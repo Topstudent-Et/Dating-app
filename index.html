@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>World Dating</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root { --main: #ff4d6d; --bg: #fff5f7; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); margin: 0; padding: 0; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
+        .header { background: #fff; padding: 15px; text-align: center; font-weight: bold; font-size: 20px; color: var(--main); border-bottom: 1px solid #eee; }
+        .card-container { flex: 1; position: relative; display: flex; justify-content: center; align-items: center; perspective: 1000px; padding: 20px; }
+        .card { width: 100%; max-width: 350px; height: 450px; background: #fff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: absolute; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); overflow: hidden; }
+        .card img { width: 100%; height: 80%; object-fit: cover; pointer-events: none; }
+        .card-info { padding: 15px; }
+        .card-info h3 { margin: 0; font-size: 22px; color: #333; }
+        .card-info p { margin: 5px 0 0; color: #666; font-size: 14px; }
+        .controls { display: flex; justify-content: center; gap: 30px; padding: 20px; }
+        .btn { width: 60px; height: 60px; border-radius: 50%; border: none; background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .btn-no { color: #ff4b2b; }
+        .btn-yes { color: #2ecc71; font-size: 28px; }
+    </style>
+</head>
+<body>
+    <div class="header">💖 World Dating</div>
+    <div class="card-container" id="cardContainer">
+        <div class="card" id="activeCard">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Profile">
+            <div class="card-info">
+                <h3>Sara, 24</h3>
+                <p>📍 አዲስ አበባ | ✨ ፎቶግራፍ እወዳለሁ</p>
+            </div>
+        </div>
+    </div>
+    <div class="controls">
+        <button class="btn btn-no" onclick="handleSwipe('left')">✖</button>
+        <button class="btn btn-yes" onclick="handleSwipe('right')">❤</button>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+
+        function handleSwipe(direction) {
+            const card = document.getElementById('activeCard');
+            if (direction === 'right') {
+                card.style.transform = 'translateX(200%) rotate(30deg)';
+                tg.HapticFeedback.notificationOccurred('success');
+            } else {
+                card.style.transform = 'translateX(-200%) rotate(-30deg)';
+                tg.HapticFeedback.impactOccurred('medium');
+            }
+            // እዚህ ጋር ለወደፊቱ ዳታቤዝ ማገናኘት ይቻላል
+            setTimeout(() => {
+                card.style.transition = 'none';
+                card.style.transform = 'scale(0)';
+                setTimeout(() => {
+                    card.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                    card.style.transform = 'scale(1)';
+                }, 100);
+            }, 500);
+        }
+    </script>
+</body>
+</html>
