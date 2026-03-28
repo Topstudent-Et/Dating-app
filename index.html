@@ -3,63 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>World Dating</title>
+    <title>World Dating App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --main: #ff4d6d; --bg: #fff5f7; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); margin: 0; padding: 0; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
-        .header { background: #fff; padding: 15px; text-align: center; font-weight: bold; font-size: 20px; color: var(--main); border-bottom: 1px solid #eee; }
-        .card-container { flex: 1; position: relative; display: flex; justify-content: center; align-items: center; perspective: 1000px; padding: 20px; }
-        .card { width: 100%; max-width: 350px; height: 450px; background: #fff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: absolute; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); overflow: hidden; }
-        .card img { width: 100%; height: 80%; object-fit: cover; pointer-events: none; }
-        .card-info { padding: 15px; }
-        .card-info h3 { margin: 0; font-size: 22px; color: #333; }
-        .card-info p { margin: 5px 0 0; color: #666; font-size: 14px; }
-        .controls { display: flex; justify-content: center; gap: 30px; padding: 20px; }
-        .btn { width: 60px; height: 60px; border-radius: 50%; border: none; background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 24px; }
-        .btn-no { color: #ff4b2b; }
-        .btn-yes { color: #2ecc71; font-size: 28px; }
+        :root { --primary: #ff4d6d; --bg: #f8f9fa; --white: #ffffff; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding-bottom: 70px; }
+        
+        /* Navigation Bar */
+        .top-nav { background: var(--white); padding: 15px; display: flex; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .top-nav h2 { margin: 0; color: var(--primary); font-size: 20px; }
+
+        /* Page Sections */
+        .page { display: none; padding: 15px; animation: fadeIn 0.3s; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Profile Card (Swipe) */
+        .swipe-card { background: var(--white); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.1); position: relative; height: 70vh; }
+        .swipe-card img, .swipe-card video { width: 100%; height: 100%; object-fit: cover; }
+        .info-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: white; padding: 20px; }
+
+        /* Profile View */
+        .profile-header { text-align: center; padding: 20px; }
+        .user-img { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--primary); object-fit: cover; }
+
+        /* Bottom Menu */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--white); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #ddd; }
+        .nav-btn { font-size: 22px; color: #bbb; cursor: pointer; transition: 0.3s; }
+        .nav-btn.active { color: var(--primary); }
+
+        /* Buttons */
+        .action-btns { display: flex; justify-content: center; gap: 20px; margin-top: 15px; }
+        .round-btn { width: 55px; height: 55px; border-radius: 50%; border: none; font-size: 20px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .like-btn { background: var(--primary); color: white; }
+        .msg-btn { background: #0088cc; color: white; }
     </style>
 </head>
 <body>
-    <div class="header">💖 World Dating</div>
-    <div class="card-container" id="cardContainer">
-        <div class="card" id="activeCard">
-            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Profile">
-            <div class="card-info">
-                <h3>Sara, 24</h3>
-                <p>📍 አዲስ አበባ | ✨ ፎቶግራፍ እወዳለሁ</p>
+
+    <div class="top-nav">
+        <h2 id="appTitle">World Dating</h2>
+        <i class="fas fa-bell"></i>
+    </div>
+
+    <div id="discover" class="page active">
+        <div class="swipe-card">
+            <img id="mainPhoto" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500" alt="Profile">
+            <div class="info-overlay">
+                <h3 id="userNameAge">Sara, 22</h3>
+                <p id="userLocation">📍 Addis Ababa, Ethiopia</p>
+                <p id="userGender">♀ Female</p>
             </div>
         </div>
+        <div class="action-btns">
+            <button class="round-btn" onclick="nextUser()"><i class="fas fa-times"></i></button>
+            <button class="round-btn like-btn" onclick="sendAction('Like')"><i class="fas fa-heart"></i></button>
+            <button class="round-btn msg-btn" onclick="sendAction('Message')"><i class="fas fa-comment"></i></button>
+        </div>
     </div>
-    <div class="controls">
-        <button class="btn btn-no" onclick="handleSwipe('left')">✖</button>
-        <button class="btn btn-yes" onclick="handleSwipe('right')">❤</button>
+
+    <div id="profile" class="page">
+        <div class="profile-header">
+            <img class="user-img" id="myPhoto" src="https://via.placeholder.com/150" alt="Me">
+            <h2 id="myName">User Name</h2>
+            <button onclick="changePhoto()" style="margin-top:10px;">📸 Change Photo</button>
+        </div>
+        <div style="background:white; padding:15px; border-radius:15px;">
+            <p><b>Country:</b> Ethiopia</p>
+            <p><b>Age:</b> 25</p>
+            <p><b>Bio:</b> Hello world!</p>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <i class="fas fa-fire nav-btn active" onclick="showPage('discover', this)"></i>
+        <i class="fas fa-search nav-btn" onclick="showPage('discover', this)"></i>
+        <i class="fas fa-user nav-btn" onclick="showPage('profile', this)"></i>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.ready();
         tg.expand();
 
-        function handleSwipe(direction) {
-            const card = document.getElementById('activeCard');
-            if (direction === 'right') {
-                card.style.transform = 'translateX(200%) rotate(30deg)';
-                tg.HapticFeedback.notificationOccurred('success');
-            } else {
-                card.style.transform = 'translateX(-200%) rotate(-30deg)';
-                tg.HapticFeedback.impactOccurred('medium');
-            }
-            // እዚህ ጋር ለወደፊቱ ዳታቤዝ ማገናኘት ይቻላል
-            setTimeout(() => {
-                card.style.transition = 'none';
-                card.style.transform = 'scale(0)';
-                setTimeout(() => {
-                    card.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-                    card.style.transform = 'scale(1)';
-                }, 100);
-            }, 500);
+        function showPage(pageId, btn) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        function sendAction(type) {
+            tg.HapticFeedback.notificationOccurred('success');
+            // ቦቱ ላይ መረጃ ለመላክ
+            tg.sendData(JSON.stringify({
+                action: type,
+                target_user: "Sara",
+                target_id: "12345"
+            }));
+            if(type === 'Like') alert("Liked!");
+        }
+
+        function changePhoto() {
+            // ይህ ቦቱ ላይ ፎቶ መጫኛ እንዲከፈት ያደርጋል
+            tg.close(); 
+        }
+
+        function nextUser() {
+            // ለወደፊቱ ዳታቤዝ ሲጨምር እዚህ ጋር ይቀየራል
+            alert("Next Profile...");
+        }
+
+        // ቋንቋ መቀየሪያ (የቦቱ ቋንቋ መሰረት ያደርጋል)
+        const userLang = tg.initDataUnsafe.user.language_code;
+        if(userLang === 'am') {
+            document.getElementById('appTitle').innerText = "የፍቅር አጋር";
         }
     </script>
 </body>
