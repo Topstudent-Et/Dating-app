@@ -3,140 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aviator Ultra - Dai Tech</title>
+    <title>Aviator Pro Audio Fix - Dai Tech</title>
     <style>
-        :root {
-            --aviator-red: #ff003c;
-            --win-green: #28a745;
-            --bg-black: #050505;
-        }
-
-        body {
-            margin: 0;
-            background-color: var(--bg-black);
-            color: white;
-            font-family: 'Arial Black', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .game-card {
-            width: 100%;
-            max-width: 500px;
-            background: #111;
-            border-radius: 20px;
-            padding: 20px;
-            border: 2px solid #222;
-            box-shadow: 0 0 30px rgba(255, 0, 60, 0.2);
-        }
-
-        .top-info {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-
-        #balance { color: var(--win-green); font-size: 1.2rem; }
-
-        /* Canvas Area */
-        .display-area {
-            position: relative;
-            height: 300px;
-            background: radial-gradient(circle at bottom left, #200, #000);
-            border-radius: 15px;
-            overflow: hidden;
-            border: 1px solid #333;
-        }
-
-        #multiplier {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 4.5rem;
-            z-index: 10;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
-        }
-
+        body { margin: 0; background: #050505; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .game-box { width: 90%; max-width: 450px; background: #111; padding: 20px; border-radius: 20px; border: 2px solid #333; text-align: center; }
+        .screen { position: relative; height: 250px; background: radial-gradient(circle, #200, #000); border-radius: 15px; overflow: hidden; margin-bottom: 20px; }
+        #multiplier { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 4rem; font-weight: bold; z-index: 10; }
         canvas { width: 100%; height: 100%; }
-
-        /* Buttons */
-        .controls {
-            margin-top: 20px;
-            display: grid;
-            gap: 15px;
-        }
-
-        .bet-btn {
-            height: 70px;
-            background: var(--win-green);
-            color: white;
-            border: none;
-            border-radius: 15px;
-            font-size: 1.8rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 5px 0 #1e7e34;
-        }
-
-        .cashout-btn {
-            height: 70px;
-            background: #ffc107;
-            color: black;
-            border: none;
-            border-radius: 15px;
-            font-size: 1.8rem;
-            font-weight: bold;
-            cursor: pointer;
-            display: none;
-            box-shadow: 0 5px 0 #d39e00;
-        }
-
-        input {
-            background: #1a1a1a;
-            border: 1px solid #444;
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            font-size: 1.2rem;
-        }
+        .btn { width: 100%; height: 60px; border: none; border-radius: 10px; font-size: 1.5rem; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .bet-btn { background: #28a745; color: white; }
+        .cash-btn { background: #ffc107; color: black; display: none; }
+        input { width: 80%; padding: 10px; margin-bottom: 15px; background: #222; border: 1px solid #444; color: white; border-radius: 5px; text-align: center; }
     </style>
 </head>
 <body>
 
-<audio id="jetSound" loop src="https://www.soundjay.com/transportation/sounds/jet-pass-by-01.mp3"></audio>
-<audio id="moneySound" src="https://www.myinstants.com/media/sounds/cha-ching.mp3"></audio>
-<audio id="bombSound" src="https://www.soundjay.com/mechanical/sounds/explosion-01.mp3"></audio>
+<audio id="jetSound" loop>
+    <source src="https://www.soundjay.com/transportation/sounds/jet-flying-1.mp3" type="audio/mpeg">
+</audio>
+<audio id="moneySound">
+    <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg">
+</audio>
+<audio id="bombSound">
+    <source src="https://www.soundjay.com/mechanical/sounds/explosion-02.mp3" type="audio/mpeg">
+</audio>
 
-<div class="game-card">
-    <div class="top-info">
-        <span style="color: var(--aviator-red);">AVIATOR PRO</span>
-        <span id="balance">💰 1,000.00 ETB</span>
-    </div>
-
-    <div class="display-area">
+<div class="game-box">
+    <h2 style="color: #ff003c; margin-top: 0;">AVIATOR PRO</h2>
+    <div id="balance" style="color: #28a745; margin-bottom: 10px;">💰 1,000.00 ETB</div>
+    
+    <div class="screen">
         <div id="multiplier">1.00x</div>
         <canvas id="gameCanvas"></canvas>
     </div>
 
-    <div class="controls">
-        <input type="number" id="betAmount" value="10.00">
-        <button id="betBtn" class="bet-btn" onclick="startFly()">BET</button>
-        <button id="cashBtn" class="cashout-btn" onclick="takeMoney()">CASH OUT</button>
-    </div>
+    <input type="number" id="betAmount" value="10.00">
+    <button id="betBtn" class="btn bet-btn" onclick="startRound()">BET</button>
+    <button id="cashBtn" class="btn cash-btn" onclick="cashOut()">CASH OUT</button>
+    <p style="font-size: 10px; color: #555; margin-top: 10px;">ድምፅ ለመስማት ስልክዎ Silent ላይ አለመሆኑን ያረጋግጡ</p>
 </div>
 
 <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
-    const multText = document.getElementById('multiplier');
+    const multDisplay = document.getElementById('multiplier');
     const balDisplay = document.getElementById('balance');
     
-    // Sounds
     const jetSnd = document.getElementById('jetSound');
     const moneySnd = document.getElementById('moneySound');
     const bombSnd = document.getElementById('bombSound');
@@ -147,15 +59,9 @@
     let crashPoint;
     let animationId;
 
-    function resize() {
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-    }
-    resize();
-
-    function startFly() {
+    function startRound() {
         const amt = parseFloat(document.getElementById('betAmount').value);
-        if (amt > balance) return alert("ሂሳብዎ በቂ አይደለም!");
+        if (amt > balance) return alert("ሂሳብ የሎትም!");
         
         balance -= amt;
         balDisplay.innerText = "💰 " + balance.toFixed(2) + " ETB";
@@ -163,87 +69,75 @@
         isFlying = true;
         multiplier = 1.00;
         // 40% House Edge Logic
-        crashPoint = Math.random() < 0.4 ? (Math.random() * 0.2 + 1.01) : (Math.random() * 6 + 1.2);
-        
+        crashPoint = Math.random() < 0.4 ? (Math.random() * 0.2 + 1.01) : (Math.random() * 5 + 1.2);
+
         document.getElementById('betBtn').style.display = 'none';
         document.getElementById('cashBtn').style.display = 'block';
-        multText.style.color = "white";
+        multDisplay.style.color = "white";
 
+        // ድምፅ ማስነሻ
         jetSnd.currentTime = 0;
-        jetSnd.play();
+        jetSnd.play().catch(e => console.log("Audio Play Error:", e));
 
         animate();
     }
 
     function animate() {
         if (!isFlying) return;
-
-        multiplier += 0.007 * Math.sqrt(multiplier);
-        multText.innerText = multiplier.toFixed(2) + "x";
-
-        drawPlane();
-
-        if (multiplier >= crashPoint) {
-            explode();
-            return;
-        }
+        multiplier += 0.008 * Math.sqrt(multiplier);
+        multDisplay.innerText = multiplier.toFixed(2) + "x";
+        draw();
+        if (multiplier >= crashPoint) { explode(); return; }
         animationId = requestAnimationFrame(animate);
     }
 
-    function drawPlane() {
+    function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const x = (multiplier - 1) * 60;
+        const y = canvas.height - ((multiplier - 1) * 40);
         
-        const x = (multiplier - 1) * (canvas.width / 4);
-        const y = canvas.height - ((multiplier - 1) * (canvas.height / 4));
-
-        // ደማቅ ቀይ መስመር (Trail)
-        ctx.shadowBlur = 15;
-        ctx.shadowColor = "red";
         ctx.strokeStyle = "#ff003c";
-        ctx.lineWidth = 6;
+        ctx.lineWidth = 5;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = "red";
         ctx.beginPath();
         ctx.moveTo(0, canvas.height);
         ctx.quadraticCurveTo(x/2, canvas.height, x, y);
         ctx.stroke();
 
-        // ደማቅ አውሮፕላን
-        ctx.font = "50px Arial";
-        ctx.shadowBlur = 25;
-        ctx.fillText("✈️", x - 25, y + 15);
-        ctx.shadowBlur = 0;
+        ctx.font = "40px Arial";
+        ctx.fillText("✈️", x - 20, y + 15);
     }
 
     function explode() {
         isFlying = false;
         jetSnd.pause();
         bombSnd.play();
-
-        multText.innerText = "FLEW AWAY!";
-        multText.style.color = "#ff0000";
-        resetButtons();
+        multDisplay.innerText = "FLEW AWAY!";
+        multDisplay.style.color = "#ff4444";
+        stopGame();
     }
 
-    function takeMoney() {
+    function cashOut() {
         if (!isFlying) return;
-        
-        const win = (parseFloat(document.getElementById('betAmount').value) * multiplier);
+        const win = parseFloat(document.getElementById('betAmount').value) * multiplier;
         balance += win;
         balDisplay.innerText = "💰 " + balance.toFixed(2) + " ETB";
         
         isFlying = false;
         jetSnd.pause();
         moneySnd.play();
-
-        multText.style.color = "#28a745";
-        resetButtons();
-        alert(`አሸንፈዋል! ${win.toFixed(2)} ETB`);
+        multDisplay.style.color = "#28a745";
+        stopGame();
     }
 
-    function resetButtons() {
+    function stopGame() {
         document.getElementById('betBtn').style.display = 'block';
         document.getElementById('cashBtn').style.display = 'none';
         cancelAnimationFrame(animationId);
     }
+
+    canvas.width = 400; canvas.height = 250;
 </script>
 
 </body>
