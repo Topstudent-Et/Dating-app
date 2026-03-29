@@ -3,157 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Avatar Game - Dai Edition</title>
+    <title>Premium Aviator - Dai Edition</title>
     <style>
-        /* CSS - የገጹ ውበት */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1a1a2e;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
             margin: 0;
+            padding: 0;
+            background-color: #0b0b0d;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            overflow: hidden;
         }
 
-        .game-container {
-            background: #16213e;
-            padding: 30px;
+        .game-wrapper {
+            width: 100%;
+            max-width: 450px;
+            background: #1b1c21;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            text-align: center;
-            width: 90%;
-            max-width: 400px;
+            padding: 15px;
+            box-shadow: 0 0 50px rgba(233, 30, 99, 0.2);
+            position: relative;
         }
 
-        .avatar-preview {
-            width: 200px;
-            height: 200px;
-            background: #0f3460;
-            border-radius: 50%;
-            margin: 0 auto 20px;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        .logo { color: #e91e63; font-weight: bold; font-size: 24px; }
+
+        /* የጨዋታው ሜዳ */
+        #game-area {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(to bottom, #141517, #1e1f24);
+            margin: 15px 0;
+            border-radius: 10px;
             position: relative;
             overflow: hidden;
-            border: 5px solid #e94560;
         }
 
-        .avatar-part {
+        #multiplier {
             position: absolute;
-            transition: all 0.3s ease;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3.5rem;
+            font-weight: 900;
+            z-index: 10;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
         }
 
-        .face { width: 100%; height: 100%; background: #ffdbac; border-radius: 50%; top: 0; left: 0; }
-        .eyes { top: 35%; width: 100%; display: flex; justify-content: space-around; font-size: 30px; }
-        .mouth { bottom: 20%; width: 100%; text-align: center; font-size: 30px; }
-        .hair { top: -10%; width: 100%; text-align: center; font-size: 80px; }
+        canvas { width: 100%; height: 100%; }
 
+        /* የመጫወቻ ቁልፎች */
         .controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 10px;
-            margin-top: 20px;
         }
 
-        button {
-            background-color: #e94560;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
+        .bet-box {
+            background: #2c2d33;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
         }
 
-        button:active { transform: scale(0.95); }
-
-        .color-picker {
-            margin-top: 15px;
+        .main-btn {
             width: 100%;
-            height: 40px;
+            padding: 18px;
+            font-size: 1.5rem;
+            font-weight: bold;
             border: none;
+            border-radius: 12px;
             cursor: pointer;
+            transition: 0.2s;
+            text-transform: uppercase;
         }
 
-        h1 { font-size: 1.5rem; margin-bottom: 10px; color: #4ecca3; }
+        .bet-btn { background: #28a745; color: white; }
+        .cash-btn { background: #ffc107; color: black; display: none; }
+        .reset-btn { background: #e91e63; color: white; display: none; }
+
+        .history {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+            overflow-x: auto;
+        }
+
+        .hist-item {
+            background: #333;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #ffc107;
+        }
     </style>
 </head>
 <body>
 
-    <div class="game-container">
-        <h1>የአቫታር ፈጠራ</h1>
-        
-        <div class="avatar-preview" id="avatar">
-            <div class="face" id="facePart"></div>
-            <div class="hair" id="hairPart">👦</div>
-            <div class="eyes" id="eyePart">
-                <span>👁️</span><span>👁️</span>
-            </div>
-            <div class="mouth" id="mouthPart">👄</div>
-        </div>
-
-        <div class="controls">
-            <button onclick="changePart('hair')">ፀጉር ቀይር</button>
-            <button onclick="changePart('eye')">አይን ቀይር</button>
-            <button onclick="changePart('mouth')">አፍ ቀይር</button>
-            <button onclick="randomize()">Randomize</button>
-        </div>
-
-        <p>የቆዳ ቀለም ምረጥ፡</p>
-        <input type="color" class="color-picker" id="skinColor" value="#ffdbac" oninput="changeSkin()">
-        
-        <button style="width: 100%; margin-top: 15px; background-color: #4ecca3;" onclick="downloadAvatar()">አቫታሩን ሴቭ አድርግ</button>
+<div class="game-wrapper">
+    <div class="header">
+        <div class="logo">AVIATOR</div>
+        <div id="balance">💰 1,000.00 ETB</div>
     </div>
 
-    <script>
-        // JavaScript - የጨዋታው እንቅስቃሴ
-        const hairs = ['👦', '👱', '👨‍🦱', '👨‍🦲', '👳', '👲', '🧔'];
-        const eyes = [
-            '<span>👁️</span><span>👁️</span>',
-            '<span>🕶️</span><span>🕶️</span>',
-            '<span>😎</span><span>😎</span>',
-            '<span>🤩</span><span>🤩</span>',
-            '<span>😉</span><span>😉</span>'
-        ];
-        const mouths = ['👄', '😊', '😋', '😎', '😂', '😐'];
+    <div class="history" id="historyLog">
+        <span class="hist-item">1.50x</span>
+        <span class="hist-item">2.10x</span>
+    </div>
 
-        let hIdx = 0;
-        let eIdx = 0;
-        let mIdx = 0;
+    <div id="game-area">
+        <div id="multiplier">1.00x</div>
+        <canvas id="aviatorCanvas"></canvas>
+    </div>
 
-        function changePart(part) {
-            if(part === 'hair') {
-                hIdx = (hIdx + 1) % hairs.length;
-                document.getElementById('hairPart').innerText = hairs[hIdx];
-            } else if(part === 'eye') {
-                eIdx = (eIdx + 1) % eyes.length;
-                document.getElementById('eyePart').innerHTML = eyes[eIdx];
-            } else if(part === 'mouth') {
-                mIdx = (mIdx + 1) % mouths.length;
-                document.getElementById('mouthPart').innerText = mouths[mIdx];
-            }
+    <div class="controls">
+        <div class="bet-box">
+            <button id="betBtn" class="main-btn bet-btn" onclick="startGame()">BET</button>
+            <button id="cashBtn" class="main-btn cash-btn" onclick="cashOut()">CASH OUT</button>
+            <button id="resetBtn" class="main-btn reset-btn" onclick="prepareNext()">NEXT ROUND</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('aviatorCanvas');
+    const ctx = canvas.getContext('2d');
+    const multDisplay = document.getElementById('multiplier');
+    const histLog = document.getElementById('historyLog');
+
+    let multiplier = 1.00;
+    let isFlying = false;
+    let crashPoint;
+    let animationFrame;
+    let time = 0;
+
+    // ካንቫሱን ማስተካከል
+    function resize() {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function drawScene(progress) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // የመስመሩ ስዕል (Curve)
+        ctx.beginPath();
+        ctx.strokeStyle = "#e91e63";
+        ctx.lineWidth = 5;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = "#e91e63";
+        
+        ctx.moveTo(0, canvas.height);
+        let targetX = (progress - 1) * (canvas.width / 4);
+        let targetY = canvas.height - ((progress - 1) * (canvas.height / 4));
+        
+        // አውሮፕላኑ እንዳይወጣ መቆጣጠሪያ
+        targetX = Math.min(targetX, canvas.width - 50);
+        targetY = Math.max(targetY, 50);
+
+        ctx.quadraticCurveTo(targetX / 2, canvas.height, targetX, targetY);
+        ctx.stroke();
+
+        // አውሮፕላኑን መሳል
+        ctx.shadowBlur = 0;
+        ctx.font = "40px Arial";
+        ctx.fillText("✈️", targetX - 20, targetY + 10);
+    }
+
+    function startGame() {
+        if (isFlying) return;
+
+        isFlying = true;
+        multiplier = 1.00;
+        crashPoint = (Math.random() * 10 + 1.1).toFixed(2); // በዘፈቀደ መውደቂያ
+
+        document.getElementById('betBtn').style.display = 'none';
+        document.getElementById('cashBtn').style.display = 'block';
+        multDisplay.style.color = "white";
+
+        animate();
+    }
+
+    function animate() {
+        if (!isFlying) return;
+
+        multiplier += 0.005 * Math.sqrt(multiplier); // ፍጥነቱ በሂደት ይጨምራል
+        multDisplay.innerText = multiplier.toFixed(2) + "x";
+        
+        drawScene(multiplier);
+
+        if (multiplier >= crashPoint) {
+            crash();
+            return;
         }
 
-        function changeSkin() {
-            const color = document.getElementById('skinColor').value;
-            document.getElementById('facePart').style.backgroundColor = color;
-        }
+        animationFrame = requestAnimationFrame(animate);
+    }
 
-        function randomize() {
-            hIdx = Math.floor(Math.random() * hairs.length);
-            eIdx = Math.floor(Math.random() * eyes.length);
-            mIdx = Math.floor(Math.random() * mouths.length);
-            
-            document.getElementById('hairPart').innerText = hairs[hIdx];
-            document.getElementById('eyePart').innerHTML = eyes[eIdx];
-            document.getElementById('mouthPart').innerText = mouths[mIdx];
-        }
+    function crash() {
+        isFlying = false;
+        cancelAnimationFrame(animationFrame);
+        multDisplay.innerText = "FLEW AWAY!";
+        multDisplay.style.color = "#ff4444";
+        
+        // ታሪክ ላይ ጨምር
+        const item = document.createElement('span');
+        item.className = 'hist-item';
+        item.innerText = multiplier.toFixed(2) + 'x';
+        histLog.prepend(item);
 
-        function downloadAvatar() {
-            alert("አቫታርህ በተሳካ ሁኔታ ተፈጥሯል! (ለቴሌግራም ሚኒ አፕ ተዘጋጅቷል)");
-        }
-    </script>
+        document.getElementById('cashBtn').style.display = 'none';
+        document.getElementById('resetBtn').style.display = 'block';
+    }
+
+    function cashOut() {
+        if (!isFlying) return;
+        isFlying = false;
+        cancelAnimationFrame(animationFrame);
+
+        multDisplay.style.color = "#28a745";
+        alert("አሸንፈሃል! " + multiplier.toFixed(2) + "x");
+
+        document.getElementById('cashBtn').style.display = 'none';
+        document.getElementById('resetBtn').style.display = 'block';
+    }
+
+    function prepareNext() {
+        multiplier = 1.00;
+        multDisplay.innerText = "1.00x";
+        multDisplay.style.color = "white";
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        document.getElementById('resetBtn').style.display = 'none';
+        document.getElementById('betBtn').style.display = 'block';
+    }
+</script>
 
 </body>
 </html>
