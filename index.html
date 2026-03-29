@@ -1,305 +1,237 @@
 <!DOCTYPE html>
-<html lang="am">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Afro Games Pro - Dai Tech</title>
+    <title>World All Games - Premium Edition</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary-yellow: #ffcc00;
-            --bg-dark: #0f1014;
-            --card-bg: #1c1d22;
-            --text-gray: #9ca3af;
+            --gold: #ffcc00;
+            --bg-main: #0b0b0d;
+            --card-dark: #16171b;
+            --accent-red: #ff003c;
+            --success: #00c851;
         }
 
         body {
             margin: 0;
-            background-color: var(--bg-dark);
+            background-color: var(--bg-main);
             color: white;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Inter', sans-serif;
             display: flex;
             flex-direction: column;
             height: 100vh;
+            overflow: hidden;
         }
 
-        /* Top Header */
-        .top-header {
+        /* Header with Profile */
+        .top-nav {
             padding: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: rgba(22, 23, 27, 0.9);
+            border-bottom: 1px solid #333;
         }
 
-        .user-pill {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .user-box { display: flex; align-items: center; gap: 10px; }
+        .avatar { 
+            width: 42px; height: 42px; 
+            background: var(--gold); 
+            border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center;
+            color: #000; font-weight: 900; font-size: 18px;
+            box-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
         }
 
-        .avatar-circle {
-            width: 40px;
-            height: 40px;
-            background: var(--primary-yellow);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: black;
+        .stats { display: flex; flex-direction: column; gap: 4px; }
+        .stat-badge {
+            background: #1c1d22;
+            border: 1px solid #444;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 11px;
             font-weight: bold;
+            display: flex; align-items: center; gap: 5px;
         }
 
-        .balance-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .bal-item {
-            background: rgba(255, 204, 0, 0.1);
-            border: 1px solid var(--primary-yellow);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            color: var(--primary-yellow);
-            font-weight: bold;
-        }
-
-        /* Navigation Content */
-        .main-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 15px;
-            padding-bottom: 80px;
-        }
-
-        .page { display: none; }
+        /* Pages Container */
+        .content { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 90px; }
+        .page { display: none; animation: fadeIn 0.3s ease-in; }
         .page.active { display: block; }
 
-        /* Game Grid */
-        .section-title { font-size: 18px; margin-bottom: 15px; display: flex; justify-content: space-between; }
-        .game-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .game-card {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 10px;
-            position: relative;
+        /* Game Cards */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+        .card {
+            background: var(--card-dark);
+            border-radius: 18px;
+            padding: 15px;
             text-align: center;
-            border: 1px solid #333;
+            border: 1px solid #222;
+            transition: 0.2s;
         }
+        .card:active { transform: scale(0.95); background: #25262c; }
+        .card i { font-size: 35px; margin-bottom: 10px; display: block; }
+        .card h4 { margin: 5px 0; font-size: 14px; }
+        .card span { font-size: 10px; color: #777; }
 
-        .game-card img { width: 100%; border-radius: 10px; margin-bottom: 10px; }
-        .game-card .tag { position: absolute; top: 10px; left: 10px; font-size: 10px; padding: 2px 8px; border-radius: 5px; font-weight: bold; }
-        .tag.hot { background: #ff4444; }
-        .tag.new { background: #00c851; }
-
-        /* Bonus Page - Daily Rewards */
-        .reward-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .day-box {
-            background: #25262c;
-            padding: 10px;
-            border-radius: 10px;
-            text-align: center;
-            font-size: 12px;
-            border: 1px solid #333;
-        }
-
-        .day-box.active { border-color: var(--primary-yellow); background: rgba(255, 204, 0, 0.05); }
-
-        /* Bottom Nav */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
+        /* Wallet & Buttons */
+        .btn-gold {
+            background: var(--gold);
+            color: black;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 900;
             width: 100%;
-            background: #16171b;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            border-top: 1px solid #333;
-            z-index: 100;
-        }
-
-        .nav-item {
-            text-align: center;
-            color: var(--text-gray);
-            font-size: 11px;
-            text-decoration: none;
+            margin-top: 10px;
             cursor: pointer;
         }
 
+        /* Bottom Menu */
+        .nav-bar {
+            position: fixed;
+            bottom: 0; width: 100%;
+            background: #16171b;
+            display: flex; justify-content: space-around;
+            padding: 12px 0; border-top: 1px solid #333;
+        }
+        .nav-item { text-align: center; color: #666; font-size: 10px; flex: 1; }
         .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
-        .nav-item.active { color: var(--primary-yellow); }
+        .nav-item.active { color: var(--gold); }
 
-        .play-btn-main {
-            width: 60px;
-            height: 60px;
-            background: var(--primary-yellow);
+        .center-btn {
+            width: 55px; height: 55px;
+            background: var(--gold);
             border-radius: 50%;
             margin-top: -35px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: black;
-            font-size: 24px;
-            box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
-        }
-
-        /* Modal / Alert Styles */
-        #noticeModal {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
             display: flex; justify-content: center; align-items: center;
-            z-index: 1000;
+            color: black; font-size: 22px;
+            box-shadow: 0 4px 15px rgba(255, 204, 0, 0.4);
         }
 
-        .modal-content {
-            background: #1c1d22;
-            width: 85%;
-            padding: 25px;
-            border-radius: 20px;
-            border: 1px solid var(--primary-yellow);
+        /* Popup */
+        #notice {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000; display: flex; justify-content: center; align-items: center;
         }
-
-        .yellow-btn {
-            background: var(--primary-yellow);
-            color: black;
-            width: 100%;
-            padding: 15px;
-            border-radius: 12px;
-            border: none;
-            font-weight: bold;
-            font-size: 16px;
-            margin-top: 20px;
+        .modal {
+            background: #1c1d22; width: 85%; padding: 25px;
+            border-radius: 20px; border: 1px solid var(--gold);
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <div id="noticeModal">
-        <div class="modal-content">
-            <h2 style="color: var(--primary-yellow); font-size: 18px;"><i class="fas fa-exclamation-triangle"></i> ጠቃሚ ማሳሰቢያ</h2>
-            <p style="font-size: 13px; line-height: 1.6; color: #ccc;">
-                📌 <b>ዲፖዚት (Deposit):</b> ዝቅተኛው ማስገባት የሚቻለው መጠን 50 ብር ነው።<br><br>
-                ⚠️ ያለ ፎርም ዝም ብለው ገንዘብ ከላኩ ተመላሽ አይሆንም!<br><br>
-                📌 <b>ዊዝድሮው (Withdraw):</b> ያሸነፉትን ገንዘብ ወጪ ለማድረግ ቢያንስ አንድ ጊዜ ዲፖዚት ማድረግ ይኖርብዎታል።
+    <audio id="clickSnd" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+
+    <div id="notice">
+        <div class="modal">
+            <h2 style="color: var(--gold);">WELCOME TO WORLD GAMES</h2>
+            <p style="font-size: 13px; color: #ccc; line-height: 1.5;">
+                Deposit min: <b>50 ETB</b><br>
+                Withdrawal: Instant for verified users.<br>
+                Refer friends and earn <b>10 ETB</b> per person!
             </p>
-            <button class="yellow-btn" onclick="closeNotice()">ተስማምቻለሁ፤ ወደ ጨዋታው</button>
+            <button class="btn-gold" onclick="closeNotice()">START PLAYING</button>
         </div>
     </div>
 
-    <div class="top-header">
-        <div class="user-pill">
-            <div class="avatar-circle" id="userInitial">D</div>
-            <div style="font-size: 14px;">ሰላም፣ <br><b id="userName">Dai</b></div>
+    <div class="top-nav">
+        <div class="user-box">
+            <div class="avatar" id="avatarIcon">D</div>
+            <div class="stats">
+                <span style="font-size: 13px; font-weight: bold;" id="nameDisplay">Player</span>
+                <span style="font-size: 10px; color: var(--gold);">Verified Account</span>
+            </div>
         </div>
-        <div class="balance-group">
-            <div class="bal-item">🟡 <span id="mainBal">1.00</span> ብር</div>
-            <div class="bal-item" style="color: #00c851; border-color: #00c851;">🎁 0.00 ብር</div>
+        <div class="stats" style="align-items: flex-end;">
+            <div class="stat-badge" style="color: var(--success); border-color: var(--success);">
+                <i class="fas fa-wallet"></i> <span id="balanceDisp">0.00</span> ETB
+            </div>
         </div>
     </div>
 
-    <div class="main-content">
+    <div class="content">
         
         <div id="home" class="page active">
-            <div style="background: linear-gradient(to right, #2a1a5e, #1c1d22); padding: 20px; border-radius: 20px; margin-bottom: 20px;">
-                <h2 style="margin: 0;">እንኳን ደህና መጡ!</h2>
-                <p style="font-size: 12px; color: #ccc;">ምርጥ የሆኑ ጨዋታዎችን ተጫውተው አሁኑኑ ያሸንፉ።</p>
-                <button style="background: var(--primary-yellow); border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold;">ጨዋታ ይጀምሩ</button>
+            <div style="background: linear-gradient(45deg, #1c1d22, #2a1a5e); padding: 20px; border-radius: 20px;">
+                <h2 style="margin: 0;">Super Bonus! 🎁</h2>
+                <p style="font-size: 12px; color: #ddd;">Get 20% extra on your first deposit today.</p>
+                <button class="btn-gold" style="width: auto; padding: 8px 20px;">CLAIM NOW</button>
             </div>
 
-            <div class="section-title"><b>ተወዳጅ ጨዋታዎች</b> <span style="color: var(--primary-yellow); font-size: 12px;">ሁሉንም አሳይ</span></div>
-            <div class="game-grid">
-                <div class="game-card">
-                    <span class="tag hot">HOT</span>
-                    <i class="fas fa- dice" style="font-size: 40px; color: #8a2be2; margin-bottom: 10px;"></i>
-                    <div style="font-weight: bold; font-size: 14px;">BINGO PRO</div>
-                    <div style="font-size: 10px; color: var(--text-gray);">● 1.2k ተጫዋቾች</div>
+            <h3 style="margin-top: 25px;">Popular Games</h3>
+            <div class="grid">
+                <div class="card" onclick="playSound()">
+                    <i class="fas fa-plane" style="color: var(--accent-red);"></i>
+                    <h4>AVIATOR</h4>
+                    <span>5.4k Playing</span>
                 </div>
-                <div class="game-card">
-                    <span class="tag new">NEW</span>
-                    <i class="fas fa-fill-drip" style="font-size: 40px; color: #1e90ff; margin-bottom: 10px;"></i>
-                    <div style="font-weight: bold; font-size: 14px;">AFRO CARTELA</div>
-                    <div style="font-size: 10px; color: var(--text-gray);">● 600 ተጫዋቾች</div>
+                <div class="card" onclick="playSound()">
+                    <i class="fas fa-bomb" style="color: #ffa500;"></i>
+                    <h4>MINES</h4>
+                    <span>1.1k Playing</span>
                 </div>
-                <div class="game-card" onclick="openAviator()">
-                    <i class="fas fa-plane-departure" style="font-size: 40px; color: #ff003c; margin-bottom: 10px;"></i>
-                    <div style="font-weight: bold; font-size: 14px;">AVIATOR</div>
-                    <div style="font-size: 10px; color: var(--text-gray);">● 5.1k ተጫዋቾች</div>
+                <div class="card" onclick="playSound()">
+                    <i class="fas fa-dice" style="color: #8a2be2;"></i>
+                    <h4>BINGO</h4>
+                    <span>800 Playing</span>
                 </div>
-                <div class="game-card">
-                    <i class="fas fa-bomb" style="font-size: 40px; color: #ffa500; margin-bottom: 10px;"></i>
-                    <div style="font-weight: bold; font-size: 14px;">MINES RUSH</div>
-                    <div style="font-size: 10px; color: var(--text-gray);">● 850 ተጫዋቾች</div>
+                <div class="card" onclick="playSound()">
+                    <i class="fas fa-coins" style="color: var(--gold);"></i>
+                    <h4>KENO</h4>
+                    <span>2.3k Playing</span>
                 </div>
             </div>
         </div>
 
-        <div id="bonus" class="page">
-            <h2 style="text-align: center;"><i class="fas fa-gift"></i> የቦነስ ማዕከል</h2>
-            <div class="reward-grid">
-                <div class="day-box">ቀን 1<br><b>+1 ብር</b></div>
-                <div class="day-box active">ቀን 2<br><b>+2 ብር</b></div>
-                <div class="day-box">ቀን 3<br><b>+3 ብር</b></div>
-                <div class="day-box">ቀን 4<br><b>+5 ብር</b></div>
+        <div id="wallet" class="page">
+            <h3>My Wallet</h3>
+            <div class="card" style="text-align: left; background: #000;">
+                <span style="color: #777;">Total Balance</span>
+                <h1 style="margin: 5px 0; color: var(--success);">$ <span id="walBal">0.00</span></h1>
             </div>
-            <button class="yellow-btn">የዛሬን ውሰድ</button>
-
-            <div style="margin-top: 30px; background: #1c1d22; padding: 15px; border-radius: 15px;">
-                <h4>🤝 ጓደኛ ይጋብዙ</h4>
-                <p style="font-size: 12px; color: #aaa;">ለእያንዳንዱ ሰው +10 ብር ያግኙ!</p>
-                <input type="text" value="https://t.me/AfroGamesBot?start=123" readonly style="width: 80%; background: #000; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 5px;">
+            <div class="grid">
+                <button class="btn-gold" onclick="alert('Deposit Form Opening...')">DEPOSIT</button>
+                <button class="btn-gold" style="background: #333; color: #fff;" onclick="alert('Withdraw Form Opening...')">WITHDRAW</button>
             </div>
         </div>
 
         <div id="profile" class="page">
             <div style="text-align: center; margin-bottom: 30px;">
-                <div class="avatar-circle" style="width: 80px; height: 80px; font-size: 30px; margin: 0 auto 10px;">D</div>
-                <h3 id="profileName">Dawit</h3>
-                <p style="color: var(--text-gray);">0910016861</p>
+                <div class="avatar" style="width: 80px; height: 80px; font-size: 30px; margin: 0 auto 10px;">D</div>
+                <h3 id="profName">User Name</h3>
+                <p style="color: #777;">ID: 9844231</p>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-                <div class="game-card" style="text-align: left; display: flex; align-items: center; gap: 15px;">
-                    <i class="fas fa-history"></i> የታሪክ ማህደር <i class="fas fa-chevron-right" style="margin-left: auto;"></i>
-                </div>
-                <div class="game-card" style="text-align: left; display: flex; align-items: center; gap: 15px;">
-                    <i class="fas fa-language"></i> ቋንቋ <span style="margin-left: auto; font-size: 12px;">አማርኛ 🇪🇹</span>
-                </div>
-                <div class="game-card" style="text-align: left; display: flex; align-items: center; gap: 15px; color: #ff4444;">
-                    <i class="fas fa-sign-out-alt"></i> ውጣ
-                </div>
-            </div>
+            <div class="card" style="text-align: left; margin-bottom: 10px;"><i class="fas fa-history" style="display:inline; font-size:16px;"></i> Game History</div>
+            <div class="card" style="text-align: left; margin-bottom: 10px;"><i class="fas fa-headset" style="display:inline; font-size:16px;"></i> Live Support</div>
+            <div class="card" style="text-align: left; color: var(--accent-red);"><i class="fas fa-sign-out-alt" style="display:inline; font-size:16px;"></i> Logout</div>
         </div>
 
     </div>
 
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="showPage('home', this)">
-            <i class="fas fa-home"></i> መነሻ
+    <div class="nav-bar">
+        <div class="nav-item active" onclick="switchPage('home', this)">
+            <i class="fas fa-th-large"></i> Games
         </div>
-        <div class="nav-item" onclick="showPage('wallet', this)">
-            <i class="fas fa-wallet"></i> ዋሌት
+        <div class="nav-item" onclick="switchPage('wallet', this)">
+            <i class="fas fa-wallet"></i> Wallet
         </div>
-        <div class="play-btn-main" onclick="showPage('home', this)">
+        <div class="center-btn" onclick="switchPage('home', this)">
             <i class="fas fa-play"></i>
         </div>
-        <div class="nav-item" onclick="showPage('bonus', this)">
-            <i class="fas fa-gift"></i> ቦነስ
+        <div class="nav-item">
+            <i class="fas fa-gift"></i> Rewards
         </div>
-        <div class="nav-item" onclick="showPage('profile', this)">
-            <i class="fas fa-user"></i> ፕሮፋይል
+        <div class="nav-item" onclick="switchPage('profile', this)">
+            <i class="fas fa-user"></i> Profile
         </div>
     </div>
 
@@ -307,36 +239,36 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // የመነሻ ማሳሰቢያ መዝጊያ
+        function playSound() {
+            document.getElementById('clickSnd').play();
+        }
+
         function closeNotice() {
-            document.getElementById('noticeModal').style.display = 'none';
+            playSound();
+            document.getElementById('notice').style.display = 'none';
         }
 
-        // ገጾችን መቀያየሪያ
-        function showPage(pageId, element) {
-            // ሁሉንም ገጽ ደብቅ
+        function switchPage(id, el) {
+            playSound();
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            // የተመረጠውን ገጽ አሳይ
-            const target = document.getElementById(pageId);
-            if(target) target.classList.add('active');
-
-            // በተኖችን ቀለም ቀይር
-            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-            if(element) element.classList.add('active');
+            document.getElementById(id).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if(el) el.classList.add('active');
         }
 
-        // የቴሌግራም መረጃ ጫን
+        // Load Telegram Data
         const user = tg.initDataUnsafe?.user;
         if(user) {
-            document.getElementById('userName').innerText = user.first_name;
-            document.getElementById('profileName').innerText = user.first_name;
-            document.getElementById('userInitial').innerText = user.first_name.charAt(0);
+            document.getElementById('nameDisplay').innerText = user.first_name;
+            document.getElementById('profName').innerText = user.first_name;
+            document.getElementById('avatarIcon').innerText = user.first_name.charAt(0);
         }
 
-        function openAviator() {
-            alert("Aviator Game Loading...");
-            // እዚህ ጋር ከዚህ በፊት የሰራነውን የ Aviator ኮድ ሊንክ ማገናኘት ትችላለህ
-        }
+        // Balance Sync
+        let balance = localStorage.getItem('world_games_bal') || "10.00";
+        document.getElementById('balanceDisp').innerText = balance;
+        document.getElementById('walBal').innerText = balance;
     </script>
 </body>
 </html>
