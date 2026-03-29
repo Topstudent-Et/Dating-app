@@ -4,5 +4,47 @@
   <div id="aviator-plane" style="font-size:40px;">🛩️</div>
   <h3 id="multiplier">1.00x</h3>
   <button id="start-btn">Start</button>
+<script>
+const startBtn = document.getElementById('start-btn');
+const multiplierElem = document.getElementById('multiplier');
+const planeElem = document.getElementById('aviator-plane');
 
+let multiplier = 1;
+let animation;
+let planeTop = 0;
+let planeLeft = 0;
+
+function startGame() {
+  multiplier = 1;
+  planeTop = 0;
+  planeLeft = 0;
+  multiplierElem.textContent = multiplier.toFixed(2) + "x";
+  planeElem.style.position = 'relative';
+  planeElem.style.top = '0px';
+  planeElem.style.left = '0px';
+
+  animation = setInterval(() => {
+    // multiplier ይጨምር
+    multiplier += 0.01 + multiplier * 0.02;
+    multiplierElem.textContent = multiplier.toFixed(2) + "x";
+
+    // ፔላን እንዲሄድ 
+    planeTop -= 2;      // Upwards
+    planeLeft += 4;     // Rightwards
+
+    planeElem.style.top = planeTop + 'px';
+    planeElem.style.left = planeLeft + 'px';
+
+    // multiplier 15x ከደረሰ stop
+    if (multiplier >= 15) {
+      clearInterval(animation);
+    }
+  }, 50); // የፍጥነት እና የመለዋወጫ ዘመን
+}
+
+startBtn.onclick = function() {
+  clearInterval(animation); // አስቀድሞ የቆሰለ ካለ ይቆም
+  startGame();
+};
+</script>
 
