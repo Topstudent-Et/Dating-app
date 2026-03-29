@@ -2,113 +2,145 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dating Mini App</title>
+  <title>Dating App - Registration</title>
   <style>
-    body { margin: 0; font-family: Arial, sans-serif; background: #0f172a; color: white;}
-    header { padding: 20px; text-align: center; background: #1e293b;}
-    h1 { margin: 0; color: #38bdf8;}
-    .container { padding: 20px; max-width: 1000px; margin: auto;}
-    .section { margin-bottom: 40px;}
-    .card { background: #1e293b; padding: 20px; border-radius: 12px; margin-top: 10px;}
-    button { padding: 12px 20px; border: none; border-radius: 8px; background: #38bdf8; color: black; cursor: pointer; font-weight: bold;}
-    footer { text-align: center; padding: 20px; background: #1e293b; margin-top: 40px;}
+    body { font-family: Arial, sans-serif; }
+    .hidden { display: none; }
+    .form-section { max-width: 400px; margin: 40px auto; border: 1px solid #ccc; padding: 20px; border-radius: 8px; }
+    label { display: block; margin-top: 12px; }
+    select, input { width: 100%; padding: 6px; margin-top: 4px; }
+    .lang-btns { text-align: center; margin-bottom: 20px; }
+    .lang-btns button { margin: 0 10px; font-size: 16px; }
   </style>
 </head>
 <body>
-<header>
-  <h1>❤️ Dating Mini App</h1>
-  <p>Find Love • ፍቅርን ፈልግ</p>
-</header>
-<div class="container">
 
-  <div class="section">
-    <h2>🚀 Welcome / እንኳን ደህና መጡ</h2>
-    <div class="card">
-      <p>Start your journey to find love today.<br>ዛሬ የፍቅር ጉዞዎን ይጀምሩ።</p>
-      <button>Get Started / ጀምር</button>
+  <!-- 1. Language Selector -->
+  <div class="form-section" id="language-section">
+    <h2>ቋንቋ ምረጥ | Choose Language</h2>
+    <div class="lang-btns">
+      <button onclick="selectLanguage('am')">አማርኛ</button>
+      <button onclick="selectLanguage('en')">English</button>
     </div>
   </div>
 
-  <div class="section">
-    <h2>🔐 Signup / መመዝገቢያ</h2>
-    <div class="card">
-      <p>Sign up with your phone or email.<br>በስልክ ወይም በኢሜይል ይመዝገቡ።</p>
-      <button>Sign Up / መመዝገቢያ</button>
-    </div>
+  <!-- 2. Registration Form -->
+  <form id="register-form" class="form-section hidden" onsubmit="showNext(event)">
+    <h2 id="reg-title">መመዝገብ</h2>
+    <label id="lbl-name" for="name">ስም</label>
+    <input type="text" id="name" name="name" required>
+
+    <label id="lbl-email" for="email">ኢሜይል</label>
+    <input type="email" id="email" name="email" required>
+
+    <label id="lbl-pass" for="password">የይለፍ ቃል</label>
+    <input type="password" id="password" name="password" required>
+
+    <button type="submit" id="reg-btn">መመዝገብ</button>
+  </form>
+
+  <!-- 3. Next Info Form -->
+  <form id="more-form" class="form-section hidden" onsubmit="submitAll(event)">
+    <h2 id="more-title">ቀጣይ መረጃ</h2>
+    <label id="lbl-gender" for="gender">ፆታ</label>
+    <select id="gender" name="gender" required>
+      <option value="" disabled selected></option>
+      <option value="male" id="opt-male">ወንድ</option>
+      <option value="female" id="opt-female">ሴት</option>
+      <option value="other" id="opt-other">ሌላ</option>
+    </select>
+
+    <label id="lbl-age" for="age">እድሜ</label>
+    <input type="number" id="age" name="age" required min="18" max="100">
+
+    <label id="lbl-city" for="city">ከተማ</label>
+    <input type="text" id="city" name="city" required>
+
+    <button type="submit" id="more-btn">አቀርብ</button>
+  </form>
+
+  <div id="done-section" class="form-section hidden" style="text-align:center;">
+    <h2 id="done-msg">በትክክል ተመዝግበዋል!</h2>
   </div>
 
-  <div class="section">
-    <h2>👤 Profile Setup / ፕሮፋይል ማዘጋጀት</h2>
-    <div class="card">
-      <ul>
-        <li>Name / ስም</li>
-        <li>Age / እድሜ</li>
-        <li>Gender / ፆታ</li>
-        <li>Bio / መግለጫ</li>
-      </ul>
-    </div>
-  </div>
+  <script>
+    // Language data
+    const langData = {
+      am: {
+        regTitle: 'መመዝገብ',
+        lblName: 'ስም',
+        lblEmail: 'ኢሜይል',
+        lblPass: 'የይለፍ ቃል',
+        regBtn: 'መመዝገብ',
+        moreTitle: 'ቀጣይ መረጃ',
+        lblGender: 'ፆታ',
+        optMale: 'ወንድ',
+        optFemale: 'ሴት',
+        optOther: 'ሌላ',
+        lblAge: 'እድሜ',
+        lblCity: 'ከተማ',
+        moreBtn: 'አቀርብ',
+        doneMsg: 'በትክክል ተመዝግበዋል!',
+      },
+      en: {
+        regTitle: 'Register',
+        lblName: 'Name',
+        lblEmail: 'Email',
+        lblPass: 'Password',
+        regBtn: 'Register',
+        moreTitle: 'More Information',
+        lblGender: 'Gender',
+        optMale: 'Male',
+        optFemale: 'Female',
+        optOther: 'Other',
+        lblAge: 'Age',
+        lblCity: 'City',
+        moreBtn: 'Submit',
+        doneMsg: 'Registration Complete!',
+      }
+    };
+    let currentLang = 'am';
 
-  <div class="section">
-    <h2>📸 Photo Upload / ፎቶ ማስገባት</h2>
-    <div class="card">
-      <p>Upload your best photos.<br>ምርጥ ፎቶዎችዎን ያስገቡ።</p>
-    </div>
-  </div>
+    function selectLanguage(lang) {
+      currentLang = lang;
+      document.getElementById('language-section').classList.add('hidden');
+      document.getElementById('register-form').classList.remove('hidden');
+      // Set language
+      setFormLanguage();
+    }
 
-  <div class="section">
-    <h2>💘 Match / ማቻ</h2>
-    <div class="card">
-      <p>Swipe and match with people you like.<br>የሚወዱትን ሰው ይምረጡ እና ይገናኙ።</p>
-    </div>
-  </div>
+    function setFormLanguage() {
+      let l = langData[currentLang];
+      document.getElementById('reg-title').innerText = l.regTitle;
+      document.getElementById('lbl-name').innerText = l.lblName;
+      document.getElementById('lbl-email').innerText = l.lblEmail;
+      document.getElementById('lbl-pass').innerText = l.lblPass;
+      document.getElementById('reg-btn').innerText = l.regBtn;
 
-  <div class="section">
-    <h2>💬 Chat / መልዕክት</h2>
-    <div class="card">
-      <p>Start chatting after you match.<br>ከተማች በኋላ ያነጋግሩ።</p>
-    </div>
-  </div>
+      document.getElementById('more-title').innerText = l.moreTitle;
+      document.getElementById('lbl-gender').innerText = l.lblGender;
+      document.getElementById('opt-male').innerText = l.optMale;
+      document.getElementById('opt-female').innerText = l.optFemale;
+      document.getElementById('opt-other').innerText = l.optOther;
+      document.getElementById('lbl-age').innerText = l.lblAge;
+      document.getElementById('lbl-city').innerText = l.lblCity;
+      document.getElementById('more-btn').innerText = l.moreBtn;
+      document.getElementById('done-msg').innerText = l.doneMsg;
+    }
 
-  <div class="section">
-    <h2>🎥 Video Message / ቪዲዮ መልዕክት</h2>
-    <div class="card">
-      <p>Send video messages.<br>ቪዲዮ መልዕክት ይላኩ።</p>
-    </div>
-  </div>
+    function showNext(e) {
+      e.preventDefault();
+      document.getElementById('register-form').classList.add('hidden');
+      document.getElementById('more-form').classList.remove('hidden');
+    }
 
-  <div class="section">
-    <h2>🎤 Voice Message / የድምፅ መልዕክት</h2>
-    <div class="card">
-      <p>Send voice messages.<br>የድምፅ መልዕክት ይላኩ።</p>
-    </div>
-  </div>
+    function submitAll(e) {
+      e.preventDefault();
+      document.getElementById('more-form').classList.add('hidden');
+      document.getElementById('done-section').classList.remove('hidden');
+      // Here you could collect all info and send it to backend if needed
+    }
+  </script>
 
-  <div class="section">
-    <h2>💎 Premium / ፕሪሚየም</h2>
-    <div class="card">
-      <p>Unlock advanced features.<br>ተጨማሪ ፋይዳዎችን ይክፈቱ።</p>
-    </div>
-  </div>
-
-  <div class="section">
-    <h2>⚙️ Settings / ቅንብሮች</h2>
-    <div class="card">
-      <p>Adjust your app preferences.<br>የመተግበሪያውን ቅንብር ያስተካክሉ።</p>
-    </div>
-  </div>
-
-  <div class="section">
-    <h2>📊 Dashboard / ዳሽቦር��</h2>
-    <div class="card">
-      <p>See your activity summary and stats.<br>የእርስዎን እንቅስቃሴ ዝርዝር ያዩ።</p>
-    </div>
-  </div>
-
-</div>
-<footer>
-  <p>© 2026 Dating Mini App | Made with ❤️</p>
-</footer>
 </body>
 </html>
