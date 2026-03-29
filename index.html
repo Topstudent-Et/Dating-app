@@ -1,162 +1,106 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>World Dating Premium</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { --primary: #ff2d55; --secondary: #5856d6; --bg: #f0f2f5; --white: #ffffff; --text: #1c1c1e; }
-        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; color: var(--text); user-select: none; }
-        
-        /* Header & Dashboard */
-        .app-header { background: var(--white); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .app-header h1 { font-size: 22px; margin: 0; color: var(--primary); font-weight: 800; }
-        .dashboard-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
-        .stat-box { background: var(--white); padding: 15px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-        .stat-box i { font-size: 20px; color: var(--primary); margin-bottom: 5px; }
-
-        /* Navigation */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--white); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #e5e5ea; z-index: 2000; }
-        .nav-item { font-size: 22px; color: #8e8e93; cursor: pointer; transition: 0.3s; }
-        .nav-item.active { color: var(--primary); transform: scale(1.1); }
-
-        /* Pages */
-        .page { display: none; animation: fadeIn 0.4s ease; }
-        .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* User Cards (Discover) */
-        .card-container { padding: 15px; position: relative; height: 65vh; }
-        .user-card { width: 100%; height: 100%; background: #000; border-radius: 25px; position: relative; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
-        .user-card img { width: 100%; height: 100%; object-fit: cover; }
-        .card-details { position: absolute; bottom: 0; width: 100%; padding: 30px 20px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); color: white; box-sizing: border-box; }
-        
-        /* Profile Page */
-        .profile-section { text-align: center; padding: 30px 20px; }
-        .profile-img-wrapper { position: relative; display: inline-block; }
-        .profile-img { width: 130px; height: 130px; border-radius: 50%; border: 4px solid var(--primary); object-fit: cover; }
-        .edit-icon { position: absolute; bottom: 5px; right: 5px; background: var(--primary); color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid white; }
-        .edit-form { padding: 20px; }
-        .input-field { background: white; border-radius: 12px; padding: 15px; margin-bottom: 12px; border: 1px solid #ddd; width: 100%; box-sizing: border-box; font-size: 16px; }
-
-        /* Action Buttons */
-        .controls { display: flex; justify-content: center; gap: 15px; margin-top: -35px; position: relative; z-index: 100; }
-        .btn { width: 65px; height: 65px; border-radius: 50%; border: none; background: white; box-shadow: 0 8px 20px rgba(0,0,0,0.1); font-size: 26px; cursor: pointer; transition: 0.2s; }
-        .btn:active { transform: scale(0.9); }
-        .btn-like { color: #ff2d55; }
-        .btn-msg { color: #007aff; }
-        .btn-call { color: #34c759; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dating Mini App</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+    }
+    header {
+      padding: 20px;
+      text-align: center;
+      background: #1e293b;
+    }
+    h1 {
+      margin: 0;
+      color: #38bdf8;
+    }
+    .container {
+      padding: 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .section {
+      margin-bottom: 40px;
+    }
+    .card {
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 10px;
+    }
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #38bdf8;
+      color: black;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #1e293b;
+      margin-top: 40px;
+    }
+  </style>
 </head>
-<body>
-
-    <div class="app-header">
-        <h1 id="app-name">World Dating</h1>
-        <i class="fas fa-cog" onclick="switchPage('profile-page')"></i>
+<body><header>
+  <h1>❤️ Dating Mini App</h1>
+  <p>Find Love • ፍቅርን ፈልግ</p>
+</header><div class="container">  <div class="section">
+    <h2>🚀 Welcome / እንኳን ደህና መጡ</h2>
+    <div class="card">
+      <p>Start your journey to find love today.</p>
+      <p>ዛሬ የፍቅር ጉዞዎን ይጀምሩ።</p>
+      <button>Get Started</button>
     </div>
-
-    <div id="discover-page" class="page active">
-        <div class="dashboard-stats">
-            <div class="stat-box"><i class="fas fa-heart"></i><br><small id="txt-likes">Likes</small><br><b id="count-likes">48</b></div>
-            <div class="stat-box"><i class="fas fa-users"></i><br><small id="txt-matches">Matches</small><br><b>12</b></div>
-        </div>
-        <div class="card-container">
-            <div class="user-card">
-                <img id="current-user-img" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500" alt="Profile">
-                <div class="card-details">
-                    <h2 id="current-user-info">Selam, 24</h2>
-                    <p id="current-user-loc">📍 Addis Ababa, Ethiopia</p>
-                </div>
-            </div>
-        </div>
-        <div class="controls">
-            <button class="btn" onclick="nextUser()"><i class="fas fa-times"></i></button>
-            <button class="btn btn-msg" onclick="action('message')"><i class="fas fa-comment"></i></button>
-            <button class="btn btn-like" onclick="action('like')"><i class="fas fa-heart"></i></button>
-            <button class="btn btn-call" onclick="action('call')"><i class="fas fa-video"></i></button>
-        </div>
+  </div>  <div class="section">
+    <h2>🔐 Signup / መመዝገቢያ</h2>
+    <div class="card">
+      <p>Sign up using Phone or Email.</p>
+      <p>በስልክ ወይም በኢሜይል ይመዝገቡ።</p>
     </div>
-
-    <div id="profile-page" class="page">
-        <div class="profile-section">
-            <div class="profile-img-wrapper" onclick="uploadAction()">
-                <img id="my-avatar" src="https://via.placeholder.com/150" class="profile-img">
-                <div class="edit-icon"><i class="fas fa-camera"></i></div>
-            </div>
-            <h2 id="my-name-display">User Name</h2>
-        </div>
-        <div class="edit-form">
-            <input type="text" id="edit-name" class="input-field" placeholder="Full Name">
-            <input type="number" id="edit-age" class="input-field" placeholder="Age">
-            <button onclick="saveProfile()" style="width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 16px;" id="btn-save">SAVE CHANGES</button>
-        </div>
+  </div>  <div class="section">
+    <h2>👤 Profile Setup / ፕሮፋይል</h2>
+    <div class="card">
+      <ul>
+        <li>Name / ስም</li>
+        <li>Age / እድሜ</li>
+        <li>Gender / ፆታ</li>
+        <li>Bio / መግለጫ</li>
+      </ul>
     </div>
-
-    <div class="bottom-nav">
-        <i class="fas fa-fire nav-item active" onclick="switchPage('discover-page', this)"></i>
-        <i class="fas fa-comment nav-item" onclick="switchPage('discover-page', this)"></i>
-        <i class="fas fa-user nav-item" onclick="switchPage('profile-page', this)"></i>
+  </div>  <div class="section">
+    <h2>📸 Photos / ፎቶ</h2>
+    <div class="card">
+      <p>Upload your best photos.</p>
+      <p>ምርጥ ፎቶዎችዎን ያስገቡ።</p>
     </div>
-
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.enableClosingConfirmation();
-
-        // Multi-language system
-        const lang = tg.initDataUnsafe.user.language_code || 'en';
-        const labels = {
-            am: { likes: "ላይኮች", matches: "ጥምረቶች", save: "አስቀምጥ", name: "ሙሉ ስም", age: "እድሜ" },
-            en: { likes: "Likes", matches: "Matches", save: "SAVE CHANGES", name: "Full Name", age: "Age" },
-            fr: { likes: "J'aime", matches: "Matches", save: "ENREGISTRER", name: "Nom", age: "Âge" },
-            ar: { likes: "اعجابات", matches: "تطابقات", save: "حفظ", name: "الاسم", age: "العمر" }
-        };
-
-        const t = labels[lang] || labels['en'];
-        document.getElementById('txt-likes').innerText = t.likes;
-        document.getElementById('txt-matches').innerText = t.matches;
-        document.getElementById('btn-save').innerText = t.save;
-        document.getElementById('edit-name').placeholder = t.name;
-        document.getElementById('edit-age').placeholder = t.age;
-
-        function switchPage(pageId, el) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            if(el) {
-                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-                el.classList.add('active');
-            }
-        }
-
-        function action(type) {
-            tg.HapticFeedback.impactOccurred('medium');
-            if(type === 'call') {
-                alert(lang === 'am' ? "የቪዲዮ ጥሪ በመደረግ ላይ..." : "Video calling...");
-            }
-            tg.sendData(JSON.stringify({ action: type, target: "Selam", id: "123" }));
-        }
-
-        function saveProfile() {
-            const name = document.getElementById('edit-name').value;
-            const age = document.getElementById('edit-age').value;
-            if(!name || !age) return alert("Please fill all fields!");
-            
-            tg.sendData(JSON.stringify({ action: "update_profile", name: name, age: age }));
-            alert(lang === 'am' ? "ተቀምጧል!" : "Saved!");
-            switchPage('discover-page');
-        }
-
-        function uploadAction() {
-            alert(lang === 'am' ? "ፎቶ ለመቀየር እባክዎ ለቦቱ ፎቶ ይላኩ!" : "Please send a photo to the bot to update!");
-            tg.close();
-        }
-
-        function nextUser() {
-            tg.HapticFeedback.selectionChanged();
-            // እዚህ ጋር ዳታቤዝ ሲኖር አዲስ ሰው ይቀየራል
-        }
-    </script>
-</body>
+  </div>  <div class="section">
+    <h2>💘 Match / ማቻ</h2>
+    <div class="card">
+      <p>Swipe and match with people you like.</p>
+      <p>የሚወዱትን ሰው ይምረጡ እና ይገናኙ።</p>
+    </div>
+  </div>  <div class="section">
+    <h2>💬 Chat / መልዕክት</h2>
+    <div class="card">
+      <p>Start chatting instantly after matching.</p>
+      <p>ከተማች በኋላ ወዲያውኑ ይነጋገሩ።</p>
+    </div>
+  </div>  <div class="section">
+    <h2>💎 Premium / ፕሪሚየም</h2>
+    <div class="card">
+      <p>Unlock advanced features.</p>
+      <p>ተጨማሪ ፋይዳዎችን ይክፈቱ።</p>
+    </div>
+  </div></div><footer>
+  <p>© 2026 Dating Mini App | Made with ❤️</p>
+</footer></body>
 </html>
