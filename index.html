@@ -1,236 +1,218 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>World All Games - Premium</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root { --gold: #ffcc00; --bg: #0b0b0d; --card: #16171b; --red: #ff003c; }
-        body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; height: 100vh; }
-        
-        /* Header */
-        .header { padding: 15px; display: flex; justify-content: space-between; align-items: center; background: #16171b; border-bottom: 1px solid #333; }
-        .balance-box { background: #1c1d22; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--gold); color: var(--gold); font-weight: bold; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Games PRO</title>
 
-        /* Navigation Content */
-        .content { padding: 15px; height: calc(100vh - 140px); overflow-y: auto; }
-        .page { display: none; animation: fadeIn 0.3s; }
-        .active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-        /* Aviator Animation Area */
-        .aviator-env { height: 200px; background: #050505; position: relative; overflow: hidden; border-radius: 10px; margin-bottom: 20px; border: 1px solid #333; }
-        .plane { position: absolute; bottom: 20px; left: 20px; font-size: 30px; color: var(--red); transition: all 0.1s linear; z-index: 10; }
-        .mult-display { position: absolute; width: 100%; text-align: center; top: 40%; font-size: 45px; font-weight: bold; transition: 0.2s; }
+<style>
+:root { --gold:#ffcc00; --bg:#0b0b0d; --card:#16171b; }
+body { margin:0; background:var(--bg); color:white; font-family:sans-serif; }
 
-        /* Bingo Styles */
-        .bingo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 20px auto; width: 80%; }
-        .bingo-slot { background: #222; border-radius: 10px; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 40px; border: 2px solid #333; }
-        .bingo-win .bingo-slot { border-color: var(--gold); animation: pulse 0.5s infinite alternate; }
-        @keyframes pulse { from { box-shadow: 0 0 5px var(--gold); } to { box-shadow: 0 0 15px var(--gold); } }
+.header { display:flex; justify-content:space-between; padding:10px; background:#16171b; }
+.balance { color:var(--gold); }
 
-        /* Forms & Buttons */
-        .form-group { background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #333; margin-top: 10px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #444; background: #222; color: white; box-sizing: border-box; }
-        .btn-gold { background: var(--gold); color: black; border: none; padding: 12px; border-radius: 8px; font-weight: bold; width: 100%; cursor: pointer; transition: 0.2s; }
-        .btn-gold:active { transform: scale(0.98); }
-        .file-input { display: none; }
+.page { display:none; padding:15px; }
+.active { display:block; }
 
-        /* Bottom Nav */
-        .nav { position: fixed; bottom: 0; width: 100%; background: #16171b; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
-        .nav-item { color: #777; font-size: 12px; text-align: center; cursor: pointer; flex: 1; }
-        .nav-item.active { color: var(--gold); }
-    </style>
+.btn { background:var(--gold); padding:10px; border:none; width:100%; margin-top:10px; }
+
+.nav { position:fixed; bottom:0; width:100%; display:flex; background:#16171b; }
+.nav div { flex:1; text-align:center; padding:10px; }
+
+.card { background:var(--card); padding:15px; margin:10px 0; }
+</style>
 </head>
+
 <body>
 
-    <div class="header">
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <div id="av" style="width: 35px; height: 35px; background: var(--gold); border-radius: 50%; color: black; display: flex; align-items: center; justify-content: center; font-weight: bold;">U</div>
-            <div id="u_name" style="font-size: 14px; font-weight: bold;">Loading...</div>
-        </div>
-        <div class="balance-box"><span id="bal">0.00</span> ETB</div>
-    </div>
+<div class="header">
+<div id="name">User</div>
+<div class="balance"><span id="bal">0</span> ETB</div>
+</div>
 
-    <div class="content">
-        <div id="home" class="page active">
-            <h3>Top Games</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <div style="background: var(--card); padding: 20px; border-radius: 15px; text-align: center;" onclick="showPage('aviator')">
-                    <i class="fas fa-plane" style="font-size: 40px; color: var(--red);"></i>
-                    <h4>AVIATOR</h4>
-                </div>
-                <div style="background: var(--card); padding: 20px; border-radius: 15px; text-align: center;" onclick="showPage('bingo')">
-                    <i class="fas fa-magic" style="font-size: 40px; color: #8a2be2;"></i>
-                    <h4>BINGO MUD</h4>
-                </div>
-            </div>
-        </div>
+<div id="home" class="page active">
+<h3>Games</h3>
 
-        <div id="aviator" class="page">
-            <h4 onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Back</h4>
-            <div class="aviator-env">
-                <div id="plane" class="plane"><i class="fas fa-plane"></i></div>
-                <div id="mult" class="mult-display">1.00x</div>
-            </div>
-            <input type="number" id="aviBet" placeholder="Bet Amount">
-            <button class="btn-gold" id="aviBtn" onclick="startAviator()">BET</button>
-        </div>
+<div class="card" onclick="show('aviator')">✈️ Aviator</div>
+<div class="card" onclick="show('bingo')">🎰 Bingo</div>
+<div class="card" onclick="show('spin')">🎡 Spin</div>
 
-        <div id="bingo" class="page">
-            <h4 onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Back</h4>
-            <div id="bingoGrid" class="bingo-grid">
-                <div class="bingo-slot">?</div>
-                <div class="bingo-slot">?</div>
-                <div class="bingo-slot">?</div>
-            </div>
-            <input type="number" id="bingoBet" placeholder="Bet Amount">
-            <button class="btn-gold" onclick="playBingo()">PLAY BINGO</button>
-        </div>
+</div>
 
-        <div id="deposit" class="page">
-            <h3>Deposit Money</h3>
-            <div class="form-group">
-                <p style="font-size: 13px; color: #ccc;">Send minimum <b>50 ETB</b> to:</p>
-                <p style="color: var(--gold); font-weight: bold;">Dawit - 0906067696 (Telebirr)</p>
-                <p style="font-size: 11px; color: #777;">Upload the screenshot from your gallery below.</p>
-                
-                <input type="file" id="fileInp" class="file-input" accept="image/*" onchange="fileSelected()">
-                <button class="btn-gold" onclick="document.getElementById('fileInp').click()">
-                    <i class="fas fa-image"></i> Upload Screenshot
-                </button>
-                <p id="fileName" style="font-size: 11px; color: var(--gold); margin-top: 5px;"></p>
-                <button class="btn-gold" id="submitDep" style="margin-top: 10px; display: none;" onclick="submitDeposit()">Submit to Admin</button>
-            </div>
-        </div>
-    </div>
+<div id="aviator" class="page">
+<h3>Aviator</h3>
+<input id="bet" placeholder="Bet">
+<button class="btn" onclick="start()">Start</button>
+<button class="btn" onclick="cashout()">Cashout</button>
+<div id="mult">1.00x</div>
+</div>
 
-    <div class="nav">
-        <div class="nav-item active" onclick="showPage('home')"><i class="fas fa-gamepad"></i><br>Games</div>
-        <div class="nav-item" onclick="showPage('deposit')"><i class="fas fa-plus-circle"></i><br>Deposit</div>
-        <div class="nav-item"><i class="fas fa-wallet"></i><br>Withdraw</div>
-        <div class="nav-item"><i class="fas fa-user"></i><br>Profile</div>
-    </div>
+<div id="bingo" class="page">
+<h3>Bingo</h3>
+<input id="bbet">
+<button class="btn" onclick="bingo()">Play</button>
+</div>
 
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-        const adminId = "6521426530";
-        const urlParams = new URLSearchParams(window.location.search);
-        const uId = urlParams.get('id') || "DemoID";
-        const uName = urlParams.get('name') || "Player";
-        const uUser = urlParams.get('user') || "NoUser";
+<div id="spin" class="page">
+<h3>Spin</h3>
+<button class="btn" onclick="spin()">Spin</button>
+</div>
 
-        // Balance & Info Management
-        let balance = parseFloat(localStorage.getItem('user_bal_' + uId));
-        if (isNaN(balance)) {
-            balance = 20.00; // First time bonus
-            localStorage.setItem('user_bal_' + uId, balance);
-            tg.showAlert("Welcome! You received 20 ETB Bonus! 🎉");
-        }
+<div id="deposit" class="page">
+<h3>Deposit</h3>
+<p>Telebirr: 0906067696</p>
+<input type="file">
+<button class="btn" onclick="deposit()">Submit</button>
+</div>
 
-        function updateUI() {
-            document.getElementById('bal').innerText = balance.toFixed(2);
-            document.getElementById('u_name').innerText = uName;
-            document.getElementById('av').innerText = uName.charAt(0);
-            localStorage.setItem('user_bal_' + uId, balance); // Save balance
-        }
-        updateUI();
+<div id="withdraw" class="page">
+<h3>Withdraw</h3>
+<input id="wamt" placeholder="Amount">
+<input id="wacc" placeholder="Telebirr">
+<button class="btn" onclick="withdraw()">Withdraw</button>
+</div>
 
-        function showPage(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            if(id === 'home') document.querySelectorAll('.nav-item')[0].classList.add('active');
-            if(id === 'deposit') document.querySelectorAll('.nav-item')[1].classList.add('active');
-        }
+<div id="profile" class="page">
+<h3>Profile</h3>
+<p id="refLink"></p>
+</div>
 
-        // Aviator Logic
-        function startAviator() {
-            let bet = parseFloat(document.getElementById('aviBet').value);
-            if(isNaN(bet) || bet > balance || bet < 1) return tg.showAlert("Invalid Bet!");
-            
-            balance -= bet; updateUI();
-            let plane = document.getElementById('plane');
-            let multText = document.getElementById('mult');
-            let aviBtn = document.getElementById('aviBtn');
-            aviBtn.disabled = true; aviBtn.innerText = "RUNNING...";
+<div class="nav">
+<div onclick="show('home')">Games</div>
+<div onclick="show('deposit')">Deposit</div>
+<div onclick="show('withdraw')">Withdraw</div>
+<div onclick="show('profile')">Profile</div>
+</div>
 
-            let m = 1.00;
-            let crash = Math.random() < 0.4 ? (1 + Math.random()) : (1.5 + Math.random() * 5);
-            
-            let fly = setInterval(() => {
-                m += 0.03;
-                multText.innerText = m.toFixed(2) + "x";
-                plane.style.bottom = (20 + (m * 20)) + "px"; // Vertical move
-                plane.style.left = (20 + (m * 30)) + "px"; // Horizontal move
-                
-                if(m >= crash) {
-                    clearInterval(fly);
-                    multText.style.color = "red";
-                    multText.innerText = "FLEW AWAY!";
-                    setTimeout(() => { 
-                        plane.style.transition = "none";
-                        plane.style.bottom = "20px"; plane.style.left = "20px"; 
-                        setTimeout(()=> plane.style.transition = "all 0.1s linear", 100);
-                        multText.style.color = "white"; multText.innerText = "1.00x";
-                        aviBtn.disabled = false; aviBtn.innerText = "BET";
-                    }, 2000);
-                }
-            }, 100);
-        }
+<script>
+const tg = window.Telegram.WebApp;
+tg.expand();
 
-        // Bingo Logic (Match 3)
-        function playBingo() {
-            let bet = parseFloat(document.getElementById('bingoBet').value);
-            if(isNaN(bet) || bet > balance) return tg.showAlert("Low Balance!");
-            
-            const icons = ['💎', '🍋', '⭐', '🍀', '🍎'];
-            let grid = document.getElementById('bingoGrid');
-            grid.classList.remove('bingo-win');
-            let slots = document.querySelectorAll('.bingo-slot');
-            
-            balance -= bet; updateUI();
+let user = new URLSearchParams(location.search);
+let id = user.get("id") || "1";
+let name = user.get("name") || "Player";
 
-            // 40% probability house edge
-            let forcedWin = Math.random() < 0.3; // Low natural win rate
-            
-            let res = forcedWin ? [icons[0], icons[0], icons[0]] : 
-                      [icons[Math.floor(Math.random()*5)], icons[Math.floor(Math.random()*5)], icons[Math.floor(Math.random()*5)]];
+document.getElementById("name").innerText = name;
 
-            slots.forEach((s, i) => s.innerText = res[i]);
+let balance = parseFloat(localStorage.getItem("bal_"+id));
 
-            if(res[0] === res[1] && res[1] === res[2]) {
-                grid.classList.add('bingo-win');
-                let prize = bet * 3; balance += prize;
-                tg.showAlert("🎉 CONGRATS! 3 Matches: WIN " + prize + " ETB");
-            }
-            updateUI();
-        }
+if(!balance){
+    balance = 20;
+    alert("🎁 Bonus 20 ETB");
+}
 
-        // Deposit Screenshot
-        function fileSelected() {
-            let file = document.getElementById('fileInp').files[0];
-            if(file) {
-                document.getElementById('fileName').innerText = "Selected: " + file.name;
-                document.getElementById('submitDep').style.display = "block";
-            }
-        }
+function save(){
+    localStorage.setItem("bal_"+id, balance);
+    document.getElementById("bal").innerText = balance.toFixed(2);
+}
+save();
 
-        function submitDeposit() {
-            // Since we can't send full file through sendData, we notify BJS
-            tg.sendData(JSON.stringify({
-                type: "deposit",
-                id: uId,
-                name: uName,
-                username: uUser,
-                msg: "Screenshot ready. Admin, ask user for the image."
-            }));
-            tg.showAlert("Request sent. The Admin will contact you in the main bot to receive the screenshot.");
-            showPage('home');
-        }
-    </script>
+function show(p){
+document.querySelectorAll(".page").forEach(e=>e.classList.remove("active"));
+document.getElementById(p).classList.add("active");
+}
+
+//// AVIATOR
+let running=false, multi=1, bet=0, interval;
+
+function start(){
+bet=parseFloat(document.getElementById("bet").value);
+if(bet>balance) return alert("No balance");
+
+balance-=bet;
+save();
+
+multi=1;
+running=true;
+
+interval=setInterval(()=>{
+multi+=0.05;
+document.getElementById("mult").innerText=multi.toFixed(2)+"x";
+
+if(Math.random()<0.02){
+clearInterval(interval);
+running=false;
+alert("💥 Lost");
+}
+},100);
+}
+
+function cashout(){
+if(!running) return;
+clearInterval(interval);
+
+let win=bet*multi;
+balance+=win;
+save();
+
+alert("✅ Win "+win);
+running=false;
+}
+
+//// BINGO
+function bingo(){
+let b=parseFloat(document.getElementById("bbet").value);
+if(b>balance) return;
+
+balance-=b;
+
+if(Math.random()<0.3){
+let win=b*3;
+balance+=win;
+alert("Win "+win);
+}else{
+alert("Lose");
+}
+save();
+}
+
+//// SPIN
+function spin(){
+let win=Math.random()<0.5?10:0;
+balance+=win;
+alert(win? "Win 10":"Lose");
+save();
+}
+
+//// WITHDRAW
+function withdraw(){
+let amt=parseFloat(document.getElementById("wamt").value);
+let acc=document.getElementById("wacc").value;
+
+if(amt>balance) return alert("Low");
+
+tg.sendData(JSON.stringify({
+type:"withdraw",
+amount:amt,
+acc:acc
+}));
+
+alert("Sent");
+}
+
+//// DEPOSIT
+function deposit(){
+tg.sendData(JSON.stringify({type:"deposit"}));
+alert("Sent");
+}
+
+//// REFERRAL
+let refLink="https://t.me/yourbot?start="+id;
+document.getElementById("refLink").innerText=refLink;
+
+//// DAILY BONUS
+let last=localStorage.getItem("daily");
+if(!last || Date.now()-last>86400000){
+balance+=5;
+localStorage.setItem("daily",Date.now());
+alert("🎁 Daily 5 ETB");
+save();
+}
+
+</script>
+
 </body>
 </html>
