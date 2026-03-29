@@ -1,146 +1,265 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="am">
 <head>
   <meta charset="UTF-8">
-  <title>Dating App - Registration</title>
+  <title>Dating App</title>
   <style>
-    body { font-family: Arial, sans-serif; }
+    body { font-family: Arial, sans-serif; background: #fafaff; margin: 0; padding: 0;}
+    nav { background: #4c3c88; color: #fff; padding: 12px 0; display: flex; justify-content: center;}
+    nav button { background: none; border: none; color: #fff; margin: 0 10px; font-size: 17px; cursor: pointer; }
+    .centered { max-width: 420px; margin:40px auto 0 auto; background: #fff; border-radius: 10px; padding: 27px 20px; box-shadow:0 2px 8px #3332;}
     .hidden { display: none; }
-    .form-section { max-width: 400px; margin: 40px auto; border: 1px solid #ccc; padding: 20px; border-radius: 8px; }
-    label { display: block; margin-top: 12px; }
-    select, input { width: 100%; padding: 6px; margin-top: 4px; }
-    .lang-btns { text-align: center; margin-bottom: 20px; }
-    .lang-btns button { margin: 0 10px; font-size: 16px; }
+    label { margin-top: 12px; display:block; font-weight: 500;}
+    input, select { width:100%; margin-top:4px; padding:8px; border-radius:5px; border:1px solid #ddd;}
+    .btn { background: #4c3c88; color: #fff; border:none; padding:10px 18px; border-radius: 6px; margin-top:17px; font-size:16px; cursor:pointer;}
+    .profile-card, .user-card { background:#f0f3fa; margin:20px 0; border-radius:9px; padding:12px 16px; box-shadow:0 1px 4px #aaa3;}
+    .profile-pic, .user-pic { width:80px; height:80px; border-radius:50%; object-fit:cover; background:#eee; margin-bottom:8px; }
+    .actions button, .chat-actions button { margin: 3px 2px; background: #eaf0ff; color: #4c3c88; font-size:14px; }
+    #search-section{ margin-top:30px; }
+    #chat-section, #video-section, #settings-section {margin-top:35px;}
+    .inbox-list { max-height:160px; overflow-y:auto; background:#f4f9fc; border-radius:6px; margin-bottom:8px;}
+    .chat-msg { padding:6px 0; border-bottom:1px solid #ddd;}
+    .nav-active {text-decoration:underline;}
   </style>
 </head>
 <body>
 
-  <!-- 1. Language Selector -->
-  <div class="form-section" id="language-section">
-    <h2>ቋንቋ ምረጥ | Choose Language</h2>
-    <div class="lang-btns">
-      <button onclick="selectLanguage('am')">አማርኛ</button>
-      <button onclick="selectLanguage('en')">English</button>
-    </div>
-  </div>
+<!-- Navigation Bar -->
+<nav>
+  <button id="nav-dashboard" onclick="showSection('dashboard')">Dashboard</button>
+  <button id="nav-search" onclick="showSection('search')">ፈልግ</button>
+  <button id="nav-message" onclick="showSection('chat')">መልእክት</button>
+  <button id="nav-video" onclick="showSection('video')">ቪዲዮ</button>
+  <button id="nav-settings" onclick="showSection('settings')">Settings</button>
+  <button onclick="logout()">Logout</button>
+</nav>
 
-  <!-- 2. Registration Form -->
-  <form id="register-form" class="form-section hidden" onsubmit="showNext(event)">
-    <h2 id="reg-title">መመዝገብ</h2>
-    <label id="lbl-name" for="name">ስም</label>
-    <input type="text" id="name" name="name" required>
-
-    <label id="lbl-email" for="email">ኢሜይል</label>
-    <input type="email" id="email" name="email" required>
-
-    <label id="lbl-pass" for="password">የይለፍ ቃል</label>
-    <input type="password" id="password" name="password" required>
-
-    <button type="submit" id="reg-btn">መመዝገብ</button>
-  </form>
-
-  <!-- 3. Next Info Form -->
-  <form id="more-form" class="form-section hidden" onsubmit="submitAll(event)">
-    <h2 id="more-title">ቀጣይ መረጃ</h2>
-    <label id="lbl-gender" for="gender">ፆታ</label>
-    <select id="gender" name="gender" required>
-      <option value="" disabled selected></option>
-      <option value="male" id="opt-male">ወንድ</option>
-      <option value="female" id="opt-female">ሴት</option>
-      <option value="other" id="opt-other">ሌላ</option>
+<!-- Registration Form -->
+<div class="centered" id="register-section">
+  <h2>መመዝገብ</h2>
+  <form id="register-form" onsubmit="register(event)">
+    <label>ስም</label>
+    <input id="reg-name" required>
+    <label>ኢሜይል</label>
+    <input id="reg-email" type="email" required>
+    <label>የይለፍ ቃል</label>
+    <input id="reg-pass" type="password" required>
+    <label>ፆታ</label>
+    <select id="reg-gender" required>
+      <option value="">ምረጥ</option>
+      <option>ወንድ</option>
+      <option>ሴት</option>
+      <option>ሌላ</option>
     </select>
-
-    <label id="lbl-age" for="age">እድሜ</label>
-    <input type="number" id="age" name="age" required min="18" max="100">
-
-    <label id="lbl-city" for="city">ከተማ</label>
-    <input type="text" id="city" name="city" required>
-
-    <button type="submit" id="more-btn">አቀርብ</button>
+    <label>እድሜ</label>
+    <input type="number" id="reg-age" min="18" max="100" required>
+    <label>ከተማ</label>
+    <input id="reg-city" required>
+    <label>ፎቶ</label>
+    <input type="file" id="reg-pic" accept="image/*">
+    <button class="btn" type="submit">መመዝገብ</button>
   </form>
+</div>
 
-  <div id="done-section" class="form-section hidden" style="text-align:center;">
-    <h2 id="done-msg">በትክክል ተመዝግበዋል!</h2>
+<!-- DASHBOARD Section -->
+<div class="centered hidden" id="dashboard-section">
+  <h2>Dashboard</h2>
+  <div class="profile-card">
+    <img id="profile-pic" class="profile-pic" src="" alt="profile">
+    <h3 id="profile-name">ስም</h3>
+    <p id="profile-email">ኢሜይል</p>
+    <p><span id="profile-gender"></span> | <span id="profile-age"></span> | <span id="profile-city"></span></p>
+    <button class="btn" onclick="showSection('settings')">Edit Profile</button>
   </div>
+</div>
 
-  <script>
-    // Language data
-    const langData = {
-      am: {
-        regTitle: 'መመዝገብ',
-        lblName: 'ስም',
-        lblEmail: 'ኢሜይል',
-        lblPass: 'የይለፍ ቃል',
-        regBtn: 'መመዝገብ',
-        moreTitle: 'ቀጣይ መረጃ',
-        lblGender: 'ፆታ',
-        optMale: 'ወንድ',
-        optFemale: 'ሴት',
-        optOther: 'ሌላ',
-        lblAge: 'እድሜ',
-        lblCity: 'ከተማ',
-        moreBtn: 'አቀርብ',
-        doneMsg: 'በትክክል ተመዝግበዋል!',
-      },
-      en: {
-        regTitle: 'Register',
-        lblName: 'Name',
-        lblEmail: 'Email',
-        lblPass: 'Password',
-        regBtn: 'Register',
-        moreTitle: 'More Information',
-        lblGender: 'Gender',
-        optMale: 'Male',
-        optFemale: 'Female',
-        optOther: 'Other',
-        lblAge: 'Age',
-        lblCity: 'City',
-        moreBtn: 'Submit',
-        doneMsg: 'Registration Complete!',
-      }
+<!-- SEARCH / PEOPLE Section -->
+<div class="centered hidden" id="search-section">
+  <h2>ሰዎች ፈልግ</h2>
+  <div id="user-list">
+    <!-- Example Users: JS will fill this! -->
+  </div>
+</div>
+
+<!-- MESSAGE/CHATS Section -->
+<div class="centered hidden" id="chat-section">
+  <h2>መልእክት Inbox</h2>
+  <div class="inbox-list" id="inbox-list">
+    <!-- Messages will show here -->
+  </div>
+  <div>
+    <h4>ወደ User ለማንቀሳቀስ:</h4>
+    <input id="chat-to" placeholder="የተጠቃሚ ስም">
+    <input id="chat-msg" placeholder="መልእክት">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<!-- VIDEO CHAT Section -->
+<div class="centered hidden" id="video-section">
+  <h2>ቪዲዮ መደዋወያ (Demo Only)</h2>
+  <p>Video Chat 기능은 ምሳሌ ብቻ ነው።</p>
+  <button class="btn" onclick="alert('Video Chat started! (Demo)')">Start Video</button>
+</div>
+
+<!-- SETTINGS Section -->
+<div class="centered hidden" id="settings-section">
+  <h2>Profile አስተካክል</h2>
+  <form id="settings-form" onsubmit="saveSettings(event)">
+    <label>ስም</label>
+    <input id="set-name">
+    <label>ኢሜይል</label>
+    <input id="set-email" type="email">
+    <label>ፆታ</label>
+    <select id="set-gender">
+      <option>ወንድ</option>
+      <option>ሴት</option>
+      <option>ሌላ</option>
+    </select>
+    <label>እድሜ</label>
+    <input id="set-age" type="number" min="18" max="100">
+    <label>ከተማ</label>
+    <input id="set-city">
+    <button class="btn" type="submit">ያቀርቡ</button>
+  </form>
+</div>
+
+<script>
+  // በመጀመሪያ የዋና ክፍል ማሳያ
+  function showSection(section) {
+    ['register', 'dashboard', 'search', 'chat', 'video', 'settings'].forEach(s => {
+      document.getElementById(s+'-section').classList.add('hidden')
+      document.getElementById('nav-'+s)?.classList.remove('nav-active');
+    });
+    if(section!=='register') document.getElementById('nav-'+section)?.classList.add('nav-active');
+    document.getElementById(section+'-section').classList.remove('hidden');
+    if(section === 'search') renderUserList();
+    if(section === 'settings') fillSettingsForm();
+    if(section === 'dashboard') renderProfile();
+  }
+
+  // 1. Registration
+  let user = null;
+  function register(e) {
+    e.preventDefault();
+    user = {
+      name: document.getElementById('reg-name').value,
+      email: document.getElementById('reg-email').value,
+      password: document.getElementById('reg-pass').value,
+      gender: document.getElementById('reg-gender').value,
+      age: document.getElementById('reg-age').value,
+      city: document.getElementById('reg-city').value,
+      photo: '' // will fill below
     };
-    let currentLang = 'am';
-
-    function selectLanguage(lang) {
-      currentLang = lang;
-      document.getElementById('language-section').classList.add('hidden');
-      document.getElementById('register-form').classList.remove('hidden');
-      // Set language
-      setFormLanguage();
+    // Photo preview
+    let picFile = document.getElementById('reg-pic').files[0];
+    if(picFile){
+      let reader = new FileReader();
+      reader.onload = function(e){
+        user.photo = e.target.result;
+        renderProfile();
+      };
+      reader.readAsDataURL(picFile);
     }
+    document.getElementById('register-section').classList.add('hidden');
+    showSection('dashboard');
+  }
 
-    function setFormLanguage() {
-      let l = langData[currentLang];
-      document.getElementById('reg-title').innerText = l.regTitle;
-      document.getElementById('lbl-name').innerText = l.lblName;
-      document.getElementById('lbl-email').innerText = l.lblEmail;
-      document.getElementById('lbl-pass').innerText = l.lblPass;
-      document.getElementById('reg-btn').innerText = l.regBtn;
+  // 2. Profile Render
+  function renderProfile() {
+    if(!user) return;
+    document.getElementById('profile-pic').src = user.photo || 'https://ui-avatars.com/api/?name='+encodeURIComponent(user.name);
+    document.getElementById('profile-name').textContent = user.name;
+    document.getElementById('profile-email').textContent = user.email;
+    document.getElementById('profile-gender').textContent = user.gender;
+    document.getElementById('profile-age').textContent = user.age;
+    document.getElementById('profile-city').textContent = user.city;
+  }
 
-      document.getElementById('more-title').innerText = l.moreTitle;
-      document.getElementById('lbl-gender').innerText = l.lblGender;
-      document.getElementById('opt-male').innerText = l.optMale;
-      document.getElementById('opt-female').innerText = l.optFemale;
-      document.getElementById('opt-other').innerText = l.optOther;
-      document.getElementById('lbl-age').innerText = l.lblAge;
-      document.getElementById('lbl-city').innerText = l.lblCity;
-      document.getElementById('more-btn').innerText = l.moreBtn;
-      document.getElementById('done-msg').innerText = l.doneMsg;
+  // 3. Settings/Profile Edit
+  function fillSettingsForm() {
+    if(!user) return;
+    document.getElementById('set-name').value = user.name;
+    document.getElementById('set-email').value = user.email;
+    document.getElementById('set-gender').value = user.gender;
+    document.getElementById('set-age').value = user.age;
+    document.getElementById('set-city').value = user.city;
+  }
+  function saveSettings(e){
+    e.preventDefault();
+    user.name = document.getElementById('set-name').value;
+    user.email = document.getElementById('set-email').value;
+    user.gender = document.getElementById('set-gender').value;
+    user.age = document.getElementById('set-age').value;
+    user.city = document.getElementById('set-city').value;
+    showSection('dashboard');
+  }
+
+  // 4. User List / Search / Like / Msg
+  const sampleUsers = [
+    {name:'አስተማማኝ',age:25,city:'Addis',gender:'ወንድ',photo:'https://randomuser.me/api/portraits/men/11.jpg'},
+    {name:'ደስታ',age:22,city:'Hawassa',gender:'ሴት',photo:'https://randomuser.me/api/portraits/women/12.jpg'},
+    {name:'ቶማስ',age:28,city:'Bahir Dar',gender:'ወንድ',photo:'https://randomuser.me/api/portraits/men/14.jpg'}
+  ];
+  function renderUserList(){
+    let list = document.getElementById('user-list');
+    list.innerHTML = '';
+    sampleUsers.forEach(u=>{
+      let card = document.createElement('div');
+      card.className = 'user-card';
+      card.innerHTML = `<img class="user-pic" src="${u.photo}" alt="">
+        <h4>${u.name}</h4>
+        <p>${u.gender}, ${u.age}, ${u.city} </p>
+        <div class="actions">
+          <button onclick="likeUser('${u.name}')">Like 👍</button>
+          <button onclick="sendQuickMsg('${u.name}')">Message 💬</button>
+          <button onclick="startVideo('${u.name}')">Video 📹</button>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  function likeUser(name){ alert(`You liked ${name}!`); }
+  function sendQuickMsg(name){
+    document.getElementById('chat-to').value = name;
+    showSection('chat');
+  }
+  function startVideo(name){
+    alert(`Video chat started with ${name}! (Demo only)`);
+    showSection('video');
+  }
+
+  // 5. Chat Demo
+  let inbox = [];
+  function sendMessage(){
+    const to = document.getElementById('chat-to').value.trim();
+    const msg = document.getElementById('chat-msg').value.trim();
+    if(to && msg){
+      inbox.push({from:user.name,to,msg});
+      document.getElementById('chat-msg').value = '';
+      renderInbox();
+      alert('Message sent!');
     }
+  }
+  function renderInbox(){
+    let inboxList = document.getElementById('inbox-list');
+    inboxList.innerHTML = ''
+    inbox.slice(-10).forEach(m=>{
+      let item = document.createElement('div');
+      item.className = 'chat-msg';
+      item.innerHTML = `<b>${m.from}</b>: ${m.msg}`;
+      inboxList.appendChild(item);
+    });
+  }
 
-    function showNext(e) {
-      e.preventDefault();
-      document.getElementById('register-form').classList.add('hidden');
-      document.getElementById('more-form').classList.remove('hidden');
-    }
+  // Log out
+  function logout(){
+    location.reload();
+  }
 
-    function submitAll(e) {
-      e.preventDefault();
-      document.getElementById('more-form').classList.add('hidden');
-      document.getElementById('done-section').classList.remove('hidden');
-      // Here you could collect all info and send it to backend if needed
-    }
-  </script>
-
+  // Start: Registration first!
+  showSection('register');
+</script>
 </body>
 </html>
