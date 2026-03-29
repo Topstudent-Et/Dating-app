@@ -3,142 +3,281 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aviator Pro Audio Fix - Dai Tech</title>
+    <title>Aviator Pro - Telegram Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { margin: 0; background: #050505; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-        .game-box { width: 90%; max-width: 450px; background: #111; padding: 20px; border-radius: 20px; border: 2px solid #333; text-align: center; }
-        .screen { position: relative; height: 250px; background: radial-gradient(circle, #200, #000); border-radius: 15px; overflow: hidden; margin-bottom: 20px; }
-        #multiplier { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 4rem; font-weight: bold; z-index: 10; }
+        :root {
+            --primary: #ff003c;
+            --secondary: #28a745;
+            --bg: #0b0b0d;
+            --panel: #1c1d22;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg);
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header Section */
+        .header {
+            background: var(--panel);
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #333;
+        }
+
+        .user-info { display: flex; align-items: center; gap: 8px; }
+        .user-name { font-weight: bold; color: #4ecca3; font-size: 14px; }
+        .balance-box { background: #000; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--secondary); color: var(--secondary); font-weight: bold; }
+
+        /* Game Display */
+        .game-screen {
+            flex-grow: 1;
+            position: relative;
+            background: radial-gradient(circle at center, #2a0505 0%, #000 100%);
+            overflow: hidden;
+        }
+
+        #multiplier {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4.5rem;
+            font-weight: 900;
+            z-index: 10;
+            text-shadow: 0 0 20px rgba(255, 0, 60, 0.5);
+        }
+
         canvas { width: 100%; height: 100%; }
-        .btn { width: 100%; height: 60px; border: none; border-radius: 10px; font-size: 1.5rem; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        .bet-btn { background: #28a745; color: white; }
+
+        /* Control Panel */
+        .controls {
+            background: var(--panel);
+            padding: 15px;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .input-group { display: flex; flex-direction: column; gap: 5px; }
+        input { background: #000; border: 1px solid #444; color: #fff; padding: 10px; border-radius: 8px; text-align: center; font-size: 16px; }
+
+        .btn { border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.2s; height: 50px; font-size: 18px; }
+        .bet-btn { background: var(--secondary); color: white; }
         .cash-btn { background: #ffc107; color: black; display: none; }
-        input { width: 80%; padding: 10px; margin-bottom: 15px; background: #222; border: 1px solid #444; color: white; border-radius: 5px; text-align: center; }
+
+        /* Deposit/Withdraw Modal */
+        .modal-btns { display: flex; gap: 10px; padding: 10px; background: var(--panel); }
+        .wallet-btn { flex: 1; background: #333; color: white; padding: 8px; border-radius: 5px; border: none; font-size: 12px; }
+
+        #history { position: absolute; top: 10px; left: 10px; display: flex; gap: 5px; overflow-x: auto; max-width: 80%; }
+        .hist-tag { background: #222; padding: 2px 8px; border-radius: 10px; font-size: 11px; color: #ffc107; }
     </style>
 </head>
 <body>
 
-<audio id="jetSound" loop>
-    <source src="https://www.soundjay.com/transportation/sounds/jet-flying-1.mp3" type="audio/mpeg">
-</audio>
-<audio id="moneySound">
-    <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg">
-</audio>
-<audio id="bombSound">
-    <source src="https://www.soundjay.com/mechanical/sounds/explosion-02.mp3" type="audio/mpeg">
-</audio>
+    <audio id="jetSnd" loop src="https://www.soundjay.com/transportation/sounds/jet-flying-1.mp3"></audio>
+    <audio id="winSnd" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+    <audio id="bombSnd" src="https://www.soundjay.com/mechanical/sounds/explosion-02.mp3"></audio>
 
-<div class="game-box">
-    <h2 style="color: #ff003c; margin-top: 0;">AVIATOR PRO</h2>
-    <div id="balance" style="color: #28a745; margin-bottom: 10px;">💰 1,000.00 ETB</div>
-    
-    <div class="screen">
+    <div class="header">
+        <div class="user-info">
+            <span class="user-name" id="tgName">ተጫዋች</span>
+        </div>
+        <div class="balance-box" id="userBal">0.00 ETB</div>
+    </div>
+
+    <div class="modal-btns">
+        <button class="wallet-btn" onclick="addMoney()">➕ ገቢ (Deposit)</button>
+        <button class="wallet-btn" onclick="withdrawMoney()">➖ ወጪ (Withdraw)</button>
+    </div>
+
+    <div class="game-screen">
+        <div id="history"></div>
         <div id="multiplier">1.00x</div>
         <canvas id="gameCanvas"></canvas>
     </div>
 
-    <input type="number" id="betAmount" value="10.00">
-    <button id="betBtn" class="btn bet-btn" onclick="startRound()">BET</button>
-    <button id="cashBtn" class="btn cash-btn" onclick="cashOut()">CASH OUT</button>
-    <p style="font-size: 10px; color: #555; margin-top: 10px;">ድምፅ ለመስማት ስልክዎ Silent ላይ አለመሆኑን ያረጋግጡ</p>
-</div>
+    <div class="controls">
+        <div class="input-group">
+            <label style="font-size: 11px; color: #888;">መጠን (ETB)</label>
+            <input type="number" id="betAmount" value="10.00">
+            <button id="betBtn" class="btn bet-btn" onclick="handleBet()">BET</button>
+            <button id="cashBtn" class="btn cash-btn" onclick="handleCashOut()">CASH OUT</button>
+        </div>
+        <div class="input-group">
+            <label style="font-size: 11px; color: #888;">Auto Stop (x)</label>
+            <input type="number" id="autoStop" placeholder="2.00">
+            <div style="font-size: 10px; color: #555; text-align: center; margin-top: 5px;">አውሮፕላኑ እዚህ ሲደርስ በራሱ ያቆማል</div>
+        </div>
+    </div>
 
 <script>
+    // Telegram WebApp Initialization
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+    
+    // User Data Handling
+    const tgUser = tg.initDataUnsafe?.user;
+    document.getElementById('tgName').innerText = tgUser ? tgUser.first_name : "Dai Player";
+
+    // Balance Logic (LocalStorage በመጠቀም ሂሳብ መመዝገብ)
+    let balance = parseFloat(localStorage.getItem('aviator_bal')) || 1000.00;
+    function updateBalUI() {
+        document.getElementById('userBal').innerText = balance.toFixed(2) + " ETB";
+        localStorage.setItem('aviator_bal', balance);
+    }
+    updateBalUI();
+
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const multDisplay = document.getElementById('multiplier');
-    const balDisplay = document.getElementById('balance');
-    
-    const jetSnd = document.getElementById('jetSound');
-    const moneySnd = document.getElementById('moneySound');
-    const bombSnd = document.getElementById('bombSound');
+    const jetSnd = document.getElementById('jetSnd');
+    const winSnd = document.getElementById('winSnd');
+    const bombSnd = document.getElementById('bombSnd');
 
-    let balance = 1000.00;
-    let multiplier = 1.00;
     let isFlying = false;
+    let multiplier = 1.00;
     let crashPoint;
     let animationId;
+    let currentBet = 0;
 
-    function startRound() {
+    function handleBet() {
         const amt = parseFloat(document.getElementById('betAmount').value);
-        if (amt > balance) return alert("ሂሳብ የሎትም!");
-        
+        if (amt > balance || amt <= 0) return alert("በቂ ሂሳብ የሎትም!");
+
         balance -= amt;
-        balDisplay.innerText = "💰 " + balance.toFixed(2) + " ETB";
-        
+        currentBet = amt;
+        updateBalUI();
+
         isFlying = true;
         multiplier = 1.00;
-        // 40% House Edge Logic
-        crashPoint = Math.random() < 0.4 ? (Math.random() * 0.2 + 1.01) : (Math.random() * 5 + 1.2);
+        
+        // 40% House Profit Logic (ባለቤቱ እንዲያተርፍ)
+        let chance = Math.random();
+        crashPoint = (chance < 0.40) ? (Math.random() * 0.18 + 1.01) : (Math.random() * 5 + 1.2);
 
         document.getElementById('betBtn').style.display = 'none';
         document.getElementById('cashBtn').style.display = 'block';
         multDisplay.style.color = "white";
 
-        // ድምፅ ማስነሻ
-        jetSnd.currentTime = 0;
-        jetSnd.play().catch(e => console.log("Audio Play Error:", e));
-
+        jetSnd.play();
         animate();
     }
 
     function animate() {
         if (!isFlying) return;
-        multiplier += 0.008 * Math.sqrt(multiplier);
+
+        multiplier += 0.007 * Math.sqrt(multiplier);
         multDisplay.innerText = multiplier.toFixed(2) + "x";
-        draw();
-        if (multiplier >= crashPoint) { explode(); return; }
+
+        // Auto Stop Logic
+        const auto = parseFloat(document.getElementById('autoStop').value);
+        if (auto > 1 && multiplier >= auto) {
+            handleCashOut();
+            return;
+        }
+
+        if (multiplier >= crashPoint) {
+            crash();
+            return;
+        }
+
+        drawPlane();
         animationId = requestAnimationFrame(animate);
     }
 
-    function draw() {
+    function drawPlane() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const x = (multiplier - 1) * 60;
-        const y = canvas.height - ((multiplier - 1) * 40);
-        
+        const x = (multiplier - 1) * 70;
+        const y = canvas.height - ((multiplier - 1) * 50);
+
         ctx.strokeStyle = "#ff003c";
-        ctx.lineWidth = 5;
-        ctx.shadowBlur = 10;
+        ctx.lineWidth = 6;
+        ctx.shadowBlur = 15;
         ctx.shadowColor = "red";
         ctx.beginPath();
         ctx.moveTo(0, canvas.height);
         ctx.quadraticCurveTo(x/2, canvas.height, x, y);
         ctx.stroke();
 
-        ctx.font = "40px Arial";
-        ctx.fillText("✈️", x - 20, y + 15);
+        ctx.font = "50px Arial";
+        ctx.fillText("✈️", x - 25, y + 15);
     }
 
-    function explode() {
+    function crash() {
         isFlying = false;
         jetSnd.pause();
         bombSnd.play();
         multDisplay.innerText = "FLEW AWAY!";
         multDisplay.style.color = "#ff4444";
-        stopGame();
+        addHistory(multiplier);
+        resetUI();
     }
 
-    function cashOut() {
+    function handleCashOut() {
         if (!isFlying) return;
-        const win = parseFloat(document.getElementById('betAmount').value) * multiplier;
-        balance += win;
-        balDisplay.innerText = "💰 " + balance.toFixed(2) + " ETB";
-        
         isFlying = false;
         jetSnd.pause();
-        moneySnd.play();
+        winSnd.play();
+
+        const winnings = currentBet * multiplier;
+        balance += winnings;
+        updateBalUI();
+
         multDisplay.style.color = "#28a745";
-        stopGame();
+        addHistory(multiplier);
+        resetUI();
+        alert(`አሸንፈዋል! ${winnings.toFixed(2)} ETB`);
     }
 
-    function stopGame() {
+    function resetUI() {
         document.getElementById('betBtn').style.display = 'block';
         document.getElementById('cashBtn').style.display = 'none';
         cancelAnimationFrame(animationId);
     }
 
-    canvas.width = 400; canvas.height = 250;
-</script>
+    function addHistory(m) {
+        const h = document.getElementById('history');
+        const span = document.createElement('span');
+        span.className = 'hist-tag';
+        span.innerText = m.toFixed(2) + 'x';
+        h.prepend(span);
+    }
 
+    // Wallet Functions
+    function addMoney() {
+        let amt = prompt("የሚጨምሩትን የገንዘብ መጠን ያስገቡ (ETB):");
+        if (amt && !isNaN(amt)) {
+            balance += parseFloat(amt);
+            updateBalUI();
+        }
+    }
+
+    function withdrawMoney() {
+        let amt = prompt("ወጪ የሚያደርጉትን የገንዘብ መጠን ያስገቡ (ETB):");
+        if (amt && !isNaN(amt) && amt <= balance) {
+            balance -= parseFloat(amt);
+            updateBalUI();
+            alert("ወጪ የማድረጊያ ጥያቄዎ ተልኳል!");
+        } else {
+            alert("በቂ ሂሳብ የሎትም ወይም የተሳሳተ ቁጥር ነው!");
+        }
+    }
+
+    canvas.width = window.innerWidth;
+    canvas.height = 300;
+</script>
 </body>
 </html>
