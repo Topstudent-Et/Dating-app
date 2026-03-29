@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aviator Professional - Dai Tech</title>
+    <title>Aviator Pro Audio - Dai Tech</title>
     <style>
         :root {
-            --primary: #d21f3c; /* Aviator Red */
+            --primary: #d21f3c;
             --secondary: #28a745;
-            --bg-dark: #000000;
+            --bg-dark: #050505;
             --panel-bg: #1c1d22;
         }
 
@@ -32,23 +32,13 @@
             padding: 15px;
         }
 
-        /* Players List */
         .players-panel {
             background: var(--panel-bg);
             border-radius: 12px;
             padding: 15px;
-            overflow-y: auto;
+            overflow-y: hidden;
         }
 
-        .player-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            padding: 10px 0;
-            border-bottom: 1px solid #2d2e35;
-        }
-
-        /* Game Area */
         .game-panel {
             display: flex;
             flex-direction: column;
@@ -83,9 +73,9 @@
             font-size: 5rem;
             font-weight: 900;
             z-index: 10;
+            transition: transform 0.1s;
         }
 
-        /* Controls */
         .bet-controls {
             background: var(--panel-bg);
             border-radius: 15px;
@@ -119,6 +109,8 @@
         .bet-active { background: var(--secondary); color: white; }
         .cashout-active { background: #ffc107; color: black; box-shadow: 0 0 20px rgba(255, 193, 7, 0.4); }
 
+        .player-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #333; font-size: 12px; }
+
         @media (max-width: 768px) {
             .main-container { grid-template-columns: 1fr; }
             .players-panel { display: none; }
@@ -126,6 +118,10 @@
     </style>
 </head>
 <body>
+
+<audio id="engineSound" loop src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+<audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
+<audio id="crashSound" src="https://assets.mixkit.co/active_storage/sfx/123/123-preview.mp3"></audio>
 
 <div class="main-container">
     <div class="players-panel">
@@ -151,7 +147,7 @@
             </div>
             <div>
                 <input type="number" id="autoCashOut" placeholder="Auto Cash Out (e.g 2.00)">
-                <div style="font-size: 12px; color: #777; margin-top: 10px; text-align: center;">ሲስተሙ በራሱ ትርፍህን እንዲያስቀምጥ</div>
+                <div style="font-size: 11px; color: #777; margin-top: 10px; text-align: center;">ድምፅ ለመስማት BET የሚለውን ይጫኑ</div>
             </div>
         </div>
     </div>
@@ -164,6 +160,11 @@
     const balText = document.getElementById('balance-display');
     const mainBtn = document.getElementById('mainBtn');
     
+    // የድምፅ ኤለመንቶች
+    const engineSnd = document.getElementById('engineSound');
+    const winSnd = document.getElementById('winSound');
+    const crashSnd = document.getElementById('crashSound');
+
     let balance = 1000.00;
     let currentBet = 0;
     let multiplier = 1.00;
@@ -179,13 +180,12 @@
     window.onresize = resize;
     resize();
 
-    // 40% ትርፍ እንዲኖር የተደረገ የካስማ ነጥብ (Crash Point Logic)
     function generateCrashPoint() {
         let chance = Math.random();
-        if (chance < 0.40) { // 40% እድል ቶሎ እንዲፈነዳ (ከ 1.00 - 1.20)
-            return (Math.random() * 0.2 + 1.00).toFixed(2);
-        } else { // 60% እድል ረዘም እንዲል
-            return (Math.random() * 8 + 1.21).toFixed(2);
+        if (chance < 0.40) { // 40% House Edge (ትርፍህ)
+            return (Math.random() * 0.15 + 1.01).toFixed(2);
+        } else {
+            return (Math.random() * 5 + 1.16).toFixed(2);
         }
     }
 
@@ -211,18 +211,25 @@
         mainBtn.innerText = "CASH OUT";
         mainBtn.className = "btn-main cashout-active";
         multText.style.color = "white";
+
+        // ድምፅ ጀምር
+        engineSnd.currentTime = 0;
+        engineSnd.play().catch(e => console.log("Audio play blocked"));
+
         animate();
     }
 
     function animate() {
         if (!isPlaying) return;
 
-        multiplier += 0.005 * Math.pow(multiplier, 0.5); // ተጨባጭ ፍጥነት
+        multiplier += 0.006 * Math.sqrt(multiplier);
         multText.innerText = multiplier.toFixed(2) + "x";
+        
+        // ለቁጥሩ ትንሽ መንቀጥቀጥ (Vibration effect)
+        multText.style.transform = `translate(-50%, -50%) scale(${1 + (multiplier * 0.01)})`;
 
         drawGame();
 
-        // Auto Cash Out
         const auto = parseFloat(document.getElementById('autoCashOut').value);
         if (auto > 1 && multiplier >= auto) {
             cashOut();
@@ -240,55 +247,51 @@
     function drawGame() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        // ደመናዎችን መሳል (Moving Clouds for depth)
-        cloudX -= 2;
+        cloudX -= 3;
         if (cloudX < -200) cloudX = canvas.width;
-        ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+        ctx.fillStyle = "rgba(255, 255, 255, 0.05)";
         ctx.beginPath();
-        ctx.arc(cloudX, 100, 30, 0, Math.PI * 2);
-        ctx.arc(cloudX + 40, 100, 40, 0, Math.PI * 2);
+        ctx.arc(cloudX, 150, 40, 0, Math.PI * 2);
+        ctx.arc(cloudX + 50, 130, 50, 0, Math.PI * 2);
         ctx.fill();
 
         const x = (multiplier - 1) * (canvas.width / 5);
         const y = canvas.height - ((multiplier - 1) * (canvas.height / 5));
 
-        // የመስመሩ አኒሜሽን
         ctx.beginPath();
         ctx.strokeStyle = "var(--primary)";
         ctx.lineWidth = 6;
-        ctx.lineCap = "round";
         ctx.moveTo(0, canvas.height);
         ctx.quadraticCurveTo(x/2, canvas.height, x, y);
         ctx.stroke();
 
-        // Glow Effect
-        ctx.shadowBlur = 20;
-        ctx.shadowColor = "red";
-
-        // ፕሮፌሽናል የአውሮፕላን ምልክት (Plane)
         ctx.font = "50px Arial";
         ctx.save();
         ctx.translate(Math.min(x, canvas.width-80), Math.max(y, 60));
-        ctx.rotate(-Math.PI / 10);
+        ctx.rotate(-Math.PI / 12);
         ctx.fillText("✈️", 0, 0);
         ctx.restore();
-        
-        ctx.shadowBlur = 0;
     }
 
     function crash() {
         isPlaying = false;
         cancelAnimationFrame(animationId);
-        multText.innerText = "FLEW AWAY! ✈️";
-        multText.style.color = "#ff4444";
         
+        engineSnd.pause();
+        crashSnd.play();
+
+        multText.innerText = "FLEW AWAY!";
+        multText.style.color = "#ff4444";
         mainBtn.innerText = "BET";
         mainBtn.className = "btn-main bet-active";
-        currentBet = 0;
     }
 
     function cashOut() {
         if (!isPlaying) return;
+        
+        engineSnd.pause();
+        winSnd.play();
+
         const win = currentBet * multiplier;
         balance += win;
         balText.innerText = "💰 " + balance.toFixed(2) + " ETB";
@@ -301,7 +304,7 @@
         mainBtn.className = "btn-main bet-active";
     }
 
-    // ተጫዋቾችን ማስመሰል
+    // Players logic
     const players = ["Abebe", "Sara", "Kebede", "Mulu", "Dai", "Yonas", "Hanna"];
     setInterval(() => {
         const list = document.getElementById('player-list');
@@ -311,7 +314,7 @@
                 <span style="color: #ffc107;">${(Math.random()*200).toFixed(2)} ETB</span>
             </div>
         `).join('');
-    }, 3000);
+    }, 4000);
 </script>
 
 </body>
