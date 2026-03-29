@@ -7,168 +7,207 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --gold: #ffcc00; --bg: #0b0b0d; --card: #16171b; }
-        body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+        :root { --gold: #ffcc00; --bg: #0b0b0d; --card: #16171b; --red: #ff003c; }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; height: 100vh; }
         
-        /* Header */
         .header { padding: 15px; display: flex; justify-content: space-between; align-items: center; background: #16171b; border-bottom: 1px solid #333; }
-        .user-info { display: flex; align-items: center; gap: 10px; }
-        .avatar { width: 40px; height: 40px; background: var(--gold); border-radius: 50%; color: black; display: flex; align-items: center; justify-content: center; font-weight: bold; }
         .balance-box { background: #1c1d22; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--gold); color: var(--gold); font-weight: bold; }
 
-        /* Navigation */
-        .content { padding: 15px; padding-bottom: 80px; }
-        .page { display: none; }
+        .content { padding: 15px; height: calc(100vh - 140px); overflow-y: auto; }
+        .page { display: none; animation: fadeIn 0.3s; }
         .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Game Cards */
-        .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .game-card { background: var(--card); border-radius: 15px; padding: 15px; text-align: center; border: 1px solid #222; position: relative; }
-        .game-card img { width: 100%; border-radius: 10px; margin-bottom: 10px; }
-        .badge { position: absolute; top: 10px; left: 10px; background: red; font-size: 10px; padding: 2px 6px; border-radius: 5px; }
+        /* Aviator Animation */
+        .aviator-env { height: 200px; background: #050505; position: relative; overflow: hidden; border-radius: 10px; margin-bottom: 20px; border: 1px solid #333; }
+        .plane { position: absolute; bottom: 20px; left: 20px; font-size: 30px; color: var(--red); transition: all 0.1s linear; z-index: 10; }
+        .line-canvas { position: absolute; bottom: 35px; left: 35px; width: 0; height: 0; border-left: 2px solid var(--red); border-bottom: 2px solid var(--red); transform-origin: bottom left; }
 
-        /* Play Section */
-        .play-area { text-align: center; background: #111; padding: 20px; border-radius: 15px; border: 1px solid var(--gold); }
-        .btn-play { background: var(--gold); color: black; border: none; padding: 12px 30px; border-radius: 10px; font-weight: bold; width: 100%; margin-top: 15px; }
-        input { width: 80%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; background: #222; color: white; text-align: center; }
+        /* Bingo Styles */
+        .scratch-card { width: 200px; height: 100px; background: #444; margin: 20px auto; display: flex; align-items: center; justify-content: center; border-radius: 10px; cursor: pointer; position: relative; overflow: hidden; }
+        .scratch-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(45deg, #888, #555); transition: 0.5s; }
+        .scratched .scratch-overlay { transform: translateY(-100%); }
 
-        /* Bottom Nav */
+        /* Forms */
+        .form-group { background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #333; margin-top: 10px; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #444; background: #222; color: white; box-sizing: border-box; }
+        .btn-gold { background: var(--gold); color: black; border: none; padding: 12px; border-radius: 8px; font-weight: bold; width: 100%; cursor: pointer; }
+
         .nav { position: fixed; bottom: 0; width: 100%; background: #16171b; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
-        .nav-item { color: #777; font-size: 12px; text-align: center; }
+        .nav-item { color: #777; font-size: 12px; text-align: center; cursor: pointer; }
         .nav-item.active { color: var(--gold); }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="user-info">
-            <div class="avatar" id="av">U</div>
-            <div>
-                <div id="u_name" style="font-size: 14px; font-weight: bold;">Loading...</div>
-                <div id="u_id" style="font-size: 10px; color: #777;">ID: 0000</div>
-            </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <div id="av" style="width: 35px; height: 35px; background: var(--gold); border-radius: 50%; color: black; display: flex; align-items: center; justify-content: center; font-weight: bold;">U</div>
+            <div id="u_name" style="font-size: 14px; font-weight: bold;">Player</div>
         </div>
-        <div class="balance-box"><span id="bal">1.00</span> ETB</div>
+        <div class="balance-box"><span id="bal">0.00</span> ETB</div>
     </div>
 
     <div class="content">
         <div id="home" class="page active">
-            <h3 style="margin-bottom: 5px;">Top Games</h3>
-            <div class="game-grid">
-                <div class="game-card" onclick="openGame('Bingo')">
-                    <span class="badge">HOT</span>
-                    <i class="fas fa-dice" style="font-size: 40px; color: #8a2be2;"></i>
-                    <h4>BINGO PRO</h4>
-                    <p style="font-size: 10px; color: #777;">1.2k Players</p>
-                </div>
-                <div class="game-card" onclick="openGame('Aviator')">
-                    <span class="badge" style="background: #ff003c;">NEW</span>
-                    <i class="fas fa-plane" style="font-size: 40px; color: #ff003c;"></i>
+            <h3>Top Games</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div style="background: var(--card); padding: 20px; border-radius: 15px; text-align: center;" onclick="showPage('aviator')">
+                    <i class="fas fa-plane" style="font-size: 40px; color: var(--red);"></i>
                     <h4>AVIATOR</h4>
-                    <p style="font-size: 10px; color: #777;">5.1k Players</p>
+                </div>
+                <div style="background: var(--card); padding: 20px; border-radius: 15px; text-align: center;" onclick="showPage('bingo')">
+                    <i class="fas fa-dice" style="font-size: 40px; color: #8a2be2;"></i>
+                    <h4>BINGO</h4>
                 </div>
             </div>
         </div>
 
-        <div id="aviator_game" class="page">
-            <button onclick="goHome()" style="background: none; border: none; color: var(--gold); margin-bottom: 10px;"><i class="fas fa-arrow-left"></i> Back</button>
-            <div class="play-area">
-                <h2 style="color: #ff003c;">AVIATOR 🚀</h2>
-                <div id="multiplier" style="font-size: 40px; font-weight: bold; margin: 20px 0;">1.00x</div>
-                <input type="number" id="betAmount" placeholder="Enter Bet (min 10 ETB)">
-                <button class="btn-play" id="flyBtn" onclick="startAviator()">BET</button>
+        <div id="aviator" class="page">
+            <h4 onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Back</h4>
+            <div class="aviator-env">
+                <div id="plane" class="plane"><i class="fas fa-plane"></i></div>
+                <div id="mult" style="position: absolute; width: 100%; text-align: center; top: 40%; font-size: 40px; font-weight: bold;">1.00x</div>
+            </div>
+            <input type="number" id="aviBet" placeholder="Bet Amount">
+            <button class="btn-gold" id="aviBtn" onclick="startAviator()">BET</button>
+        </div>
+
+        <div id="bingo" class="page">
+            <h4 onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Back</h4>
+            <div id="bingoCard" class="scratch-card">
+                <div class="scratch-overlay"></div>
+                <div id="bingoRes" style="font-size: 24px; font-weight: bold;">?</div>
+            </div>
+            <input type="number" id="bingoBet" placeholder="Bet Amount">
+            <button class="btn-gold" onclick="playBingo()">SCRATCH & PLAY</button>
+        </div>
+
+        <div id="deposit" class="page">
+            <h3>Deposit Money</h3>
+            <div class="form-group">
+                <p style="font-size: 13px; color: #ccc;">Send minimum <b>50 ETB</b> to:</p>
+                <p style="color: var(--gold); font-weight: bold;">Dawit - 0906067696 (Telebirr)</p>
+                <button class="btn-gold" style="background: #222; color: #fff; border: 1px solid #444;" onclick="sendScreenshot()">Submit Screenshot</button>
             </div>
         </div>
 
-        <div id="bingo_game" class="page">
-            <button onclick="goHome()" style="background: none; border: none; color: var(--gold); margin-bottom: 10px;"><i class="fas fa-arrow-left"></i> Back</button>
-            <div class="play-area">
-                <h2 style="color: #8a2be2;">BINGO 🎱</h2>
-                <div id="bingo_res" style="font-size: 20px; margin: 20px 0;">Pick a number & Win!</div>
-                <input type="number" id="bingoBet" placeholder="Enter Bet">
-                <button class="btn-play" onclick="playBingo()">PLAY BINGO</button>
+        <div id="withdraw" class="page">
+            <h3>Withdraw</h3>
+            <div class="form-group">
+                <input type="number" id="winAmt" placeholder="Amount">
+                <select id="method">
+                    <option value="Telebirr">Telebirr</option>
+                    <option value="CBE">CBE</option>
+                </select>
+                <input type="text" id="accInfo" placeholder="Account Number">
+                <button class="btn-gold" onclick="sendWithdraw()">Withdraw Now</button>
             </div>
         </div>
     </div>
 
     <div class="nav">
-        <div class="nav-item active" onclick="goHome()"><i class="fas fa-home"></i><br>Home</div>
-        <div class="nav-item"><i class="fas fa-wallet"></i><br>Wallet</div>
-        <div class="nav-item"><i class="fas fa-gift"></i><br>Bonus</div>
-        <div class="nav-item"><i class="fas fa-user"></i><br>Profile</div>
+        <div class="nav-item active" onclick="showPage('home')"><i class="fas fa-gamepad"></i><br>Games</div>
+        <div class="nav-item" onclick="showPage('deposit')"><i class="fas fa-plus-circle"></i><br>Deposit</div>
+        <div class="nav-item" onclick="showPage('withdraw')"><i class="fas fa-wallet"></i><br>Withdraw</div>
     </div>
 
     <script>
+        const tg = window.Telegram.WebApp;
+        const adminId = "6521426530";
         const urlParams = new URLSearchParams(window.location.search);
-        const uID = urlParams.get('id') || "Guest";
+        const uId = urlParams.get('id');
         const uName = urlParams.get('name') || "Player";
-        const uUser = urlParams.get('user') || "None";
 
-        document.getElementById('u_name').innerText = uName;
-        document.getElementById('u_id').innerText = "ID: " + uID;
-        document.getElementById('av').innerText = uName.charAt(0);
-
-        let balance = 100.00; // Starting demo balance
-
-        function openGame(name) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            if(name === 'Aviator') document.getElementById('aviator_game').classList.add('active');
-            if(name === 'Bingo') document.getElementById('bingo_game').classList.add('active');
+        // Initial Balance Logic
+        let balance = parseFloat(localStorage.getItem('user_balance'));
+        if (isNaN(balance)) {
+            balance = 20.00; // First time bonus
+            localStorage.setItem('user_balance', balance);
+            alert("Welcome! You received 20 ETB Bonus! 🎉");
         }
 
-        function goHome() {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById('home').classList.add('active');
-        }
-
-        // Aviator Logic (40% House Edge)
-        function startAviator() {
-            let bet = parseFloat(document.getElementById('betAmount').value);
-            if(isNaN(bet) || bet > balance) return alert("Invalid Balance!");
-            
-            balance -= bet;
+        function updateUI() {
             document.getElementById('bal').innerText = balance.toFixed(2);
+            document.getElementById('u_name').innerText = uName;
+            document.getElementById('av').innerText = uName.charAt(0);
+            localStorage.setItem('user_balance', balance);
+        }
+        updateUI();
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        }
+
+        // Aviator Logic
+        function startAviator() {
+            let bet = parseFloat(document.getElementById('aviBet').value);
+            if(bet > balance || bet < 1) return alert("Invalid Balance!");
             
-            let flyBtn = document.getElementById('flyBtn');
-            flyBtn.disabled = true;
-            flyBtn.innerText = "FLYING...";
+            balance -= bet; updateUI();
+            let plane = document.getElementById('plane');
+            let multText = document.getElementById('mult');
+            let m = 1.00;
+            let crash = Math.random() < 0.4 ? (1 + Math.random()) : (1.5 + Math.random() * 5);
             
-            let mult = 1.00;
-            // 40% probability the plane crashes early (below 1.5x)
-            let crashPoint = Math.random() < 0.4 ? (1 + Math.random() * 0.5) : (1 + Math.random() * 5);
-            
-            let interval = setInterval(() => {
-                mult += 0.05;
-                document.getElementById('multiplier').innerText = mult.toFixed(2) + "x";
+            let fly = setInterval(() => {
+                m += 0.05;
+                multText.innerText = m.toFixed(2) + "x";
+                plane.style.bottom = (20 + (m * 15)) + "px";
+                plane.style.left = (20 + (m * 25)) + "px";
                 
-                if(mult >= crashPoint) {
-                    clearInterval(interval);
-                    document.getElementById('multiplier').style.color = "red";
-                    document.getElementById('multiplier').innerText = "CRASHED at " + mult.toFixed(2) + "x";
-                    flyBtn.disabled = false;
-                    flyBtn.innerText = "BET AGAIN";
+                if(m >= crash) {
+                    clearInterval(fly);
+                    multText.style.color = "red";
+                    multText.innerText = "FLEW AWAY!";
+                    setTimeout(() => { 
+                        plane.style.bottom = "20px"; plane.style.left = "20px"; 
+                        multText.style.color = "white"; multText.innerText = "1.00x";
+                    }, 2000);
                 }
             }, 100);
         }
 
-        // Bingo Logic (40% House Edge)
+        // Bingo Logic
         function playBingo() {
             let bet = parseFloat(document.getElementById('bingoBet').value);
-            if(isNaN(bet) || bet > balance) return alert("Invalid Balance!");
+            if(bet > balance) return alert("Low Balance!");
             
-            // 40% chance of losing regardless of "luck"
-            let win = Math.random() > 0.4; 
-            if(win) {
-                let winAmt = bet * 1.8;
-                balance += winAmt;
-                document.getElementById('bingo_res').innerText = "🎉 WIN! + " + winAmt + " ETB";
-                document.getElementById('bingo_res').style.color = "lime";
-            } else {
-                balance -= bet;
-                document.getElementById('bingo_res').innerText = "❌ Better luck next time!";
-                document.getElementById('bingo_res').style.color = "red";
-            }
-            document.getElementById('bal').innerText = balance.toFixed(2);
+            document.getElementById('bingoCard').classList.remove('scratched');
+            setTimeout(() => {
+                document.getElementById('bingoCard').classList.add('scratched');
+                let win = Math.random() > 0.4;
+                if(win) {
+                    let prize = bet * 1.8; balance += prize;
+                    document.getElementById('bingoRes').innerText = "WIN " + prize + "!";
+                    document.getElementById('bingoRes').style.color = "lime";
+                } else {
+                    balance -= bet;
+                    document.getElementById('bingoRes').innerText = "LOSE!";
+                    document.getElementById('bingoRes').style.color = "red";
+                }
+                updateUI();
+            }, 500);
+        }
+
+        // Admin Communication
+        function sendScreenshot() {
+            tg.sendData(JSON.stringify({type: "deposit_request", id: uId}));
+            alert("Please send the screenshot to the Admin now!");
+        }
+
+        function sendWithdraw() {
+            let amt = document.getElementById('winAmt').value;
+            let acc = document.getElementById('accInfo').value;
+            let method = document.getElementById('method').value;
+            
+            if(amt > balance) return alert("Insufficient balance!");
+            
+            let data = `Withdraw Request:\nID: ${uId}\nName: ${uName}\nAmount: ${amt} ETB\nMethod: ${method}\nAccount: ${acc}`;
+            tg.sendData(data); // This sends data back to Bots.business
+            alert("Withdrawal request sent to Admin!");
         }
     </script>
 </body>
