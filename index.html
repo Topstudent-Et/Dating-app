@@ -1,50 +1,159 @@
-<!-- Aviator Game DEMO -->
-<div id="aviator-game" style="border:2px solid #333; width:300px; padding:20px; margin:30px auto;">
-  <h2>Aviator Game</h2>
-  <div id="aviator-plane" style="font-size:40px;">🛩️</div>
-  <h3 id="multiplier">1.00x</h3>
-  <button id="start-btn">Start</button>
-<script>
-const startBtn = document.getElementById('start-btn');
-const multiplierElem = document.getElementById('multiplier');
-const planeElem = document.getElementById('aviator-plane');
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avatar Game - Dai Edition</title>
+    <style>
+        /* CSS - የገጹ ውበት */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a2e;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
 
-let multiplier = 1;
-let animation;
-let planeTop = 0;
-let planeLeft = 0;
+        .game-container {
+            background: #16213e;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
 
-function startGame() {
-  multiplier = 1;
-  planeTop = 0;
-  planeLeft = 0;
-  multiplierElem.textContent = multiplier.toFixed(2) + "x";
-  planeElem.style.position = 'relative';
-  planeElem.style.top = '0px';
-  planeElem.style.left = '0px';
+        .avatar-preview {
+            width: 200px;
+            height: 200px;
+            background: #0f3460;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            position: relative;
+            overflow: hidden;
+            border: 5px solid #e94560;
+        }
 
-  animation = setInterval(() => {
-    // multiplier ይጨምር
-    multiplier += 0.01 + multiplier * 0.02;
-    multiplierElem.textContent = multiplier.toFixed(2) + "x";
+        .avatar-part {
+            position: absolute;
+            transition: all 0.3s ease;
+        }
 
-    // ፔላን እንዲሄድ 
-    planeTop -= 2;      // Upwards
-    planeLeft += 4;     // Rightwards
+        .face { width: 100%; height: 100%; background: #ffdbac; border-radius: 50%; top: 0; left: 0; }
+        .eyes { top: 35%; width: 100%; display: flex; justify-content: space-around; font-size: 30px; }
+        .mouth { bottom: 20%; width: 100%; text-align: center; font-size: 30px; }
+        .hair { top: -10%; width: 100%; text-align: center; font-size: 80px; }
 
-    planeElem.style.top = planeTop + 'px';
-    planeElem.style.left = planeLeft + 'px';
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
 
-    // multiplier 15x ከደረሰ stop
-    if (multiplier >= 15) {
-      clearInterval(animation);
-    }
-  }, 50); // የፍጥነት እና የመለዋወጫ ዘመን
-}
+        button {
+            background-color: #e94560;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
 
-startBtn.onclick = function() {
-  clearInterval(animation); // አስቀድሞ የቆሰለ ካለ ይቆም
-  startGame();
-};
-</script>
-
+        button:active { transform: scale(0.95); }
+
+        .color-picker {
+            margin-top: 15px;
+            width: 100%;
+            height: 40px;
+            border: none;
+            cursor: pointer;
+        }
+
+        h1 { font-size: 1.5rem; margin-bottom: 10px; color: #4ecca3; }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1>የአቫታር ፈጠራ</h1>
+        
+        <div class="avatar-preview" id="avatar">
+            <div class="face" id="facePart"></div>
+            <div class="hair" id="hairPart">👦</div>
+            <div class="eyes" id="eyePart">
+                <span>👁️</span><span>👁️</span>
+            </div>
+            <div class="mouth" id="mouthPart">👄</div>
+        </div>
+
+        <div class="controls">
+            <button onclick="changePart('hair')">ፀጉር ቀይር</button>
+            <button onclick="changePart('eye')">አይን ቀይር</button>
+            <button onclick="changePart('mouth')">አፍ ቀይር</button>
+            <button onclick="randomize()">Randomize</button>
+        </div>
+
+        <p>የቆዳ ቀለም ምረጥ፡</p>
+        <input type="color" class="color-picker" id="skinColor" value="#ffdbac" oninput="changeSkin()">
+        
+        <button style="width: 100%; margin-top: 15px; background-color: #4ecca3;" onclick="downloadAvatar()">አቫታሩን ሴቭ አድርግ</button>
+    </div>
+
+    <script>
+        // JavaScript - የጨዋታው እንቅስቃሴ
+        const hairs = ['👦', '👱', '👨‍🦱', '👨‍🦲', '👳', '👲', '🧔'];
+        const eyes = [
+            '<span>👁️</span><span>👁️</span>',
+            '<span>🕶️</span><span>🕶️</span>',
+            '<span>😎</span><span>😎</span>',
+            '<span>🤩</span><span>🤩</span>',
+            '<span>😉</span><span>😉</span>'
+        ];
+        const mouths = ['👄', '😊', '😋', '😎', '😂', '😐'];
+
+        let hIdx = 0;
+        let eIdx = 0;
+        let mIdx = 0;
+
+        function changePart(part) {
+            if(part === 'hair') {
+                hIdx = (hIdx + 1) % hairs.length;
+                document.getElementById('hairPart').innerText = hairs[hIdx];
+            } else if(part === 'eye') {
+                eIdx = (eIdx + 1) % eyes.length;
+                document.getElementById('eyePart').innerHTML = eyes[eIdx];
+            } else if(part === 'mouth') {
+                mIdx = (mIdx + 1) % mouths.length;
+                document.getElementById('mouthPart').innerText = mouths[mIdx];
+            }
+        }
+
+        function changeSkin() {
+            const color = document.getElementById('skinColor').value;
+            document.getElementById('facePart').style.backgroundColor = color;
+        }
+
+        function randomize() {
+            hIdx = Math.floor(Math.random() * hairs.length);
+            eIdx = Math.floor(Math.random() * eyes.length);
+            mIdx = Math.floor(Math.random() * mouths.length);
+            
+            document.getElementById('hairPart').innerText = hairs[hIdx];
+            document.getElementById('eyePart').innerHTML = eyes[eIdx];
+            document.getElementById('mouthPart').innerText = mouths[mIdx];
+        }
+
+        function downloadAvatar() {
+            alert("አቫታርህ በተሳካ ሁኔታ ተፈጥሯል! (ለቴሌግራም ሚኒ አፕ ተዘጋጅቷል)");
+        }
+    </script>
+
+</body>
+</html>
