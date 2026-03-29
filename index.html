@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aviator Pro - Dai Tech</title>
+    <title>Aviator Professional - Dai Tech</title>
     <style>
         :root {
-            --primary: #e91e63;
+            --primary: #d21f3c; /* Aviator Red */
             --secondary: #28a745;
-            --bg-dark: #14151a;
+            --bg-dark: #000000;
             --panel-bg: #1c1d22;
         }
 
@@ -16,7 +16,7 @@
             margin: 0;
             background-color: var(--bg-dark);
             color: white;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             display: flex;
             justify-content: center;
             height: 100vh;
@@ -25,34 +25,30 @@
 
         .main-container {
             width: 100%;
-            max-width: 900px;
+            max-width: 1000px;
             display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 10px;
-            padding: 10px;
+            grid-template-columns: 300px 1fr;
+            gap: 15px;
+            padding: 15px;
         }
 
-        /* የተጫዋቾች ዝርዝር (Left Panel) */
+        /* Players List */
         .players-panel {
             background: var(--panel-bg);
-            border-radius: 10px;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
+            border-radius: 12px;
+            padding: 15px;
+            overflow-y: auto;
         }
 
         .player-row {
             display: flex;
             justify-content: space-between;
-            font-size: 12px;
-            padding: 8px 0;
+            font-size: 13px;
+            padding: 10px 0;
             border-bottom: 1px solid #2d2e35;
         }
 
-        .player-name { color: #aaa; }
-        .player-bet { color: #fff; font-weight: bold; }
-
-        /* የጨዋታው ክፍል (Right Panel) */
+        /* Game Area */
         .game-panel {
             display: flex;
             flex-direction: column;
@@ -61,27 +57,22 @@
 
         .top-bar {
             background: var(--panel-bg);
-            padding: 10px 20px;
-            border-radius: 10px;
+            padding: 12px 25px;
+            border-radius: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        #balance-display {
-            color: var(--secondary);
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
+        #balance-display { color: var(--secondary); font-weight: bold; font-size: 1.2rem; }
 
-        /* ካንቫስ */
         .canvas-container {
             position: relative;
-            background: #000;
+            background: radial-gradient(circle, #2a0a0e 0%, #000000 100%);
             border-radius: 15px;
-            height: 350px;
+            height: 400px;
             overflow: hidden;
-            border: 1px solid #333;
+            border: 2px solid #333;
         }
 
         #multiplier {
@@ -89,52 +80,46 @@
             top: 40%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 4rem;
+            font-size: 5rem;
             font-weight: 900;
-            z-index: 5;
+            z-index: 10;
         }
 
-        /* የመጫወቻ መቆጣጠሪያ (Bottom) */
+        /* Controls */
         .bet-controls {
             background: var(--panel-bg);
             border-radius: 15px;
-            padding: 20px;
+            padding: 25px;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
 
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
         input {
             background: #14151a;
-            border: 1px solid #333;
+            border: 1px solid #444;
             color: white;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 1.1rem;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.2rem;
             text-align: center;
+            width: 100%;
         }
 
         .btn-main {
-            height: 60px;
+            height: 70px;
             border: none;
             border-radius: 12px;
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             font-weight: bold;
             cursor: pointer;
-            text-transform: uppercase;
+            transition: 0.3s;
         }
 
         .bet-active { background: var(--secondary); color: white; }
-        .cashout-active { background: #ffc107; color: black; }
-        .disabled { background: #444; cursor: not-allowed; }
+        .cashout-active { background: #ffc107; color: black; box-shadow: 0 0 20px rgba(255, 193, 7, 0.4); }
 
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .main-container { grid-template-columns: 1fr; }
             .players-panel { display: none; }
         }
@@ -144,15 +129,14 @@
 
 <div class="main-container">
     <div class="players-panel">
-        <h3 style="font-size: 14px; color: #888;">All Bets</h3>
-        <div id="player-list">
-            </div>
+        <h3 style="font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px;">ተጫዋቾች (LIVE)</h3>
+        <div id="player-list"></div>
     </div>
 
     <div class="game-panel">
         <div class="top-bar">
-            <span style="color: var(--primary); font-weight: bold;">AVIATOR</span>
-            <div id="balance-display">1,000.00 ETB</div>
+            <span style="color: var(--primary); font-weight: bold; font-size: 1.5rem;">AVIATOR</span>
+            <div id="balance-display">💰 1,000.00 ETB</div>
         </div>
 
         <div class="canvas-container">
@@ -161,15 +145,13 @@
         </div>
 
         <div class="bet-controls">
-            <div class="input-group">
-                <label style="font-size: 12px; color: #888;">መወራረድ የሚፈልጉት መጠን</label>
+            <div>
                 <input type="number" id="betAmount" value="10.00">
-                <button id="mainBtn" class="btn-main bet-active" onclick="handleButtonClick()">BET</button>
+                <button id="mainBtn" class="btn-main bet-active" style="width: 100%; margin-top: 10px;" onclick="handleButtonClick()">BET</button>
             </div>
-            <div class="input-group">
-                <label style="font-size: 12px; color: #888;">Auto Cash Out (አማራጭ)</label>
-                <input type="number" id="autoCashOut" placeholder="2.00">
-                <div style="font-size: 11px; color: #555; text-align: center;">ቁጥሩ ሲደርስ በራሱ ያቆማል</div>
+            <div>
+                <input type="number" id="autoCashOut" placeholder="Auto Cash Out (e.g 2.00)">
+                <div style="font-size: 12px; color: #777; margin-top: 10px; text-align: center;">ሲስተሙ በራሱ ትርፍህን እንዲያስቀምጥ</div>
             </div>
         </div>
     </div>
@@ -188,6 +170,7 @@
     let isPlaying = false;
     let crashPoint;
     let animationId;
+    let cloudX = 0;
 
     function resize() {
         canvas.width = canvas.parentElement.offsetWidth;
@@ -196,28 +179,24 @@
     window.onresize = resize;
     resize();
 
-    // የተጫዋቾች ዝርዝር ማስመሰያ
-    const names = ["Abebe", "Sara", "Kebede", "Mulu", "Dai", "Yonas"];
-    function updatePlayers() {
-        const list = document.getElementById('player-list');
-        list.innerHTML = names.map(n => `
-            <div class="player-row">
-                <span class="player-name">👤 ${n}</span>
-                <span class="player-bet">${(Math.random()*100).toFixed(2)} ETB</span>
-            </div>
-        `).join('');
+    // 40% ትርፍ እንዲኖር የተደረገ የካስማ ነጥብ (Crash Point Logic)
+    function generateCrashPoint() {
+        let chance = Math.random();
+        if (chance < 0.40) { // 40% እድል ቶሎ እንዲፈነዳ (ከ 1.00 - 1.20)
+            return (Math.random() * 0.2 + 1.00).toFixed(2);
+        } else { // 60% እድል ረዘም እንዲል
+            return (Math.random() * 8 + 1.21).toFixed(2);
+        }
     }
-    updatePlayers();
 
     function handleButtonClick() {
         if (!isPlaying && mainBtn.innerText === "BET") {
             const amt = parseFloat(document.getElementById('betAmount').value);
-            if (amt > balance) return alert("በቂ ሂሳብ የሎትም!");
+            if (amt > balance || amt <= 0) return alert("በቂ ሂሳብ የሎትም!");
             
             currentBet = amt;
             balance -= amt;
-            balText.innerText = balance.toFixed(2) + " ETB";
-            
+            balText.innerText = "💰 " + balance.toFixed(2) + " ETB";
             startRound();
         } else if (isPlaying) {
             cashOut();
@@ -227,24 +206,23 @@
     function startRound() {
         isPlaying = true;
         multiplier = 1.00;
-        crashPoint = (Math.random() * 5 + 1.1).toFixed(2);
+        crashPoint = generateCrashPoint();
         
         mainBtn.innerText = "CASH OUT";
         mainBtn.className = "btn-main cashout-active";
         multText.style.color = "white";
-
         animate();
     }
 
     function animate() {
         if (!isPlaying) return;
 
-        multiplier += 0.004 * Math.sqrt(multiplier);
+        multiplier += 0.005 * Math.pow(multiplier, 0.5); // ተጨባጭ ፍጥነት
         multText.innerText = multiplier.toFixed(2) + "x";
 
-        drawPlane();
+        drawGame();
 
-        // Auto Cash Out check
+        // Auto Cash Out
         const auto = parseFloat(document.getElementById('autoCashOut').value);
         if (auto > 1 && multiplier >= auto) {
             cashOut();
@@ -259,29 +237,49 @@
         animationId = requestAnimationFrame(animate);
     }
 
-    function drawPlane() {
+    function drawGame() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        const x = (multiplier - 1) * (canvas.width / 4);
-        const y = canvas.height - ((multiplier - 1) * (canvas.height / 4));
-
-        // Curve Line
+        // ደመናዎችን መሳል (Moving Clouds for depth)
+        cloudX -= 2;
+        if (cloudX < -200) cloudX = canvas.width;
+        ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
         ctx.beginPath();
-        ctx.strokeStyle = "#e91e63";
-        ctx.lineWidth = 4;
+        ctx.arc(cloudX, 100, 30, 0, Math.PI * 2);
+        ctx.arc(cloudX + 40, 100, 40, 0, Math.PI * 2);
+        ctx.fill();
+
+        const x = (multiplier - 1) * (canvas.width / 5);
+        const y = canvas.height - ((multiplier - 1) * (canvas.height / 5));
+
+        // የመስመሩ አኒሜሽን
+        ctx.beginPath();
+        ctx.strokeStyle = "var(--primary)";
+        ctx.lineWidth = 6;
+        ctx.lineCap = "round";
         ctx.moveTo(0, canvas.height);
         ctx.quadraticCurveTo(x/2, canvas.height, x, y);
         ctx.stroke();
 
-        // Plane Icon (እውነተኛ አቪዬተር እንዲመስል)
-        ctx.font = "40px Arial";
-        ctx.fillText("✈️", Math.min(x, canvas.width-60), Math.max(y, 40));
+        // Glow Effect
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = "red";
+
+        // ፕሮፌሽናል የአውሮፕላን ምልክት (Plane)
+        ctx.font = "50px Arial";
+        ctx.save();
+        ctx.translate(Math.min(x, canvas.width-80), Math.max(y, 60));
+        ctx.rotate(-Math.PI / 10);
+        ctx.fillText("✈️", 0, 0);
+        ctx.restore();
+        
+        ctx.shadowBlur = 0;
     }
 
     function crash() {
         isPlaying = false;
         cancelAnimationFrame(animationId);
-        multText.innerText = "FLEW AWAY!";
+        multText.innerText = "FLEW AWAY! ✈️";
         multText.style.color = "#ff4444";
         
         mainBtn.innerText = "BET";
@@ -293,16 +291,27 @@
         if (!isPlaying) return;
         const win = currentBet * multiplier;
         balance += win;
-        balText.innerText = balance.toFixed(2) + " ETB";
+        balText.innerText = "💰 " + balance.toFixed(2) + " ETB";
         
         isPlaying = false;
         cancelAnimationFrame(animationId);
         
-        multText.style.color = "#28a745";
+        multText.style.color = "var(--secondary)";
         mainBtn.innerText = "BET";
         mainBtn.className = "btn-main bet-active";
-        alert(`እንኳን ደስ አለህ! ${win.toFixed(2)} ETB አሸንፈሃል።`);
     }
+
+    // ተጫዋቾችን ማስመሰል
+    const players = ["Abebe", "Sara", "Kebede", "Mulu", "Dai", "Yonas", "Hanna"];
+    setInterval(() => {
+        const list = document.getElementById('player-list');
+        list.innerHTML = players.map(n => `
+            <div class="player-row">
+                <span>👤 ${n}</span>
+                <span style="color: #ffc107;">${(Math.random()*200).toFixed(2)} ETB</span>
+            </div>
+        `).join('');
+    }, 3000);
 </script>
 
 </body>
