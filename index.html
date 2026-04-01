@@ -1,63 +1,101 @@
-import React, { useState } from "react"; import { motion } from "framer-motion"; import { Card, CardContent } from "@/components/ui/card"; import { Button } from "@/components/ui/button"; import { Input } from "@/components/ui/input";
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Full Aviator App</title>
+<style>
+body { font-family: Arial; background:#0b0f1a; color:white; margin:0; }
+header { background:#111; padding:15px; text-align:center; color:#00ffcc; }
+.container { padding:20px; }
+button { padding:10px; margin:5px; border:none; border-radius:6px; cursor:pointer; }.bet { background:#00ffcc; } .cash { background:orange; } .deposit { background:green; color:white; } .withdraw { background:red; color:white; }
 
-export default function BettingApp() { const [balance, setBalance] = useState(100); const [betAmount, setBetAmount] = useState(10);
+#multiplier { font-size:40px; margin:20px; } #plane { font-size:30px; animation: fly 5s linear infinite; position:relative; }
 
-const placeBet = () => { if (betAmount <= balance) { setBalance(balance - betAmount); alert("Bet Placed Successfully!"); } else { alert("Insufficient Balance"); } };
+@keyframes fly { 0% { left:-50px; top:50px } 100% { left:100%; top:-50px } }
 
-return ( <div className="min-h-screen bg-black text-white p-4 grid gap-4"> {/* Header */} <div className="text-2xl font-bold text-center">🔥 Betting App</div>
+.panel { background:#111; padding:15px; border-radius:10px; margin-top:20px; } </style>
 
-{/* Match Card */}
-  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-    <Card className="rounded-2xl bg-gray-900 shadow-lg">
-      <CardContent className="p-4 space-y-2">
-        <div className="text-lg font-semibold">Arsenal vs Chelsea</div>
-        <div>Prediction: Over 2.5</div>
-        <div>Odds: 1.95</div>
-        <Input
-          type="number"
-          value={betAmount}
-          onChange={(e) => setBetAmount(Number(e.target.value))}
-          placeholder="Enter Bet Amount"
-        />
-        <Button onClick={placeBet} className="w-full mt-2">
-          Place Bet
-        </Button>
-      </CardContent>
-    </Card>
-  </motion.div>
+</head>
+<body><header>AVIATOR FULL APP ✈️</header><div class="container"><h2>Balance: $<span id="balance">100</span></h2><input type="number" id="betAmount" placeholder="Enter Bet"><div id="plane">✈️</div>
+<div id="multiplier">1.00x</div><button class="bet" onclick="startGame()">Start Bet</button> <button class="cash" onclick="cashOut()">Cash Out</button>
 
-  {/* Aviator Game */}
-  <Card className="rounded-2xl bg-gray-900 shadow-lg">
-    <CardContent className="p-4 space-y-2">
-      <div className="text-lg font-semibold">✈️ Aviator Game</div>
-      <div>Watch multiplier grow and cash out before crash!</div>
-      <Button className="w-full">Play Aviator</Button>
-    </CardContent>
-  </Card>
+<h3 id="result"></h3><div class="panel">
+<h3>Deposit / Withdraw</h3>
+<input type="number" id="amount" placeholder="Amount">
+<button class="deposit" onclick="deposit()">Deposit</button>
+<button class="withdraw" onclick="withdraw()">Withdraw</button>
+</div><div class="panel">
+<h3>Admin Panel</h3>
+<input type="number" id="crashControl" placeholder="Set Crash (e.g 2.5)">
+<button onclick="setCrash()">Set Crash</button>
+</div></div><script>
+let balance = 100;
+let multiplier = 1;
+let interval;
+let playing = false;
+let bet = 0;
+let crashPoint = null;
 
-  {/* Bingo Game */}
-  <Card className="rounded-2xl bg-gray-900 shadow-lg">
-    <CardContent className="p-4 space-y-2">
-      <div className="text-lg font-semibold">🎯 Bingo</div>
-      <div>Join live bingo rooms and win rewards.</div>
-      <Button className="w-full">Play Bingo</Button>
-    </CardContent>
-  </Card>
+function updateBalance() {
+ document.getElementById("balance").innerText = balance.toFixed(2);
+}
 
-  {/* Profile */}
-  <Card className="rounded-2xl bg-gray-900 shadow-lg">
-    <CardContent className="p-4 space-y-2">
-      <div className="text-lg font-semibold">👤 Profile</div>
-      <div>Balance: {balance} Birr</div>
-    </CardContent>
-  </Card>
+function deposit() {
+ let amt = parseFloat(document.getElementById("amount").value);
+ if (!amt) return;
+ balance += amt;
+ updateBalance();
+}
 
-  {/* Bottom Navigation */}
-  <div className="fixed bottom-0 left-0 right-0 bg-gray-800 p-3 flex justify-around text-xl">
-    <div>🏠</div>
-    <div>🔥</div>
-    <div>👤</div>
-  </div>
-</div>
+function withdraw() {
+ let amt = parseFloat(document.getElementById("amount").value);
+ if (!amt || amt > balance) return;
+ balance -= amt;
+ updateBalance();
+}
 
-); }
+function setCrash() {
+ crashPoint = parseFloat(document.getElementById("crashControl").value);
+}
+
+function startGame() {
+ if (playing) return;
+
+ bet = parseFloat(document.getElementById("betAmount").value);
+ if (!bet || bet > balance) return alert("Invalid bet");
+
+ balance -= bet;
+ updateBalance();
+
+ multiplier = 1;
+ playing = true;
+
+ let crash = crashPoint || (Math.random()*5+1);
+
+ interval = setInterval(() => {
+   multiplier += 0.05;
+   document.getElementById("multiplier").innerText = multiplier.toFixed(2)+"x";
+
+   if (multiplier >= crash) {
+     clearInterval(interval);
+     playing = false;
+     document.getElementById("result").innerText = "💥 Crashed at "+crash.toFixed(2);
+   }
+ }, 100);
+}
+
+function cashOut() {
+ if (!playing) return;
+
+ clearInterval(interval);
+ playing = false;
+
+ let win = bet * multiplier;
+ balance += win;
+ updateBalance();
+
+ document.getElementById("result").innerText = "✅ You won $"+win.toFixed(2);
+}
+
+</script></body>
+</html>
