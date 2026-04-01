@@ -3,9 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Telegram Dating — Modern Connection, Private & Safe</title>
-  <!-- Google Fonts & simple CSS reset -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <title>Telegram Dating · Mini App</title>
+  <!-- Telegram WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
+  <!-- Font & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * {
       margin: 0;
@@ -14,576 +17,657 @@
     }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background: #faf8fc;
-      color: #1a1a2e;
-      line-height: 1.4;
-      scroll-behavior: smooth;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--tg-theme-bg-color, #ffffff);
+      color: var(--tg-theme-text-color, #1f1f2f);
+      transition: background 0.2s, color 0.2s;
     }
 
-    .container {
-      max-width: 1280px;
+    /* Main app container */
+    .app-container {
+      max-width: 500px;
       margin: 0 auto;
-      padding: 0 32px;
+      padding: 16px 20px 90px 20px;
     }
 
-    /* gradient accents */
-    .gradient-bg {
-      background: linear-gradient(135deg, #ff6a6a 0%, #ff8e53 100%);
+    /* screens */
+    .screen {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+    /* bottom tab bar (Telegram style) */
+    .bottom-tab {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 500px;
+      margin: 0 auto;
+      background: var(--tg-theme-secondary-bg-color, #ffffff);
+      backdrop-filter: blur(20px);
+      background: rgba(var(--tg-theme-bg-color-rgb, 255,255,255), 0.96);
+      border-top: 1px solid var(--tg-theme-hint-color, #e2e2e8);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 20px 22px 20px;
+      z-index: 100;
+    }
+
+    .tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      color: var(--tg-theme-hint-color, #8e8e9e);
+      background: none;
+      border: none;
+      font-weight: 500;
+      transition: 0.1s;
+      cursor: pointer;
+    }
+
+    .tab-item i {
+      font-size: 24px;
+    }
+
+    .tab-item.active {
+      color: var(--tg-theme-button-color, #ff6a6a);
+    }
+
+    /* cards */
+    .card {
+      background: var(--tg-theme-secondary-bg-color, #f8f8fc);
+      border-radius: 28px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      border: 1px solid var(--tg-theme-hint-color, #ededf2);
     }
 
     .btn-primary {
-      background: linear-gradient(105deg, #ff6a6a 0%, #ff8e53 100%);
+      background: var(--tg-theme-button-color, #ff6a6a);
+      color: var(--tg-theme-button-text-color, white);
       border: none;
-      color: white;
-      font-weight: 600;
-      padding: 12px 28px;
+      padding: 14px 20px;
       border-radius: 60px;
-      font-size: 1rem;
+      font-weight: 600;
+      width: 100%;
+      font-size: 16px;
       cursor: pointer;
-      transition: all 0.25s ease;
-      box-shadow: 0 8px 18px rgba(255, 106, 106, 0.25);
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 26px rgba(255, 106, 106, 0.35);
+      transition: 0.2s;
     }
 
     .btn-outline {
       background: transparent;
-      border: 1.5px solid #ff6a6a;
-      color: #ff6a6a;
-      padding: 10px 24px;
+      border: 1.5px solid var(--tg-theme-button-color, #ff6a6a);
+      color: var(--tg-theme-button-color, #ff6a6a);
+      padding: 12px 18px;
       border-radius: 60px;
       font-weight: 600;
-      transition: all 0.2s;
-      cursor: pointer;
     }
 
-    .btn-outline:hover {
-      background: #ff6a6a10;
-      border-color: #ff4a3a;
-    }
-
-    /* header / nav */
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 0;
-      flex-wrap: wrap;
-    }
-
-    .logo {
-      font-size: 1.8rem;
-      font-weight: 800;
-      background: linear-gradient(125deg, #FF5F6D, #FFC371);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      letter-spacing: -0.5px;
-    }
-
-    .logo span {
-      background: none;
-      color: #1a1a2e;
-      font-weight: 700;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 32px;
-      align-items: center;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: #2d2f3e;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover {
-      color: #ff6a6a;
-    }
-
-    /* hero */
-    .hero {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 48px;
-      padding: 48px 0 64px;
-      flex-wrap: wrap;
-    }
-
-    .hero-left {
-      flex: 1;
-      min-width: 280px;
-    }
-
-    .hero-badge {
-      background: #ffece5;
-      display: inline-block;
-      padding: 6px 14px;
-      border-radius: 40px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #ff6a3a;
-      margin-bottom: 24px;
-    }
-
-    .hero-left h1 {
-      font-size: 3.4rem;
-      font-weight: 800;
-      line-height: 1.2;
-      margin-bottom: 24px;
-      background: linear-gradient(125deg, #1F1C2C, #ff6a6a);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .hero-left p {
-      font-size: 1.2rem;
-      color: #4a4a5a;
-      margin-bottom: 32px;
-      max-width: 500px;
-    }
-
-    .hero-buttons {
-      display: flex;
-      gap: 18px;
-      flex-wrap: wrap;
-    }
-
-    .hero-right {
-      flex: 1;
-      background: #ffffff;
-      border-radius: 48px;
-      box-shadow: 0 25px 45px -12px rgba(0,0,0,0.2);
-      padding: 20px 16px 20px 16px;
-      text-align: center;
-      min-width: 280px;
-    }
-
-    .mockup-phone {
-      background: #f3f0fe;
-      border-radius: 36px;
-      padding: 16px 12px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.05);
-    }
-
-    .swipe-card {
-      background: white;
-      border-radius: 32px;
-      padding: 20px;
-      box-shadow: 0 12px 22px rgba(0,0,0,0.08);
-      margin-bottom: 16px;
-    }
-
-    .card-avatar {
-      width: 80px;
-      height: 80px;
-      background: linear-gradient(145deg, #ffb88c, #ff6a6a);
-      border-radius: 50%;
-      margin: 0 auto 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-      font-size: 32px;
-    }
-
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 32px;
-      margin: 64px 0;
-    }
-
-    .feature-card {
-      background: white;
-      border-radius: 32px;
-      padding: 28px 24px;
-      transition: all 0.2s;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.02);
-      border: 1px solid #f0eef4;
-    }
-
-    .feature-icon {
-      font-size: 2.4rem;
+    .input-group {
       margin-bottom: 20px;
     }
 
-    .feature-card h3 {
-      font-size: 1.5rem;
-      margin-bottom: 12px;
+    .input-group label {
+      font-size: 13px;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 8px;
+      color: var(--tg-theme-hint-color, #6c6c7a);
     }
 
-    /* screens section */
-    .screens-section {
-      margin: 80px 0;
+    input, select, textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 24px;
+      border: 1px solid var(--tg-theme-hint-color, #ddd);
+      background: var(--tg-theme-bg-color, white);
+      font-size: 16px;
+      outline: none;
     }
 
-    .section-title {
-      font-size: 2.2rem;
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 16px;
+    .swipe-card {
+      background: var(--tg-theme-secondary-bg-color, white);
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
     }
 
-    .section-desc {
-      text-align: center;
-      color: #5a5a72;
-      max-width: 680px;
-      margin: 0 auto 48px;
-    }
-
-    .screens-row {
+    .profile-photo {
+      height: 280px;
+      background: linear-gradient(135deg, #ff9a6e, #ff4f6c);
       display: flex;
-      flex-wrap: wrap;
+      align-items: center;
       justify-content: center;
-      gap: 32px;
-    }
-
-    .screen-card {
-      background: white;
-      border-radius: 44px;
-      width: 260px;
-      padding: 20px 16px 24px;
-      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
-      transition: transform 0.2s;
-    }
-
-    .screen-card:hover {
-      transform: translateY(-6px);
-    }
-
-    .screen-preview {
-      background: #f9f5ff;
-      border-radius: 28px;
-      padding: 16px 12px;
-      margin-bottom: 16px;
-    }
-
-    .mini-profile {
-      text-align: left;
-    }
-
-    .mini-name {
-      font-weight: 700;
-    }
-
-    /* pricing */
-    .pricing-card {
-      background: white;
-      border-radius: 40px;
-      padding: 32px;
-      text-align: center;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.05);
-      border: 1px solid #ffe0d4;
-    }
-
-    .price {
-      font-size: 2.6rem;
-      font-weight: 800;
-      margin: 20px 0;
-    }
-
-    /* cta */
-    .cta-section {
-      background: linear-gradient(125deg, #1e1a2f, #2a2438);
-      border-radius: 48px;
-      padding: 64px 40px;
-      margin: 70px 0;
-      text-align: center;
+      font-size: 64px;
       color: white;
     }
 
-    footer {
-      border-top: 1px solid #eae6f0;
-      padding: 40px 0 32px;
+    /* grid */
+    .match-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+    }
+    .match-item {
+      background: var(--tg-theme-secondary-bg-color, #f3f3f7);
+      border-radius: 20px;
+      padding: 12px;
+      text-align: center;
+    }
+    .avatar-small {
+      width: 70px;
+      height: 70px;
+      background: #ffb48a;
+      border-radius: 50%;
+      margin: 0 auto 8px;
       display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 24px;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
     }
 
-    @media (max-width: 800px) {
-      .container {
-        padding: 0 24px;
-      }
-      .hero-left h1 {
-        font-size: 2.4rem;
-      }
-      .navbar {
-        flex-direction: column;
-        gap: 16px;
-      }
+    .message-bubble {
+      background: var(--tg-theme-button-color, #eef2ff);
+      padding: 10px 14px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+      max-width: 85%;
+    }
+
+    .flex-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Navigation -->
-    <nav class="navbar">
-      <div class="logo">Telegram <span>DATING</span></div>
-      <div class="nav-links">
-        <a href="#features">Features</a>
-        <a href="#preview">Preview</a>
-        <a href="#pricing">Premium</a>
-        <a href="#" class="btn-outline" style="padding: 8px 20px;">Log in</a>
-        <a href="#" class="btn-primary" style="padding: 8px 22px;">Get App</a>
-      </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <div class="hero">
-      <div class="hero-left">
-        <div class="hero-badge">✨ Trusted by 10,000+ Ethiopian singles</div>
-        <h1>Find real love, <br> powered by Telegram</h1>
-        <p>Meet authentic people nearby. Swipe, match & chat — all inside a private, secure and modern dating experience built for Ethiopia and beyond.</p>
-        <div class="hero-buttons">
-          <button class="btn-primary">📲 Download for Android</button>
-          <button class="btn-outline">🍏 App Store</button>
-        </div>
-        <p style="font-size: 0.85rem; margin-top: 24px;">🔒 100% verified profiles | End-to-end encrypted chats</p>
-      </div>
-      <div class="hero-right">
-        <div class="mockup-phone">
-          <div class="swipe-card">
-            <div class="card-avatar">👩🏾</div>
-            <div style="font-weight: 700; font-size: 1.25rem;">Hiwot, 26</div>
-            <div style="color: gray; margin: 4px 0;">📍 Addis Ababa • 2 km away</div>
-            <div style="display: flex; justify-content: center; gap: 24px; margin-top: 16px;">
-              <span style="font-size: 28px;">❌</span>
-              <span style="font-size: 28px;">⭐</span>
-              <span style="font-size: 28px;">❤️</span>
-            </div>
-          </div>
-          <div style="display: flex; justify-content: space-between; background: white; border-radius: 40px; padding: 8px 16px;">
-            <span>🔥 12 liked you</span>
-            <span>💬 New match</span>
-          </div>
-        </div>
-      </div>
+<div class="app-container" id="appContainer">
+  <!-- REGISTRATION SCREEN (step 1) -->
+  <div id="registerScreen" class="screen active">
+    <div style="text-align: center; margin: 24px 0;">
+      <i class="fas fa-heart" style="font-size: 48px; color: var(--tg-theme-button-color, #ff6a6a);"></i>
+      <h2 style="margin: 16px 0 8px;">Welcome to Telegram Dating</h2>
+      <p style="color: var(--tg-theme-hint-color);">Find your perfect match</p>
     </div>
-
-    <!-- Features Section -->
-    <div id="features">
-      <div class="section-title" style="text-align: left;">Everything you need for meaningful connections</div>
-      <div class="feature-grid">
-        <div class="feature-card">
-          <div class="feature-icon">🎯</div>
-          <h3>Smart Matching</h3>
-          <p>AI-based algorithm that respects your preferences — distance, interests, values and lifestyle. Filter by religion, smoking habits, education.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🔐</div>
-          <h3>Privacy & Safety</h3>
-          <p>Phone verification, photo verification, report & block tools. Your location is never shared precisely. Emergency alert feature built-in.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">💬</div>
-          <h3>Rich Messaging</h3>
-          <p>Text, voice notes, GIFs, stickers and crystal-crystal video calls — all without sharing personal number. Icebreaker questions included.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">📍</div>
-          <h3>Location-based</h3>
-          <p>Discover singles nearby in Addis, Bahir Dar, Hawassa or anywhere. Adjust distance radius and remain invisible if you want.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">✨</div>
-          <h3>Premium Boosts</h3>
-          <p>Unlimited swipes, see who liked you, super likes, profile boost and advanced filters. Pay via Telebirr, Kiasa or mobile money.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🎥</div>
-          <h3>Video Profiles</h3>
-          <p>Short video intros, story-like moments and profile prompts to show your real personality.</p>
-        </div>
+    <div class="card">
+      <div class="input-group">
+        <label>Full name</label>
+        <input type="text" id="regName" placeholder="e.g. Hiwot Alemu" value="">
       </div>
-    </div>
-
-    <!-- App Screens Preview (UI mockup) -->
-    <div id="preview" class="screens-section">
-      <div class="section-title">Beautiful, intuitive interface</div>
-      <div class="section-desc">Swiping, matching and chatting has never felt this smooth — designed for modern daters.</div>
-      <div class="screens-row">
-        <div class="screen-card">
-          <div class="screen-preview">
-            <div style="background: #ffe1d4; border-radius: 24px; padding: 12px;">
-              <div style="font-weight: bold;">🔥 24 likes</div>
-              <div style="display: flex; gap: 8px; margin: 12px 0;">
-                <span>👤</span><span>👤</span><span>👤</span>
-              </div>
-              <div class="mini-profile">
-                <div><strong>Meron, 23</strong> • 4km</div>
-                <div style="font-size: 12px;">💼 Architect | ☕ Coffee lover</div>
-              </div>
-            </div>
-          </div>
-          <div style="text-align: center; font-weight: 500;">Swipe Cards</div>
-          <div style="font-size: 13px; color: gray; text-align: center;">Easy right/left gestures</div>
-        </div>
-
-        <div class="screen-card">
-          <div class="screen-preview">
-            <div style="background: #f3eefc; border-radius: 24px; padding: 12px;">
-              <div><strong>💬 Messages</strong></div>
-              <div style="border-bottom: 1px solid #ddd; margin: 8px 0;"></div>
-              <div><span style="font-weight: 500;">Dawit:</span> Hey, how's your week?</div>
-              <div><span style="font-weight: 500;">Helen:</span> Free on Saturday?</div>
-              <div style="margin-top: 8px;">🎙️ Voice message 0:12</div>
-            </div>
-          </div>
-          <div style="text-align: center; font-weight: 500;">In-App Chat</div>
-          <div style="font-size: 13px; color: gray; text-align: center;">Encrypted & fun</div>
-        </div>
-
-        <div class="screen-card">
-          <div class="screen-preview">
-            <div style="background: #fef2e0; border-radius: 24px; padding: 12px;">
-              <div><strong>⭐ Premium Perks</strong></div>
-              <div>✨ See who liked you</div>
-              <div>🔓 Unlimited swipes</div>
-              <div>🚀 Profile boost once/week</div>
-              <div style="margin-top: 8px;"><span class="btn-primary" style="padding: 4px 12px; font-size: 12px;">Upgrade</span></div>
-            </div>
-          </div>
-          <div style="text-align: center; font-weight: 500;">Premium</div>
-          <div style="font-size: 13px; color: gray; text-align: center;">from 299 ETB/month</div>
-        </div>
-
-        <div class="screen-card">
-          <div class="screen-preview">
-            <div style="background: #e7f0eb; border-radius: 24px; padding: 12px;">
-              <div><strong>📋 Profile filters</strong></div>
-              <div>📍 Distance: ≤ 10km</div>
-              <div>🎂 Age: 22–32</div>
-              <div>✝️ Religion: Orthodox</div>
-              <div>🚭 Non-smoker</div>
-            </div>
-          </div>
-          <div style="text-align: center; font-weight: 500;">Advanced Filters</div>
-          <div style="font-size: 13px; color: gray; text-align: center;">Find exactly who you're looking for</div>
-        </div>
+      <div class="input-group">
+        <label>Age</label>
+        <input type="number" id="regAge" placeholder="18-60" value="24">
       </div>
-    </div>
-
-    <!-- Why Telegram Dating? (Ethiopia special) -->
-    <div style="background: #fff5f0; border-radius: 48px; padding: 48px 32px; margin: 48px 0;">
-      <div style="display: flex; flex-wrap: wrap; gap: 40px; align-items: center; justify-content: space-between;">
-        <div style="flex:1">
-          <div style="font-size: 2rem; font-weight: 700;">🇪🇹 Built for Ethiopia</div>
-          <ul style="margin-top: 20px; list-style: none;">
-            <li style="margin: 12px 0;">✔️ <strong>Amharic & English</strong> full interface</li>
-            <li style="margin: 12px 0;">✔️ <strong>Telebirr / Chapa / Kiasa</strong> integrated payments</li>
-            <li style="margin: 12px 0;">✔️ Low data mode — perfect for Ethiopian networks</li>
-            <li style="margin: 12px 0;">✔️ Culturally sensitive matching (family values, faith, ethnicity preferences)</li>
-            <li style="margin: 12px 0;">✔️ 24/7 local support & safety team</li>
-          </ul>
-        </div>
-        <div style="flex: 0.6; background: white; border-radius: 32px; padding: 24px; text-align: center;">
-          <div style="font-weight: 800;">✨ Verified by 10k+ users</div>
-          <div style="font-size: 2rem;">⭐ 4.8</div>
-          <div>“Found my soulmate within weeks! The safety features are top-notch.” — <strong>Adanech, A.A</strong></div>
-        </div>
+      <div class="input-group">
+        <label>Gender</label>
+        <select id="regGender">
+          <option value="Female">Female</option>
+          <option value="Male">Male</option>
+          <option value="Non-binary">Non-binary</option>
+        </select>
       </div>
-    </div>
-
-    <!-- Premium pricing -->
-    <div id="pricing" style="margin: 60px 0;">
-      <div class="section-title">Go further with Telegram Dating Premium</div>
-      <div class="section-desc">Unlock the best experience and get noticed faster</div>
-      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 32px;">
-        <div class="pricing-card" style="flex:1; min-width: 240px;">
-          <h3>Free</h3>
-          <div class="price">0 ETB</div>
-          <ul style="list-style: none; margin: 20px 0;">
-            <li>✅ Basic matching</li>
-            <li>✅ 10 swipes/day</li>
-            <li>✅ Text messaging</li>
-            <li>✅ 1 photo upload</li>
-          </ul>
-          <button class="btn-outline">Current plan</button>
-        </div>
-        <div class="pricing-card" style="flex:1; border: 2px solid #ff8e53; background: #fffaf5;">
-          <div style="background: #ff6a6a; color: white; border-radius: 30px; padding: 4px 12px; display: inline-block; font-size: 12px;">POPULAR</div>
-          <h3 style="margin-top: 12px;">Premium</h3>
-          <div class="price">299 ETB <span style="font-size: 1rem;">/month</span></div>
-          <ul style="list-style: none; margin: 20px 0;">
-            <li>✅ Unlimited swipes</li>
-            <li>✅ See who liked you</li>
-            <li>✅ Advanced filters (religion, lifestyle)</li>
-            <li>✅ 5 Super Likes per week</li>
-            <li>✅ Profile Boost (1/week)</li>
-            <li>✅ Video call & incognito mode</li>
-          </ul>
-          <button class="btn-primary">Upgrade via Telebirr</button>
-        </div>
-        <div class="pricing-card" style="flex:1; min-width: 240px;">
-          <h3>Premium 6 months</h3>
-          <div class="price">1,499 ETB</div>
-          <ul style="list-style: none; margin: 20px 0;">
-            <li>✅ All Premium features</li>
-            <li>✅ Save 16%</li>
-            <li>✅ Priority support</li>
-            <li>✅ Free profile verification badge</li>
-          </ul>
-          <button class="btn-outline">Save now</button>
-        </div>
+      <div class="input-group">
+        <label>City (Ethiopia)</label>
+        <input type="text" id="regCity" placeholder="Addis Ababa" value="Addis Ababa">
       </div>
-    </div>
-
-    <!-- CTA Section -->
-    <div class="cta-section">
-      <h2 style="font-size: 2rem; margin-bottom: 16px;">Ready to meet someone special?</h2>
-      <p style="font-size: 1.2rem; margin-bottom: 32px; opacity: 0.9;">Join thousands of Ethiopians finding meaningful relationships.</p>
-      <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
-        <button class="btn-primary" style="background: white; color: #ff6a6a; box-shadow: none;">Download on Telegram</button>
-        <button class="btn-outline" style="border-color: white; color: white;">Learn more</button>
+      <div class="input-group">
+        <label>Bio (tell about yourself)</label>
+        <textarea rows="2" id="regBio" placeholder="Coffee lover, traveler, looking for real connection..."></textarea>
       </div>
-      <p style="margin-top: 32px; font-size: 0.8rem;">🔒 No phone number exposure | Your data is safe</p>
-    </div>
-
-    <!-- Footer -->
-    <footer>
-      <div>
-        <div class="logo" style="font-size: 1.5rem;">Telegram <span>DATING</span></div>
-        <p style="color: #5a5a72; margin-top: 8px;">Modern dating, Ethiopian soul.</p>
+      <div class="input-group">
+        <label>Interests (comma separated)</label>
+        <input type="text" id="regInterests" placeholder="Music, Travel, Reading" value="Music, Travel, Coffee">
       </div>
-      <div style="display: flex; gap: 48px; flex-wrap: wrap;">
-        <div>
-          <strong>Product</strong><br>
-          <a href="#" style="text-decoration: none; color: #5a5a72;">Features</a><br>
-          <a href="#" style="text-decoration: none; color: #5a5a72;">Premium</a><br>
-          <a href="#" style="text-decoration: none; color: #5a5a72;">Safety tips</a>
-        </div>
-        <div>
-          <strong>Company</strong><br>
-          <a href="#" style="text-decoration: none; color: #5a5a72;">About</a><br>
-          <a href="#" style="text-decoration: none; color: #5a5a72;">Press</a><br>
-          <a href="#" style="text-decoration: none; color: #5a5a72;">Contact</a>
-        </div>
-        <div>
-          <strong>Legal</strong><br>
-          <a href="#" style="text-decoration: none; color: #5a5a72;">Privacy</a><br>
-          <a href="#" style="text-decoration: none; color: #5a5a72;">Terms</a><br>
-          <a href="#" style="text-decoration: none; color: #5a5a72;">Community guidelines</a>
-        </div>
-      </div>
-    </footer>
-    <div style="text-align: center; padding: 24px 0 48px; color: #7a7a8a; font-size: 0.8rem;">
-      © 2025 Telegram Dating — built with ❤️ for Ethiopian singles. Swipe, match, and vibe.
+      <button class="btn-primary" id="completeRegistrationBtn">✨ Complete profile & Start</button>
+      <p style="font-size: 12px; text-align: center; margin-top: 16px;">By continuing you agree to community guidelines</p>
     </div>
   </div>
+
+  <!-- MAIN APP (after registration) -->
+  <div id="mainAppScreen" class="screen">
+    <!-- bottom tab bar -->
+    <div class="bottom-tab">
+      <button class="tab-item" data-tab="swipe"><i class="fas fa-fire"></i><span>Explore</span></button>
+      <button class="tab-item" data-tab="matches"><i class="fas fa-comment-dots"></i><span>Matches</span></button>
+      <button class="tab-item" data-tab="profile"><i class="fas fa-user"></i><span>Profile</span></button>
+      <button class="tab-item" data-tab="premium"><i class="fas fa-crown"></i><span>Premium</span></button>
+    </div>
+
+    <!-- SWIPE / DISCOVER TAB -->
+    <div id="swipeTab" class="tab-content active" style="display: block;">
+      <div style="margin-top: 8px; margin-bottom: 16px;">
+        <h3>❤️ Discover nearby</h3>
+        <p style="font-size: 13px; color: var(--tg-theme-hint-color);">Swipe right to like, left to pass</p>
+      </div>
+      <div id="swipeCardContainer"></div>
+      <div id="noMoreProfiles" style="text-align: center; padding: 40px; display: none;">
+        <i class="fas fa-smile-wink" style="font-size: 48px;"></i>
+        <p>No more profiles nearby. Check again later!</p>
+      </div>
+    </div>
+
+    <!-- MATCHES & CHAT TAB -->
+    <div id="matchesTab" class="tab-content" style="display: none;">
+      <div class="flex-between" style="margin: 8px 0 20px;">
+        <h3>💬 Your matches</h3>
+        <i class="fas fa-search" style="color: var(--tg-theme-hint-color);"></i>
+      </div>
+      <div id="matchesListContainer"></div>
+      <!-- Chat detail panel (hidden) -->
+      <div id="chatDetailPanel" style="display: none; margin-top: 16px;">
+        <div class="flex-between">
+          <button id="backToMatchesBtn" class="btn-outline" style="padding: 6px 12px;"><i class="fas fa-arrow-left"></i> Back</button>
+          <span id="chatWithName"></span>
+        </div>
+        <div id="chatMessagesArea" style="margin: 20px 0; max-height: 320px; overflow-y: auto;"></div>
+        <div class="flex-between" style="gap: 8px;">
+          <input type="text" id="chatInput" placeholder="Write a message..." style="flex:1;">
+          <button id="sendMsgBtn" class="btn-primary" style="width: auto; padding: 12px 18px;"><i class="fas fa-paper-plane"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE TAB -->
+    <div id="profileTab" class="tab-content" style="display: none;">
+      <div style="text-align: center; margin: 16px 0;">
+        <div class="avatar-small" style="width: 100px; height: 100px; font-size: 48px; background: var(--tg-theme-button-color, #ff8e53);">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <h3 id="profileNameDisplay"></h3>
+        <p id="profileCityAge"></p>
+      </div>
+      <div class="card">
+        <h4>About me</h4>
+        <p id="profileBio"></p>
+        <hr style="margin: 16px 0;">
+        <h4>Interests</h4>
+        <p id="profileInterests"></p>
+        <button id="editProfileBtn" class="btn-outline" style="margin-top: 20px;">Edit profile</button>
+        <button id="verifyIdentityBtn" class="btn-outline" style="margin-top: 12px; border-color: green; color: green;">📸 Verify ID (Safety)</button>
+      </div>
+      <div class="card">
+        <h4>Privacy & Safety</h4>
+        <p>✅ Phone verified via Telegram<br>✅ Report / Block users anytime<br>✅ Location hidden after match</p>
+      </div>
+    </div>
+
+    <!-- PREMIUM TAB -->
+    <div id="premiumTab" class="tab-content" style="display: none;">
+      <div class="card" style="text-align: center;">
+        <i class="fas fa-crown" style="font-size: 48px; color: gold;"></i>
+        <h3>Telegram Dating Premium</h3>
+        <p>Unlimited likes · See who liked you · Advanced filters · Boost profile</p>
+        <div class="price" style="font-size: 28px; font-weight: 800; margin: 16px 0;">299 ETB <span style="font-size: 14px;">/month</span></div>
+        <button id="upgradePremiumBtn" class="btn-primary">Upgrade via Telebirr</button>
+        <p style="font-size: 12px; margin-top: 16px;">🔓 Also: Super Likes, Incognito mode, Priority support</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ---------- Mock Data & Global State ----------
+  let currentUser = null;           // registered user object
+  let allProfiles = [];             // list of other users (for swipe)
+  let matches = [];                 // array of matched users { id, name, age, city, avatar, chatHistory }
+  let currentSwipeIndex = 0;
+  let activeChatUserId = null;
+  
+  // Helper: generate random profiles (for demo)
+  function generateMockProfiles(excludeUserId) {
+    const nameList = ["Dawit M.", "Helen T.", "Meron A.", "Samuel K.", "Liya B.", "Natanim F.", "Betty G.", "Yonas D."];
+    const cities = ["Addis Ababa", "Bahir Dar", "Hawassa", "Dire Dawa", "Mekelle", "Jimma"];
+    const bios = ["Adventurous soul, love hiking", "Coffee & book enthusiast", "Tech geek and foodie", "Looking for deep connection", "Dancer & photographer"];
+    const interestsList = ["Music, Travel", "Movies, Sports", "Art, Cooking", "Yoga, Nature", "Tech, Reading"];
+    const profiles = [];
+    for (let i = 0; i < 12; i++) {
+      const id = i+100;
+      if (excludeUserId === id) continue;
+      profiles.push({
+        id: id,
+        name: nameList[i % nameList.length] + (i>5 ? " " + (i+20) : ""),
+        age: 22 + (i % 20),
+        city: cities[i % cities.length],
+        bio: bios[i % bios.length],
+        interests: interestsList[i % interestsList.length],
+        gender: i%2===0 ? "Female" : "Male",
+        avatarIcon: "fas fa-user",
+        liked: false,   // not yet swiped right by currentUser (simulated)
+      });
+    }
+    return profiles;
+  }
+
+  // Load initial matches from localStorage if any
+  function loadMatchesFromStorage() {
+    if (currentUser && localStorage.getItem(`matches_${currentUser.id}`)) {
+      matches = JSON.parse(localStorage.getItem(`matches_${currentUser.id}`));
+      // ensure each match has chatHistory array
+      matches = matches.map(m => ({ ...m, chatHistory: m.chatHistory || [] }));
+    } else {
+      // default demo matches
+      matches = [];
+    }
+    renderMatchesList();
+  }
+
+  function saveMatchesToStorage() {
+    if (currentUser) {
+      localStorage.setItem(`matches_${currentUser.id}`, JSON.stringify(matches));
+    }
+  }
+
+  // swipe logic: right swipe = like
+  function likeProfile(profile) {
+    // check if already matched
+    const alreadyMatched = matches.find(m => m.id === profile.id);
+    if (alreadyMatched) {
+      alert("You already matched! Go to chat 💬");
+      return false;
+    }
+    // for demo, 50% chance of mutual like (makes it fun)
+    const isMutual = Math.random() > 0.4;
+    if (isMutual) {
+      // create match
+      const newMatch = {
+        id: profile.id,
+        name: profile.name,
+        age: profile.age,
+        city: profile.city,
+        avatarIcon: profile.avatarIcon,
+        chatHistory: [{ sender: "system", text: "✨ You matched! Start the conversation.", timestamp: Date.now() }]
+      };
+      matches.push(newMatch);
+      saveMatchesToStorage();
+      alert(`🎉 It's a match! You and ${profile.name} liked each other. Start chatting!`);
+      renderMatchesList();
+      return true;
+    } else {
+      alert(`👍 You liked ${profile.name}. If they like you back, it's a match!`);
+      return false;
+    }
+  }
+
+  function skipProfile() {
+    // just load next
+    loadNextSwipeCard();
+  }
+
+  function loadNextSwipeCard() {
+    if (!allProfiles.length) {
+      document.getElementById("swipeCardContainer").innerHTML = "";
+      document.getElementById("noMoreProfiles").style.display = "block";
+      return;
+    }
+    if (currentSwipeIndex >= allProfiles.length) {
+      // reshuffle? but keep simple
+      document.getElementById("swipeCardContainer").innerHTML = "";
+      document.getElementById("noMoreProfiles").style.display = "block";
+      return;
+    }
+    const p = allProfiles[currentSwipeIndex];
+    const container = document.getElementById("swipeCardContainer");
+    container.innerHTML = `
+      <div class="swipe-card">
+        <div class="profile-photo">
+          <i class="fas fa-heart" style="font-size: 72px;"></i>
+        </div>
+        <div style="padding: 20px;">
+          <div class="flex-between">
+            <h2>${p.name}, ${p.age}</h2>
+            <span style="background: #eee; padding: 4px 12px; border-radius: 40px;">📍 ${p.city}</span>
+          </div>
+          <p style="margin: 12px 0;">${p.bio}</p>
+          <p><i class="fas fa-tag"></i> ${p.interests}</p>
+          <div style="display: flex; gap: 16px; margin-top: 24px;">
+            <button id="swipeLeftBtn" class="btn-outline" style="flex:1;"><i class="fas fa-times"></i> Pass</button>
+            <button id="swipeRightBtn" class="btn-primary" style="flex:1;"><i class="fas fa-heart"></i> Like</button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.getElementById("swipeLeftBtn")?.addEventListener("click", () => {
+      currentSwipeIndex++;
+      loadNextSwipeCard();
+    });
+    document.getElementById("swipeRightBtn")?.addEventListener("click", () => {
+      likeProfile(p);
+      currentSwipeIndex++;
+      loadNextSwipeCard();
+    });
+    document.getElementById("noMoreProfiles").style.display = "none";
+  }
+
+  // render matches list
+  function renderMatchesList() {
+    const container = document.getElementById("matchesListContainer");
+    if (!container) return;
+    if (matches.length === 0) {
+      container.innerHTML = `<div class="card" style="text-align:center;">No matches yet. Swipe and like to find connections! ❤️</div>`;
+      return;
+    }
+    container.innerHTML = matches.map(m => `
+      <div class="match-item" data-matchid="${m.id}" style="cursor:pointer; margin-bottom: 12px; display: flex; align-items: center; gap: 12px; background: var(--tg-theme-secondary-bg-color); border-radius: 60px; padding: 8px 16px;">
+        <div class="avatar-small" style="width: 50px; height: 50px; font-size: 24px; background: #ffc3a0;"><i class="fas fa-user"></i></div>
+        <div style="flex:1;">
+          <strong>${m.name}</strong> <span style="font-size:12px;">${m.age}, ${m.city}</span>
+          <div style="font-size:12px; color: var(--tg-theme-hint-color);">${m.chatHistory.length > 1 ? "💬 New messages" : "Say hello!"}</div>
+        </div>
+        <i class="fas fa-comment"></i>
+      </div>
+    `).join('');
+    // attach click event
+    document.querySelectorAll('.match-item').forEach(el => {
+      const id = parseInt(el.getAttribute('data-matchid'));
+      el.addEventListener('click', () => openChat(id));
+    });
+  }
+
+  function openChat(matchId) {
+    const match = matches.find(m => m.id === matchId);
+    if (!match) return;
+    activeChatUserId = matchId;
+    document.getElementById("chatWithName").innerHTML = `<strong>${match.name}</strong>`;
+    document.getElementById("chatDetailPanel").style.display = "block";
+    document.getElementById("matchesListContainer").style.display = "none";
+    renderChatMessages(matchId);
+  }
+
+  function renderChatMessages(matchId) {
+    const match = matches.find(m => m.id === matchId);
+    if (!match) return;
+    const container = document.getElementById("chatMessagesArea");
+    if (!match.chatHistory) match.chatHistory = [];
+    container.innerHTML = match.chatHistory.map(msg => `
+      <div style="display: flex; justify-content: ${msg.sender === 'me' ? 'flex-end' : 'flex-start'}; margin-bottom: 8px;">
+        <div class="message-bubble" style="background: ${msg.sender === 'me' ? 'var(--tg-theme-button-color, #ff6a6a)' : '#eef2ff'}; color: ${msg.sender === 'me' ? 'white' : 'inherit'}">
+          ${msg.text}
+        </div>
+      </div>
+    `).join('');
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function sendMessageToMatch(matchId, text) {
+    if (!text.trim()) return;
+    const match = matches.find(m => m.id === matchId);
+    if (match) {
+      match.chatHistory = match.chatHistory || [];
+      match.chatHistory.push({ sender: "me", text: text, timestamp: Date.now() });
+      saveMatchesToStorage();
+      renderChatMessages(matchId);
+      // simulate reply after 1 sec (for demo)
+      setTimeout(() => {
+        match.chatHistory.push({ sender: match.name, text: "😊 Thanks for messaging! Let's meet for coffee?", timestamp: Date.now() });
+        saveMatchesToStorage();
+        renderChatMessages(matchId);
+        renderMatchesList(); // update preview
+      }, 800);
+    }
+  }
+
+  // update profile UI
+  function updateProfileUI() {
+    if (!currentUser) return;
+    document.getElementById("profileNameDisplay").innerText = currentUser.name;
+    document.getElementById("profileCityAge").innerText = `${currentUser.city}, ${currentUser.age} yrs`;
+    document.getElementById("profileBio").innerText = currentUser.bio || "No bio yet";
+    document.getElementById("profileInterests").innerText = currentUser.interests || "Not specified";
+  }
+
+  // edit profile modal simulation
+  function editProfileFlow() {
+    const newBio = prompt("Edit your bio:", currentUser.bio);
+    if (newBio !== null) currentUser.bio = newBio;
+    const newInterests = prompt("Edit interests (comma separated):", currentUser.interests);
+    if (newInterests !== null) currentUser.interests = newInterests;
+    const newCity = prompt("City:", currentUser.city);
+    if (newCity !== null) currentUser.city = newCity;
+    updateProfileUI();
+    // save to localStorage
+    localStorage.setItem(`user_${currentUser.id}`, JSON.stringify(currentUser));
+  }
+
+  // Registration completion
+  function registerUser() {
+    const name = document.getElementById("regName").value.trim();
+    const age = parseInt(document.getElementById("regAge").value);
+    const gender = document.getElementById("regGender").value;
+    const city = document.getElementById("regCity").value.trim();
+    const bio = document.getElementById("regBio").value.trim();
+    const interests = document.getElementById("regInterests").value.trim();
+    if (!name || age < 18) {
+      alert("Please enter valid name and age (+18)");
+      return;
+    }
+    const newId = Math.floor(Date.now() / 1000);
+    currentUser = {
+      id: newId,
+      name: name,
+      age: age,
+      gender: gender,
+      city: city,
+      bio: bio || "Ready to meet new people!",
+      interests: interests || "Adventure, Music",
+      verified: true
+    };
+    localStorage.setItem(`user_${newId}`, JSON.stringify(currentUser));
+    localStorage.setItem("activeUserId", newId);
+    // generate other profiles excluding self
+    allProfiles = generateMockProfiles(newId);
+    currentSwipeIndex = 0;
+    // load matches from storage
+    loadMatchesFromStorage();
+    // switch to main app
+    document.getElementById("registerScreen").classList.remove("active");
+    document.getElementById("mainAppScreen").classList.add("active");
+    updateProfileUI();
+    loadNextSwipeCard();
+    // set active tab to swipe
+    setActiveTab('swipe');
+    // init telegram main button if needed
+    if (window.Telegram && Telegram.WebApp) {
+      Telegram.WebApp.ready();
+      Telegram.WebApp.expand();
+    }
+  }
+
+  // Tab switching logic
+  function setActiveTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+    document.getElementById(`${tabId}Tab`).style.display = 'block';
+    document.querySelectorAll('.tab-item').forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`.tab-item[data-tab="${tabId}"]`).classList.add('active');
+    if (tabId === 'matches') {
+      document.getElementById("matchesListContainer").style.display = "block";
+      document.getElementById("chatDetailPanel").style.display = "none";
+      renderMatchesList();
+    }
+    if (tabId === 'profile') updateProfileUI();
+    if (tabId === 'swipe' && allProfiles.length && currentSwipeIndex >= allProfiles.length) {
+      document.getElementById("noMoreProfiles").style.display = "block";
+    }
+  }
+
+  // event listeners for tabs
+  function bindTabs() {
+    document.querySelectorAll('.tab-item').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const tab = btn.getAttribute('data-tab');
+        setActiveTab(tab);
+      });
+    });
+    document.getElementById("editProfileBtn")?.addEventListener("click", editProfileFlow);
+    document.getElementById("upgradePremiumBtn")?.addEventListener("click", () => {
+      alert("🔐 Telegram Dating Premium: Integration with Telebirr would open. Enjoy unlimited features!");
+    });
+    document.getElementById("backToMatchesBtn")?.addEventListener("click", () => {
+      document.getElementById("chatDetailPanel").style.display = "none";
+      document.getElementById("matchesListContainer").style.display = "block";
+      activeChatUserId = null;
+    });
+    document.getElementById("sendMsgBtn")?.addEventListener("click", () => {
+      const input = document.getElementById("chatInput");
+      if (activeChatUserId && input.value.trim()) {
+        sendMessageToMatch(activeChatUserId, input.value);
+        input.value = "";
+      } else if (!activeChatUserId) alert("No chat selected");
+    });
+    document.getElementById("verifyIdentityBtn")?.addEventListener("click", () => {
+      alert("✅ Verification request sent! Your profile gets a blue badge after review (Safety first)");
+    });
+  }
+
+  // Check if user already logged in via localStorage
+  function checkExistingUser() {
+    const savedId = localStorage.getItem("activeUserId");
+    if (savedId) {
+      const userData = localStorage.getItem(`user_${savedId}`);
+      if (userData) {
+        currentUser = JSON.parse(userData);
+        allProfiles = generateMockProfiles(currentUser.id);
+        currentSwipeIndex = 0;
+        loadMatchesFromStorage();
+        document.getElementById("registerScreen").classList.remove("active");
+        document.getElementById("mainAppScreen").classList.add("active");
+        updateProfileUI();
+        loadNextSwipeCard();
+        setActiveTab('swipe');
+        if (window.Telegram && Telegram.WebApp) Telegram.WebApp.ready();
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // initialize
+  function init() {
+    bindTabs();
+    document.getElementById("completeRegistrationBtn").addEventListener("click", registerUser);
+    if (!checkExistingUser()) {
+      // show registration and fill some demo values
+      document.getElementById("regName").value = "";
+      document.getElementById("regBio").value = "Looking for genuine connection, love hiking and Ethiopian coffee!";
+      document.getElementById("regInterests").value = "Travel, Music, Cinema";
+    }
+  }
+  init();
+</script>
 </body>
 </html>
