@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>World Dating | Signup & Login</title>
+    <title>World Dating · Light Theme</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -11,372 +11,504 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        body {
             font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle at 10% 20%, #0a0f1e, #03060c);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
         }
-
-        /* Main container */
-        .auth-container {
-            width: 100%;
-            max-width: 480px;
+        /* LIGHT THEME (default) */
+        :root {
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --border: #e2e8f0;
+            --accent: #ff477e;
+            --accent-hover: #ff6b9d;
+            --shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.02);
+            --input-bg: #ffffff;
+        }
+        body {
+            background: var(--bg-body);
+            color: var(--text-primary);
+        }
+        /* Layout */
+        .app-container {
+            max-width: 550px;
             margin: 0 auto;
+            background: var(--bg-body);
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 80px;
         }
-
-        /* Card style */
-        .auth-card {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(16px);
-            border-radius: 48px;
-            padding: 40px 36px;
-            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s;
-            animation: fadeSlideUp 0.5s ease;
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-
-        @keyframes fadeSlideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .auth-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 30px 50px -15px rgba(0, 0, 0, 0.6);
-        }
-
-        /* Logo / header */
         .logo {
-            text-align: center;
-            margin-bottom: 28px;
-        }
-
-        .logo h1 {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #ff4d6d, #ff9f4a);
+            background: linear-gradient(135deg, #ff477e, #ff9f4a);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            letter-spacing: -0.5px;
         }
-
-        .logo p {
-            color: #99a4c2;
-            font-size: 0.85rem;
-            margin-top: 6px;
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 550px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 20px 24px;
+            border-top: 1px solid var(--border);
+            z-index: 100;
         }
-
-        /* Form styling */
-        .form-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #e2e8f0;
-            font-size: 0.85rem;
-        }
-
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 14px 18px;
-            border-radius: 60px;
-            border: 1.5px solid #2d3a5e;
-            background: #020617cc;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-            transition: all 0.2s;
-        }
-
-        .form-group input:focus, .form-group select:focus {
-            border-color: #ff4d6d;
-            box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.2);
-        }
-
-        /* Password toggle */
-        .password-wrapper {
-            position: relative;
-        }
-        .toggle-password {
-            position: absolute;
-            right: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #99a4c2;
-            font-size: 1.1rem;
-        }
-
-        /* Button */
-        .btn-primary {
-            background: linear-gradient(105deg, #ff4d6d, #ff8a4a);
+        .nav-item {
+            background: none;
             border: none;
-            width: 100%;
-            padding: 14px;
-            border-radius: 60px;
-            font-weight: 700;
-            font-size: 1rem;
-            color: white;
+            color: var(--text-secondary);
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
             cursor: pointer;
-            transition: all 0.25s ease;
-            margin-top: 8px;
-            box-shadow: 0 8px 18px -5px rgba(255, 77, 109, 0.3);
         }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 14px 26px -8px rgba(255, 77, 109, 0.5);
+        .nav-item.active {
+            color: #ff477e;
         }
-
-        /* Switch link */
-        .switch-link {
-            text-align: center;
-            margin-top: 28px;
-            color: #99a4c2;
-            font-size: 0.9rem;
-        }
-
-        .switch-link a {
-            color: #ff4d6d;
-            text-decoration: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .switch-link a:hover {
-            text-decoration: underline;
-        }
-
-        /* Form transition */
-        .form-container {
-            transition: opacity 0.25s ease;
-        }
-
-        .hidden-form {
+        .tab-content {
             display: none;
+            padding: 20px 16px;
+            animation: fade 0.2s;
         }
-
-        /* Footer extra */
-        .footer-note {
-            text-align: center;
-            margin-top: 24px;
-            font-size: 0.7rem;
-            color: #5a6a8a;
+        .tab-content.active-tab {
+            display: block;
         }
-
-        /* Responsive */
-        @media (max-width: 550px) {
-            .auth-card {
-                padding: 32px 24px;
-            }
-            .logo h1 {
-                font-size: 1.7rem;
-            }
+        @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+        /* Cards & Forms */
+        .glass-card {
+            background: var(--bg-card);
+            border-radius: 28px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+        .btn-primary {
+            background: linear-gradient(105deg, #ff477e, #ff8c42);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 12px;
+            border-radius: 60px;
+            width: 100%;
+            cursor: pointer;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid #ff477e;
+            color: #ff477e;
+            padding: 8px 16px;
+            border-radius: 60px;
+            cursor: pointer;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 60px;
+            border: 1px solid var(--border);
+            background: var(--input-bg);
+            color: var(--text-primary);
+            margin-bottom: 14px;
+            outline: none;
+        }
+        .photo-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 8px auto;
+            display: block;
+            border: 2px solid #ff477e;
+        }
+        .country-row {
+            display: flex;
+            gap: 10px;
+        }
+        .country-row select {
+            width: 130px;
+            margin-bottom: 0;
+        }
+        .post-card {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+        }
+        .post-media {
+            margin: 12px 0;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .post-media img, .post-media video {
+            width: 100%;
+            max-height: 280px;
+            object-fit: cover;
+        }
+        .match-card {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .avatar-sm {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
     </style>
 </head>
 <body>
-<div class="auth-container">
-    <div class="auth-card">
-        <div class="logo">
-            <h1>🌍 World Dating</h1>
-            <p>Find love across borders</p>
+<div class="app-container">
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">🌍 World Dating</div>
+        <i class="fas fa-heart" style="color:#ff477e;"></i>
+    </div>
+
+    <!-- REGISTRATION MODAL (first time) -->
+    <div id="registerModal" class="glass-card" style="margin:20px 16px; text-align:center;">
+        <h2>Create Account</h2>
+        <div style="text-align:center;">
+            <img id="regPhotoPreview" class="photo-preview" src="https://randomuser.me/api/portraits/women/68.jpg">
+            <input type="file" id="regPhotoInput" accept="image/*" style="display:none">
+            <button id="uploadPhotoRegBtn" class="btn-outline" style="margin-bottom:12px;"><i class="fas fa-camera"></i> Upload Photo</button>
+        </div>
+        <input type="text" id="regName" placeholder="Full Name">
+        <div class="country-row">
+            <select id="countryCodeSelect">
+                <option value="+93">🇦🇫 +93</option><option value="+355">🇦🇱 +355</option><option value="+213">🇩🇿 +213</option>
+                <option value="+376">🇦🇩 +376</option><option value="+244">🇦🇴 +244</option><option value="+54">🇦🇷 +54</option>
+                <option value="+374">🇦🇲 +374</option><option value="+61">🇦🇺 +61</option><option value="+43">🇦🇹 +43</option>
+                <option value="+994">🇦🇿 +994</option><option value="+973">🇧🇭 +973</option><option value="+880">🇧🇩 +880</option>
+                <option value="+375">🇧🇾 +375</option><option value="+32">🇧🇪 +32</option><option value="+591">🇧🇴 +591</option>
+                <option value="+387">🇧🇦 +387</option><option value="+55">🇧🇷 +55</option><option value="+359">🇧🇬 +359</option>
+                <option value="+855">🇰🇭 +855</option><option value="+1">🇨🇦 +1</option><option value="+56">🇨🇱 +56</option>
+                <option value="+86">🇨🇳 +86</option><option value="+57">🇨🇴 +57</option><option value="+506">🇨🇷 +506</option>
+                <option value="+385">🇭🇷 +385</option><option value="+53">🇨🇺 +53</option><option value="+420">🇨🇿 +420</option>
+                <option value="+45">🇩🇰 +45</option><option value="+593">🇪🇨 +593</option><option value="+20">🇪🇬 +20</option>
+                <option value="+503">🇸🇻 +503</option><option value="+372">🇪🇪 +372</option><option value="+251">🇪🇹 +251</option>
+                <option value="+679">🇫🇯 +679</option><option value="+358">🇫🇮 +358</option><option value="+33">🇫🇷 +33</option>
+                <option value="+241">🇬🇦 +241</option><option value="+220">🇬🇲 +220</option><option value="+995">🇬🇪 +995</option>
+                <option value="+49">🇩🇪 +49</option><option value="+233">🇬🇭 +233</option><option value="+30">🇬🇷 +30</option>
+                <option value="+502">🇬🇹 +502</option><option value="+224">🇬🇳 +224</option><option value="+509">🇭🇹 +509</option>
+                <option value="+504">🇭🇳 +504</option><option value="+36">🇭🇺 +36</option><option value="+354">🇮🇸 +354</option>
+                <option value="+91">🇮🇳 +91</option><option value="+62">🇮🇩 +62</option><option value="+98">🇮🇷 +98</option>
+                <option value="+964">🇮🇶 +964</option><option value="+353">🇮🇪 +353</option><option value="+972">🇮🇱 +972</option>
+                <option value="+39">🇮🇹 +39</option><option value="+81">🇯🇵 +81</option><option value="+962">🇯🇴 +962</option>
+                <option value="+7">🇰🇿 +7</option><option value="+254">🇰🇪 +254</option><option value="+965">🇰🇼 +965</option>
+                <option value="+996">🇰🇬 +996</option><option value="+856">🇱🇦 +856</option><option value="+371">🇱🇻 +371</option>
+                <option value="+961">🇱🇧 +961</option><option value="+218">🇱🇾 +218</option><option value="+423">🇱🇮 +423</option>
+                <option value="+370">🇱🇹 +370</option><option value="+352">🇱🇺 +352</option><option value="+389">🇲🇰 +389</option>
+                <option value="+261">🇲🇬 +261</option><option value="+265">🇲🇼 +265</option><option value="+60">🇲🇾 +60</option>
+                <option value="+960">🇲🇻 +960</option><option value="+223">🇲🇱 +223</option><option value="+356">🇲🇹 +356</option>
+                <option value="+52">🇲🇽 +52</option><option value="+373">🇲🇩 +373</option><option value="+377">🇲🇨 +377</option>
+                <option value="+976">🇲🇳 +976</option><option value="+382">🇲🇪 +382</option><option value="+212">🇲🇦 +212</option>
+                <option value="+258">🇲🇿 +258</option><option value="+95">🇲🇲 +95</option><option value="+264">🇳🇦 +264</option>
+                <option value="+977">🇳🇵 +977</option><option value="+31">🇳🇱 +31</option><option value="+64">🇳🇿 +64</option>
+                <option value="+505">🇳🇮 +505</option><option value="+227">🇳🇪 +227</option><option value="+234">🇳🇬 +234</option>
+                <option value="+47">🇳🇴 +47</option><option value="+968">🇴🇲 +968</option><option value="+92">🇵🇰 +92</option>
+                <option value="+507">🇵🇦 +507</option><option value="+595">🇵🇾 +595</option><option value="+51">🇵🇪 +51</option>
+                <option value="+63">🇵🇭 +63</option><option value="+48">🇵🇱 +48</option><option value="+351">🇵🇹 +351</option>
+                <option value="+974">🇶🇦 +974</option><option value="+40">🇷🇴 +40</option><option value="+7">🇷🇺 +7</option>
+                <option value="+250">🇷🇼 +250</option><option value="+966">🇸🇦 +966</option><option value="+221">🇸🇳 +221</option>
+                <option value="+381">🇷🇸 +381</option><option value="+65">🇸🇬 +65</option><option value="+421">🇸🇰 +421</option>
+                <option value="+386">🇸🇮 +386</option><option value="+27">🇿🇦 +27</option><option value="+82">🇰🇷 +82</option>
+                <option value="+34">🇪🇸 +34</option><option value="+94">🇱🇰 +94</option><option value="+249">🇸🇩 +249</option>
+                <option value="+46">🇸🇪 +46</option><option value="+41">🇨🇭 +41</option><option value="+963">🇸🇾 +963</option>
+                <option value="+886">🇹🇼 +886</option><option value="+255">🇹🇿 +255</option><option value="+66">🇹🇭 +66</option>
+                <option value="+90">🇹🇷 +90</option><option value="+256">🇺🇬 +256</option><option value="+380">🇺🇦 +380</option>
+                <option value="+971">🇦🇪 +971</option><option value="+44">🇬🇧 +44</option><option value="+1">🇺🇸 +1</option>
+                <option value="+598">🇺🇾 +598</option><option value="+998">🇺🇿 +998</option><option value="+58">🇻🇪 +58</option>
+                <option value="+84">🇻🇳 +84</option><option value="+967">🇾🇪 +967</option><option value="+260">🇿🇲 +260</option>
+                <option value="+263">🇿🇼 +263</option>
+            </select>
+            <input type="tel" id="regPhone" placeholder="Phone number">
+        </div>
+        <select id="regGender">
+            <option>Female</option><option>Male</option><option>Non-binary</option>
+        </select>
+        <input type="password" id="regPassword" placeholder="Password (min 6 chars)">
+        <textarea id="regBio" rows="2" placeholder="Bio: Tell about yourself..."></textarea>
+        <input type="text" id="regInterests" placeholder="Interests (e.g., Travel, Music, Coffee)">
+        <button id="completeRegisterBtn" class="btn-primary">Start Dating →</button>
+    </div>
+
+    <!-- MAIN DASHBOARD (hidden until registered) -->
+    <div id="mainApp" style="display:none;">
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <button class="nav-item active" data-tab="home"><i class="fas fa-home"></i><span>Home</span></button>
+            <button class="nav-item" data-tab="profile"><i class="fas fa-user"></i><span>Profile</span></button>
+            <button class="nav-item" data-tab="post"><i class="fas fa-plus-circle"></i><span>Post</span></button>
+            <button class="nav-item" data-tab="match"><i class="fas fa-heart"></i><span>Match</span></button>
         </div>
 
-        <!-- SIGNUP FORM -->
-        <div id="signupForm" class="form-container">
-            <form id="signupFormElement">
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="fullName" placeholder="e.g., Elena Rodriguez" required>
-                </div>
-                <div class="form-group">
-                    <label>Age</label>
-                    <input type="number" id="age" placeholder="18+" min="18" max="100" required>
-                </div>
-                <div class="form-group">
-                    <label>Gender</label>
-                    <select id="gender">
-                        <option value="Female">Female</option>
-                        <option value="Male">Male</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="emailSignup" placeholder="hello@worlddating.com" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="passwordSignup" placeholder="••••••" required>
-                        <i class="far fa-eye toggle-password" data-target="passwordSignup"></i>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Confirm Password</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="confirmPassword" placeholder="••••••" required>
-                        <i class="far fa-eye toggle-password" data-target="confirmPassword"></i>
-                    </div>
-                </div>
-                <button type="submit" class="btn-primary">Sign Up</button>
-                <div class="switch-link">
-                    Already have an account? <a id="showLoginBtn">Login</a>
-                </div>
-            </form>
+        <!-- Home Tab (Feed) -->
+        <div id="homeTab" class="tab-content active-tab">
+            <h3>💬 Latest Moments</h3>
+            <div id="postsFeed"></div>
         </div>
 
-        <!-- LOGIN FORM (UI only) -->
-        <div id="loginForm" class="form-container hidden-form">
-            <form id="loginFormElement">
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="emailLogin" placeholder="hello@worlddating.com">
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="passwordLogin" placeholder="••••••">
-                        <i class="far fa-eye toggle-password" data-target="passwordLogin"></i>
-                    </div>
-                </div>
-                <button type="submit" class="btn-primary">Login</button>
-                <div class="switch-link">
-                    Don't have an account? <a id="showSignupBtn">Sign Up</a>
-                </div>
-            </form>
+        <!-- Profile Tab -->
+        <div id="profileTab" class="tab-content">
+            <div class="glass-card" style="text-align:center;">
+                <img id="profilePhotoImg" class="photo-preview" src="" style="width:100px;height:100px;">
+                <h3 id="profileName"></h3>
+                <p id="profilePhone"></p>
+                <p id="profileBioText"></p>
+                <p id="profileInterestsText"></p>
+                <button id="editProfileBtn" class="btn-outline">Edit Profile</button>
+            </div>
         </div>
-        <div class="footer-note">
-            <i class="fas fa-heart" style="color:#ff4d6d;"></i> Join millions of singles worldwide
+
+        <!-- Post Tab (Create Post) -->
+        <div id="postTab" class="tab-content">
+            <div class="glass-card">
+                <textarea id="newPostCaption" rows="2" placeholder="Share your moment..."></textarea>
+                <div style="display:flex; gap:12px; margin:12px 0;">
+                    <button id="uploadPhotoPost" class="btn-outline"><i class="fas fa-image"></i> Photo</button>
+                    <button id="uploadVideoPost" class="btn-outline"><i class="fas fa-video"></i> Video</button>
+                </div>
+                <input type="file" id="postPhotoFile" accept="image/*" style="display:none">
+                <input type="file" id="postVideoFile" accept="video/*" style="display:none">
+                <div id="postMediaPreview"></div>
+                <button id="publishPostBtn" class="btn-primary">Publish</button>
+            </div>
+        </div>
+
+        <!-- Match Tab (Swipe) -->
+        <div id="matchTab" class="tab-content">
+            <h3>✨ Discover Matches</h3>
+            <div id="matchContainer"></div>
         </div>
     </div>
 </div>
 
 <script>
-    // Toggle between Signup and Login forms
-    const signupFormContainer = document.getElementById('signupForm');
-    const loginFormContainer = document.getElementById('loginForm');
-    const showLoginBtn = document.getElementById('showLoginBtn');
-    const showSignupBtn = document.getElementById('showSignupBtn');
+    // ---------- GLOBAL STATE ----------
+    let currentUser = null;
+    let users = [];
+    let posts = [];
+    let matches = [];
 
-    function showSignup() {
-        signupFormContainer.classList.remove('hidden-form');
-        loginFormContainer.classList.add('hidden-form');
+    // Load/Save localStorage
+    function loadData() {
+        const u = localStorage.getItem("wd_users");
+        if(u) users = JSON.parse(u);
+        const p = localStorage.getItem("wd_posts");
+        if(p) posts = JSON.parse(p);
+        if(users.length === 0) {
+            users.push({ id: 1, name: "Emma", phone: "+251911111111", password: "123", gender: "Female", bio: "Adventure lover", interests: "Travel, Music", photo: "https://randomuser.me/api/portraits/women/1.jpg", countryCode: "+251" });
+            users.push({ id: 2, name: "Liam", phone: "+1 555123456", password: "123", gender: "Male", bio: "Coffee geek", interests: "Coffee, Books", photo: "https://randomuser.me/api/portraits/men/2.jpg", countryCode: "+1" });
+        }
+        if(posts.length === 0) {
+            posts.push({ id: 101, userId: 1, mediaType: "image", mediaUrl: "https://picsum.photos/id/29/400/300", caption: "Sunset vibes 🌅", likes: 12, timestamp: Date.now() });
+        }
+        saveAll();
+    }
+    function saveAll() {
+        localStorage.setItem("wd_users", JSON.stringify(users));
+        localStorage.setItem("wd_posts", JSON.stringify(posts));
     }
 
-    function showLogin() {
-        loginFormContainer.classList.remove('hidden-form');
-        signupFormContainer.classList.add('hidden-form');
+    // Registration
+    document.getElementById("completeRegisterBtn").addEventListener("click", () => {
+        const name = document.getElementById("regName").value.trim();
+        const countryCode = document.getElementById("countryCodeSelect").value;
+        const phoneRaw = document.getElementById("regPhone").value.trim();
+        const fullPhone = countryCode + phoneRaw;
+        const gender = document.getElementById("regGender").value;
+        const password = document.getElementById("regPassword").value;
+        const bio = document.getElementById("regBio").value;
+        const interests = document.getElementById("regInterests").value;
+        const photoFile = document.getElementById("regPhotoInput").files[0];
+        if(!name || !phoneRaw || !password) { alert("Fill required fields"); return; }
+        if(password.length < 6) { alert("Password min 6 chars"); return; }
+        if(users.find(u => u.phone === fullPhone)) { alert("Phone already registered"); return; }
+        
+        const processReg = (photoBase64) => {
+            const newUser = {
+                id: Date.now(),
+                name: name,
+                phone: fullPhone,
+                password: password,
+                gender: gender,
+                bio: bio || "New to World Dating!",
+                interests: interests || "Exploring",
+                photo: photoBase64 || "https://randomuser.me/api/portraits/women/68.jpg",
+                countryCode: countryCode
+            };
+            users.push(newUser);
+            saveAll();
+            currentUser = newUser;
+            localStorage.setItem("wd_current", JSON.stringify(currentUser));
+            showMainApp();
+        };
+        if(photoFile) {
+            const reader = new FileReader();
+            reader.onload = (e) => processReg(e.target.result);
+            reader.readAsDataURL(photoFile);
+        } else { processReg(null); }
+    });
+
+    function showMainApp() {
+        document.getElementById("registerModal").style.display = "none";
+        document.getElementById("mainApp").style.display = "block";
+        renderProfile();
+        renderFeed();
+        renderMatch();
     }
 
-    if (showLoginBtn) showLoginBtn.addEventListener('click', showLogin);
-    if (showSignupBtn) showSignupBtn.addEventListener('click', showSignup);
+    function renderProfile() {
+        if(!currentUser) return;
+        document.getElementById("profilePhotoImg").src = currentUser.photo;
+        document.getElementById("profileName").innerText = currentUser.name;
+        document.getElementById("profilePhone").innerHTML = `<i class="fas fa-phone"></i> ${currentUser.phone}`;
+        document.getElementById("profileBioText").innerHTML = `<i class="fas fa-comment"></i> ${currentUser.bio}`;
+        document.getElementById("profileInterestsText").innerHTML = `<i class="fas fa-tag"></i> ${currentUser.interests}`;
+    }
 
-    // Password show/hide toggle for all password fields
-    const toggleIcons = document.querySelectorAll('.toggle-password');
-    toggleIcons.forEach(icon => {
-        icon.addEventListener('click', function () {
-            const targetId = this.getAttribute('data-target');
-            const passwordInput = document.getElementById(targetId);
-            if (passwordInput) {
-                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordInput.setAttribute('type', type);
-                this.classList.toggle('fa-eye-slash');
-            }
+    function renderFeed() {
+        const feedDiv = document.getElementById("postsFeed");
+        if(!feedDiv) return;
+        const sorted = [...posts].reverse();
+        feedDiv.innerHTML = sorted.map(post => {
+            const author = users.find(u => u.id === post.userId);
+            return `
+                <div class="post-card">
+                    <div class="flex-between"><div><strong>${author?.name || "User"}</strong><span style="font-size:11px; margin-left:8px;">${new Date(post.timestamp).toLocaleString()}</span></div></div>
+                    <p>${post.caption}</p>
+                    <div class="post-media">${post.mediaType === "image" ? `<img src="${post.mediaUrl}">` : (post.mediaType === "video" ? `<video controls src="${post.mediaUrl}"></video>` : "")}</div>
+                    <div class="flex-between"><span><i class="far fa-heart"></i> ${post.likes || 0}</span><span><i class="far fa-comment"></i> Comment</span></div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // Match system (simple swipe)
+    function renderMatch() {
+        const others = users.filter(u => u.id !== currentUser?.id && !matches.includes(u.id));
+        const container = document.getElementById("matchContainer");
+        if(others.length === 0) { container.innerHTML = "<div class='glass-card'>No more profiles. Check later!</div>"; return; }
+        const p = others[0];
+        container.innerHTML = `
+            <div class="glass-card" style="text-align:center;">
+                <img src="${p.photo}" style="width:120px;height:120px;border-radius:50%;object-fit:cover;">
+                <h3>${p.name}, ${p.gender}</h3>
+                <p>${p.bio}</p>
+                <div style="display:flex; gap:16px; margin-top:16px;">
+                    <button id="passBtn" class="btn-outline">❌ Pass</button>
+                    <button id="likeBtn" class="btn-primary">❤️ Like</button>
+                </div>
+            </div>
+        `;
+        document.getElementById("passBtn")?.addEventListener("click", () => renderMatch());
+        document.getElementById("likeBtn")?.addEventListener("click", () => {
+            if(!matches.includes(p.id)) matches.push(p.id);
+            alert(`💕 You liked ${p.name}! If mutual, it's a match.`);
+            renderMatch();
+        });
+    }
+
+    // Post creation
+    let pendingMedia = null, pendingMediaType = null;
+    document.getElementById("uploadPhotoPost")?.addEventListener("click", () => document.getElementById("postPhotoFile").click());
+    document.getElementById("uploadVideoPost")?.addEventListener("click", () => document.getElementById("postVideoFile").click());
+    document.getElementById("postPhotoFile")?.addEventListener("change", (e) => {
+        const f = e.target.files[0];
+        if(f) { const r = new FileReader(); r.onload = ev => { pendingMedia = ev.target.result; pendingMediaType = "image"; document.getElementById("postMediaPreview").innerHTML = `<img src="${pendingMedia}" style="max-height:150px;border-radius:20px;">`; }; r.readAsDataURL(f); }
+    });
+    document.getElementById("postVideoFile")?.addEventListener("change", (e) => {
+        const f = e.target.files[0];
+        if(f) { const r = new FileReader(); r.onload = ev => { pendingMedia = ev.target.result; pendingMediaType = "video"; document.getElementById("postMediaPreview").innerHTML = `<video controls src="${pendingMedia}" style="max-height:150px;border-radius:20px;"></video>`; }; r.readAsDataURL(f); }
+    });
+    document.getElementById("publishPostBtn")?.addEventListener("click", () => {
+        const caption = document.getElementById("newPostCaption").value;
+        if(!caption && !pendingMedia) { alert("Write something or add media"); return; }
+        const newPost = { id: Date.now(), userId: currentUser.id, mediaType: pendingMediaType, mediaUrl: pendingMedia, caption: caption || "Shared a moment", likes: 0, timestamp: Date.now() };
+        posts.push(newPost);
+        saveAll();
+        renderFeed();
+        document.getElementById("newPostCaption").value = "";
+        pendingMedia = null; pendingMediaType = null;
+        document.getElementById("postMediaPreview").innerHTML = "";
+        alert("Post published!");
+    });
+
+    // Edit profile
+    document.getElementById("editProfileBtn")?.addEventListener("click", () => {
+        const newBio = prompt("Edit Bio:", currentUser.bio);
+        if(newBio !== null) currentUser.bio = newBio;
+        const newInterests = prompt("Edit Interests:", currentUser.interests);
+        if(newInterests !== null) currentUser.interests = newInterests;
+        saveAll();
+        renderProfile();
+    });
+
+    // Photo upload registration preview
+    document.getElementById("uploadPhotoRegBtn")?.addEventListener("click", () => document.getElementById("regPhotoInput").click());
+    document.getElementById("regPhotoInput")?.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if(file) { const reader = new FileReader(); reader.onload = (ev) => { document.getElementById("regPhotoPreview").src = ev.target.result; }; reader.readAsDataURL(file); }
+    });
+
+    // Tab switching
+    document.querySelectorAll(".nav-item").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            const tab = btn.getAttribute("data-tab");
+            document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active-tab"));
+            if(tab === "home") document.getElementById("homeTab").classList.add("active-tab");
+            if(tab === "profile") document.getElementById("profileTab").classList.add("active-tab");
+            if(tab === "post") document.getElementById("postTab").classList.add("active-tab");
+            if(tab === "match") { document.getElementById("matchTab").classList.add("active-tab"); renderMatch(); }
         });
     });
 
-    // SIGNUP form validation (demo purposes only, UI feedback)
-    const signupForm = document.getElementById('signupFormElement');
-    if (signupForm) {
-        signupForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const fullName = document.getElementById('fullName').value.trim();
-            const age = document.getElementById('age').value;
-            const email = document.getElementById('emailSignup').value.trim();
-            const password = document.getElementById('passwordSignup').value;
-            const confirmPwd = document.getElementById('confirmPassword').value;
-
-            if (!fullName || !age || !email || !password || !confirmPwd) {
-                alert("❌ Please fill in all fields.");
-                return;
-            }
-            if (password !== confirmPwd) {
-                alert("❌ Passwords do not match.");
-                return;
-            }
-            if (password.length < 6) {
-                alert("❌ Password must be at least 6 characters.");
-                return;
-            }
-            if (age < 18 || age > 100) {
-                alert("❌ Age must be between 18 and 100.");
-                return;
-            }
-            // Simple email regex
-            const emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                alert("❌ Please enter a valid email address.");
-                return;
-            }
-            // Success demo message
-            alert(`🎉 Welcome to World Dating, ${fullName}! Your account has been created. (Demo)`);
-            // Optionally reset form or switch to login
-            signupForm.reset();
-            // Switch to login after signup success (optional)
-            showLogin();
-        });
+    // Restore session
+    const savedUser = localStorage.getItem("wd_current");
+    loadData();
+    if(savedUser) {
+        currentUser = JSON.parse(savedUser);
+        if(users.find(u => u.id === currentUser.id)) showMainApp();
+        else document.getElementById("registerModal").style.display = "block";
+    } else {
+        document.getElementById("registerModal").style.display = "block";
     }
-
-    // LOGIN form (UI only with demo feedback)
-    const loginForm = document.getElementById('loginFormElement');
-    if (loginForm) {
-        loginForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const email = document.getElementById('emailLogin').value.trim();
-            const password = document.getElementById('passwordLogin').value;
-            if (!email || !password) {
-                alert("❌ Please enter both email and password.");
-                return;
-            }
-            alert(`✨ Welcome back! You've successfully logged in to World Dating. (Demo UI)`);
-            // In a real app, you would redirect or authenticate.
-            loginForm.reset();
-        });
-    }
-
-    // Extra: Smooth placeholder effect + live age validation on input
-    const ageInput = document.getElementById('age');
-    if (ageInput) {
-        ageInput.addEventListener('input', function () {
-            let val = parseInt(this.value);
-            if (val < 18) this.value = 18;
-            if (val > 100) this.value = 100;
-        });
-    }
-
-    // Pre-fill demo data for quick preview (optional)
-    // Not auto-filling to keep clean but can add placeholder demo
-    console.log("World Dating Auth Module Ready — Dark theme, responsive, toggle ready.");
 </script>
 </body>
 </html>
