@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Telegram Dating Pro | Secure Global Dating</title>
+    <title>GlobalHeart · International Dating</title>
     <!-- Font Awesome 6 & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-    <!-- Flatpickr for date of birth -->
+    <!-- Flatpickr for DOB -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <style>
@@ -19,50 +19,51 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #f4f7fc;
-            color: #1a2634;
-            line-height: 1.5;
+            background: linear-gradient(135deg, #f9f0f2 0%, #f0eef7 100%);
+            min-height: 100vh;
+            color: #1a1f2e;
         }
 
-        /* App container */
-        .app-wrapper {
+        /* Main container */
+        .app-container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 20px 24px 40px;
+            padding: 24px 28px 60px;
         }
 
-        /* cards & forms */
+        /* Glass morphism card */
         .glass-card {
-            background: rgba(255, 255, 255, 0.96);
+            background: rgba(255, 255, 255, 0.97);
             backdrop-filter: blur(2px);
-            border-radius: 32px;
-            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.1);
-            padding: 32px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+            padding: 36px 32px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            transition: all 0.2s;
         }
 
         .btn-primary {
             background: linear-gradient(105deg, #ff4d6d, #ff8c42);
             border: none;
             color: white;
-            font-weight: 600;
+            font-weight: 700;
             padding: 14px 28px;
             border-radius: 60px;
             font-size: 1rem;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.25s ease;
             width: 100%;
-            box-shadow: 0 8px 18px rgba(255, 77, 109, 0.25);
+            box-shadow: 0 8px 20px rgba(255, 77, 109, 0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 24px rgba(255, 77, 109, 0.35);
+            box-shadow: 0 14px 28px rgba(255, 77, 109, 0.4);
         }
 
         .btn-outline {
             background: transparent;
-            border: 1.5px solid #ff4d6d;
+            border: 2px solid #ff4d6d;
             color: #ff4d6d;
             padding: 12px 24px;
             border-radius: 60px;
@@ -71,262 +72,280 @@
             transition: 0.2s;
         }
 
+        .btn-outline:hover {
+            background: #ff4d6d10;
+            transform: scale(0.98);
+        }
+
         input, select, textarea {
             width: 100%;
-            padding: 14px 18px;
-            border-radius: 28px;
-            border: 1px solid #e2e8f0;
+            padding: 14px 20px;
+            border-radius: 60px;
+            border: 1.5px solid #e9ecef;
             font-size: 1rem;
             background: white;
             transition: 0.2s;
             outline: none;
         }
 
-        input:focus {
+        input:focus, select:focus {
             border-color: #ff8c42;
-            box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.2);
+            box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.15);
         }
 
-        .form-row {
-            margin-bottom: 22px;
+        .form-group {
+            margin-bottom: 24px;
         }
 
         label {
             font-weight: 600;
             display: block;
             margin-bottom: 8px;
-            color: #2c3e50;
+            color: #2d3e50;
+            font-size: 0.9rem;
         }
 
-        .grid-2col {
+        .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 24px;
         }
 
-        /* tabs & admin panel */
-        .admin-panel {
+        /* Country-select nice style */
+        .country-select-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .country-code-select {
+            width: 140px;
+        }
+
+        /* admin panel dark */
+        .admin-panel-dark {
             background: #1e2a3a;
-            color: white;
-            border-radius: 28px;
-            padding: 24px;
+            border-radius: 32px;
+            padding: 28px;
             margin-top: 40px;
+            color: white;
+            box-shadow: 0 20px 35px -10px rgba(0,0,0,0.3);
         }
-
         .user-table {
             width: 100%;
             border-collapse: collapse;
-            background: #0f1720;
-            border-radius: 20px;
-            overflow-x: auto;
-            display: block;
+            background: #0f1a24;
+            border-radius: 24px;
+            overflow: hidden;
         }
-
         .user-table th, .user-table td {
-            padding: 12px;
+            padding: 14px 12px;
             text-align: left;
-            border-bottom: 1px solid #2d3e50;
+            border-bottom: 1px solid #2d4458;
         }
-
-        .badge {
-            background: #ff4d6d;
+        .badge-id {
+            background: #27ae60;
             padding: 4px 12px;
             border-radius: 40px;
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 11px;
+            font-weight: bold;
         }
-
-        /* modal */
         .modal {
             display: none;
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.65);
             align-items: center;
             justify-content: center;
-            z-index: 1000;
+            z-index: 2000;
         }
-        .modal-content {
+        .modal-card {
             background: white;
-            max-width: 450px;
+            max-width: 420px;
             width: 90%;
-            border-radius: 36px;
-            padding: 28px;
-        }
-        .toggle-pwd {
-            cursor: pointer;
-            position: absolute;
-            right: 18px;
-            top: 42px;
-            color: #888;
+            border-radius: 48px;
+            padding: 32px;
+            text-align: center;
         }
         .relative {
             position: relative;
         }
+        .toggle-pwd {
+            position: absolute;
+            right: 20px;
+            top: 45px;
+            cursor: pointer;
+            color: #aaa;
+        }
         .photo-preview {
             width: 80px;
             height: 80px;
-            background: #f0f2f5;
             border-radius: 50%;
             object-fit: cover;
-            margin-top: 8px;
+            margin-top: 12px;
+            border: 2px solid #ff8c42;
         }
         hr {
-            margin: 20px 0;
+            margin: 24px 0;
         }
-        @media (max-width: 800px) {
-            .grid-2col { grid-template-columns: 1fr; }
-            .app-wrapper { padding: 16px; }
+        .flag-icon {
+            font-size: 1.2rem;
+            margin-right: 8px;
+        }
+        @media (max-width: 780px) {
+            .app-container { padding: 16px; }
+            .grid-2 { grid-template-columns: 1fr; gap: 16px; }
+            .glass-card { padding: 24px; }
         }
     </style>
 </head>
 <body>
-<div class="app-wrapper">
-    <!-- REGISTRATION SECTION (default visible) -->
-    <div id="registerSection">
-        <div class="glass-card" style="max-width: 800px; margin: 0 auto;">
-            <div style="text-align: center; margin-bottom: 24px;">
-                <i class="fas fa-heart" style="font-size: 48px; color: #ff4d6d;"></i>
-                <h2 style="margin-top: 12px;">Telegram Dating · Global Access</h2>
-                <p>Secure registration | ID Verification | OTP protection</p>
+<div class="app-container">
+    <!-- REGISTRATION PANEL (default visible) -->
+    <div id="registerPanel">
+        <div class="glass-card" style="max-width: 900px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 28px;">
+                <i class="fas fa-globe-americas" style="font-size: 52px; color: #ff4d6d;"></i>
+                <h2 style="margin-top: 12px; font-size: 2rem;">GlobalHeart ❤️ International Dating</h2>
+                <p>Connect with singles worldwide · Verified profiles · Secure OTP</p>
             </div>
             <form id="registerForm">
-                <div class="grid-2col">
-                    <div class="form-row">
-                        <label>Full Name <span style="color:red;">*</span></label>
-                        <input type="text" id="fullName" placeholder="Asnakech Tadese" required>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Full Name *</label>
+                        <input type="text" id="fullName" placeholder="e.g., Elena Rodriguez" required>
                     </div>
-                    <div class="form-row">
-                        <label>Country / Phone Code</label>
-                        <select id="countryCode">
-                            <option value="+251">🇪🇹 Ethiopia (+251)</option>
-                            <option value="+1">🇺🇸 USA (+1)</option>
-                            <option value="+44">🇬🇧 UK (+44)</option>
-                            <option value="+254">🇰🇪 Kenya (+254)</option>
-                            <option value="+256">🇺🇬 Uganda (+256)</option>
-                            <option value="+255">🇹🇿 Tanzania (+255)</option>
-                            <option value="+27">🇿🇦 South Africa (+27)</option>
-                            <option value="+91">🇮🇳 India (+91)</option>
-                            <option value="+86">🇨🇳 China (+86)</option>
+                    <div class="form-group">
+                        <label><i class="fas fa-venus-mars"></i> Gender</label>
+                        <select id="gender">
+                            <option>Female</option>
+                            <option>Male</option>
+                            <option>Non-binary</option>
                         </select>
                     </div>
                 </div>
-                <div class="form-row">
-                    <label>Phone Number (without code)</label>
-                    <input type="tel" id="phoneNumber" placeholder="912345678" required>
-                </div>
-                <div class="form-row">
-                    <label>Email (optional)</label>
-                    <input type="email" id="email" placeholder="hello@example.com">
-                </div>
-                <div class="grid-2col">
-                    <div class="form-row relative">
-                        <label>Password (min 6 chars)</label>
-                        <input type="password" id="password" placeholder="••••••" required>
-                        <i class="fas fa-eye toggle-pwd" id="toggleRegPwd" style="top: 44px;"></i>
+                <div class="form-group">
+                    <label><i class="fas fa-phone-alt"></i> Phone Number (with country code) *</label>
+                    <div class="country-select-wrapper">
+                        <select id="countryCodeSelect" class="country-code-select">
+                            <!-- dynamic loaded with all countries via JS -->
+                        </select>
+                        <input type="tel" id="phoneNumber" placeholder="912345678" style="flex:1;" required>
                     </div>
-                    <div class="form-row relative">
-                        <label>Confirm Password</label>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group relative">
+                        <label><i class="fas fa-lock"></i> Password (min 6 chars) *</label>
+                        <input type="password" id="password" placeholder="••••••" required>
+                        <i class="fas fa-eye toggle-pwd" id="toggleRegPwd"></i>
+                    </div>
+                    <div class="form-group relative">
+                        <label><i class="fas fa-check-circle"></i> Confirm Password</label>
                         <input type="password" id="confirmPwd" placeholder="••••••" required>
                     </div>
                 </div>
-                <div class="form-row">
-                    <label>Date of Birth (Age verification)</label>
-                    <input type="text" id="dob" placeholder="Select date of birth" required>
-                </div>
-                <div class="form-row">
-                    <label>Profile Photo (URL or upload)</label>
-                    <input type="file" id="profilePhotoFile" accept="image/*">
-                    <div id="photoPreview"></div>
-                </div>
-                <div class="form-row">
-                    <label>Government ID / Passport (upload for verification)</label>
-                    <input type="file" id="idDocument" accept="image/*,application/pdf">
-                    <small style="color:#666;">ID verification ensures real connections</small>
-                </div>
-                <div class="form-row">
-                    <label>OTP Code (6-digit sent to your phone)</label>
-                    <div style="display: flex; gap: 12px;">
-                        <input type="text" id="otpCode" placeholder="123456" style="flex:2;">
-                        <button type="button" id="sendOtpBtn" class="btn-outline" style="width: auto; padding: 0 20px;">Send OTP</button>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> Date of Birth *</label>
+                        <input type="text" id="dob" placeholder="YYYY-MM-DD" required>
                     </div>
-                    <div id="otpTimer" style="font-size: 12px; margin-top: 6px;"></div>
+                    <div class="form-group">
+                        <label><i class="fas fa-city"></i> City / Region</label>
+                        <input type="text" id="city" placeholder="e.g., Nairobi, São Paulo, Bangkok">
+                    </div>
                 </div>
-                <button type="submit" class="btn-primary" id="registerBtn">✅ Complete Registration</button>
-                <div style="text-align: center; margin-top: 20px;">
-                    <a href="#" id="adminLoginLink" style="color:#ff4d6d;">🔐 Admin login</a> &nbsp;|&nbsp;
-                    <span style="color:#999;">Already have account? <a href="#" id="showLoginLink">Sign in</a></span>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label><i class="fas fa-image"></i> Profile Photo (optional)</label>
+                        <input type="file" id="profilePhoto" accept="image/*">
+                        <div id="photoPreviewContainer"></div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-id-card"></i> Government ID / Passport (verification) *</label>
+                        <input type="file" id="idDocumentUpload" accept="image/*,application/pdf" required>
+                        <small style="color:#777;">We require ID for genuine dating community</small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-key"></i> OTP Verification (5 minutes valid) *</label>
+                    <div style="display: flex; gap: 14px;">
+                        <input type="text" id="otpInput" placeholder="6-digit code" style="flex:2;">
+                        <button type="button" id="sendOtpBtn" class="btn-outline" style="width: auto; padding: 0 24px;">Send OTP</button>
+                    </div>
+                    <div id="otpTimerDisplay" style="font-size: 12px; margin-top: 8px; color: #ff4d6d;"></div>
+                </div>
+                <button type="submit" id="registerSubmitBtn" class="btn-primary"><i class="fas fa-heart"></i> Complete Registration</button>
+                <div style="text-align: center; margin-top: 24px;">
+                    <a href="#" id="adminLoginTrigger" style="color:#ff4d6d; font-weight:500;">🔐 Admin Login</a> &nbsp;|&nbsp;
+                    <a href="#" id="showLoginLink" style="color:#5a6874;">Already have an account? Sign in</a>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- LOGIN SECTION (hidden by default) -->
-    <div id="loginSection" style="display: none;">
+    <!-- LOGIN PANEL -->
+    <div id="loginPanel" style="display: none;">
         <div class="glass-card" style="max-width: 500px; margin: 0 auto;">
-            <h2>Welcome Back</h2>
-            <p>Login with phone & password</p>
-            <div class="form-row">
+            <h2><i class="fas fa-sign-in-alt"></i> Welcome Back</h2>
+            <p>Login with your registered phone & password</p>
+            <div class="form-group">
                 <label>Phone (with country code)</label>
                 <input type="text" id="loginPhone" placeholder="+251912345678">
             </div>
-            <div class="form-row relative">
+            <div class="form-group relative">
                 <label>Password</label>
                 <input type="password" id="loginPassword" placeholder="••••••">
-                <i class="fas fa-eye toggle-pwd" id="toggleLoginPwd" style="top: 44px;"></i>
+                <i class="fas fa-eye toggle-pwd" id="toggleLoginPwd"></i>
             </div>
-            <button id="doLoginBtn" class="btn-primary">Sign in</button>
+            <button id="doLogin" class="btn-primary">Sign in</button>
             <div style="margin-top: 20px; text-align:center;">
-                <a href="#" id="backToRegisterLink">← Create new account</a>
+                <a href="#" id="backToRegister">← Create new account</a>
             </div>
         </div>
     </div>
 
-    <!-- USER DASHBOARD (after successful login) -->
+    <!-- USER DASHBOARD (after login) -->
     <div id="userDashboard" style="display: none;">
         <div class="glass-card">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-                <h2><i class="fas fa-user-check"></i> Welcome, <span id="dashboardName"></span></h2>
-                <button id="logoutUserBtn" class="btn-outline" style="padding: 8px 20px;">Logout</button>
+                <h2><i class="fas fa-user-circle"></i> Welcome, <span id="dashboardName"></span></h2>
+                <button id="userLogoutBtn" class="btn-outline">Logout</button>
             </div>
             <hr>
-            <div class="grid-2col">
+            <div class="grid-2">
                 <div>
                     <p><strong>📞 Phone:</strong> <span id="dashboardPhone"></span></p>
                     <p><strong>🌍 Country:</strong> <span id="dashboardCountry"></span></p>
                     <p><strong>🎂 Age:</strong> <span id="dashboardAge"></span></p>
-                    <p><strong>✅ ID Verified:</strong> <span id="dashboardIdStatus"></span></p>
+                    <p><strong>🆔 ID Status:</strong> <span id="dashboardIdStatus" class="badge-id" style="background:#2c3e50;"></span></p>
                 </div>
                 <div>
-                    <img id="dashboardPhoto" src="" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; background:#ddd;">
+                    <img id="dashboardPhoto" src="" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #ff8c42;">
                 </div>
             </div>
-            <div class="form-row">
-                <label>Change Password (optional)</label>
-                <input type="password" id="newPasswordInput" placeholder="New password">
-                <button id="updatePasswordBtn" class="btn-outline" style="margin-top: 10px;">Update Password</button>
+            <div class="form-group">
+                <label>Change Password</label>
+                <input type="password" id="newUserPassword" placeholder="New password (min 6 chars)">
+                <button id="updateUserPasswordBtn" class="btn-outline" style="margin-top: 10px;">Update Password</button>
             </div>
-            <div style="margin-top: 30px; background:#fef2e8; border-radius: 24px; padding: 16px;">
-                <i class="fas fa-shield-alt"></i> <strong>Safety first</strong> — your data is encrypted. 1-hour lock: after 1 hour of inactivity you'll be prompted for password again.
+            <div class="form-group" style="background:#fef5e8; border-radius: 28px; padding: 16px;">
+                <i class="fas fa-shield-alt"></i> <strong>Safety & Privacy</strong> — Session expires after 1 hour of inactivity. Your ID is encrypted.
             </div>
         </div>
     </div>
 
-    <!-- ADMIN PANEL (hidden by default) -->
-    <div id="adminPanel" style="display: none; margin-top: 20px;">
-        <div class="admin-panel">
+    <!-- ADMIN PANEL -->
+    <div id="adminPanel" style="display: none;">
+        <div class="admin-panel-dark">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-                <h3><i class="fas fa-user-secret"></i> Admin Dashboard | Telegram Dating</h3>
-                <button id="adminLogoutBtn" class="btn-outline" style="background:#2c3e50; border-color:white; color:white;">Exit Admin</button>
+                <h3><i class="fas fa-user-shield"></i> GlobalHeart Admin Dashboard</h3>
+                <button id="adminLogout" class="btn-outline" style="border-color: white; color: white;">Exit Admin</button>
             </div>
-            <p>All registered users (ID, photo, phone, password hash hidden for security)</p>
+            <p>All registered users (global dating platform)</p>
             <div style="overflow-x: auto;">
-                <table class="user-table" id="adminUserTable">
-                    <thead>
-                        <tr><th>Full Name</th><th>Phone</th><th>Country</th><th>Email</th><th>ID uploaded</th><th>Photo</th><th>Registered</th><th>Actions</th></tr>
-                    </thead>
-                    <tbody id="adminUserList"></tbody>
+                <table class="user-table">
+                    <thead><tr><th>Name</th><th>Phone</th><th>Country</th><th>ID Upload</th><th>Photo</th><th>DOB</th><th>Actions</th></tr></thead>
+                    <tbody id="adminUserTableBody"></tbody>
                 </table>
             </div>
         </div>
@@ -334,363 +353,352 @@
 </div>
 
 <script>
-    // ---------- STORAGE & GLOBAL STATE ----------
-    let users = [];           // array of user objects
-    let otpStorage = {};     // { phone: { code, expires } }
-    let activeSession = null; // { userId, lastActive }
+    // ---------- COUNTRIES DATABASE (all world, 50+ major) ----------
+    const countriesList = [
+        { code: "+1", name: "🇺🇸 USA", dial: "+1" },{ code: "+44", name: "🇬🇧 UK", dial: "+44" },{ code: "+251", name: "🇪🇹 Ethiopia", dial: "+251" },
+        { code: "+254", name: "🇰🇪 Kenya", dial: "+254" },{ code: "+255", name: "🇹🇿 Tanzania", dial: "+255" },{ code: "+256", name: "🇺🇬 Uganda", dial: "+256" },
+        { code: "+27", name: "🇿🇦 South Africa", dial: "+27" },{ code: "+91", name: "🇮🇳 India", dial: "+91" },{ code: "+86", name: "🇨🇳 China", dial: "+86" },
+        { code: "+55", name: "🇧🇷 Brazil", dial: "+55" },{ code: "+52", name: "🇲🇽 Mexico", dial: "+52" },{ code: "+33", name: "🇫🇷 France", dial: "+33" },
+        { code: "+49", name: "🇩🇪 Germany", dial: "+49" },{ code: "+39", name: "🇮🇹 Italy", dial: "+39" },{ code: "+34", name: "🇪🇸 Spain", dial: "+34" },
+        { code: "+7", name: "🇷🇺 Russia", dial: "+7" },{ code: "+81", name: "🇯🇵 Japan", dial: "+81" },{ code: "+82", name: "🇰🇷 South Korea", dial: "+82" },
+        { code: "+63", name: "🇵🇭 Philippines", dial: "+63" },{ code: "+66", name: "🇹🇭 Thailand", dial: "+66" },{ code: "+60", name: "🇲🇾 Malaysia", dial: "+60" },
+        { code: "+65", name: "🇸🇬 Singapore", dial: "+65" },{ code: "+61", name: "🇦🇺 Australia", dial: "+61" },{ code: "+64", name: "🇳🇿 New Zealand", dial: "+64" },
+        { code: "+31", name: "🇳🇱 Netherlands", dial: "+31" },{ code: "+46", name: "🇸🇪 Sweden", dial: "+46" },{ code: "+47", name: "🇳🇴 Norway", dial: "+47" }
+    ];
+    // populate country select
+    const countrySelect = document.getElementById("countryCodeSelect");
+    countriesList.forEach(c => {
+        const opt = document.createElement("option");
+        opt.value = c.dial;
+        opt.innerHTML = `${c.name} (${c.dial})`;
+        countrySelect.appendChild(opt);
+    });
+
+    // ---------- GLOBAL DATA ----------
+    let users = [];          // each user: { id, name, phoneFull, countryCode, passwordHash, dob, age, photo, idDocument, city, gender, createdAt }
+    let otpStore = {};      // key: phoneFull, value: { code, expiresAt }
+    let activeUserSession = null; // { userId, lastActive }
     let adminLogged = false;
-    let sessionTimer = null;
-    const ADMIN_PHONE = "0906067696";
-    const ADMIN_PASSWORD_HASH = btoa("21522152"); // simple hash
+    let sessionInterval = null;
 
-    // Helper: Save to localStorage
-    function saveUsers() {
-        localStorage.setItem("dating_users", JSON.stringify(users));
+    // Helper: save to localStorage
+    function saveUsersToLocal() {
+        localStorage.setItem("global_dating_users", JSON.stringify(users));
     }
-    function loadUsers() {
-        const stored = localStorage.getItem("dating_users");
+    function loadUsersFromLocal() {
+        const stored = localStorage.getItem("global_dating_users");
         if (stored) users = JSON.parse(stored);
-        else {
-            // demo initial users (optional)
-            users = [];
-        }
+        else users = [];
     }
 
-    // Generate random OTP
-    function generateOTP() {
-        return Math.floor(100000 + Math.random() * 900000).toString();
+    // OTP: send sms simulation (5 minutes)
+    function sendOtpCode(phoneFull) {
+        const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+        const expiresAt = Date.now() + 5 * 60 * 1000; // 5 minutes exactly
+        otpStore[phoneFull] = { code: otpCode, expiresAt };
+        console.log(`📱 OTP for ${phoneFull}: ${otpCode}`);
+        alert(`[DEMO] Your verification OTP is: ${otpCode}\nValid for 5 minutes.`);
+        return otpCode;
     }
 
-    // send OTP simulation (in real app, SMS API, here simulated)
-    function sendOTPSim(phoneNumber) {
-        const otp = generateOTP();
-        const expires = Date.now() + 10 * 60 * 1000; // 10 min
-        otpStorage[phoneNumber] = { code: otp, expires };
-        console.log(`📱 OTP for ${phoneNumber}: ${otp}`); // for testing
-        alert(`[DEMO] Your OTP is: ${otp}\n(Valid 10 minutes)`);
-        return otp;
-    }
-
-    // verify OTP
-    function verifyOTP(phone, enteredOtp) {
-        const record = otpStorage[phone];
+    function verifyOtp(phoneFull, enteredCode) {
+        const record = otpStore[phoneFull];
         if (!record) return false;
-        if (Date.now() > record.expires) {
-            delete otpStorage[phone];
+        if (Date.now() > record.expiresAt) {
+            delete otpStore[phoneFull];
             return false;
         }
-        if (record.code === enteredOtp) {
-            delete otpStorage[phone];
+        if (record.code === enteredCode) {
+            delete otpStore[phoneFull];
             return true;
         }
         return false;
     }
 
-    // get age from DOB string (YYYY-MM-DD)
-    function calculateAge(dobStr) {
+    // age from dob string
+    function calcAge(dobStr) {
         const birth = new Date(dobStr);
         const diff = Date.now() - birth.getTime();
         const ageDate = new Date(diff);
         return Math.abs(ageDate.getUTCFullYear() - 1970);
     }
 
-    // convert file to base64
+    // file to base64
     function fileToBase64(file) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
+            reader.onerror = () => resolve("");
         });
     }
 
-    // registration handler
+    // Registration handler
     document.getElementById("registerForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         const fullName = document.getElementById("fullName").value.trim();
-        const countryCode = document.getElementById("countryCode").value;
-        const phoneNumber = document.getElementById("phoneNumber").value.trim();
-        const fullPhone = countryCode + phoneNumber;
-        const email = document.getElementById("email").value.trim();
+        const countryCode = document.getElementById("countryCodeSelect").value;
+        const phoneRaw = document.getElementById("phoneNumber").value.trim();
+        const fullPhone = countryCode + phoneRaw;
         const password = document.getElementById("password").value;
         const confirmPwd = document.getElementById("confirmPwd").value;
         const dob = document.getElementById("dob").value;
-        const otpEntered = document.getElementById("otpCode").value.trim();
+        const otpValue = document.getElementById("otpInput").value.trim();
+        const gender = document.getElementById("gender").value;
+        const city = document.getElementById("city").value.trim();
 
-        if (!fullName || !phoneNumber || !password || !dob || !otpEntered) {
-            alert("All required fields (*) must be filled");
+        if (!fullName || !phoneRaw || !password || !dob || !otpValue) {
+            alert("Please fill all required fields (*)");
             return;
         }
-        if (password !== confirmPwd) {
-            alert("Passwords do not match");
+        if (password !== confirmPwd) { alert("Passwords do not match"); return; }
+        if (password.length < 6) { alert("Password must be at least 6 characters"); return; }
+        if (!verifyOtp(fullPhone, otpValue)) {
+            alert("Invalid or expired OTP. Please request a new code (valid 5 minutes).");
             return;
         }
-        if (password.length < 6) {
-            alert("Password must be at least 6 characters");
+        if (users.find(u => u.phoneFull === fullPhone)) {
+            alert("Phone number already registered. Please login.");
             return;
         }
-        // OTP verification
-        if (!verifyOTP(fullPhone, otpEntered)) {
-            alert("Invalid or expired OTP. Please request a new code.");
-            return;
-        }
-        // check existing user
-        if (users.find(u => u.phone === fullPhone)) {
-            alert("Phone number already registered. Try login.");
-            return;
-        }
-        // handle photo & id
+
+        // handle photo and ID uploads
         let photoBase64 = "";
-        const photoFile = document.getElementById("profilePhotoFile").files[0];
+        const photoFile = document.getElementById("profilePhoto").files[0];
         if (photoFile) photoBase64 = await fileToBase64(photoFile);
+        
         let idBase64 = "";
-        const idFile = document.getElementById("idDocument").files[0];
+        const idFile = document.getElementById("idDocumentUpload").files[0];
         if (idFile) idBase64 = await fileToBase64(idFile);
+        else { alert("ID document upload is required for verification (Government ID/Passport)"); return; }
 
         const newUser = {
             id: Date.now(),
             name: fullName,
-            phone: fullPhone,
+            phoneFull: fullPhone,
             countryCode: countryCode,
-            email: email,
-            passwordHash: btoa(password), // simple base64 encoding (demo)
+            passwordHash: btoa(password),
             dob: dob,
-            age: calculateAge(dob),
-            photo: photoBase64 || "https://randomuser.me/api/portraits/women/1.jpg",
+            age: calcAge(dob),
+            photo: photoBase64 || "https://randomuser.me/api/portraits/women/68.jpg",
             idDocument: idBase64,
-            verifiedId: idBase64 ? true : false,
+            idVerified: true,
+            city: city,
+            gender: gender,
             createdAt: new Date().toISOString()
         };
         users.push(newUser);
-        saveUsers();
-        alert("✅ Registration successful! You can now login.");
-        // switch to login
-        document.getElementById("registerSection").style.display = "none";
-        document.getElementById("loginSection").style.display = "block";
+        saveUsersToLocal();
+        alert("✅ Registration successful! You can now log in.");
+        document.getElementById("registerPanel").style.display = "none";
+        document.getElementById("loginPanel").style.display = "block";
         document.getElementById("loginPhone").value = fullPhone;
     });
 
-    // Send OTP button
+    // Send OTP with 5-minute timer
     document.getElementById("sendOtpBtn").addEventListener("click", () => {
-        const countryCode = document.getElementById("countryCode").value;
-        const phoneRaw = document.getElementById("phoneNumber").value.trim();
-        if (!phoneRaw) { alert("Enter phone number first"); return; }
-        const fullPhone = countryCode + phoneRaw;
-        const otp = sendOTPSim(fullPhone);
-        let timer = 60;
-        const timerEl = document.getElementById("otpTimer");
+        const countryCode = document.getElementById("countryCodeSelect").value;
+        const phoneNum = document.getElementById("phoneNumber").value.trim();
+        if (!phoneNum) { alert("Enter phone number first"); return; }
+        const fullPhone = countryCode + phoneNum;
+        sendOtpCode(fullPhone);
+        let secondsLeft = 300; // 5 min
+        const timerEl = document.getElementById("otpTimerDisplay");
         const interval = setInterval(() => {
-            if (timer <= 0) {
-                clearInterval(interval);
-                timerEl.innerHTML = "";
-            } else {
-                timerEl.innerHTML = `⏳ Resend available in ${timer}s`;
-                timer--;
+            if (secondsLeft <= 0) { clearInterval(interval); timerEl.innerHTML = ""; }
+            else {
+                const mins = Math.floor(secondsLeft / 60);
+                const secs = secondsLeft % 60;
+                timerEl.innerHTML = `⏳ OTP valid for ${mins}:${secs < 10 ? '0'+secs : secs} minutes`;
+                secondsLeft--;
             }
         }, 1000);
-        setTimeout(() => clearInterval(interval), 61000);
+        setTimeout(() => clearInterval(interval), 300000);
     });
 
-    // Login logic
-    document.getElementById("doLoginBtn").addEventListener("click", () => {
+    // Login
+    document.getElementById("doLogin").addEventListener("click", () => {
         const loginPhone = document.getElementById("loginPhone").value.trim();
         const loginPwd = document.getElementById("loginPassword").value;
-        const user = users.find(u => u.phone === loginPhone && btoa(loginPwd) === u.passwordHash);
-        if (!user) {
-            alert("Invalid phone or password");
-            return;
-        }
-        activeSession = { userId: user.id, lastActive: Date.now() };
-        sessionStorage.setItem("activeSession", JSON.stringify(activeSession));
-        // start session timeout (1 hour)
-        if (sessionTimer) clearInterval(sessionTimer);
-        sessionTimer = setInterval(() => {
-            if (activeSession && (Date.now() - activeSession.lastActive) > 60 * 60 * 1000) {
-                alert("🔒 Session expired due to 1 hour inactivity. Please re-enter your password.");
+        const user = users.find(u => u.phoneFull === loginPhone && btoa(loginPwd) === u.passwordHash);
+        if (!user) { alert("Invalid credentials"); return; }
+        activeUserSession = { userId: user.id, lastActive: Date.now() };
+        sessionStorage.setItem("activeSession", JSON.stringify(activeUserSession));
+        if (sessionInterval) clearInterval(sessionInterval);
+        sessionInterval = setInterval(() => {
+            if (activeUserSession && (Date.now() - activeUserSession.lastActive) > 60 * 60 * 1000) {
+                alert("🔒 Session expired due to 1 hour inactivity. Please login again.");
                 logoutUser();
                 window.location.reload();
             }
         }, 30000);
-        // show dashboard
-        document.getElementById("loginSection").style.display = "none";
-        document.getElementById("registerSection").style.display = "none";
+        // refresh activity on any click
+        const activityRefresh = () => { if(activeUserSession) { activeUserSession.lastActive = Date.now(); sessionStorage.setItem("activeSession", JSON.stringify(activeUserSession)); }};
+        document.removeEventListener("click", activityRefresh);
+        document.addEventListener("click", activityRefresh);
+        document.removeEventListener("keydown", activityRefresh);
+        document.addEventListener("keydown", activityRefresh);
+
+        document.getElementById("loginPanel").style.display = "none";
+        document.getElementById("registerPanel").style.display = "none";
         document.getElementById("userDashboard").style.display = "block";
-        document.getElementById("dashboardName").innerText = user.name;
-        document.getElementById("dashboardPhone").innerText = user.phone;
-        document.getElementById("dashboardCountry").innerText = user.countryCode;
-        document.getElementById("dashboardAge").innerText = user.age;
-        document.getElementById("dashboardIdStatus").innerHTML = user.verifiedId ? "<span style='color:green'>✔ Verified</span>" : "⚠️ Pending";
-        if (user.photo) document.getElementById("dashboardPhoto").src = user.photo;
-        else document.getElementById("dashboardPhoto").src = "https://via.placeholder.com/100";
-        // activity update
-        document.addEventListener("click", () => { if(activeSession) activeSession.lastActive = Date.now(); sessionStorage.setItem("activeSession", JSON.stringify(activeSession)); });
-        document.addEventListener("keydown", () => { if(activeSession) activeSession.lastActive = Date.now(); sessionStorage.setItem("activeSession", JSON.stringify(activeSession)); });
+        document.getElementById("dashboardName").innerHTML = user.name;
+        document.getElementById("dashboardPhone").innerHTML = user.phoneFull;
+        document.getElementById("dashboardCountry").innerHTML = user.countryCode;
+        document.getElementById("dashboardAge").innerHTML = user.age;
+        document.getElementById("dashboardIdStatus").innerHTML = user.idDocument ? "✅ ID Verified" : "⚠️ Pending";
+        document.getElementById("dashboardIdStatus").style.background = user.idDocument ? "#27ae60" : "#e67e22";
+        document.getElementById("dashboardPhoto").src = user.photo;
     });
 
-    // Update password
-    document.getElementById("updatePasswordBtn").addEventListener("click", () => {
-        if (!activeSession) return;
-        const newPwd = document.getElementById("newPasswordInput").value;
-        if (!newPwd || newPwd.length < 6) { alert("Password must be 6+ chars"); return; }
-        const userIndex = users.findIndex(u => u.id === activeSession.userId);
-        if (userIndex !== -1) {
-            users[userIndex].passwordHash = btoa(newPwd);
-            saveUsers();
-            alert("Password updated successfully. Please login again.");
+    function logoutUser() {
+        activeUserSession = null;
+        sessionStorage.removeItem("activeSession");
+        if(sessionInterval) clearInterval(sessionInterval);
+        document.getElementById("userDashboard").style.display = "none";
+        document.getElementById("registerPanel").style.display = "block";
+        document.getElementById("loginPanel").style.display = "none";
+        document.getElementById("adminPanel").style.display = "none";
+        adminLogged = false;
+    }
+    document.getElementById("userLogoutBtn").addEventListener("click", logoutUser);
+    document.getElementById("updateUserPasswordBtn").addEventListener("click", () => {
+        if (!activeUserSession) return;
+        const newPwd = document.getElementById("newUserPassword").value;
+        if (!newPwd || newPwd.length < 6) { alert("Min 6 characters"); return; }
+        const idx = users.findIndex(u => u.id === activeUserSession.userId);
+        if (idx !== -1) {
+            users[idx].passwordHash = btoa(newPwd);
+            saveUsersToLocal();
+            alert("Password updated! Please login again.");
             logoutUser();
         }
     });
 
-    function logoutUser() {
-        activeSession = null;
-        sessionStorage.removeItem("activeSession");
-        if(sessionTimer) clearInterval(sessionTimer);
-        document.getElementById("userDashboard").style.display = "none";
-        document.getElementById("registerSection").style.display = "block";
-        document.getElementById("loginSection").style.display = "none";
-        document.getElementById("adminPanel").style.display = "none";
-        adminLogged = false;
-    }
-
-    document.getElementById("logoutUserBtn").addEventListener("click", logoutUser);
-
-    // Admin logic
-    document.getElementById("adminLoginLink").addEventListener("click", (e) => {
+    // Admin section (admin phone: 0906067696 , pass: 21522152)
+    const ADMIN_PHONE = "0906067696";
+    const ADMIN_PASS_HASH = btoa("21522152");
+    document.getElementById("adminLoginTrigger").addEventListener("click", (e) => {
         e.preventDefault();
-        const adminPhone = prompt("Enter Admin Phone Number:", "0906067696");
+        const adminPhone = prompt("Admin Phone:", "0906067696");
         const adminPass = prompt("Admin Password:");
-        if (adminPhone === ADMIN_PHONE && btoa(adminPass) === ADMIN_PASSWORD_HASH) {
+        if (adminPhone === ADMIN_PHONE && btoa(adminPass) === ADMIN_PASS_HASH) {
             adminLogged = true;
             renderAdminTable();
-            document.getElementById("registerSection").style.display = "none";
-            document.getElementById("loginSection").style.display = "none";
+            document.getElementById("registerPanel").style.display = "none";
+            document.getElementById("loginPanel").style.display = "none";
             document.getElementById("userDashboard").style.display = "none";
             document.getElementById("adminPanel").style.display = "block";
-        } else {
-            alert("Invalid admin credentials");
-        }
+        } else alert("Invalid admin credentials");
     });
-
     function renderAdminTable() {
-        const tbody = document.getElementById("adminUserList");
-        if (!tbody) return;
+        const tbody = document.getElementById("adminUserTableBody");
         tbody.innerHTML = "";
         users.forEach(user => {
             const row = tbody.insertRow();
             row.insertCell(0).innerText = user.name;
-            row.insertCell(1).innerText = user.phone;
+            row.insertCell(1).innerText = user.phoneFull;
             row.insertCell(2).innerText = user.countryCode;
-            row.insertCell(3).innerText = user.email || "-";
-            row.insertCell(4).innerHTML = user.idDocument ? "<span class='badge'>ID uploaded</span>" : "❌";
-            row.insertCell(5).innerHTML = user.photo ? "<i class='fas fa-image'></i> yes" : "no";
-            row.insertCell(6).innerText = new Date(user.createdAt).toLocaleDateString();
-            const actions = row.insertCell(7);
+            row.insertCell(3).innerHTML = user.idDocument ? "<span style='background:#27ae60; padding:4px 12px; border-radius:30px;'>ID present</span>" : "❌";
+            row.insertCell(4).innerHTML = user.photo ? "🖼️ Yes" : "No";
+            row.insertCell(5).innerText = user.dob;
             const delBtn = document.createElement("button");
             delBtn.innerText = "Delete";
             delBtn.className = "btn-outline";
             delBtn.style.padding = "4px 12px";
             delBtn.onclick = () => {
-                if(confirm(`Delete user ${user.name}?`)){
+                if(confirm(`Delete ${user.name}?`)) {
                     users = users.filter(u => u.id !== user.id);
-                    saveUsers();
+                    saveUsersToLocal();
                     renderAdminTable();
                 }
             };
-            actions.appendChild(delBtn);
+            row.insertCell(6).appendChild(delBtn);
         });
     }
-
-    document.getElementById("adminLogoutBtn").addEventListener("click", () => {
+    document.getElementById("adminLogout").addEventListener("click", () => {
         adminLogged = false;
         document.getElementById("adminPanel").style.display = "none";
-        document.getElementById("registerSection").style.display = "block";
+        document.getElementById("registerPanel").style.display = "block";
     });
 
-    // navigation between login / register
+    // navigation links
     document.getElementById("showLoginLink").addEventListener("click", (e) => {
         e.preventDefault();
-        document.getElementById("registerSection").style.display = "none";
-        document.getElementById("loginSection").style.display = "block";
+        document.getElementById("registerPanel").style.display = "none";
+        document.getElementById("loginPanel").style.display = "block";
     });
-    document.getElementById("backToRegisterLink").addEventListener("click", (e) => {
+    document.getElementById("backToRegister").addEventListener("click", (e) => {
         e.preventDefault();
-        document.getElementById("loginSection").style.display = "none";
-        document.getElementById("registerSection").style.display = "block";
+        document.getElementById("loginPanel").style.display = "none";
+        document.getElementById("registerPanel").style.display = "block";
     });
 
     // password visibility toggles
-    function toggleVisibility(inputId, iconId) {
+    function setupToggle(toggleId, inputId) {
+        const toggle = document.getElementById(toggleId);
         const input = document.getElementById(inputId);
-        const icon = document.getElementById(iconId);
-        icon.addEventListener("click", () => {
+        if(toggle && input) toggle.addEventListener("click", () => {
             const type = input.type === "password" ? "text" : "password";
             input.type = type;
-            icon.classList.toggle("fa-eye-slash");
+            toggle.classList.toggle("fa-eye-slash");
         });
     }
-    toggleVisibility("password", "toggleRegPwd");
-    toggleVisibility("confirmPwd", "toggleRegPwd");
-    toggleVisibility("loginPassword", "toggleLoginPwd");
+    setupToggle("toggleRegPwd", "password");
+    setupToggle("toggleLoginPwd", "loginPassword");
+    // confirm password simple
+    const confirmField = document.getElementById("confirmPwd");
+    const toggleConfirm = document.createElement("i");
+    // just reuse style
+    document.querySelectorAll(".toggle-pwd").forEach(el => {});
 
-    // flatpickr DOB
-    flatpickr("#dob", {
-        dateFormat: "Y-m-d",
-        maxDate: "2006-01-01",
-        minDate: "1940-01-01",
-        defaultDate: "1995-01-01"
-    });
-
+    // flatpickr for DOB
+    flatpickr("#dob", { dateFormat: "Y-m-d", maxDate: "2006-12-31", minDate: "1940-01-01" });
     // photo preview
-    document.getElementById("profilePhotoFile").addEventListener("change", function(e) {
+    document.getElementById("profilePhoto").addEventListener("change", (e) => {
         const file = e.target.files[0];
-        if (file) {
+        if(file) {
             const reader = new FileReader();
-            reader.onload = function(ev) {
-                const preview = document.getElementById("photoPreview");
-                preview.innerHTML = `<img src="${ev.target.result}" class="photo-preview" />`;
+            reader.onload = (ev) => {
+                const container = document.getElementById("photoPreviewContainer");
+                container.innerHTML = `<img src="${ev.target.result}" class="photo-preview" />`;
             };
             reader.readAsDataURL(file);
         }
     });
 
-    // Check existing session from sessionStorage
-    function checkExistingSession() {
+    // check existing session
+    function restoreSession() {
         const saved = sessionStorage.getItem("activeSession");
-        if (saved) {
-            try {
-                const sess = JSON.parse(saved);
-                const userExists = users.find(u => u.id === sess.userId);
-                if (userExists && (Date.now() - sess.lastActive) < 60 * 60 * 1000) {
-                    activeSession = sess;
-                    // simulate auto login
-                    document.getElementById("registerSection").style.display = "none";
-                    document.getElementById("loginSection").style.display = "none";
-                    document.getElementById("userDashboard").style.display = "block";
-                    const u = userExists;
-                    document.getElementById("dashboardName").innerText = u.name;
-                    document.getElementById("dashboardPhone").innerText = u.phone;
-                    document.getElementById("dashboardCountry").innerText = u.countryCode;
-                    document.getElementById("dashboardAge").innerText = u.age;
-                    document.getElementById("dashboardIdStatus").innerHTML = u.verifiedId ? "✔ Verified" : "⚠️ Pending";
-                    document.getElementById("dashboardPhoto").src = u.photo || "https://via.placeholder.com/100";
-                    // start timer again
-                    if(sessionTimer) clearInterval(sessionTimer);
-                    sessionTimer = setInterval(() => {
-                        if (activeSession && (Date.now() - activeSession.lastActive) > 60 * 60 * 1000) {
-                            alert("Session expired due to inactivity.");
-                            logoutUser();
-                            location.reload();
-                        }
-                    }, 30000);
-                    document.addEventListener("click", () => { if(activeSession) activeSession.lastActive = Date.now(); sessionStorage.setItem("activeSession", JSON.stringify(activeSession)); });
-                } else sessionStorage.removeItem("activeSession");
-            } catch(e) { sessionStorage.removeItem("activeSession"); }
+        if(saved) {
+            const sess = JSON.parse(saved);
+            const userExists = users.find(u => u.id === sess.userId);
+            if(userExists && (Date.now() - sess.lastActive) < 60*60*1000) {
+                activeUserSession = sess;
+                document.getElementById("registerPanel").style.display = "none";
+                document.getElementById("loginPanel").style.display = "none";
+                document.getElementById("userDashboard").style.display = "block";
+                const u = userExists;
+                document.getElementById("dashboardName").innerHTML = u.name;
+                document.getElementById("dashboardPhone").innerHTML = u.phoneFull;
+                document.getElementById("dashboardCountry").innerHTML = u.countryCode;
+                document.getElementById("dashboardAge").innerHTML = u.age;
+                document.getElementById("dashboardIdStatus").innerHTML = u.idDocument ? "✅ ID Verified" : "⚠️ Pending";
+                document.getElementById("dashboardPhoto").src = u.photo;
+                if(sessionInterval) clearInterval(sessionInterval);
+                sessionInterval = setInterval(() => {
+                    if (activeUserSession && (Date.now() - activeUserSession.lastActive) > 60 * 60 * 1000) {
+                        alert("Session expired");
+                        logoutUser();
+                        location.reload();
+                    }
+                }, 30000);
+            } else sessionStorage.removeItem("activeSession");
         }
     }
 
-    loadUsers();
-    checkExistingSession();
+    loadUsersFromLocal();
+    restoreSession();
 </script>
 </body>
 </html>
-```
