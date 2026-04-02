@@ -3,532 +3,549 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>World Dating · Connect Globally</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <title>World Dating | Global Love & Connection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            transition: background-color 0.25s ease, color 0.2s ease, border-color 0.2s;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle at 10% 20%, #0a0f1e, #03060c);
-            color: #eef2ff;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             line-height: 1.5;
-            scroll-behavior: smooth;
         }
 
-        /* custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
+        /* Light Theme (default) */
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --border: #e2e8f0;
+            --accent: #ff477e;
+            --accent-hover: #ff6b9d;
+            --header-glass: rgba(255, 255, 255, 0.85);
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
         }
-        ::-webkit-scrollbar-track {
-            background: #111827;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #ff3b6f;
-            border-radius: 10px;
+
+        body.dark {
+            --bg-primary: #0a0f1e;
+            --bg-secondary: #111827;
+            --bg-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --border: #2d3a5e;
+            --header-glass: rgba(15, 23, 42, 0.9);
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
         }
 
         .container {
             max-width: 1280px;
             margin: 0 auto;
-            padding: 0 32px;
+            padding: 0 28px;
         }
 
-        /* header / navbar */
+        /* Glass navbar */
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 24px 0;
+            padding: 20px 0;
             flex-wrap: wrap;
             gap: 20px;
+            backdrop-filter: blur(12px);
+            background: var(--header-glass);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
         }
 
         .logo {
             font-size: 1.8rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #ff3b6f, #ff9f4a);
+            background: linear-gradient(135deg, #ff477e, #ff9f4a);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            letter-spacing: -0.5px;
         }
 
-        .nav-links {
+        .nav-controls {
             display: flex;
-            gap: 36px;
+            gap: 20px;
             align-items: center;
+            flex-wrap: wrap;
         }
 
-        .nav-links a {
-            text-decoration: none;
-            color: #d1d5f0;
-            font-weight: 500;
-            transition: 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: #ff5c8a;
-        }
-
-        .btn-login {
-            background: rgba(255, 59, 111, 0.12);
-            border: 1.5px solid #ff3b6f;
-            padding: 8px 24px;
+        .theme-toggle, .lang-toggle {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
             border-radius: 40px;
-            font-weight: 600;
-            color: #ff5c8a;
-            transition: 0.25s;
+            padding: 8px 18px;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(105deg, #ff477e, #ff8c42);
+            border: none;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 700;
+            color: white;
             cursor: pointer;
         }
 
-        .btn-login:hover {
-            background: #ff3b6f;
-            color: white;
-            box-shadow: 0 6px 16px rgba(255, 59, 111, 0.3);
-        }
-
-        /* hero section */
+        /* Hero */
         .hero {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 48px;
-            padding: 60px 0 80px;
+            padding: 60px 0 70px;
             flex-wrap: wrap;
         }
 
-        .hero-content {
-            flex: 1;
-            min-width: 280px;
-        }
-
-        .hero-badge {
-            background: rgba(255, 59, 111, 0.18);
-            display: inline-block;
-            padding: 6px 18px;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #ff9f6e;
-            margin-bottom: 24px;
-            backdrop-filter: blur(4px);
-        }
-
         .hero-content h1 {
-            font-size: 3.6rem;
+            font-size: 3.4rem;
             font-weight: 800;
             line-height: 1.2;
             margin-bottom: 24px;
-            background: linear-gradient(to right, #ffffff, #ffb8d0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
         }
 
         .hero-content p {
             font-size: 1.2rem;
-            color: #b9c3e6;
-            margin-bottom: 36px;
-            max-width: 550px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
         }
 
-        .btn-primary {
-            background: linear-gradient(105deg, #ff3b6f, #ff8a4a);
-            border: none;
-            padding: 14px 38px;
-            border-radius: 60px;
-            font-weight: 700;
-            font-size: 1rem;
-            color: white;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            box-shadow: 0 10px 20px -5px rgba(255, 59, 111, 0.4);
+        /* Feed / Posts Section */
+        .feed-section {
+            margin: 60px 0;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 20px 28px -8px rgba(255, 59, 111, 0.5);
-        }
-
-        .hero-image {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-        }
-
-        .profile-preview-card {
-            background: rgba(18, 25, 45, 0.7);
-            backdrop-filter: blur(12px);
-            border-radius: 48px;
+        .create-post {
+            background: var(--bg-card);
+            border-radius: 32px;
             padding: 24px;
-            width: 300px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 30px 40px -20px rgba(0,0,0,0.5);
-            transition: transform 0.3s;
-            animation: float 4s ease-in-out infinite;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
         }
 
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-12px); }
-            100% { transform: translateY(0px); }
+        .post-input {
+            width: 100%;
+            padding: 16px;
+            border-radius: 28px;
+            border: 1px solid var(--border);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            resize: vertical;
         }
 
-        .profile-preview-card .avatar {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(145deg, #ff5f7c, #ff9f4a);
+        .media-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .media-btn {
+            background: none;
+            border: 1px solid var(--border);
+            padding: 8px 18px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .post-card {
+            background: var(--bg-card);
+            border-radius: 32px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(145deg, #ff5f7c, #ffaa5e);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
-            margin-bottom: 16px;
+            font-weight: bold;
+            color: white;
         }
 
-        .profile-preview-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 6px;
+        .post-media {
+            margin: 16px 0;
+            border-radius: 28px;
+            overflow: hidden;
+            max-width: 100%;
         }
 
-        .profile-preview-card .location {
-            color: #ffb47b;
-            font-size: 0.85rem;
-            margin-bottom: 16px;
+        .post-media img, .post-media video {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 24px;
         }
 
-        .profile-preview-card .badge {
-            display: inline-block;
-            background: rgba(255, 59, 111, 0.25);
-            border-radius: 40px;
-            padding: 4px 12px;
-            font-size: 0.7rem;
-            margin-right: 8px;
+        .post-actions {
+            display: flex;
+            gap: 24px;
+            margin-top: 16px;
+            color: var(--text-secondary);
         }
 
-        /* features section */
-        .features {
-            padding: 80px 0 100px;
-            text-align: center;
-        }
-
-        .section-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        .section-sub {
-            color: #99a4c2;
-            max-width: 600px;
-            margin: 0 auto 56px;
-        }
-
-        .cards-grid {
+        /* grid */
+        .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 32px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 28px;
+            margin: 48px 0;
         }
 
         .feature-card {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(8px);
-            border-radius: 36px;
-            padding: 36px 28px;
-            transition: all 0.3s;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: var(--bg-card);
+            border-radius: 32px;
+            padding: 28px;
             text-align: center;
+            border: 1px solid var(--border);
         }
 
-        .feature-card:hover {
-            transform: translateY(-10px);
-            background: rgba(25, 35, 60, 0.85);
-            border-color: rgba(255, 59, 111, 0.4);
-            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
-        }
-
-        .feature-icon {
-            font-size: 3.4rem;
-            margin-bottom: 24px;
-            background: linear-gradient(135deg, #ff5c8a, #ffaa5e);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .feature-card h3 {
-            font-size: 1.7rem;
-            margin-bottom: 12px;
-        }
-
-        .feature-card p {
-            color: #b4bfe0;
-        }
-
-        /* footer */
         footer {
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 40px 0 36px;
             text-align: center;
-            color: #7e89ac;
+            padding: 40px 0;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
         }
 
-        /* login modal (UI only) */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(12px);
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .modal-card {
-            background: #0f172ad9;
-            backdrop-filter: blur(20px);
-            border-radius: 48px;
-            max-width: 420px;
-            width: 90%;
-            padding: 32px;
-            border: 1px solid rgba(255, 59, 111, 0.3);
-            text-align: center;
-            animation: modalFade 0.25s ease;
-        }
-
-        @keyframes modalFade {
-            from { opacity: 0; transform: scale(0.95);}
-            to { opacity: 1; transform: scale(1);}
-        }
-
-        .modal-card input {
-            width: 100%;
-            padding: 14px 20px;
-            margin: 12px 0;
-            border-radius: 60px;
-            border: 1px solid #2d3a5e;
-            background: #020617cc;
-            color: white;
-            outline: none;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            color: #ff7b9c;
-            font-size: 24px;
-            float: right;
-            cursor: pointer;
-        }
-
-        /* responsiveness */
-        @media (max-width: 850px) {
-            .hero {
-                flex-direction: column;
-                text-align: center;
-            }
-            .hero-content h1 {
-                font-size: 2.6rem;
-            }
-            .container {
-                padding: 0 24px;
-            }
-            .navbar {
-                flex-direction: column;
-            }
-        }
-
-        @media (max-width: 550px) {
-            .hero-content h1 {
-                font-size: 2rem;
-            }
-            .btn-primary {
-                padding: 12px 28px;
-            }
+        @media (max-width: 780px) {
+            .hero h1 { font-size: 2.2rem; }
+            .container { padding: 0 20px; }
         }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <!-- Header / Navigation -->
-        <header>
-            <nav class="navbar">
-                <div class="logo">🌍 World Dating</div>
-                <div class="nav-links">
-                    <a href="#">Home</a>
-                    <a href="#features">Features</a>
-                    <button class="btn-login" id="openLoginModalBtn">Login</button>
-                </div>
-            </nav>
-        </header>
+        <nav class="navbar">
+            <div class="logo">🌍 World Dating</div>
+            <div class="nav-controls">
+                <button class="theme-toggle" id="themeToggleBtn"><i class="fas fa-moon"></i> <span id="themeText">Dark</span></button>
+                <button class="lang-toggle" id="langToggleBtn"><i class="fas fa-globe"></i> <span id="langText">አማርኛ</span></button>
+                <button class="btn-primary" id="getStartedBtn">Get Started</button>
+            </div>
+        </nav>
 
-        <!-- Hero Section -->
         <section class="hero">
             <div class="hero-content">
-                <div class="hero-badge">✨ Global Community ✨</div>
-                <h1>Meet People From <br> Around the World</h1>
-                <p>Connect, chat, and find love globally — thousands of singles are waiting for you. Your next adventure starts here.</p>
-                <button class="btn-primary" id="heroGetStartedBtn">Get Started <i class="fas fa-arrow-right"></i></button>
+                <h1 id="heroTitle">Meet People From Around the World</h1>
+                <p id="heroSub">Connect, chat, and find love globally — share your moments with photos & videos.</p>
+                <button class="btn-primary" id="heroCta">✨ Start Exploring</button>
             </div>
-            <div class="hero-image">
-                <div class="profile-preview-card">
-                    <div class="avatar"><i class="fas fa-heart"></i></div>
-                    <h3>Elena, 26</h3>
-                    <div class="location"><i class="fas fa-map-marker-alt"></i> Paris, France</div>
-                    <div>
-                        <span class="badge">🌸 Verified</span>
-                        <span class="badge">💬 97% match</span>
-                    </div>
-                    <p style="margin-top: 16px; font-size: 0.85rem;">"Looking for deep conversations and authentic connection."</p>
-                    <div style="display: flex; justify-content: center; gap: 12px; margin-top: 16px;">
-                        <i class="fas fa-camera" style="color:#ff9f6e;"></i>
-                        <i class="fas fa-comment-dots" style="color:#ff5c8a;"></i>
-                    </div>
-                </div>
+            <div style="background: var(--bg-card); border-radius: 40px; padding: 20px; border:1px solid var(--border);">
+                <i class="fas fa-heart" style="font-size: 48px; color:#ff477e;"></i>
+                <p id="demoText">Join 10,000+ happy couples</p>
             </div>
         </section>
 
-        <!-- Features Section -->
-        <div id="features" class="features">
-            <h2 class="section-title">Why join World Dating?</h2>
-            <p class="section-sub">Experience a new way to connect with people across borders, with tools designed for real relationships.</p>
-            <div class="cards-grid">
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-globe-americas"></i></div>
-                    <h3>Smart Matching</h3>
-                    <p>Find global partners based on interests, location, and personality — our algorithm connects you with like-minded souls.</p>
+        <!-- FEED SECTION: posts with video/photo -->
+        <div class="feed-section">
+            <h2 id="feedTitle" style="margin-bottom: 24px;">💬 Latest Moments</h2>
+            <div class="create-post">
+                <textarea id="postContentInput" class="post-input" rows="2" placeholder="Share your story..."></textarea>
+                <div class="media-buttons">
+                    <button id="uploadPhotoBtn" class="media-btn"><i class="fas fa-image"></i> <span id="photoLabel">Photo</span></button>
+                    <button id="uploadVideoBtn" class="media-btn"><i class="fas fa-video"></i> <span id="videoLabel">Video</span></button>
+                    <button id="publishPostBtn" class="btn-primary" style="padding: 8px 20px;"><i class="fas fa-paper-plane"></i> <span id="publishLabel">Publish</span></button>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-comments"></i></div>
-                    <h3>Real-time Chat</h3>
-                    <p>Seamless instant messaging, voice notes, and media sharing. Break the ice with fun stickers and GIFs.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-gift"></i></div>
-                    <h3>Virtual Gifts</h3>
-                    <p>Send roses, chocolates or sparkling hearts. Surprise your match and make them feel special from miles away.</p>
-                </div>
+                <input type="file" id="photoFileInput" accept="image/*" style="display:none">
+                <input type="file" id="videoFileInput" accept="video/*" style="display:none">
+                <div id="mediaPreview" style="margin-top: 12px;"></div>
             </div>
+            <div id="postsFeed"></div>
         </div>
 
-        <!-- Extra: subtle animated divider (optional) -->
-        <div style="text-align: center; margin: 20px 0 20px;">
-            <div style="width: 80px; height: 3px; background: #ff3b6f; margin: 0 auto; border-radius: 4px;"></div>
+        <div class="features-grid">
+            <div class="feature-card"><i class="fas fa-globe" style="font-size: 32px; color:#ff477e;"></i><h3 id="feat1Title">Global Matching</h3><p id="feat1Desc">Find partners across 150+ countries</p></div>
+            <div class="feature-card"><i class="fas fa-comment-dots" style="font-size: 32px; color:#ff477e;"></i><h3 id="feat2Title">Real-time Chat</h3><p id="feat2Desc">Instant messaging & media share</p></div>
+            <div class="feature-card"><i class="fas fa-gift" style="font-size: 32px; color:#ff477e;"></i><h3 id="feat3Title">Virtual Gifts</h3><p id="feat3Desc">Send love & surprises</p></div>
         </div>
 
-        <!-- Footer -->
         <footer>
-            <p>© 2025 World Dating — Connect hearts across continents. All rights reserved.</p>
-            <div style="margin-top: 16px; display: flex; justify-content: center; gap: 24px; font-size: 1.2rem;">
-                <i class="fab fa-twitter" style="cursor:pointer; opacity:0.7;"></i>
-                <i class="fab fa-instagram" style="cursor:pointer; opacity:0.7;"></i>
-                <i class="fab fa-facebook" style="cursor:pointer; opacity:0.7;"></i>
-            </div>
+            <p id="copyright">© 2025 World Dating — Connect hearts across continents.</p>
         </footer>
     </div>
 
-    <!-- Login Modal (UI only, no backend) -->
-    <div id="loginModal" class="modal">
-        <div class="modal-card">
-            <button class="close-modal" id="closeModalBtn">&times;</button>
-            <i class="fas fa-heart" style="font-size: 48px; color: #ff5c8a; margin: 8px 0 8px;"></i>
-            <h2 style="margin: 12px 0;">Welcome back</h2>
-            <p style="margin-bottom: 20px;">Sign in to continue your journey</p>
-            <input type="email" placeholder="Email address" id="demoEmail">
-            <input type="password" placeholder="Password" id="demoPassword">
-            <button class="btn-primary" id="demoLoginBtn" style="margin-top: 12px;">Log in</button>
-            <p style="margin-top: 24px; font-size: 0.8rem; color: #a0a9c5;">Demo: any email / password → try the experience</p>
-        </div>
-    </div>
-
     <script>
-        // Smooth modal interactions + get started button
-        const modal = document.getElementById('loginModal');
-        const openModalBtns = [document.getElementById('openLoginModalBtn'), document.getElementById('heroGetStartedBtn')];
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const demoLogin = document.getElementById('demoLoginBtn');
+        // ---------- BILINGUAL DICTIONARY (ENGLISH & AMHARIC) ----------
+        const translations = {
+            en: {
+                heroTitle: "Meet People From Around the World",
+                heroSub: "Connect, chat, and find love globally — share your moments with photos & videos.",
+                feedTitle: "💬 Latest Moments",
+                photoLabel: "Photo",
+                videoLabel: "Video",
+                publishLabel: "Publish",
+                feat1Title: "Global Matching",
+                feat1Desc: "Find partners across 150+ countries",
+                feat2Title: "Real-time Chat",
+                feat2Desc: "Instant messaging & media share",
+                feat3Title: "Virtual Gifts",
+                feat3Desc: "Send love & surprises",
+                copyright: "© 2025 World Dating — Connect hearts across continents.",
+                themeDark: "Dark",
+                themeLight: "Light",
+                langAmharic: "አማርኛ",
+                langEnglish: "English",
+                demoText: "Join 10,000+ happy couples"
+            },
+            am: {
+                heroTitle: "ከዓለም ዙሪያ ሰዎችን ያግኙ",
+                heroSub: "ይገናኙ፣ ይወያዩ እና ፍቅርን በአለም አቀፍ ደረጃ ይፈልጉ — ፎቶ እና ቪዲዮ ያጋሩ",
+                feedTitle: "💬 የቅርብ ጊዜ ልጥፎች",
+                photoLabel: "ፎቶ",
+                videoLabel: "ቪዲዮ",
+                publishLabel: "አሳትም",
+                feat1Title: "ዓለም አቀፍ ማዛመድ",
+                feat1Desc: "ከ150+ አገራት የፍቅር ጓደኛ ይፈልጉ",
+                feat2Title: "የቀጥታ ውይይት",
+                feat2Desc: "ፈጣን መልእክት እና ሚዲያ ማጋራት",
+                feat3Title: "ምናባዊ ስጦታዎች",
+                feat3Desc: "ፍቅር እና አስገራሚ ስጦታዎችን ይላኩ",
+                copyright: "© 2025 World Dating — በአለም አቀፍ ደረጃ ልቦችን ያገናኛል",
+                themeDark: "ጨለማ",
+                themeLight: "ብርሃን",
+                langAmharic: "English",
+                langEnglish: "አማርኛ",
+                demoText: "ከ10,000+ ደስተኛ ጥንዶች ጋር ይቀላቀሉ"
+            }
+        };
 
-        // function to open modal
-        function openModal() {
-            modal.style.display = 'flex';
-            // small animation reset
-        }
-        function closeModal() {
-            modal.style.display = 'none';
+        let currentLang = 'en';   // 'en' or 'am'
+        let currentTheme = 'light'; // 'light' or 'dark'
+
+        // DOM elements
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const langToggleBtn = document.getElementById('langToggleBtn');
+        const themeTextSpan = document.getElementById('themeText');
+        const langTextSpan = document.getElementById('langText');
+
+        // apply language to all UI texts
+        function applyLanguage() {
+            const t = translations[currentLang];
+            document.getElementById('heroTitle').innerText = t.heroTitle;
+            document.getElementById('heroSub').innerText = t.heroSub;
+            document.getElementById('feedTitle').innerText = t.feedTitle;
+            document.getElementById('photoLabel').innerText = t.photoLabel;
+            document.getElementById('videoLabel').innerText = t.videoLabel;
+            document.getElementById('publishLabel').innerText = t.publishLabel;
+            document.getElementById('feat1Title').innerText = t.feat1Title;
+            document.getElementById('feat1Desc').innerText = t.feat1Desc;
+            document.getElementById('feat2Title').innerText = t.feat2Title;
+            document.getElementById('feat2Desc').innerText = t.feat2Desc;
+            document.getElementById('feat3Title').innerText = t.feat3Title;
+            document.getElementById('feat3Desc').innerText = t.feat3Desc;
+            document.getElementById('copyright').innerText = t.copyright;
+            document.getElementById('demoText').innerText = t.demoText;
+            // toggle button text
+            langTextSpan.innerText = (currentLang === 'en') ? "አማርኛ" : "English";
+            themeTextSpan.innerText = (currentTheme === 'light') ? t.themeDark : t.themeLight;
         }
 
-        openModalBtns.forEach(btn => {
-            if(btn) btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                openModal();
-            });
+        // Theme switching
+        function setTheme(theme) {
+            currentTheme = theme;
+            if (theme === 'dark') {
+                document.body.classList.add('dark');
+            } else {
+                document.body.classList.remove('dark');
+            }
+            const t = translations[currentLang];
+            themeTextSpan.innerText = (currentTheme === 'light') ? t.themeDark : t.themeLight;
+            localStorage.setItem('worldDatingTheme', theme);
+        }
+
+        function toggleTheme() {
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            setTheme(newTheme);
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'am' : 'en';
+            applyLanguage();
+            localStorage.setItem('worldDatingLang', currentLang);
+        }
+
+        // ----- POSTS SYSTEM (with photo & video) -----
+        let posts = [];   // each post: { id, text, mediaType, mediaData, timestamp, userName, userAvatar }
+        const currentUserName = "Explorer";
+        const currentUserAvatar = "🌟";
+
+        function renderPosts() {
+            const feedContainer = document.getElementById('postsFeed');
+            if (!feedContainer) return;
+            if (posts.length === 0) {
+                feedContainer.innerHTML = `<div class="post-card" style="text-align:center;">✨ ${currentLang === 'en' ? 'No posts yet. Share your first moment!' : 'እስካሁን ልጥፍ የለም። የመጀመሪያ ልጥፍዎን ያጋሩ!'}</div>`;
+                return;
+            }
+            feedContainer.innerHTML = posts.map(post => `
+                <div class="post-card" data-id="${post.id}">
+                    <div class="post-header">
+                        <div class="avatar">${post.userAvatar || '❤️'}</div>
+                        <div><strong>${post.userName}</strong><br><span style="font-size:12px; color:var(--text-secondary);">${new Date(post.timestamp).toLocaleString()}</span></div>
+                    </div>
+                    <p style="margin-bottom: 12px;">${escapeHtml(post.text)}</p>
+                    ${post.mediaType && post.mediaData ? `
+                        <div class="post-media">
+                            ${post.mediaType === 'image' ? `<img src="${post.mediaData}" alt="post image">` : 
+                              (post.mediaType === 'video' ? `<video controls src="${post.mediaData}"></video>` : '')}
+                        </div>
+                    ` : ''}
+                    <div class="post-actions">
+                        <span><i class="far fa-heart"></i> ❤️ ${post.likes || 0}</span>
+                        <span><i class="far fa-comment"></i> 💬 ${currentLang === 'en' ? 'Comment' : 'አስተያየት'}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+        function addPost(text, mediaType, mediaData) {
+            if (!text.trim() && !mediaData) return;
+            const newPost = {
+                id: Date.now(),
+                text: text.trim() || (currentLang === 'en' ? 'Shared a moment' : 'አንድ አፍታ አጋርቷል'),
+                mediaType: mediaType || null,
+                mediaData: mediaData || null,
+                timestamp: Date.now(),
+                userName: currentUserName,
+                userAvatar: currentUserAvatar,
+                likes: 0
+            };
+            posts.unshift(newPost);
+            // keep max 50 posts
+            if(posts.length > 50) posts.pop();
+            savePostsToLocal();
+            renderPosts();
+        }
+
+        // LocalStorage persistence
+        function savePostsToLocal() { localStorage.setItem('worldDatingPosts', JSON.stringify(posts)); }
+        function loadPostsFromLocal() {
+            const stored = localStorage.getItem('worldDatingPosts');
+            if(stored) { posts = JSON.parse(stored); renderPosts(); }
+            else { posts = []; renderPosts(); }
+        }
+
+        // Media handling
+        let pendingMedia = null; let pendingMediaType = null;
+        document.getElementById('uploadPhotoBtn').addEventListener('click', () => { document.getElementById('photoFileInput').click(); });
+        document.getElementById('uploadVideoBtn').addEventListener('click', () => { document.getElementById('videoFileInput').click(); });
+        
+        document.getElementById('photoFileInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if(file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    pendingMedia = ev.target.result;
+                    pendingMediaType = 'image';
+                    document.getElementById('mediaPreview').innerHTML = `<div style="background:var(--bg-secondary); border-radius:24px; padding:8px;"><img src="${pendingMedia}" style="max-height:150px; border-radius:20px;"><br><small>${currentLang === 'en' ? 'Photo ready' : 'ፎቶ ዝግጁ'}</small></div>`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        document.getElementById('videoFileInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if(file && file.type.startsWith('video/')) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    pendingMedia = ev.target.result;
+                    pendingMediaType = 'video';
+                    document.getElementById('mediaPreview').innerHTML = `<div style="background:var(--bg-secondary); border-radius:24px; padding:8px;"><video controls src="${pendingMedia}" style="max-height:150px; border-radius:20px;"></video><br><small>${currentLang === 'en' ? 'Video ready' : 'ቪዲዮ ዝግጁ'}</small></div>`;
+                };
+                reader.readAsDataURL(file);
+            }
         });
 
-        if(closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
-        // click outside to close
-        window.addEventListener('click', (e) => {
-            if(e.target === modal) closeModal();
+        document.getElementById('publishPostBtn').addEventListener('click', () => {
+            const content = document.getElementById('postContentInput').value;
+            if(!content.trim() && !pendingMedia) {
+                alert(currentLang === 'en' ? 'Write something or add media' : 'እባክዎ ጽሑፍ ወይም ሚዲያ ይጨምሩ');
+                return;
+            }
+            addPost(content, pendingMediaType, pendingMedia);
+            // reset
+            document.getElementById('postContentInput').value = '';
+            document.getElementById('mediaPreview').innerHTML = '';
+            pendingMedia = null;
+            pendingMediaType = null;
+            document.getElementById('photoFileInput').value = '';
+            document.getElementById('videoFileInput').value = '';
         });
 
-        // demo login: just show a toast/alert (UI only) but simulate success
-        if(demoLogin) {
-            demoLogin.addEventListener('click', () => {
-                const email = document.getElementById('demoEmail').value;
-                if(email.trim() === "") {
-                    alert("✨ Demo mode: you can enter any email (e.g., love@world.com) to experience the vibe.");
-                } else {
-                    alert(`🎉 Welcome back, ${email.split('@')[0]}! You're now part of World Dating. (UI preview)`);
+        // initialize theme from localStorage
+        function initTheme() {
+            const savedTheme = localStorage.getItem('worldDatingTheme');
+            if(savedTheme === 'dark') setTheme('dark');
+            else setTheme('light');
+        }
+        function initLang() {
+            const savedLang = localStorage.getItem('worldDatingLang');
+            if(savedLang === 'am') { currentLang = 'am'; applyLanguage(); }
+            else { currentLang = 'en'; applyLanguage(); }
+        }
+
+        // get started / demo interaction
+        document.getElementById('getStartedBtn').addEventListener('click', () => {
+            document.getElementById('feedTitle').scrollIntoView({ behavior: 'smooth' });
+            if(currentLang === 'en') alert("✨ Welcome! Share your first photo or video to meet people.");
+            else alert("✨ እንኳን ደህና መጡ! ሰዎችን ለማግኘት የመጀመሪያ ፎቶዎን ወይም ቪዲዮዎን ያጋሩ።");
+        });
+        document.getElementById('heroCta').addEventListener('click', () => {
+            document.getElementById('feedTitle').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // event listeners for toggles
+        themeToggleBtn.addEventListener('click', toggleTheme);
+        langToggleBtn.addEventListener('click', toggleLanguage);
+        
+        // Load existing posts and render
+        loadPostsFromLocal();
+        initTheme();
+        initLang();
+        
+        // Add sample posts for demo (only if no posts exist)
+        if(posts.length === 0) {
+            setTimeout(() => {
+                if(posts.length === 0) {
+                    addPost("Meeting amazing people here! 🌍", null, null);
+                    addPost("Sunset date vibes ❤️", 'image', "https://picsum.photos/id/29/400/300");
                 }
-                closeModal();
-                // optional scroll to features
-                document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
-            });
+            }, 500);
         }
-
-        // Add simple hover ripple effect on buttons (pure css already nice)
-        // Make "Get Started" also scroll to features section smoothly if needed
-        const getStartedBtn = document.getElementById('heroGetStartedBtn');
-        if(getStartedBtn) {
-            getStartedBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
-            });
-        }
-
-        // additional floating animation for card is already in CSS
-        // Small interactive: nav links smooth anchor
-        document.querySelectorAll('.nav-links a').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                const href = this.getAttribute('href');
-                if(href === '#') e.preventDefault();
-                if(href === '#features') {
-                    e.preventDefault();
-                    document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
-
-        // optional: add micro interaction on feature cards
-        const cards = document.querySelectorAll('.feature-card');
-        cards.forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.transition = 'all 0.25s ease';
-            });
-        });
-
-        // dummy console message
-        console.log("World Dating — modern, dark theme, fully responsive.");
     </script>
 </body>
 </html>
