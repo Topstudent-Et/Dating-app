@@ -3,434 +3,532 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>HeartLink · Global Dating on Telegram</title>
-    <!-- Telegram WebApp SDK + Fonts + Icons -->
-    <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>World Dating · Connect Globally</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Swiper.js for smooth swipe animations -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: #f9f7fe; color: #1e1f2c; overflow-x: hidden; }
-        .app-container { max-width: 550px; margin: 0 auto; padding: 16px 20px 90px; min-height: 100vh; position: relative; }
-        .glass-card { background: rgba(255,255,255,0.96); border-radius: 32px; box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1); padding: 24px; backdrop-filter: blur(2px); border: 1px solid rgba(255,255,255,0.7); }
-        .btn-primary { background: linear-gradient(105deg, #ff477e, #ff8c42); border: none; color: white; font-weight: 700; padding: 14px; border-radius: 60px; width: 100%; cursor: pointer; transition: 0.2s; box-shadow: 0 6px 14px rgba(255,71,126,0.3); }
-        .btn-outline { background: transparent; border: 2px solid #ff477e; color: #ff477e; padding: 10px 20px; border-radius: 60px; font-weight: 600; cursor: pointer; }
-        input, select, textarea { width: 100%; padding: 14px 18px; border-radius: 60px; border: 1.5px solid #e9ecf2; background: white; outline: none; }
-        .swipe-card { background: white; border-radius: 32px; overflow: hidden; box-shadow: 0 25px 40px -12px rgba(0,0,0,0.2); margin-bottom: 20px; transition: transform 0.2s; }
-        .profile-photo { height: 340px; background-size: cover; background-position: center; position: relative; }
-        .tab-bar { position: fixed; bottom: 0; left: 0; right: 0; max-width: 550px; margin: 0 auto; background: rgba(255,255,255,0.98); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 10px 20px 24px; border-top: 1px solid #eee; z-index: 100; }
-        .tab-item { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; color: #8e8e9e; cursor: pointer; }
-        .tab-item.active { color: #ff477e; font-weight: 600; }
-        .tab-content { display: none; animation: fade 0.2s; }
-        .tab-content.active-tab { display: block; }
-        @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-        .match-card, .message-item, .post-card { background: white; border-radius: 24px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #f0eef6; }
-        .flex-between { display: flex; justify-content: space-between; align-items: center; }
-        .badge-vip { background: gold; color: #1e1f2c; padding: 4px 12px; border-radius: 40px; font-size: 11px; font-weight: bold; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        @media (max-width: 500px) { .app-container { padding: 12px 16px 90px; } }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 10% 20%, #0a0f1e, #03060c);
+            color: #eef2ff;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+
+        /* custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111827;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ff3b6f;
+            border-radius: 10px;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        /* header / navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff3b6f, #ff9f4a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 36px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #d1d5f0;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #ff5c8a;
+        }
+
+        .btn-login {
+            background: rgba(255, 59, 111, 0.12);
+            border: 1.5px solid #ff3b6f;
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            color: #ff5c8a;
+            transition: 0.25s;
+            cursor: pointer;
+        }
+
+        .btn-login:hover {
+            background: #ff3b6f;
+            color: white;
+            box-shadow: 0 6px 16px rgba(255, 59, 111, 0.3);
+        }
+
+        /* hero section */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 48px;
+            padding: 60px 0 80px;
+            flex-wrap: wrap;
+        }
+
+        .hero-content {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .hero-badge {
+            background: rgba(255, 59, 111, 0.18);
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #ff9f6e;
+            margin-bottom: 24px;
+            backdrop-filter: blur(4px);
+        }
+
+        .hero-content h1 {
+            font-size: 3.6rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            background: linear-gradient(to right, #ffffff, #ffb8d0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: #b9c3e6;
+            margin-bottom: 36px;
+            max-width: 550px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(105deg, #ff3b6f, #ff8a4a);
+            border: none;
+            padding: 14px 38px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 10px 20px -5px rgba(255, 59, 111, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 28px -8px rgba(255, 59, 111, 0.5);
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .profile-preview-card {
+            background: rgba(18, 25, 45, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 48px;
+            padding: 24px;
+            width: 300px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 30px 40px -20px rgba(0,0,0,0.5);
+            transition: transform 0.3s;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .profile-preview-card .avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(145deg, #ff5f7c, #ff9f4a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .profile-preview-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 6px;
+        }
+
+        .profile-preview-card .location {
+            color: #ffb47b;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+        }
+
+        .profile-preview-card .badge {
+            display: inline-block;
+            background: rgba(255, 59, 111, 0.25);
+            border-radius: 40px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            margin-right: 8px;
+        }
+
+        /* features section */
+        .features {
+            padding: 80px 0 100px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .section-sub {
+            color: #99a4c2;
+            max-width: 600px;
+            margin: 0 auto 56px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+        }
+
+        .feature-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 36px;
+            padding: 36px 28px;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(25, 35, 60, 0.85);
+            border-color: rgba(255, 59, 111, 0.4);
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
+        }
+
+        .feature-icon {
+            font-size: 3.4rem;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ff5c8a, #ffaa5e);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .feature-card h3 {
+            font-size: 1.7rem;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: #b4bfe0;
+        }
+
+        /* footer */
+        footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 40px 0 36px;
+            text-align: center;
+            color: #7e89ac;
+        }
+
+        /* login modal (UI only) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(12px);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-card {
+            background: #0f172ad9;
+            backdrop-filter: blur(20px);
+            border-radius: 48px;
+            max-width: 420px;
+            width: 90%;
+            padding: 32px;
+            border: 1px solid rgba(255, 59, 111, 0.3);
+            text-align: center;
+            animation: modalFade 0.25s ease;
+        }
+
+        @keyframes modalFade {
+            from { opacity: 0; transform: scale(0.95);}
+            to { opacity: 1; transform: scale(1);}
+        }
+
+        .modal-card input {
+            width: 100%;
+            padding: 14px 20px;
+            margin: 12px 0;
+            border-radius: 60px;
+            border: 1px solid #2d3a5e;
+            background: #020617cc;
+            color: white;
+            outline: none;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: #ff7b9c;
+            font-size: 24px;
+            float: right;
+            cursor: pointer;
+        }
+
+        /* responsiveness */
+        @media (max-width: 850px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+            .hero-content h1 {
+                font-size: 2.6rem;
+            }
+            .container {
+                padding: 0 24px;
+            }
+            .navbar {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            .btn-primary {
+                padding: 12px 28px;
+            }
+        }
     </style>
 </head>
 <body>
-<div class="app-container" id="appRoot">
-    <!-- ONBOARDING / AUTH (Telegram login first) -->
-    <div id="authScreen" class="glass-card" style="text-align:center;">
-        <i class="fab fa-telegram" style="font-size: 64px; color: #ff477e;"></i>
-        <h2 style="margin: 16px 0;">HeartLink ❤️ Dating</h2>
-        <p>Meet genuine people worldwide. Telegram-secured.</p>
-        <button id="telegramLoginBtn" class="btn-primary" style="margin: 20px 0;"><i class="fab fa-telegram"></i> Continue with Telegram</button>
-        <button id="showPhoneAuthBtn" class="btn-outline">Use Phone / Email</button>
-        <div id="phoneAuthPanel" style="display:none; margin-top:20px;">
-            <input type="text" id="manualPhone" placeholder="+251912345678"><br><br>
-            <input type="password" id="manualPassword" placeholder="Password"><br><br>
-            <button id="manualLoginBtn" class="btn-primary">Sign In / Register</button>
-        </div>
-    </div>
 
-    <!-- MAIN DASHBOARD (after auth) -->
-    <div id="mainDashboard" style="display:none;">
-        <!-- Tab Bar -->
-        <div class="tab-bar">
-            <button class="tab-item" data-tab="swipe"><i class="fas fa-fire"></i><span>Explore</span></button>
-            <button class="tab-item" data-tab="matches"><i class="fas fa-comment-dots"></i><span>Matches</span></button>
-            <button class="tab-item" data-tab="profile"><i class="fas fa-user"></i><span>Profile</span></button>
-            <button class="tab-item" data-tab="vip"><i class="fas fa-crown"></i><span>VIP</span></button>
-        </div>
+    <div class="container">
+        <!-- Header / Navigation -->
+        <header>
+            <nav class="navbar">
+                <div class="logo">🌍 World Dating</div>
+                <div class="nav-links">
+                    <a href="#">Home</a>
+                    <a href="#features">Features</a>
+                    <button class="btn-login" id="openLoginModalBtn">Login</button>
+                </div>
+            </nav>
+        </header>
 
-        <!-- SWIPE TAB -->
-        <div id="swipeTab" class="tab-content active-tab">
-            <div class="flex-between"><h3>✨ Discover matches</h3><span id="swipeFilterIcon" style="cursor:pointer;"><i class="fas fa-sliders-h"></i> Filter</span></div>
-            <div id="swipeContainer" style="margin-top: 16px;"></div>
-            <div id="filterPanel" style="display:none; background:white; border-radius:28px; padding:16px; margin-top:16px;">
-                <label>Age: <input type="range" id="ageMin" min="18" max="60" value="18"> <span id="minAgeVal">18</span> - <input type="range" id="ageMax" min="18" max="60" value="45"> <span id="maxAgeVal">45</span></label>
-                <label>Gender: <select id="prefGender"><option>All</option><option>Female</option><option>Male</option></select></label>
-                <button id="applyFilterBtn" class="btn-primary">Apply</button>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-badge">✨ Global Community ✨</div>
+                <h1>Meet People From <br> Around the World</h1>
+                <p>Connect, chat, and find love globally — thousands of singles are waiting for you. Your next adventure starts here.</p>
+                <button class="btn-primary" id="heroGetStartedBtn">Get Started <i class="fas fa-arrow-right"></i></button>
             </div>
-        </div>
-
-        <!-- MATCHES & CHAT TAB -->
-        <div id="matchesTab" class="tab-content">
-            <h3>💬 Your matches</h3>
-            <div id="matchesList"></div>
-            <div id="chatView" style="display:none;">
-                <div class="flex-between"><button id="backToMatches" class="btn-outline"><i class="fas fa-arrow-left"></i> Back</button><span id="chatUserName"></span></div>
-                <div id="chatMessagesArea" style="height: 350px; overflow-y: auto; margin: 16px 0; background:#fefaf5; border-radius: 28px; padding: 12px;"></div>
-                <div class="flex-between" style="gap:8px;"><input type="text" id="messageInput" placeholder="Type a message..."><button id="sendMsgBtn" class="btn-primary" style="width:auto; padding:12px 20px;"><i class="fas fa-paper-plane"></i></button></div>
-                <div><button id="sendImageBtn" class="btn-outline" style="margin-top:8px;"><i class="fas fa-image"></i> Send Image</button></div>
-            </div>
-        </div>
-
-        <!-- PROFILE TAB -->
-        <div id="profileTab" class="tab-content">
-            <div class="glass-card">
-                <div style="text-align:center;"><img id="profilePhotoImg" src="" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:3px solid #ff8c42;"><h3 id="profileName"></h3><p id="profileLocationAge"></p><span id="verifyBadge" class="badge-vip">✅ Verified</span></div>
-                <div class="form-group"><label>Bio</label><textarea id="profileBio" rows="2" placeholder="Tell about yourself..."></textarea><button id="updateBioBtn" class="btn-outline" style="margin-top:8px;">Save Bio</button></div>
-                <div class="form-group"><label>Interests (comma)</label><input id="profileInterests" placeholder="Travel, Music, Coffee"></div>
-                <div class="form-group"><label>Upload new photo</label><input type="file" id="newPhotoUpload" accept="image/*"></div>
-                <button id="upgradeToVipBtn" class="btn-primary"><i class="fas fa-crown"></i> Upgrade VIP</button>
-            </div>
-        </div>
-
-        <!-- VIP & MONETIZATION TAB -->
-        <div id="vipTab" class="tab-content">
-            <div class="glass-card" style="text-align:center;">
-                <i class="fas fa-crown" style="font-size:48px; color:gold;"></i>
-                <h3>HeartLink VIP</h3>
-                <p>Unlimited likes · See who liked you · Profile boost · Send virtual gifts</p>
-                <div class="price" style="font-size:28px; font-weight:800;">$9.99 <span style="font-size:14px;">/month</span></div>
-                <button id="purchaseVipBtn" class="btn-primary">Subscribe (Stripe)</button>
-                <hr>
-                <h4>💎 Coin System</h4>
-                <p>100 coins = $4.99 · Send gifts to matches</p>
-                <button id="buyCoinsBtn" class="btn-outline">Buy Coins (1000 coins $39)</button>
-                <div id="coinBalance" style="margin-top:12px;">💰 Your coins: <span id="userCoins">0</span></div>
-                <button id="spinWheelBtn" class="btn-outline" style="margin-top:12px;">🎡 Daily Spin (win coins)</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    // ---------- GLOBAL STATE ----------
-    let currentUser = null;          // { id, name, age, gender, country, city, photos, bio, interests, vip, coins, matches, chats, likesGiven, likesReceived }
-    let allProfiles = [];            // other users
-    let currentSwipeIndex = 0;
-    let activeChatUserId = null;
-    let swiperInstance = null;
-
-    // Load from localStorage (simulate backend)
-    function loadData() {
-        const stored = localStorage.getItem("heartlink_users");
-        if(stored) window.usersDB = JSON.parse(stored);
-        else window.usersDB = [];
-        const session = sessionStorage.getItem("heartlink_session");
-        if(session) currentUser = JSON.parse(session);
-        initDemoUsers();
-    }
-    function saveUsers() { localStorage.setItem("heartlink_users", JSON.stringify(window.usersDB)); }
-    function saveSession() { if(currentUser) sessionStorage.setItem("heartlink_session", JSON.stringify(currentUser)); else sessionStorage.removeItem("heartlink_session"); }
-
-    // generate mock users (global reach)
-    function initDemoUsers() {
-        if(window.usersDB.length === 0) {
-            const names = ["Amara", "Liam", "Zara", "Kofi", "Yuki", "Sofia", "Mateo", "Ananya", "Elena", "David"];
-            const countries = ["USA","Ethiopia","Brazil","Japan","Kenya","UK","India","Germany","France","Mexico"];
-            for(let i=1; i<=25; i++) {
-                const age = 20 + Math.floor(Math.random() * 25);
-                window.usersDB.push({
-                    id: i,
-                    name: names[i%names.length] + (i+10),
-                    age: age,
-                    gender: i%2===0 ? "Female":"Male",
-                    country: countries[i%countries.length],
-                    city: "City"+i,
-                    photos: [`https://randomuser.me/api/portraits/${i%2===0?'women':'men'}/${i+20}.jpg`],
-                    bio: "Looking for authentic connection, love traveling and coffee.",
-                    interests: "Music, Travel",
-                    vip: false,
-                    coins: 50,
-                    matches: [],
-                    chats: [],
-                    likesGiven: [],
-                    likesReceived: [],
-                    isVerified: true
-                });
-            }
-            saveUsers();
-        }
-        // ensure current user not duplicated
-    }
-
-    // register / login via Telegram mock
-    document.getElementById("telegramLoginBtn").addEventListener("click", () => {
-        // Simulate Telegram WebApp data
-        let tgUser = { id: Math.floor(Math.random()*100000), first_name: "HeartSeeker", last_name: "", username: "lover" };
-        if(window.Telegram && Telegram.WebApp) { tgUser = Telegram.WebApp.initDataUnsafe?.user || tgUser; Telegram.WebApp.ready(); Telegram.WebApp.expand(); }
-        let existing = window.usersDB.find(u => u.telegramId == tgUser.id);
-        if(existing) { currentUser = existing; }
-        else {
-            const newUser = {
-                id: Date.now(),
-                telegramId: tgUser.id,
-                name: tgUser.first_name || "Explorer",
-                age: 25,
-                gender: "Female",
-                country: "International",
-                city: "Global",
-                photos: ["https://randomuser.me/api/portraits/women/68.jpg"],
-                bio: "New to HeartLink, excited to meet!",
-                interests: "Dating, Friendship",
-                vip: false,
-                coins: 100,
-                matches: [],
-                chats: [],
-                likesGiven: [],
-                likesReceived: [],
-                isVerified: true
-            };
-            window.usersDB.push(newUser);
-            saveUsers();
-            currentUser = newUser;
-        }
-        saveSession();
-        showMainApp();
-    });
-
-    document.getElementById("showPhoneAuthBtn").addEventListener("click", () => {
-        document.getElementById("phoneAuthPanel").style.display = "block";
-    });
-    document.getElementById("manualLoginBtn").addEventListener("click", () => {
-        const phone = document.getElementById("manualPhone").value.trim();
-        const pwd = document.getElementById("manualPassword").value;
-        let user = window.usersDB.find(u => u.phone === phone && u.password === pwd);
-        if(!user && phone && pwd) {
-            user = { id: Date.now(), name: phone.slice(-4), age: 24, gender: "Female", country: "Global", city: "World", photos: ["https://randomuser.me/api/portraits/women/1.jpg"], bio: "Hi!", interests: "Travel", vip: false, coins: 50, matches: [], chats: [], likesGiven: [], likesReceived: [], phone, password: pwd, isVerified: true };
-            window.usersDB.push(user);
-            saveUsers();
-        }
-        if(user) { currentUser = user; saveSession(); showMainApp(); }
-        else alert("Invalid / create new account");
-    });
-
-    function showMainApp() {
-        document.getElementById("authScreen").style.display = "none";
-        document.getElementById("mainDashboard").style.display = "block";
-        updateProfileUI();
-        loadSwipeProfiles();
-        renderMatchesList();
-        attachTabEvents();
-        startSwiper();
-    }
-
-    function updateProfileUI() {
-        if(!currentUser) return;
-        document.getElementById("profileName").innerText = currentUser.name;
-        document.getElementById("profileLocationAge").innerText = `${currentUser.city}, ${currentUser.age} yrs`;
-        document.getElementById("profilePhotoImg").src = currentUser.photos[0];
-        document.getElementById("profileBio").value = currentUser.bio || "";
-        document.getElementById("profileInterests").value = currentUser.interests || "";
-        document.getElementById("userCoins").innerText = currentUser.coins || 0;
-        if(currentUser.vip) document.getElementById("verifyBadge").innerHTML = "👑 VIP Member";
-    }
-
-    function loadSwipeProfiles() {
-        // filter other users, exclude self & already liked/matched
-        let candidates = window.usersDB.filter(u => u.id !== currentUser.id && !currentUser.likesGiven.includes(u.id) && !currentUser.matches.includes(u.id));
-        const minAge = parseInt(document.getElementById("ageMin")?.value || 18);
-        const maxAge = parseInt(document.getElementById("ageMax")?.value || 45);
-        const genderPref = document.getElementById("prefGender")?.value || "All";
-        candidates = candidates.filter(u => u.age >= minAge && u.age <= maxAge && (genderPref === "All" || u.gender === genderPref));
-        allProfiles = candidates;
-        currentSwipeIndex = 0;
-        renderSwipeCard();
-    }
-
-    function renderSwipeCard() {
-        const container = document.getElementById("swipeContainer");
-        if(!allProfiles.length) { container.innerHTML = `<div class="glass-card">✨ No more profiles. Check later!</div>`; return; }
-        if(currentSwipeIndex >= allProfiles.length) { container.innerHTML = `<div class="glass-card">🎉 You've seen everyone nearby!</div>`; return; }
-        const p = allProfiles[currentSwipeIndex];
-        container.innerHTML = `
-            <div class="swipe-card" id="currentSwipeCard">
-                <div class="profile-photo" style="background-image: url('${p.photos[0]}');"></div>
-                <div style="padding:20px;">
-                    <div class="flex-between"><h2>${p.name}, ${p.age}</h2><span>📍 ${p.city}, ${p.country}</span></div>
-                    <p>${p.bio}</p>
-                    <p><i class="fas fa-tag"></i> ${p.interests}</p>
-                    <div style="display:flex; gap:16px; margin-top:20px;">
-                        <button id="swipeLeftBtn" class="btn-outline" style="flex:1"><i class="fas fa-times"></i> Pass</button>
-                        <button id="swipeRightBtn" class="btn-primary" style="flex:1"><i class="fas fa-heart"></i> Like</button>
+            <div class="hero-image">
+                <div class="profile-preview-card">
+                    <div class="avatar"><i class="fas fa-heart"></i></div>
+                    <h3>Elena, 26</h3>
+                    <div class="location"><i class="fas fa-map-marker-alt"></i> Paris, France</div>
+                    <div>
+                        <span class="badge">🌸 Verified</span>
+                        <span class="badge">💬 97% match</span>
+                    </div>
+                    <p style="margin-top: 16px; font-size: 0.85rem;">"Looking for deep conversations and authentic connection."</p>
+                    <div style="display: flex; justify-content: center; gap: 12px; margin-top: 16px;">
+                        <i class="fas fa-camera" style="color:#ff9f6e;"></i>
+                        <i class="fas fa-comment-dots" style="color:#ff5c8a;"></i>
                     </div>
                 </div>
-            </div>`;
-        document.getElementById("swipeLeftBtn")?.addEventListener("click", () => { currentSwipeIndex++; renderSwipeCard(); });
-        document.getElementById("swipeRightBtn")?.addEventListener("click", () => { likeProfile(p); });
-    }
-
-    function likeProfile(profile) {
-        // add to likesGiven
-        if(currentUser.likesGiven.includes(profile.id)) return;
-        currentUser.likesGiven.push(profile.id);
-        profile.likesReceived.push(currentUser.id);
-        // check mutual like
-        if(profile.likesGiven && profile.likesGiven.includes(currentUser.id)) {
-            // mutual match!
-            if(!currentUser.matches.includes(profile.id)) currentUser.matches.push(profile.id);
-            if(!profile.matches.includes(currentUser.id)) profile.matches.push(profile.id);
-            // create empty chat
-            if(!currentUser.chats.find(c => c.withUserId === profile.id)) currentUser.chats.push({ withUserId: profile.id, messages: [] });
-            if(!profile.chats.find(c => c.withUserId === currentUser.id)) profile.chats.push({ withUserId: currentUser.id, messages: [] });
-            saveUsers();
-            alert(`💞 It's a match! You and ${profile.name} liked each other.`);
-            renderMatchesList();
-        } else {
-            alert(`👍 You liked ${profile.name}. Wait for mutual like!`);
-        }
-        saveUsers();
-        currentSwipeIndex++;
-        renderSwipeCard();
-    }
-
-    function renderMatchesList() {
-        const container = document.getElementById("matchesList");
-        if(!container) return;
-        const matches = currentUser.matches.map(mid => window.usersDB.find(u => u.id === mid)).filter(Boolean);
-        if(matches.length === 0) { container.innerHTML = `<div class="glass-card">No matches yet. Swipe right!</div>`; return; }
-        container.innerHTML = matches.map(m => `
-            <div class="match-card" data-userid="${m.id}">
-                <div class="flex-between"><div><img src="${m.photos[0]}" style="width:50px; height:50px; border-radius:50%; object-fit:cover;"><strong> ${m.name}, ${m.age}</strong><br><span style="font-size:12px;">${m.city}</span></div><button class="btn-outline chatOpenBtn" data-id="${m.id}">💬 Message</button></div>
             </div>
-        `).join('');
-        document.querySelectorAll(".chatOpenBtn").forEach(btn => {
-            btn.addEventListener("click", (e) => { const uid = parseInt(btn.getAttribute("data-id")); openChat(uid); });
-        });
-    }
+        </section>
 
-    function openChat(otherUserId) {
-        activeChatUserId = otherUserId;
-        const other = window.usersDB.find(u => u.id === otherUserId);
-        document.getElementById("chatUserName").innerText = other.name;
-        document.getElementById("matchesList").style.display = "none";
-        document.getElementById("chatView").style.display = "block";
-        loadChatMessages(otherUserId);
-    }
+        <!-- Features Section -->
+        <div id="features" class="features">
+            <h2 class="section-title">Why join World Dating?</h2>
+            <p class="section-sub">Experience a new way to connect with people across borders, with tools designed for real relationships.</p>
+            <div class="cards-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-globe-americas"></i></div>
+                    <h3>Smart Matching</h3>
+                    <p>Find global partners based on interests, location, and personality — our algorithm connects you with like-minded souls.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-comments"></i></div>
+                    <h3>Real-time Chat</h3>
+                    <p>Seamless instant messaging, voice notes, and media sharing. Break the ice with fun stickers and GIFs.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-gift"></i></div>
+                    <h3>Virtual Gifts</h3>
+                    <p>Send roses, chocolates or sparkling hearts. Surprise your match and make them feel special from miles away.</p>
+                </div>
+            </div>
+        </div>
 
-    function loadChatMessages(otherId) {
-        let chat = currentUser.chats.find(c => c.withUserId === otherId);
-        if(!chat) { chat = { withUserId: otherId, messages: [] }; currentUser.chats.push(chat); saveUsers(); }
-        const container = document.getElementById("chatMessagesArea");
-        container.innerHTML = chat.messages.map(msg => `<div style="text-align:${msg.sender === 'me' ? 'right' : 'left'}; margin:8px;"><span style="background:${msg.sender === 'me' ? '#ff477e20' : '#eef2ff'}; padding:10px 14px; border-radius:24px; display:inline-block;">${msg.text} ${msg.read ? '✓✓' : '✓'}</span></div>`).join('');
-        container.scrollTop = container.scrollHeight;
-        // mark as read
-        chat.messages.forEach(m => { if(m.sender !== 'me') m.read = true; });
-        saveUsers();
-    }
+        <!-- Extra: subtle animated divider (optional) -->
+        <div style="text-align: center; margin: 20px 0 20px;">
+            <div style="width: 80px; height: 3px; background: #ff3b6f; margin: 0 auto; border-radius: 4px;"></div>
+        </div>
 
-    document.getElementById("sendMsgBtn")?.addEventListener("click", () => {
-        if(!activeChatUserId) return;
-        const input = document.getElementById("messageInput");
-        const text = input.value.trim();
-        if(!text) return;
-        let chat = currentUser.chats.find(c => c.withUserId === activeChatUserId);
-        if(!chat) { chat = { withUserId: activeChatUserId, messages: [] }; currentUser.chats.push(chat); }
-        chat.messages.push({ sender: "me", text: text, timestamp: Date.now(), read: false });
-        // simulate reply after 1 sec (real-time)
-        const otherUser = window.usersDB.find(u => u.id === activeChatUserId);
-        setTimeout(() => {
-            let otherChat = otherUser.chats.find(c => c.withUserId === currentUser.id);
-            if(otherChat) {
-                otherChat.messages.push({ sender: "them", text: "😊 Sounds great! Tell me more.", timestamp: Date.now(), read: false });
-                saveUsers();
-                if(activeChatUserId === otherUser.id) loadChatMessages(activeChatUserId);
-            }
-        }, 1000);
-        saveUsers();
-        input.value = "";
-        loadChatMessages(activeChatUserId);
-    });
+        <!-- Footer -->
+        <footer>
+            <p>© 2025 World Dating — Connect hearts across continents. All rights reserved.</p>
+            <div style="margin-top: 16px; display: flex; justify-content: center; gap: 24px; font-size: 1.2rem;">
+                <i class="fab fa-twitter" style="cursor:pointer; opacity:0.7;"></i>
+                <i class="fab fa-instagram" style="cursor:pointer; opacity:0.7;"></i>
+                <i class="fab fa-facebook" style="cursor:pointer; opacity:0.7;"></i>
+            </div>
+        </footer>
+    </div>
 
-    document.getElementById("backToMatches")?.addEventListener("click", () => {
-        document.getElementById("chatView").style.display = "none";
-        document.getElementById("matchesList").style.display = "block";
-        renderMatchesList();
-        activeChatUserId = null;
-    });
+    <!-- Login Modal (UI only, no backend) -->
+    <div id="loginModal" class="modal">
+        <div class="modal-card">
+            <button class="close-modal" id="closeModalBtn">&times;</button>
+            <i class="fas fa-heart" style="font-size: 48px; color: #ff5c8a; margin: 8px 0 8px;"></i>
+            <h2 style="margin: 12px 0;">Welcome back</h2>
+            <p style="margin-bottom: 20px;">Sign in to continue your journey</p>
+            <input type="email" placeholder="Email address" id="demoEmail">
+            <input type="password" placeholder="Password" id="demoPassword">
+            <button class="btn-primary" id="demoLoginBtn" style="margin-top: 12px;">Log in</button>
+            <p style="margin-top: 24px; font-size: 0.8rem; color: #a0a9c5;">Demo: any email / password → try the experience</p>
+        </div>
+    </div>
 
-    // VIP and monetization
-    document.getElementById("purchaseVipBtn")?.addEventListener("click", () => {
-        if(confirm("Upgrade to VIP for $9.99/month? (Stripe demo)")) {
-            currentUser.vip = true;
-            saveUsers(); saveSession();
-            alert("🎉 VIP activated! Unlimited likes, see who liked you.");
-            updateProfileUI();
+    <script>
+        // Smooth modal interactions + get started button
+        const modal = document.getElementById('loginModal');
+        const openModalBtns = [document.getElementById('openLoginModalBtn'), document.getElementById('heroGetStartedBtn')];
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const demoLogin = document.getElementById('demoLoginBtn');
+
+        // function to open modal
+        function openModal() {
+            modal.style.display = 'flex';
+            // small animation reset
         }
-    });
-    document.getElementById("buyCoinsBtn")?.addEventListener("click", () => {
-        if(confirm("Buy 1000 coins for $39? (global payment)")) {
-            currentUser.coins = (currentUser.coins || 0) + 1000;
-            saveUsers(); updateProfileUI();
-            alert("Coins added!");
+        function closeModal() {
+            modal.style.display = 'none';
         }
-    });
-    document.getElementById("spinWheelBtn")?.addEventListener("click", () => {
-        const reward = Math.floor(Math.random() * 200) + 20;
-        currentUser.coins = (currentUser.coins || 0) + reward;
-        saveUsers(); updateProfileUI();
-        alert(`🎡 You won ${reward} coins!`);
-    });
-    document.getElementById("updateBioBtn")?.addEventListener("click", () => {
-        currentUser.bio = document.getElementById("profileBio").value;
-        currentUser.interests = document.getElementById("profileInterests").value;
-        saveUsers(); alert("Profile updated");
-    });
-    document.getElementById("newPhotoUpload")?.addEventListener("change", (e) => {
-        const file = e.target.files[0];
-        if(file) { const reader = new FileReader(); reader.onload = ev => { currentUser.photos = [ev.target.result]; saveUsers(); updateProfileUI(); }; reader.readAsDataURL(file); }
-    });
-    // Filters
-    document.getElementById("swipeFilterIcon")?.addEventListener("click", () => {
-        const panel = document.getElementById("filterPanel");
-        panel.style.display = panel.style.display === "none" ? "block" : "none";
-    });
-    document.getElementById("applyFilterBtn")?.addEventListener("click", () => { loadSwipeProfiles(); document.getElementById("filterPanel").style.display = "none"; });
-    // age slider update
-    const ageMin = document.getElementById("ageMin"); const ageMax = document.getElementById("ageMax");
-    if(ageMin) ageMin.oninput = () => document.getElementById("minAgeVal").innerText = ageMin.value;
-    if(ageMax) ageMax.oninput = () => document.getElementById("maxAgeVal").innerText = ageMax.value;
 
-    function attachTabEvents() {
-        document.querySelectorAll(".tab-item").forEach(btn => {
-            btn.addEventListener("click", () => {
-                document.querySelectorAll(".tab-item").forEach(b => b.classList.remove("active"));
-                btn.classList.add("active");
-                document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active-tab"));
-                const tabId = btn.getAttribute("data-tab");
-                document.getElementById(`${tabId}Tab`).classList.add("active-tab");
-                if(tabId === "matches") renderMatchesList();
-                if(tabId === "swipe") loadSwipeProfiles();
+        openModalBtns.forEach(btn => {
+            if(btn) btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal();
             });
         });
-    }
-    function startSwiper() { /* smooth swipe handled manually but we keep style */ }
 
-    // Referral / daily bonus (integrated)
-    function dailyBonus() {
-        const lastBonus = localStorage.getItem("lastBonusDate");
-        const today = new Date().toDateString();
-        if(lastBonus !== today && currentUser) {
-            currentUser.coins = (currentUser.coins || 0) + 50;
-            saveUsers(); updateProfileUI();
-            localStorage.setItem("lastBonusDate", today);
-            alert("🎁 Daily bonus: +50 coins!");
+        if(closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+        // click outside to close
+        window.addEventListener('click', (e) => {
+            if(e.target === modal) closeModal();
+        });
+
+        // demo login: just show a toast/alert (UI only) but simulate success
+        if(demoLogin) {
+            demoLogin.addEventListener('click', () => {
+                const email = document.getElementById('demoEmail').value;
+                if(email.trim() === "") {
+                    alert("✨ Demo mode: you can enter any email (e.g., love@world.com) to experience the vibe.");
+                } else {
+                    alert(`🎉 Welcome back, ${email.split('@')[0]}! You're now part of World Dating. (UI preview)`);
+                }
+                closeModal();
+                // optional scroll to features
+                document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
+            });
         }
-    }
 
-    loadData();
-    if(currentUser) showMainApp();
-    dailyBonus();
-</script>
+        // Add simple hover ripple effect on buttons (pure css already nice)
+        // Make "Get Started" also scroll to features section smoothly if needed
+        const getStartedBtn = document.getElementById('heroGetStartedBtn');
+        if(getStartedBtn) {
+            getStartedBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+
+        // additional floating animation for card is already in CSS
+        // Small interactive: nav links smooth anchor
+        document.querySelectorAll('.nav-links a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if(href === '#') e.preventDefault();
+                if(href === '#features') {
+                    e.preventDefault();
+                    document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // optional: add micro interaction on feature cards
+        const cards = document.querySelectorAll('.feature-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = 'all 0.25s ease';
+            });
+        });
+
+        // dummy console message
+        console.log("World Dating — modern, dark theme, fully responsive.");
+    </script>
 </body>
 </html>
