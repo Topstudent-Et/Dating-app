@@ -3,473 +3,380 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Telegram Dating · Global Love</title>
+    <title>World Dating | Signup & Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background: linear-gradient(145deg, #fef9f0 0%, #f2eef9 100%);
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 10% 20%, #0a0f1e, #03060c);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 24px;
         }
-        body.dark {
-            background: #0a0f1e;
-        }
-        /* Theme variables */
-        :root {
-            --bg-card: #ffffff;
-            --text-primary: #1e293b;
-            --text-secondary: #475569;
-            --border: #e2e8f0;
-            --accent: #ff477e;
-            --input-bg: #ffffff;
-        }
-        body.dark {
-            --bg-card: #1e293b;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --border: #334155;
-            --input-bg: #0f172a;
-        }
-        .container {
-            max-width: 450px;
+
+        /* Main container */
+        .auth-container {
             width: 100%;
+            max-width: 480px;
             margin: 0 auto;
         }
-        .card {
-            background: var(--bg-card);
+
+        /* Card style */
+        .auth-card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
             border-radius: 48px;
-            padding: 32px 28px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-            border: 1px solid var(--border);
+            padding: 40px 36px;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s;
+            animation: fadeSlideUp 0.5s ease;
         }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .auth-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 50px -15px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Logo / header */
         .logo {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .logo h1 {
             font-size: 2rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #ff477e, #ff9f4a);
+            background: linear-gradient(135deg, #ff4d6d, #ff9f4a);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-align: center;
-            margin-bottom: 24px;
+            letter-spacing: -0.5px;
         }
-        h2 { text-align: center; margin-bottom: 24px; color: var(--text-primary); }
-        input, select, textarea {
+
+        .logo p {
+            color: #99a4c2;
+            font-size: 0.85rem;
+            margin-top: 6px;
+        }
+
+        /* Form styling */
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #e2e8f0;
+            font-size: 0.85rem;
+        }
+
+        .form-group input, .form-group select {
             width: 100%;
             padding: 14px 18px;
             border-radius: 60px;
-            border: 1.5px solid var(--border);
-            background: var(--input-bg);
-            color: var(--text-primary);
-            margin-bottom: 16px;
-            outline: none;
-        }
-        .btn-primary {
-            background: linear-gradient(105deg, #ff477e, #ff8c42);
-            border: none;
+            border: 1.5px solid #2d3a5e;
+            background: #020617cc;
             color: white;
-            font-weight: 700;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: #ff4d6d;
+            box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.2);
+        }
+
+        /* Password toggle */
+        .password-wrapper {
+            position: relative;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #99a4c2;
+            font-size: 1.1rem;
+        }
+
+        /* Button */
+        .btn-primary {
+            background: linear-gradient(105deg, #ff4d6d, #ff8a4a);
+            border: none;
+            width: 100%;
             padding: 14px;
             border-radius: 60px;
-            width: 100%;
-            cursor: pointer;
+            font-weight: 700;
             font-size: 1rem;
-        }
-        .btn-outline {
-            background: transparent;
-            border: 2px solid #ff477e;
-            color: #ff477e;
-            padding: 12px;
-            border-radius: 60px;
-            font-weight: 600;
+            color: white;
             cursor: pointer;
-            width: 100%;
-            text-align: center;
-            display: inline-block;
+            transition: all 0.25s ease;
+            margin-top: 8px;
+            box-shadow: 0 8px 18px -5px rgba(255, 77, 109, 0.3);
         }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 26px -8px rgba(255, 77, 109, 0.5);
+        }
+
+        /* Switch link */
         .switch-link {
             text-align: center;
-            margin-top: 20px;
-            color: var(--text-secondary);
+            margin-top: 28px;
+            color: #99a4c2;
+            font-size: 0.9rem;
         }
+
         .switch-link a {
-            color: #ff477e;
+            color: #ff4d6d;
             text-decoration: none;
             font-weight: 600;
-        }
-        .photo-preview {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 16px;
-            display: block;
-            border: 3px solid #ff477e;
-        }
-        .country-code-row {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-        .country-code-row select {
-            width: 130px;
-            margin-bottom: 0;
-        }
-        .country-code-row input {
-            flex: 1;
-        }
-        .gender-group {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-        .gender-group label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
             cursor: pointer;
+            transition: 0.2s;
         }
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 40px;
-            padding: 8px 16px;
-            cursor: pointer;
-            z-index: 100;
+
+        .switch-link a:hover {
+            text-decoration: underline;
         }
-        /* Live indicator */
-        .live-badge {
-            background: #ff3b6f;
-            color: white;
-            font-size: 10px;
-            padding: 2px 8px;
-            border-radius: 40px;
-            display: inline-block;
-            margin-left: 8px;
-            animation: pulse 1.5s infinite;
+
+        /* Form transition */
+        .form-container {
+            transition: opacity 0.25s ease;
         }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-        .hidden { display: none; }
+
+        .hidden-form {
+            display: none;
+        }
+
+        /* Footer extra */
+        .footer-note {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 0.7rem;
+            color: #5a6a8a;
+        }
+
+        /* Responsive */
+        @media (max-width: 550px) {
+            .auth-card {
+                padding: 32px 24px;
+            }
+            .logo h1 {
+                font-size: 1.7rem;
+            }
+        }
     </style>
 </head>
 <body>
-<div class="container">
-    <!-- Theme Toggle -->
-    <button class="theme-toggle" id="themeToggleBtn"><i class="fas fa-moon"></i> <span id="themeText">Dark</span></button>
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="logo">
+            <h1>🌍 World Dating</h1>
+            <p>Find love across borders</p>
+        </div>
 
-    <!-- LOGIN CARD (separate) -->
-    <div id="loginCard" class="card">
-        <div class="logo">💕 Telegram Dating</div>
-        <h2>Welcome Back</h2>
-        <input type="text" id="loginPhone" placeholder="Phone (with country code, e.g., +251912345678)">
-        <input type="password" id="loginPassword" placeholder="Password">
-        <button id="doLoginBtn" class="btn-primary">Log In</button>
-        <div class="switch-link">Don't have an account? <a href="#" id="showSignupBtn">Sign Up</a></div>
-        <p style="text-align:center; font-size:12px; margin-top:20px;">© 2026 Telegram Dating — Live & Global</p>
-    </div>
-
-    <!-- SIGNUP CARD (separate) -->
-    <div id="signupCard" class="card hidden">
-        <div class="logo">💕 Telegram Dating</div>
-        <h2>Create Account</h2>
-        
-        <!-- Photo Upload -->
-        <div style="text-align:center;">
-            <img id="signupPhotoPreview" class="photo-preview" src="https://randomuser.me/api/portraits/women/68.jpg" alt="Preview">
-            <input type="file" id="signupPhoto" accept="image/*" style="display:none">
-            <button type="button" id="uploadPhotoBtn" class="btn-outline" style="width:auto; padding:8px 20px; margin-bottom:16px;"><i class="fas fa-camera"></i> Upload Photo</button>
-        </div>
-        
-        <input type="text" id="signupName" placeholder="Full Name">
-        
-        <!-- Gender Selection -->
-        <div class="gender-group">
-            <label><input type="radio" name="gender" value="Female"> Female</label>
-            <label><input type="radio" name="gender" value="Male"> Male</label>
-            <label><input type="radio" name="gender" value="Non-binary"> Non-binary</label>
-        </div>
-        
-        <!-- Country Code + Phone (all countries) -->
-        <div class="country-code-row">
-            <select id="countryCodeSelect">
-                <option value="+93">🇦🇫 +93 Afghanistan</option><option value="+355">🇦🇱 +355 Albania</option><option value="+213">🇩🇿 +213 Algeria</option>
-                <option value="+376">🇦🇩 +376 Andorra</option><option value="+244">🇦🇴 +244 Angola</option><option value="+54">🇦🇷 +54 Argentina</option>
-                <option value="+374">🇦🇲 +374 Armenia</option><option value="+61">🇦🇺 +61 Australia</option><option value="+43">🇦🇹 +43 Austria</option>
-                <option value="+994">🇦🇿 +994 Azerbaijan</option><option value="+973">🇧🇭 +973 Bahrain</option><option value="+880">🇧🇩 +880 Bangladesh</option>
-                <option value="+375">🇧🇾 +375 Belarus</option><option value="+32">🇧🇪 +32 Belgium</option><option value="+591">🇧🇴 +591 Bolivia</option>
-                <option value="+387">🇧🇦 +387 Bosnia</option><option value="+55">🇧🇷 +55 Brazil</option><option value="+359">🇧🇬 +359 Bulgaria</option>
-                <option value="+855">🇰🇭 +855 Cambodia</option><option value="+1">🇨🇦 +1 Canada</option><option value="+56">🇨🇱 +56 Chile</option>
-                <option value="+86">🇨🇳 +86 China</option><option value="+57">🇨🇴 +57 Colombia</option><option value="+506">🇨🇷 +506 Costa Rica</option>
-                <option value="+385">🇭🇷 +385 Croatia</option><option value="+53">🇨🇺 +53 Cuba</option><option value="+420">🇨🇿 +420 Czech</option>
-                <option value="+45">🇩🇰 +45 Denmark</option><option value="+593">🇪🇨 +593 Ecuador</option><option value="+20">🇪🇬 +20 Egypt</option>
-                <option value="+503">🇸🇻 +503 El Salvador</option><option value="+372">🇪🇪 +372 Estonia</option><option value="+251">🇪🇹 +251 Ethiopia</option>
-                <option value="+679">🇫🇯 +679 Fiji</option><option value="+358">🇫🇮 +358 Finland</option><option value="+33">🇫🇷 +33 France</option>
-                <option value="+241">🇬🇦 +241 Gabon</option><option value="+220">🇬🇲 +220 Gambia</option><option value="+995">🇬🇪 +995 Georgia</option>
-                <option value="+49">🇩🇪 +49 Germany</option><option value="+233">🇬🇭 +233 Ghana</option><option value="+30">🇬🇷 +30 Greece</option>
-                <option value="+502">🇬🇹 +502 Guatemala</option><option value="+224">🇬🇳 +224 Guinea</option><option value="+509">🇭🇹 +509 Haiti</option>
-                <option value="+504">🇭🇳 +504 Honduras</option><option value="+36">🇭🇺 +36 Hungary</option><option value="+354">🇮🇸 +354 Iceland</option>
-                <option value="+91">🇮🇳 +91 India</option><option value="+62">🇮🇩 +62 Indonesia</option><option value="+98">🇮🇷 +98 Iran</option>
-                <option value="+964">🇮🇶 +96 Iraq</option><option value="+353">🇮🇪 +353 Ireland</option><option value="+972">🇮🇱 +972 Israel</option>
-                <option value="+39">🇮🇹 +39 Italy</option><option value="+81">🇯🇵 +81 Japan</option><option value="+962">🇯🇴 +962 Jordan</option>
-                <option value="+7">🇰🇿 +7 Kazakhstan</option><option value="+254">🇰🇪 +254 Kenya</option><option value="+965">🇰🇼 +965 Kuwait</option>
-                <option value="+996">🇰🇬 +996 Kyrgyzstan</option><option value="+856">🇱🇦 +856 Laos</option><option value="+371">🇱🇻 +371 Latvia</option>
-                <option value="+961">🇱🇧 +961 Lebanon</option><option value="+218">🇱🇾 +218 Libya</option><option value="+423">🇱🇮 +423 Liechtenstein</option>
-                <option value="+370">🇱🇹 +370 Lithuania</option><option value="+352">🇱🇺 +352 Luxembourg</option><option value="+389">🇲🇰 +389 Macedonia</option>
-                <option value="+261">🇲🇬 +261 Madagascar</option><option value="+265">🇲🇼 +265 Malawi</option><option value="+60">🇲🇾 +60 Malaysia</option>
-                <option value="+960">🇲🇻 +960 Maldives</option><option value="+223">🇲🇱 +223 Mali</option><option value="+356">🇲🇹 +356 Malta</option>
-                <option value="+52">🇲🇽 +52 Mexico</option><option value="+373">🇲🇩 +373 Moldova</option><option value="+377">🇲🇨 +377 Monaco</option>
-                <option value="+976">🇲🇳 +976 Mongolia</option><option value="+382">🇲🇪 +382 Montenegro</option><option value="+212">🇲🇦 +212 Morocco</option>
-                <option value="+258">🇲🇿 +258 Mozambique</option><option value="+95">🇲🇲 +95 Myanmar</option><option value="+264">🇳🇦 +264 Namibia</option>
-                <option value="+977">🇳🇵 +977 Nepal</option><option value="+31">🇳🇱 +31 Netherlands</option><option value="+64">🇳🇿 +64 New Zealand</option>
-                <option value="+505">🇳🇮 +505 Nicaragua</option><option value="+227">🇳🇪 +227 Niger</option><option value="+234">🇳🇬 +234 Nigeria</option>
-                <option value="+47">🇳🇴 +47 Norway</option><option value="+968">🇴🇲 +968 Oman</option><option value="+92">🇵🇰 +92 Pakistan</option>
-                <option value="+507">🇵🇦 +507 Panama</option><option value="+595">🇵🇾 +595 Paraguay</option><option value="+51">🇵🇪 +51 Peru</option>
-                <option value="+63">🇵🇭 +63 Philippines</option><option value="+48">🇵🇱 +48 Poland</option><option value="+351">🇵🇹 +351 Portugal</option>
-                <option value="+974">🇶🇦 +974 Qatar</option><option value="+40">🇷🇴 +40 Romania</option><option value="+7">🇷🇺 +7 Russia</option>
-                <option value="+250">🇷🇼 +250 Rwanda</option><option value="+966">🇸🇦 +966 Saudi Arabia</option><option value="+221">🇸🇳 +221 Senegal</option>
-                <option value="+381">🇷🇸 +381 Serbia</option><option value="+65">🇸🇬 +65 Singapore</option><option value="+421">🇸🇰 +421 Slovakia</option>
-                <option value="+386">🇸🇮 +386 Slovenia</option><option value="+27">🇿🇦 +27 South Africa</option><option value="+82">🇰🇷 +82 South Korea</option>
-                <option value="+34">🇪🇸 +34 Spain</option><option value="+94">🇱🇰 +94 Sri Lanka</option><option value="+249">🇸🇩 +249 Sudan</option>
-                <option value="+46">🇸🇪 +46 Sweden</option><option value="+41">🇨🇭 +41 Switzerland</option><option value="+963">🇸🇾 +963 Syria</option>
-                <option value="+886">🇹🇼 +886 Taiwan</option><option value="+255">🇹🇿 +255 Tanzania</option><option value="+66">🇹🇭 +66 Thailand</option>
-                <option value="+90">🇹🇷 +90 Turkey</option><option value="+256">🇺🇬 +256 Uganda</option><option value="+380">🇺🇦 +380 Ukraine</option>
-                <option value="+971">🇦🇪 +971 UAE</option><option value="+44">🇬🇧 +44 UK</option><option value="+1">🇺🇸 +1 USA</option>
-                <option value="+598">🇺🇾 +598 Uruguay</option><option value="+998">🇺🇿 +998 Uzbekistan</option><option value="+58">🇻🇪 +58 Venezuela</option>
-                <option value="+84">🇻🇳 +84 Vietnam</option><option value="+967">🇾🇪 +967 Yemen</option><option value="+260">🇿🇲 +260 Zambia</option><option value="+263">🇿🇼 +263 Zimbabwe</option>
-            </select>
-            <input type="tel" id="signupPhone" placeholder="Phone number">
-        </div>
-        
-        <input type="password" id="signupPassword" placeholder="Password (min 6 chars)">
-        <input type="text" id="signupDob" placeholder="Birth Date (YYYY-MM-DD)">
-        
-        <button id="doSignupBtn" class="btn-primary">Sign Up →</button>
-        <div class="switch-link">Already have an account? <a href="#" id="showLoginBtn">Log In</a></div>
-    </div>
-
-    <!-- DASHBOARD (after login) -->
-    <div id="dashboard" class="card hidden">
-        <div class="flex-between" style="display:flex; justify-content:space-between; align-items:center;">
-            <div class="logo" style="font-size:1.5rem;">💕 Telegram Dating</div>
-            <div><span id="liveIndicator" class="live-badge"><i class="fas fa-circle"></i> LIVE</span></div>
-        </div>
-        <div id="dashboardContent">
-            <h3>Welcome, <span id="welcomeName"></span>!</h3>
-            <p><i class="fas fa-map-marker-alt"></i> Global dating • <span id="userCountry"></span></p>
-            <div style="margin: 20px 0;">
-                <button id="goLiveBtn" class="btn-primary"><i class="fas fa-video"></i> Go Live Now</button>
-                <button id="findMatchesBtn" class="btn-outline" style="margin-top:12px;">🔍 Find Matches</button>
-            </div>
-            <div id="liveStreamContainer" style="display:none; margin-top:20px;">
-                <div style="background:#000; border-radius:28px; padding:16px; text-align:center;">
-                    <i class="fas fa-video" style="font-size:48px; color:#ff477e;"></i>
-                    <p style="color:white;">🔴 You are live! Connecting with people worldwide...</p>
-                    <button id="stopLiveBtn" class="btn-outline" style="margin-top:12px;">End Live</button>
+        <!-- SIGNUP FORM -->
+        <div id="signupForm" class="form-container">
+            <form id="signupFormElement">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="fullName" placeholder="e.g., Elena Rodriguez" required>
                 </div>
-            </div>
-            <div id="matchResult" style="margin-top:20px;"></div>
+                <div class="form-group">
+                    <label>Age</label>
+                    <input type="number" id="age" placeholder="18+" min="18" max="100" required>
+                </div>
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select id="gender">
+                        <option value="Female">Female</option>
+                        <option value="Male">Male</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="emailSignup" placeholder="hello@worlddating.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="passwordSignup" placeholder="••••••" required>
+                        <i class="far fa-eye toggle-password" data-target="passwordSignup"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="confirmPassword" placeholder="••••••" required>
+                        <i class="far fa-eye toggle-password" data-target="confirmPassword"></i>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">Sign Up</button>
+                <div class="switch-link">
+                    Already have an account? <a id="showLoginBtn">Login</a>
+                </div>
+            </form>
         </div>
-        <button id="logoutDashBtn" class="btn-outline" style="margin-top:30px;">Logout</button>
-        <p style="text-align:center; font-size:11px; margin-top:20px;">© 2026 Telegram Dating — Live Global Community</p>
+
+        <!-- LOGIN FORM (UI only) -->
+        <div id="loginForm" class="form-container hidden-form">
+            <form id="loginFormElement">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="emailLogin" placeholder="hello@worlddating.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="passwordLogin" placeholder="••••••">
+                        <i class="far fa-eye toggle-password" data-target="passwordLogin"></i>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">Login</button>
+                <div class="switch-link">
+                    Don't have an account? <a id="showSignupBtn">Sign Up</a>
+                </div>
+            </form>
+        </div>
+        <div class="footer-note">
+            <i class="fas fa-heart" style="color:#ff4d6d;"></i> Join millions of singles worldwide
+        </div>
     </div>
 </div>
 
 <script>
-    // ---------- GLOBAL STATE ----------
-    let currentUser = null;
-    let users = [];
-    let isLive = false;
+    // Toggle between Signup and Login forms
+    const signupFormContainer = document.getElementById('signupForm');
+    const loginFormContainer = document.getElementById('loginForm');
+    const showLoginBtn = document.getElementById('showLoginBtn');
+    const showSignupBtn = document.getElementById('showSignupBtn');
 
-    // Load/Save users
-    function loadUsers() {
-        const stored = localStorage.getItem("td_global_users");
-        if(stored) users = JSON.parse(stored);
-        else {
-            users = [];
-            // demo users
-            users.push({ id: 1, name: "Emma", phone: "+251911111111", password: "123", gender: "Female", dob: "1995-01-01", photo: "https://randomuser.me/api/portraits/women/1.jpg", countryCode: "+251", bio: "Love travel" });
-            users.push({ id: 2, name: "Liam", phone: "+1 555123456", password: "123", gender: "Male", dob: "1992-05-12", photo: "https://randomuser.me/api/portraits/men/2.jpg", countryCode: "+1", bio: "Coffee lover" });
-            saveUsers();
-        }
-    }
-    function saveUsers() { localStorage.setItem("td_global_users", JSON.stringify(users)); }
-
-    // Helper: get country name from code
-    function getCountryFromCode(code) {
-        const map = { "+251":"Ethiopia", "+1":"USA", "+44":"UK", "+91":"India", "+86":"China", "+55":"Brazil", "+81":"Japan", "+49":"Germany", "+33":"France", "+254":"Kenya" };
-        return map[code] || "Global";
-    }
-
-    // Signup logic
-    document.getElementById("doSignupBtn")?.addEventListener("click", () => {
-        const name = document.getElementById("signupName").value.trim();
-        const genderElem = document.querySelector('input[name="gender"]:checked');
-        const gender = genderElem ? genderElem.value : "Female";
-        const countryCode = document.getElementById("countryCodeSelect").value;
-        const phoneRaw = document.getElementById("signupPhone").value.trim();
-        const fullPhone = countryCode + phoneRaw;
-        const password = document.getElementById("signupPassword").value;
-        const dob = document.getElementById("signupDob").value;
-        const photoFile = document.getElementById("signupPhoto").files[0];
-        
-        if(!name || !phoneRaw || !password || !dob) { alert("Please fill all fields"); return; }
-        if(password.length < 6) { alert("Password min 6 chars"); return; }
-        if(users.find(u => u.phone === fullPhone)) { alert("Phone already registered. Please login."); return; }
-        
-        const reader = new FileReader();
-        const processSignup = (photoBase64) => {
-            const newUser = {
-                id: Date.now(),
-                name: name,
-                phone: fullPhone,
-                password: password,
-                gender: gender,
-                dob: dob,
-                photo: photoBase64 || "https://randomuser.me/api/portraits/women/68.jpg",
-                countryCode: countryCode,
-                bio: "New to Telegram Dating!",
-                coins: 100,
-                vip: false
-            };
-            users.push(newUser);
-            saveUsers();
-            alert("✅ Signup successful! Please login.");
-            showLogin();
-        };
-        if(photoFile) {
-            const fr = new FileReader();
-            fr.onload = (e) => processSignup(e.target.result);
-            fr.readAsDataURL(photoFile);
-        } else { processSignup(null); }
-    });
-
-    // Login logic
-    document.getElementById("doLoginBtn")?.addEventListener("click", () => {
-        const loginPhone = document.getElementById("loginPhone").value.trim();
-        const loginPwd = document.getElementById("loginPassword").value;
-        const user = users.find(u => u.phone === loginPhone && u.password === loginPwd);
-        if(!user) { alert("Invalid credentials"); return; }
-        currentUser = user;
-        localStorage.setItem("td_current_session", JSON.stringify(currentUser));
-        showDashboard();
-    });
-
-    function showDashboard() {
-        document.getElementById("loginCard").classList.add("hidden");
-        document.getElementById("signupCard").classList.add("hidden");
-        document.getElementById("dashboard").classList.remove("hidden");
-        document.getElementById("welcomeName").innerText = currentUser.name;
-        document.getElementById("userCountry").innerText = getCountryFromCode(currentUser.countryCode);
+    function showSignup() {
+        signupFormContainer.classList.remove('hidden-form');
+        loginFormContainer.classList.add('hidden-form');
     }
 
     function showLogin() {
-        document.getElementById("signupCard").classList.add("hidden");
-        document.getElementById("dashboard").classList.add("hidden");
-        document.getElementById("loginCard").classList.remove("hidden");
-    }
-    function showSignup() {
-        document.getElementById("loginCard").classList.add("hidden");
-        document.getElementById("dashboard").classList.add("hidden");
-        document.getElementById("signupCard").classList.remove("hidden");
+        loginFormContainer.classList.remove('hidden-form');
+        signupFormContainer.classList.add('hidden-form');
     }
 
-    // Find matches (swipe simulation)
-    document.getElementById("findMatchesBtn")?.addEventListener("click", () => {
-        const others = users.filter(u => u.id !== currentUser.id);
-        if(others.length === 0) { document.getElementById("matchResult").innerHTML = "<p>No other users yet.</p>"; return; }
-        const randomMatch = others[Math.floor(Math.random() * others.length)];
-        document.getElementById("matchResult").innerHTML = `
-            <div style="background:var(--bg-card); border-radius:32px; padding:20px; text-align:center; border:1px solid var(--border);">
-                <img src="${randomMatch.photo}" style="width:80px; height:80px; border-radius:50%; object-fit:cover;">
-                <h3>${randomMatch.name}, ${new Date().getFullYear() - new Date(randomMatch.dob).getFullYear()}</h3>
-                <p>${randomMatch.bio}</p>
-                <button id="likeMatchBtn" class="btn-primary" style="margin-top:12px;"><i class="fas fa-heart"></i> Like & Match</button>
-            </div>
-        `;
-        document.getElementById("likeMatchBtn")?.addEventListener("click", () => {
-            alert(`💞 You matched with ${randomMatch.name}! Start chatting.`);
+    if (showLoginBtn) showLoginBtn.addEventListener('click', showLogin);
+    if (showSignupBtn) showSignupBtn.addEventListener('click', showSignup);
+
+    // Password show/hide toggle for all password fields
+    const toggleIcons = document.querySelectorAll('.toggle-password');
+    toggleIcons.forEach(icon => {
+        icon.addEventListener('click', function () {
+            const targetId = this.getAttribute('data-target');
+            const passwordInput = document.getElementById(targetId);
+            if (passwordInput) {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye-slash');
+            }
         });
     });
 
-    // Live feature
-    document.getElementById("goLiveBtn")?.addEventListener("click", () => {
-        isLive = true;
-        document.getElementById("liveStreamContainer").style.display = "block";
-        document.getElementById("liveIndicator").innerHTML = '<i class="fas fa-circle"></i> LIVE NOW';
-        // Simulate live viewers
-        let viewers = 0;
-        const interval = setInterval(() => {
-            if(!isLive) { clearInterval(interval); return; }
-            viewers += Math.floor(Math.random() * 5);
-            document.getElementById("liveStreamContainer").innerHTML = `
-                <div style="background:#000; border-radius:28px; padding:16px; text-align:center;">
-                    <i class="fas fa-video" style="font-size:48px; color:#ff477e;"></i>
-                    <p style="color:white;">🔴 LIVE: ${currentUser.name} is streaming</p>
-                    <p style="color:#ffaa66;">👁️ ${viewers} watching worldwide</p>
-                    <button id="stopLiveBtn" class="btn-outline" style="margin-top:12px;">End Live</button>
-                </div>
-            `;
-            document.getElementById("stopLiveBtn")?.addEventListener("click", () => {
-                isLive = false;
-                document.getElementById("liveStreamContainer").style.display = "none";
-                document.getElementById("liveIndicator").innerHTML = '<i class="fas fa-circle"></i> LIVE';
-                alert("Live ended. Thanks for streaming!");
-            });
-        }, 3000);
-        document.getElementById("stopLiveBtn")?.addEventListener("click", () => { isLive = false; clearInterval(interval); });
-    });
+    // SIGNUP form validation (demo purposes only, UI feedback)
+    const signupForm = document.getElementById('signupFormElement');
+    if (signupForm) {
+        signupForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const fullName = document.getElementById('fullName').value.trim();
+            const age = document.getElementById('age').value;
+            const email = document.getElementById('emailSignup').value.trim();
+            const password = document.getElementById('passwordSignup').value;
+            const confirmPwd = document.getElementById('confirmPassword').value;
 
-    document.getElementById("logoutDashBtn")?.addEventListener("click", () => {
-        currentUser = null;
-        localStorage.removeItem("td_current_session");
-        showLogin();
-    });
+            if (!fullName || !age || !email || !password || !confirmPwd) {
+                alert("❌ Please fill in all fields.");
+                return;
+            }
+            if (password !== confirmPwd) {
+                alert("❌ Passwords do not match.");
+                return;
+            }
+            if (password.length < 6) {
+                alert("❌ Password must be at least 6 characters.");
+                return;
+            }
+            if (age < 18 || age > 100) {
+                alert("❌ Age must be between 18 and 100.");
+                return;
+            }
+            // Simple email regex
+            const emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert("❌ Please enter a valid email address.");
+                return;
+            }
+            // Success demo message
+            alert(`🎉 Welcome to World Dating, ${fullName}! Your account has been created. (Demo)`);
+            // Optionally reset form or switch to login
+            signupForm.reset();
+            // Switch to login after signup success (optional)
+            showLogin();
+        });
+    }
 
-    // Photo preview for signup
-    document.getElementById("uploadPhotoBtn")?.addEventListener("click", () => document.getElementById("signupPhoto").click());
-    document.getElementById("signupPhoto")?.addEventListener("change", (e) => {
-        const file = e.target.files[0];
-        if(file) {
-            const reader = new FileReader();
-            reader.onload = (ev) => { document.getElementById("signupPhotoPreview").src = ev.target.result; };
-            reader.readAsDataURL(file);
-        }
-    });
+    // LOGIN form (UI only with demo feedback)
+    const loginForm = document.getElementById('loginFormElement');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const email = document.getElementById('emailLogin').value.trim();
+            const password = document.getElementById('passwordLogin').value;
+            if (!email || !password) {
+                alert("❌ Please enter both email and password.");
+                return;
+            }
+            alert(`✨ Welcome back! You've successfully logged in to World Dating. (Demo UI)`);
+            // In a real app, you would redirect or authenticate.
+            loginForm.reset();
+        });
+    }
 
-    // Switch between login/signup
-    document.getElementById("showSignupBtn")?.addEventListener("click", (e) => { e.preventDefault(); showSignup(); });
-    document.getElementById("showLoginBtn")?.addEventListener("click", (e) => { e.preventDefault(); showLogin(); });
+    // Extra: Smooth placeholder effect + live age validation on input
+    const ageInput = document.getElementById('age');
+    if (ageInput) {
+        ageInput.addEventListener('input', function () {
+            let val = parseInt(this.value);
+            if (val < 18) this.value = 18;
+            if (val > 100) this.value = 100;
+        });
+    }
 
-    // Theme Toggle (Dark/Light)
-    let isDark = false;
-    document.getElementById("themeToggleBtn")?.addEventListener("click", () => {
-        isDark = !isDark;
-        if(isDark) document.body.classList.add("dark");
-        else document.body.classList.remove("dark");
-        localStorage.setItem("td_theme", isDark ? "dark" : "light");
-        document.getElementById("themeText").innerText = isDark ? "Light" : "Dark";
-    });
-    const savedTheme = localStorage.getItem("td_theme");
-    if(savedTheme === "dark") { isDark = true; document.body.classList.add("dark"); document.getElementById("themeText").innerText = "Light"; }
-    else { document.getElementById("themeText").innerText = "Dark"; }
-
-    // Auto session restore
-    const savedSession = localStorage.getItem("td_current_session");
-    if(savedSession) {
-        currentUser = JSON.parse(savedSession);
-        const exists = users.find(u => u.id === currentUser.id);
-        if(exists) showDashboard();
-        else showLogin();
-    } else { showLogin(); }
-
-    loadUsers();
+    // Pre-fill demo data for quick preview (optional)
+    // Not auto-filling to keep clean but can add placeholder demo
+    console.log("World Dating Auth Module Ready — Dark theme, responsive, toggle ready.");
 </script>
 </body>
 </html>
