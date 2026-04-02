@@ -3,537 +3,434 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GlobalHeart · International Dating</title>
-    <!-- Font Awesome 6 & Google Fonts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>HeartLink · Global Dating on Telegram</title>
+    <!-- Telegram WebApp SDK + Fonts + Icons -->
+    <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Flatpickr for DOB -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Swiper.js for smooth swipe animations -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
-        body {
-            background: linear-gradient(145deg, #fef9f0 0%, #f2eef9 100%);
-            min-height: 100vh;
-        }
-        /* App Layout with different "pages" */
-        .app-wrapper {
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 20px 24px 40px;
-        }
-        .glass-card {
-            background: rgba(255,255,255,0.96);
-            backdrop-filter: blur(2px);
-            border-radius: 40px;
-            box-shadow: 0 20px 40px -12px rgba(0,0,0,0.15);
-            padding: 32px;
-            border: 1px solid rgba(255,255,255,0.6);
-        }
-        .btn-primary {
-            background: linear-gradient(105deg, #ff4d6d, #ff8c42);
-            border: none;
-            color: white;
-            font-weight: 700;
-            padding: 14px 28px;
-            border-radius: 60px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 100%;
-            box-shadow: 0 6px 14px rgba(255,77,109,0.3);
-        }
-        .btn-primary:hover { transform: translateY(-2px); }
-        .btn-outline {
-            background: transparent;
-            border: 2px solid #ff4d6d;
-            color: #ff4d6d;
-            padding: 10px 20px;
-            border-radius: 60px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 14px 18px;
-            border-radius: 60px;
-            border: 1.5px solid #e9edf2;
-            background: white;
-            outline: none;
-            transition: 0.2s;
-        }
-        input:focus { border-color: #ff8c42; box-shadow: 0 0 0 3px rgba(255,140,66,0.15); }
-        .form-group { margin-bottom: 22px; }
-        label { font-weight: 600; display: block; margin-bottom: 8px; color: #2c3e50; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-        .relative { position: relative; }
-        .toggle-pwd {
-            position: absolute;
-            right: 20px;
-            top: 45px;
-            cursor: pointer;
-            color: #aaa;
-        }
-        .photo-preview {
-            width: 85px;
-            height: 85px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-top: 8px;
-            border: 2px solid #ff8c42;
-        }
-        /* Dashboard Tabs (Profile, Messages, Posts) */
-        .dashboard-tabs {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 28px;
-            border-bottom: 2px solid #ffe1d4;
-            padding-bottom: 12px;
-        }
-        .tab-btn {
-            background: none;
-            border: none;
-            font-size: 1.1rem;
-            font-weight: 600;
-            padding: 10px 24px;
-            border-radius: 40px;
-            cursor: pointer;
-            color: #5f6c80;
-            transition: 0.2s;
-        }
-        .tab-btn.active {
-            background: #ff4d6d20;
-            color: #ff4d6d;
-            box-shadow: inset 0 0 0 1px #ff4d6d40;
-        }
-        .tab-pane { display: none; animation: fade 0.2s ease; }
-        .tab-pane.active-pane { display: block; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #f9f7fe; color: #1e1f2c; overflow-x: hidden; }
+        .app-container { max-width: 550px; margin: 0 auto; padding: 16px 20px 90px; min-height: 100vh; position: relative; }
+        .glass-card { background: rgba(255,255,255,0.96); border-radius: 32px; box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1); padding: 24px; backdrop-filter: blur(2px); border: 1px solid rgba(255,255,255,0.7); }
+        .btn-primary { background: linear-gradient(105deg, #ff477e, #ff8c42); border: none; color: white; font-weight: 700; padding: 14px; border-radius: 60px; width: 100%; cursor: pointer; transition: 0.2s; box-shadow: 0 6px 14px rgba(255,71,126,0.3); }
+        .btn-outline { background: transparent; border: 2px solid #ff477e; color: #ff477e; padding: 10px 20px; border-radius: 60px; font-weight: 600; cursor: pointer; }
+        input, select, textarea { width: 100%; padding: 14px 18px; border-radius: 60px; border: 1.5px solid #e9ecf2; background: white; outline: none; }
+        .swipe-card { background: white; border-radius: 32px; overflow: hidden; box-shadow: 0 25px 40px -12px rgba(0,0,0,0.2); margin-bottom: 20px; transition: transform 0.2s; }
+        .profile-photo { height: 340px; background-size: cover; background-position: center; position: relative; }
+        .tab-bar { position: fixed; bottom: 0; left: 0; right: 0; max-width: 550px; margin: 0 auto; background: rgba(255,255,255,0.98); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 10px 20px 24px; border-top: 1px solid #eee; z-index: 100; }
+        .tab-item { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; color: #8e8e9e; cursor: pointer; }
+        .tab-item.active { color: #ff477e; font-weight: 600; }
+        .tab-content { display: none; animation: fade 0.2s; }
+        .tab-content.active-tab { display: block; }
         @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-        .post-card {
-            background: white;
-            border-radius: 28px;
-            padding: 20px;
-            margin-bottom: 18px;
-            box-shadow: 0 5px 12px rgba(0,0,0,0.05);
-            border: 1px solid #f0eef4;
-        }
-        .message-item {
-            background: #f8f5ff;
-            border-radius: 24px;
-            padding: 16px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .admin-panel-dark {
-            background: #1e2a3a;
-            border-radius: 32px;
-            padding: 24px;
-            margin-top: 30px;
-            color: white;
-        }
-        .user-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #0f1a24;
-            border-radius: 24px;
-            overflow: hidden;
-        }
-        .user-table th, .user-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #2d4458;
-        }
-        @media (max-width: 780px) {
-            .grid-2 { grid-template-columns: 1fr; }
-            .app-wrapper { padding: 16px; }
-        }
+        .match-card, .message-item, .post-card { background: white; border-radius: 24px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #f0eef6; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .badge-vip { background: gold; color: #1e1f2c; padding: 4px 12px; border-radius: 40px; font-size: 11px; font-weight: bold; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        @media (max-width: 500px) { .app-container { padding: 12px 16px 90px; } }
     </style>
 </head>
 <body>
-<div class="app-wrapper">
-    <!-- REGISTRATION SECTION (visible by default) -->
-    <div id="registerSection">
-        <div class="glass-card" style="max-width: 900px; margin: 0 auto;">
-            <div style="text-align:center; margin-bottom: 20px;">
-                <i class="fas fa-globe-asia" style="font-size: 48px; color:#ff4d6d;"></i>
-                <h2>GlobalHeart ❤️ International Dating</h2>
-                <p>Connect worldwide · OTP verification · Real profiles</p>
-            </div>
-            <form id="registerForm">
-                <div class="grid-2">
-                    <div class="form-group"><label>Full Name *</label><input type="text" id="fullName" placeholder="e.g., Maria Gonzalez" required></div>
-                    <div class="form-group"><label>Gender</label><select id="gender"><option>Female</option><option>Male</option><option>Non-binary</option></select></div>
-                </div>
-                <div class="form-group"><label>Phone (with country code) *</label><div style="display:flex; gap:10px;"><select id="countryCode" style="width:140px;"><option value="+251">🇪🇹 +251</option><option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+254">🇰🇪 +254</option><option value="+55">🇧🇷 +55</option><option value="+91">🇮🇳 +91</option><option value="+86">🇨🇳 +86</option><option value="+81">🇯🇵 +81</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option></select><input type="tel" id="phoneNumber" placeholder="912345678" required></div></div>
-                <div class="grid-2">
-                    <div class="form-group relative"><label>Password (min 6 chars) *</label><input type="password" id="password" required><i class="fas fa-eye toggle-pwd" id="toggleRegPwd"></i></div>
-                    <div class="form-group relative"><label>Confirm Password</label><input type="password" id="confirmPwd" required></div>
-                </div>
-                <div class="grid-2">
-                    <div class="form-group"><label>Date of Birth *</label><input type="text" id="dob" placeholder="YYYY-MM-DD" required></div>
-                    <div class="form-group"><label>Profile Photo (optional)</label><input type="file" id="profilePhotoFile" accept="image/*"><div id="photoPreview"></div></div>
-                </div>
-                <div class="form-group"><label>OTP Verification (5min valid, you can copy code) *</label><div style="display:flex; gap:12px;"><input type="text" id="otpInput" placeholder="6-digit code" style="flex:2;"><button type="button" id="sendOtpBtn" class="btn-outline" style="width:auto;">Send OTP</button></div><div id="otpTimer" style="font-size:12px; margin-top:6px; color:#ff4d6d;"></div></div>
-                <button type="submit" class="btn-primary" id="registerBtn"><i class="fas fa-heart"></i> Complete Registration</button>
-                <div style="text-align:center; margin-top:20px;"><a href="#" id="adminLoginLink" style="color:#ff4d6d;">Admin Login</a> | <a href="#" id="showLoginLink">Already have account? Sign in</a></div>
-            </form>
+<div class="app-container" id="appRoot">
+    <!-- ONBOARDING / AUTH (Telegram login first) -->
+    <div id="authScreen" class="glass-card" style="text-align:center;">
+        <i class="fab fa-telegram" style="font-size: 64px; color: #ff477e;"></i>
+        <h2 style="margin: 16px 0;">HeartLink ❤️ Dating</h2>
+        <p>Meet genuine people worldwide. Telegram-secured.</p>
+        <button id="telegramLoginBtn" class="btn-primary" style="margin: 20px 0;"><i class="fab fa-telegram"></i> Continue with Telegram</button>
+        <button id="showPhoneAuthBtn" class="btn-outline">Use Phone / Email</button>
+        <div id="phoneAuthPanel" style="display:none; margin-top:20px;">
+            <input type="text" id="manualPhone" placeholder="+251912345678"><br><br>
+            <input type="password" id="manualPassword" placeholder="Password"><br><br>
+            <button id="manualLoginBtn" class="btn-primary">Sign In / Register</button>
         </div>
     </div>
 
-    <!-- LOGIN SECTION -->
-    <div id="loginSection" style="display:none;"><div class="glass-card" style="max-width:500px; margin:0 auto;"><h2>Welcome Back</h2><div class="form-group"><label>Phone (full number)</label><input type="text" id="loginPhone" placeholder="+251912345678"></div><div class="form-group relative"><label>Password</label><input type="password" id="loginPassword"><i class="fas fa-eye toggle-pwd" id="toggleLoginPwd"></i></div><button id="doLoginBtn" class="btn-primary">Sign in</button><div style="margin-top:20px;"><a href="#" id="backToRegisterLink">← Create new account</a></div></div></div>
+    <!-- MAIN DASHBOARD (after auth) -->
+    <div id="mainDashboard" style="display:none;">
+        <!-- Tab Bar -->
+        <div class="tab-bar">
+            <button class="tab-item" data-tab="swipe"><i class="fas fa-fire"></i><span>Explore</span></button>
+            <button class="tab-item" data-tab="matches"><i class="fas fa-comment-dots"></i><span>Matches</span></button>
+            <button class="tab-item" data-tab="profile"><i class="fas fa-user"></i><span>Profile</span></button>
+            <button class="tab-item" data-tab="vip"><i class="fas fa-crown"></i><span>VIP</span></button>
+        </div>
 
-    <!-- DASHBOARD (Profile, Messages, Posts) -->
-    <div id="dashboardSection" style="display:none;">
-        <div class="glass-card">
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:20px;">
-                <h2><i class="fas fa-user-astronaut"></i> Dashboard · <span id="dashUserName"></span></h2>
-                <button id="logoutBtn" class="btn-outline">Logout</button>
+        <!-- SWIPE TAB -->
+        <div id="swipeTab" class="tab-content active-tab">
+            <div class="flex-between"><h3>✨ Discover matches</h3><span id="swipeFilterIcon" style="cursor:pointer;"><i class="fas fa-sliders-h"></i> Filter</span></div>
+            <div id="swipeContainer" style="margin-top: 16px;"></div>
+            <div id="filterPanel" style="display:none; background:white; border-radius:28px; padding:16px; margin-top:16px;">
+                <label>Age: <input type="range" id="ageMin" min="18" max="60" value="18"> <span id="minAgeVal">18</span> - <input type="range" id="ageMax" min="18" max="60" value="45"> <span id="maxAgeVal">45</span></label>
+                <label>Gender: <select id="prefGender"><option>All</option><option>Female</option><option>Male</option></select></label>
+                <button id="applyFilterBtn" class="btn-primary">Apply</button>
             </div>
-            <!-- Tabs -->
-            <div class="dashboard-tabs">
-                <button class="tab-btn active" data-tab="profileTabBtn"><i class="fas fa-id-card"></i> Profile</button>
-                <button class="tab-btn" data-tab="messagesTabBtn"><i class="fas fa-comment-dots"></i> Messages</button>
-                <button class="tab-btn" data-tab="postsTabBtn"><i class="fas fa-newspaper"></i> Posts</button>
+        </div>
+
+        <!-- MATCHES & CHAT TAB -->
+        <div id="matchesTab" class="tab-content">
+            <h3>💬 Your matches</h3>
+            <div id="matchesList"></div>
+            <div id="chatView" style="display:none;">
+                <div class="flex-between"><button id="backToMatches" class="btn-outline"><i class="fas fa-arrow-left"></i> Back</button><span id="chatUserName"></span></div>
+                <div id="chatMessagesArea" style="height: 350px; overflow-y: auto; margin: 16px 0; background:#fefaf5; border-radius: 28px; padding: 12px;"></div>
+                <div class="flex-between" style="gap:8px;"><input type="text" id="messageInput" placeholder="Type a message..."><button id="sendMsgBtn" class="btn-primary" style="width:auto; padding:12px 20px;"><i class="fas fa-paper-plane"></i></button></div>
+                <div><button id="sendImageBtn" class="btn-outline" style="margin-top:8px;"><i class="fas fa-image"></i> Send Image</button></div>
             </div>
-            <!-- Profile Pane -->
-            <div id="profilePane" class="tab-pane active-pane">
-                <div class="grid-2">
-                    <div><img id="dashboardPhoto" src="" style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:3px solid #ff8c42;"></div>
-                    <div><p><strong>📞 Phone:</strong> <span id="dashPhone"></span></p><p><strong>🌍 Country:</strong> <span id="dashCountry"></span></p><p><strong>🎂 Age:</strong> <span id="dashAge"></span></p><p><strong>✅ ID Status:</strong> <span id="dashIdStatus" style="background:#27ae60; padding:2px 12px; border-radius:40px; color:white;">Verified</span></p></div>
-                </div>
-                <div class="form-group"><label>✏️ Update Bio</label><textarea id="userBio" rows="2" placeholder="Tell something about yourself..."></textarea><button id="updateBioBtn" class="btn-outline" style="margin-top:8px;">Save Bio</button></div>
-                <div class="form-group"><label>🔑 Change Password</label><input type="password" id="newPasswordField" placeholder="New password"><button id="updatePasswordBtn" class="btn-outline" style="margin-top:8px;">Update Password</button></div>
+        </div>
+
+        <!-- PROFILE TAB -->
+        <div id="profileTab" class="tab-content">
+            <div class="glass-card">
+                <div style="text-align:center;"><img id="profilePhotoImg" src="" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:3px solid #ff8c42;"><h3 id="profileName"></h3><p id="profileLocationAge"></p><span id="verifyBadge" class="badge-vip">✅ Verified</span></div>
+                <div class="form-group"><label>Bio</label><textarea id="profileBio" rows="2" placeholder="Tell about yourself..."></textarea><button id="updateBioBtn" class="btn-outline" style="margin-top:8px;">Save Bio</button></div>
+                <div class="form-group"><label>Interests (comma)</label><input id="profileInterests" placeholder="Travel, Music, Coffee"></div>
+                <div class="form-group"><label>Upload new photo</label><input type="file" id="newPhotoUpload" accept="image/*"></div>
+                <button id="upgradeToVipBtn" class="btn-primary"><i class="fas fa-crown"></i> Upgrade VIP</button>
             </div>
-            <!-- Messages Pane -->
-            <div id="messagesPane" class="tab-pane">
-                <h3>💬 Your Conversations</h3>
-                <div id="messagesListContainer">Loading messages...</div>
-                <div id="chatCompose" style="margin-top:24px; display:none;"><hr><label>New message to <span id="chatTargetName"></span></label><textarea id="newMessageText" rows="2" placeholder="Type your message..."></textarea><button id="sendMessageBtn" class="btn-primary">Send</button><button id="closeChatBtn" class="btn-outline">Close</button></div>
-            </div>
-            <!-- Posts Pane (Global feed & create post) -->
-            <div id="postsPane" class="tab-pane">
-                <div style="background:#fff2e9; border-radius:28px; padding:20px; margin-bottom:24px;">
-                    <textarea id="postContent" rows="2" placeholder="Share your thoughts, travel, dating story..."></textarea>
-                    <button id="createPostBtn" class="btn-primary" style="margin-top:10px;">📢 Create Post</button>
-                </div>
-                <h3>🌍 Community Feed</h3>
-                <div id="postsFeed"></div>
+        </div>
+
+        <!-- VIP & MONETIZATION TAB -->
+        <div id="vipTab" class="tab-content">
+            <div class="glass-card" style="text-align:center;">
+                <i class="fas fa-crown" style="font-size:48px; color:gold;"></i>
+                <h3>HeartLink VIP</h3>
+                <p>Unlimited likes · See who liked you · Profile boost · Send virtual gifts</p>
+                <div class="price" style="font-size:28px; font-weight:800;">$9.99 <span style="font-size:14px;">/month</span></div>
+                <button id="purchaseVipBtn" class="btn-primary">Subscribe (Stripe)</button>
+                <hr>
+                <h4>💎 Coin System</h4>
+                <p>100 coins = $4.99 · Send gifts to matches</p>
+                <button id="buyCoinsBtn" class="btn-outline">Buy Coins (1000 coins $39)</button>
+                <div id="coinBalance" style="margin-top:12px;">💰 Your coins: <span id="userCoins">0</span></div>
+                <button id="spinWheelBtn" class="btn-outline" style="margin-top:12px;">🎡 Daily Spin (win coins)</button>
             </div>
         </div>
     </div>
-
-    <!-- ADMIN PANEL -->
-    <div id="adminPanel" style="display:none;"><div class="admin-panel-dark"><div style="display:flex; justify-content:space-between;"><h3><i class="fas fa-shield-alt"></i> Admin Dashboard</h3><button id="adminLogoutBtn" class="btn-outline" style="border-color:white;color:white;">Exit</button></div><div style="overflow-x:auto;"><table class="user-table"><thead><tr><th>Name</th><th>Phone</th><th>Country</th><th>DOB</th><th>Photo</th><th>Action</th></tr></thead><tbody id="adminUserTable"></tbody></table></div></div></div>
 </div>
 
 <script>
-    // ---------- STORAGE KEYS ----------
-    let users = [];          // { id, fullName, phoneFull, countryCode, passwordHash, dob, age, photoBase64, bio, posts, messages }
-    let otpStore = {};       // { phoneFull: { code, expires } }
-    let activeSession = null; // { userId, lastActive }
-    let adminLogged = false;
-    let sessionInterval = null;
+    // ---------- GLOBAL STATE ----------
+    let currentUser = null;          // { id, name, age, gender, country, city, photos, bio, interests, vip, coins, matches, chats, likesGiven, likesReceived }
+    let allProfiles = [];            // other users
+    let currentSwipeIndex = 0;
+    let activeChatUserId = null;
+    let swiperInstance = null;
 
-    // Helper: Save & load
-    function saveData() { localStorage.setItem("global_dating_users_v2", JSON.stringify(users)); }
-    function loadData() { const stored = localStorage.getItem("global_dating_users_v2"); if(stored) users = JSON.parse(stored); else users = []; }
-
-    // OTP (5 min, copyable)
-    function sendOtp(phone) {
-        const code = Math.floor(100000 + Math.random() * 900000).toString();
-        const expires = Date.now() + 5 * 60 * 1000;
-        otpStore[phone] = { code, expires };
-        console.log(`OTP for ${phone}: ${code}`);
-        alert(`🔐 Your OTP code is: ${code} (valid 5 minutes, you can copy it)`);
-        return code;
+    // Load from localStorage (simulate backend)
+    function loadData() {
+        const stored = localStorage.getItem("heartlink_users");
+        if(stored) window.usersDB = JSON.parse(stored);
+        else window.usersDB = [];
+        const session = sessionStorage.getItem("heartlink_session");
+        if(session) currentUser = JSON.parse(session);
+        initDemoUsers();
     }
-    function verifyOtp(phone, entered) {
-        const record = otpStore[phone];
-        if(!record) return false;
-        if(Date.now() > record.expires) { delete otpStore[phone]; return false; }
-        if(record.code === entered) { delete otpStore[phone]; return true; }
-        return false;
-    }
-    function calcAge(dobStr) { return Math.floor((Date.now() - new Date(dobStr).getTime()) / (31557600000)); }
+    function saveUsers() { localStorage.setItem("heartlink_users", JSON.stringify(window.usersDB)); }
+    function saveSession() { if(currentUser) sessionStorage.setItem("heartlink_session", JSON.stringify(currentUser)); else sessionStorage.removeItem("heartlink_session"); }
 
-    // File to base64
-    function fileToBase64(file) { return new Promise(resolve => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result); reader.onerror = () => resolve(""); }); }
-
-    // Registration
-    document.getElementById("registerForm").addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const fullName = document.getElementById("fullName").value.trim();
-        const countryCode = document.getElementById("countryCode").value;
-        const phoneRaw = document.getElementById("phoneNumber").value.trim();
-        const fullPhone = countryCode + phoneRaw;
-        const password = document.getElementById("password").value;
-        const confirm = document.getElementById("confirmPwd").value;
-        const dob = document.getElementById("dob").value;
-        const otpVal = document.getElementById("otpInput").value.trim();
-        if(!fullName || !phoneRaw || !password || !dob || !otpVal) return alert("Fill all required fields");
-        if(password !== confirm) return alert("Passwords mismatch");
-        if(password.length < 6) return alert("Password min 6 chars");
-        if(!verifyOtp(fullPhone, otpVal)) return alert("Invalid/expired OTP. Request new.");
-        if(users.find(u => u.phoneFull === fullPhone)) return alert("Phone already registered");
-
-        let photoBase64 = "";
-        const photoFile = document.getElementById("profilePhotoFile").files[0];
-        if(photoFile) photoBase64 = await fileToBase64(photoFile);
-        if(!photoBase64) photoBase64 = "https://randomuser.me/api/portraits/women/65.jpg";
-
-        const newUser = {
-            id: Date.now(),
-            fullName: fullName,
-            phoneFull: fullPhone,
-            countryCode: countryCode,
-            passwordHash: btoa(password),
-            dob: dob,
-            age: calcAge(dob),
-            photo: photoBase64,
-            bio: "Excited to meet international friends! 🌍",
-            posts: [],     // each post: { id, content, timestamp, likes }
-            messages: [],  // { withUserId, messages: [{from, text, timestamp}] }
-            createdAt: new Date().toISOString()
-        };
-        users.push(newUser);
-        saveData();
-        alert("✅ Registration success! Please login.");
-        document.getElementById("registerSection").style.display = "none";
-        document.getElementById("loginSection").style.display = "block";
-        document.getElementById("loginPhone").value = fullPhone;
-    });
-
-    // Send OTP with timer
-    document.getElementById("sendOtpBtn").addEventListener("click", () => {
-        const countryCode = document.getElementById("countryCode").value;
-        const phoneNum = document.getElementById("phoneNumber").value.trim();
-        if(!phoneNum) return alert("Enter phone number");
-        const fullPhone = countryCode + phoneNum;
-        sendOtp(fullPhone);
-        let seconds = 300;
-        const timerDiv = document.getElementById("otpTimer");
-        const interval = setInterval(() => {
-            if(seconds <= 0) { clearInterval(interval); timerDiv.innerHTML = ""; }
-            else { let mins = Math.floor(seconds/60); let secs = seconds%60; timerDiv.innerHTML = `⏳ OTP valid for ${mins}:${secs<10?'0'+secs:secs}`; seconds--; }
-        }, 1000);
-        setTimeout(() => clearInterval(interval), 300000);
-    });
-
-    // Login
-    document.getElementById("doLoginBtn").addEventListener("click", () => {
-        const loginPhone = document.getElementById("loginPhone").value.trim();
-        const loginPwd = document.getElementById("loginPassword").value;
-        const user = users.find(u => u.phoneFull === loginPhone && btoa(loginPwd) === u.passwordHash);
-        if(!user) return alert("Invalid credentials");
-        activeSession = { userId: user.id, lastActive: Date.now() };
-        sessionStorage.setItem("activeSessionHeart", JSON.stringify(activeSession));
-        if(sessionInterval) clearInterval(sessionInterval);
-        sessionInterval = setInterval(() => {
-            if(activeSession && (Date.now() - activeSession.lastActive) > 60*60*1000) {
-                alert("Session expired (1h inactivity)");
-                logoutUser();
-                location.reload();
+    // generate mock users (global reach)
+    function initDemoUsers() {
+        if(window.usersDB.length === 0) {
+            const names = ["Amara", "Liam", "Zara", "Kofi", "Yuki", "Sofia", "Mateo", "Ananya", "Elena", "David"];
+            const countries = ["USA","Ethiopia","Brazil","Japan","Kenya","UK","India","Germany","France","Mexico"];
+            for(let i=1; i<=25; i++) {
+                const age = 20 + Math.floor(Math.random() * 25);
+                window.usersDB.push({
+                    id: i,
+                    name: names[i%names.length] + (i+10),
+                    age: age,
+                    gender: i%2===0 ? "Female":"Male",
+                    country: countries[i%countries.length],
+                    city: "City"+i,
+                    photos: [`https://randomuser.me/api/portraits/${i%2===0?'women':'men'}/${i+20}.jpg`],
+                    bio: "Looking for authentic connection, love traveling and coffee.",
+                    interests: "Music, Travel",
+                    vip: false,
+                    coins: 50,
+                    matches: [],
+                    chats: [],
+                    likesGiven: [],
+                    likesReceived: [],
+                    isVerified: true
+                });
             }
-        }, 30000);
-        const activityUpdate = () => { if(activeSession) { activeSession.lastActive = Date.now(); sessionStorage.setItem("activeSessionHeart", JSON.stringify(activeSession)); } };
-        document.addEventListener("click", activityUpdate);
-        document.addEventListener("keydown", activityUpdate);
-        showDashboard(user);
-    });
-
-    function showDashboard(user) {
-        document.getElementById("registerSection").style.display = "none";
-        document.getElementById("loginSection").style.display = "none";
-        document.getElementById("dashboardSection").style.display = "block";
-        document.getElementById("dashUserName").innerText = user.fullName;
-        document.getElementById("dashPhone").innerText = user.phoneFull;
-        document.getElementById("dashCountry").innerText = user.countryCode;
-        document.getElementById("dashAge").innerText = user.age;
-        document.getElementById("dashboardPhoto").src = user.photo;
-        document.getElementById("userBio").value = user.bio || "";
-        document.getElementById("dashIdStatus").innerText = "ID Verified ✅";
-        // Load messages & posts
-        renderMessagesList(user);
-        renderPostsFeed(user);
+            saveUsers();
+        }
+        // ensure current user not duplicated
     }
 
-    function renderMessagesList(currentUser) {
-        const container = document.getElementById("messagesListContainer");
+    // register / login via Telegram mock
+    document.getElementById("telegramLoginBtn").addEventListener("click", () => {
+        // Simulate Telegram WebApp data
+        let tgUser = { id: Math.floor(Math.random()*100000), first_name: "HeartSeeker", last_name: "", username: "lover" };
+        if(window.Telegram && Telegram.WebApp) { tgUser = Telegram.WebApp.initDataUnsafe?.user || tgUser; Telegram.WebApp.ready(); Telegram.WebApp.expand(); }
+        let existing = window.usersDB.find(u => u.telegramId == tgUser.id);
+        if(existing) { currentUser = existing; }
+        else {
+            const newUser = {
+                id: Date.now(),
+                telegramId: tgUser.id,
+                name: tgUser.first_name || "Explorer",
+                age: 25,
+                gender: "Female",
+                country: "International",
+                city: "Global",
+                photos: ["https://randomuser.me/api/portraits/women/68.jpg"],
+                bio: "New to HeartLink, excited to meet!",
+                interests: "Dating, Friendship",
+                vip: false,
+                coins: 100,
+                matches: [],
+                chats: [],
+                likesGiven: [],
+                likesReceived: [],
+                isVerified: true
+            };
+            window.usersDB.push(newUser);
+            saveUsers();
+            currentUser = newUser;
+        }
+        saveSession();
+        showMainApp();
+    });
+
+    document.getElementById("showPhoneAuthBtn").addEventListener("click", () => {
+        document.getElementById("phoneAuthPanel").style.display = "block";
+    });
+    document.getElementById("manualLoginBtn").addEventListener("click", () => {
+        const phone = document.getElementById("manualPhone").value.trim();
+        const pwd = document.getElementById("manualPassword").value;
+        let user = window.usersDB.find(u => u.phone === phone && u.password === pwd);
+        if(!user && phone && pwd) {
+            user = { id: Date.now(), name: phone.slice(-4), age: 24, gender: "Female", country: "Global", city: "World", photos: ["https://randomuser.me/api/portraits/women/1.jpg"], bio: "Hi!", interests: "Travel", vip: false, coins: 50, matches: [], chats: [], likesGiven: [], likesReceived: [], phone, password: pwd, isVerified: true };
+            window.usersDB.push(user);
+            saveUsers();
+        }
+        if(user) { currentUser = user; saveSession(); showMainApp(); }
+        else alert("Invalid / create new account");
+    });
+
+    function showMainApp() {
+        document.getElementById("authScreen").style.display = "none";
+        document.getElementById("mainDashboard").style.display = "block";
+        updateProfileUI();
+        loadSwipeProfiles();
+        renderMatchesList();
+        attachTabEvents();
+        startSwiper();
+    }
+
+    function updateProfileUI() {
+        if(!currentUser) return;
+        document.getElementById("profileName").innerText = currentUser.name;
+        document.getElementById("profileLocationAge").innerText = `${currentUser.city}, ${currentUser.age} yrs`;
+        document.getElementById("profilePhotoImg").src = currentUser.photos[0];
+        document.getElementById("profileBio").value = currentUser.bio || "";
+        document.getElementById("profileInterests").value = currentUser.interests || "";
+        document.getElementById("userCoins").innerText = currentUser.coins || 0;
+        if(currentUser.vip) document.getElementById("verifyBadge").innerHTML = "👑 VIP Member";
+    }
+
+    function loadSwipeProfiles() {
+        // filter other users, exclude self & already liked/matched
+        let candidates = window.usersDB.filter(u => u.id !== currentUser.id && !currentUser.likesGiven.includes(u.id) && !currentUser.matches.includes(u.id));
+        const minAge = parseInt(document.getElementById("ageMin")?.value || 18);
+        const maxAge = parseInt(document.getElementById("ageMax")?.value || 45);
+        const genderPref = document.getElementById("prefGender")?.value || "All";
+        candidates = candidates.filter(u => u.age >= minAge && u.age <= maxAge && (genderPref === "All" || u.gender === genderPref));
+        allProfiles = candidates;
+        currentSwipeIndex = 0;
+        renderSwipeCard();
+    }
+
+    function renderSwipeCard() {
+        const container = document.getElementById("swipeContainer");
+        if(!allProfiles.length) { container.innerHTML = `<div class="glass-card">✨ No more profiles. Check later!</div>`; return; }
+        if(currentSwipeIndex >= allProfiles.length) { container.innerHTML = `<div class="glass-card">🎉 You've seen everyone nearby!</div>`; return; }
+        const p = allProfiles[currentSwipeIndex];
+        container.innerHTML = `
+            <div class="swipe-card" id="currentSwipeCard">
+                <div class="profile-photo" style="background-image: url('${p.photos[0]}');"></div>
+                <div style="padding:20px;">
+                    <div class="flex-between"><h2>${p.name}, ${p.age}</h2><span>📍 ${p.city}, ${p.country}</span></div>
+                    <p>${p.bio}</p>
+                    <p><i class="fas fa-tag"></i> ${p.interests}</p>
+                    <div style="display:flex; gap:16px; margin-top:20px;">
+                        <button id="swipeLeftBtn" class="btn-outline" style="flex:1"><i class="fas fa-times"></i> Pass</button>
+                        <button id="swipeRightBtn" class="btn-primary" style="flex:1"><i class="fas fa-heart"></i> Like</button>
+                    </div>
+                </div>
+            </div>`;
+        document.getElementById("swipeLeftBtn")?.addEventListener("click", () => { currentSwipeIndex++; renderSwipeCard(); });
+        document.getElementById("swipeRightBtn")?.addEventListener("click", () => { likeProfile(p); });
+    }
+
+    function likeProfile(profile) {
+        // add to likesGiven
+        if(currentUser.likesGiven.includes(profile.id)) return;
+        currentUser.likesGiven.push(profile.id);
+        profile.likesReceived.push(currentUser.id);
+        // check mutual like
+        if(profile.likesGiven && profile.likesGiven.includes(currentUser.id)) {
+            // mutual match!
+            if(!currentUser.matches.includes(profile.id)) currentUser.matches.push(profile.id);
+            if(!profile.matches.includes(currentUser.id)) profile.matches.push(profile.id);
+            // create empty chat
+            if(!currentUser.chats.find(c => c.withUserId === profile.id)) currentUser.chats.push({ withUserId: profile.id, messages: [] });
+            if(!profile.chats.find(c => c.withUserId === currentUser.id)) profile.chats.push({ withUserId: currentUser.id, messages: [] });
+            saveUsers();
+            alert(`💞 It's a match! You and ${profile.name} liked each other.`);
+            renderMatchesList();
+        } else {
+            alert(`👍 You liked ${profile.name}. Wait for mutual like!`);
+        }
+        saveUsers();
+        currentSwipeIndex++;
+        renderSwipeCard();
+    }
+
+    function renderMatchesList() {
+        const container = document.getElementById("matchesList");
         if(!container) return;
-        // find conversations: all users except current
-        const otherUsers = users.filter(u => u.id !== currentUser.id);
-        if(otherUsers.length === 0) { container.innerHTML = "<p>No other users yet.</p>"; return; }
-        let html = `<div style="display:flex; flex-direction:column; gap:12px;">`;
-        otherUsers.forEach(u => {
-            let existingChat = currentUser.messages.find(m => m.withUserId === u.id);
-            let lastMsg = existingChat && existingChat.messages.length ? existingChat.messages[existingChat.messages.length-1].text : "No messages yet";
-            html += `<div class="message-item" data-otherid="${u.id}" data-othername="${u.fullName}" style="cursor:pointer;">
-                        <div><strong>${u.fullName}</strong> (${u.countryCode})<br><span style="font-size:12px;">💬 ${lastMsg.substring(0,30)}</span></div>
-                        <i class="fas fa-comment" style="color:#ff4d6d;"></i>
-                     </div>`;
+        const matches = currentUser.matches.map(mid => window.usersDB.find(u => u.id === mid)).filter(Boolean);
+        if(matches.length === 0) { container.innerHTML = `<div class="glass-card">No matches yet. Swipe right!</div>`; return; }
+        container.innerHTML = matches.map(m => `
+            <div class="match-card" data-userid="${m.id}">
+                <div class="flex-between"><div><img src="${m.photos[0]}" style="width:50px; height:50px; border-radius:50%; object-fit:cover;"><strong> ${m.name}, ${m.age}</strong><br><span style="font-size:12px;">${m.city}</span></div><button class="btn-outline chatOpenBtn" data-id="${m.id}">💬 Message</button></div>
+            </div>
+        `).join('');
+        document.querySelectorAll(".chatOpenBtn").forEach(btn => {
+            btn.addEventListener("click", (e) => { const uid = parseInt(btn.getAttribute("data-id")); openChat(uid); });
         });
-        html += `</div>`;
-        container.innerHTML = html;
-        document.querySelectorAll(".message-item").forEach(el => {
-            el.addEventListener("click", () => {
-                const otherId = parseInt(el.getAttribute("data-otherid"));
-                const otherName = el.getAttribute("data-othername");
-                openChatWith(currentUser, otherId, otherName);
+    }
+
+    function openChat(otherUserId) {
+        activeChatUserId = otherUserId;
+        const other = window.usersDB.find(u => u.id === otherUserId);
+        document.getElementById("chatUserName").innerText = other.name;
+        document.getElementById("matchesList").style.display = "none";
+        document.getElementById("chatView").style.display = "block";
+        loadChatMessages(otherUserId);
+    }
+
+    function loadChatMessages(otherId) {
+        let chat = currentUser.chats.find(c => c.withUserId === otherId);
+        if(!chat) { chat = { withUserId: otherId, messages: [] }; currentUser.chats.push(chat); saveUsers(); }
+        const container = document.getElementById("chatMessagesArea");
+        container.innerHTML = chat.messages.map(msg => `<div style="text-align:${msg.sender === 'me' ? 'right' : 'left'}; margin:8px;"><span style="background:${msg.sender === 'me' ? '#ff477e20' : '#eef2ff'}; padding:10px 14px; border-radius:24px; display:inline-block;">${msg.text} ${msg.read ? '✓✓' : '✓'}</span></div>`).join('');
+        container.scrollTop = container.scrollHeight;
+        // mark as read
+        chat.messages.forEach(m => { if(m.sender !== 'me') m.read = true; });
+        saveUsers();
+    }
+
+    document.getElementById("sendMsgBtn")?.addEventListener("click", () => {
+        if(!activeChatUserId) return;
+        const input = document.getElementById("messageInput");
+        const text = input.value.trim();
+        if(!text) return;
+        let chat = currentUser.chats.find(c => c.withUserId === activeChatUserId);
+        if(!chat) { chat = { withUserId: activeChatUserId, messages: [] }; currentUser.chats.push(chat); }
+        chat.messages.push({ sender: "me", text: text, timestamp: Date.now(), read: false });
+        // simulate reply after 1 sec (real-time)
+        const otherUser = window.usersDB.find(u => u.id === activeChatUserId);
+        setTimeout(() => {
+            let otherChat = otherUser.chats.find(c => c.withUserId === currentUser.id);
+            if(otherChat) {
+                otherChat.messages.push({ sender: "them", text: "😊 Sounds great! Tell me more.", timestamp: Date.now(), read: false });
+                saveUsers();
+                if(activeChatUserId === otherUser.id) loadChatMessages(activeChatUserId);
+            }
+        }, 1000);
+        saveUsers();
+        input.value = "";
+        loadChatMessages(activeChatUserId);
+    });
+
+    document.getElementById("backToMatches")?.addEventListener("click", () => {
+        document.getElementById("chatView").style.display = "none";
+        document.getElementById("matchesList").style.display = "block";
+        renderMatchesList();
+        activeChatUserId = null;
+    });
+
+    // VIP and monetization
+    document.getElementById("purchaseVipBtn")?.addEventListener("click", () => {
+        if(confirm("Upgrade to VIP for $9.99/month? (Stripe demo)")) {
+            currentUser.vip = true;
+            saveUsers(); saveSession();
+            alert("🎉 VIP activated! Unlimited likes, see who liked you.");
+            updateProfileUI();
+        }
+    });
+    document.getElementById("buyCoinsBtn")?.addEventListener("click", () => {
+        if(confirm("Buy 1000 coins for $39? (global payment)")) {
+            currentUser.coins = (currentUser.coins || 0) + 1000;
+            saveUsers(); updateProfileUI();
+            alert("Coins added!");
+        }
+    });
+    document.getElementById("spinWheelBtn")?.addEventListener("click", () => {
+        const reward = Math.floor(Math.random() * 200) + 20;
+        currentUser.coins = (currentUser.coins || 0) + reward;
+        saveUsers(); updateProfileUI();
+        alert(`🎡 You won ${reward} coins!`);
+    });
+    document.getElementById("updateBioBtn")?.addEventListener("click", () => {
+        currentUser.bio = document.getElementById("profileBio").value;
+        currentUser.interests = document.getElementById("profileInterests").value;
+        saveUsers(); alert("Profile updated");
+    });
+    document.getElementById("newPhotoUpload")?.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if(file) { const reader = new FileReader(); reader.onload = ev => { currentUser.photos = [ev.target.result]; saveUsers(); updateProfileUI(); }; reader.readAsDataURL(file); }
+    });
+    // Filters
+    document.getElementById("swipeFilterIcon")?.addEventListener("click", () => {
+        const panel = document.getElementById("filterPanel");
+        panel.style.display = panel.style.display === "none" ? "block" : "none";
+    });
+    document.getElementById("applyFilterBtn")?.addEventListener("click", () => { loadSwipeProfiles(); document.getElementById("filterPanel").style.display = "none"; });
+    // age slider update
+    const ageMin = document.getElementById("ageMin"); const ageMax = document.getElementById("ageMax");
+    if(ageMin) ageMin.oninput = () => document.getElementById("minAgeVal").innerText = ageMin.value;
+    if(ageMax) ageMax.oninput = () => document.getElementById("maxAgeVal").innerText = ageMax.value;
+
+    function attachTabEvents() {
+        document.querySelectorAll(".tab-item").forEach(btn => {
+            btn.addEventListener("click", () => {
+                document.querySelectorAll(".tab-item").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active-tab"));
+                const tabId = btn.getAttribute("data-tab");
+                document.getElementById(`${tabId}Tab`).classList.add("active-tab");
+                if(tabId === "matches") renderMatchesList();
+                if(tabId === "swipe") loadSwipeProfiles();
             });
         });
     }
+    function startSwiper() { /* smooth swipe handled manually but we keep style */ }
 
-    function openChatWith(currentUser, otherId, otherName) {
-        document.getElementById("chatTargetName").innerText = otherName;
-        document.getElementById("chatCompose").style.display = "block";
-        let chatHistory = currentUser.messages.find(m => m.withUserId === otherId);
-        if(!chatHistory) {
-            chatHistory = { withUserId: otherId, messages: [] };
-            currentUser.messages.push(chatHistory);
-            saveData();
+    // Referral / daily bonus (integrated)
+    function dailyBonus() {
+        const lastBonus = localStorage.getItem("lastBonusDate");
+        const today = new Date().toDateString();
+        if(lastBonus !== today && currentUser) {
+            currentUser.coins = (currentUser.coins || 0) + 50;
+            saveUsers(); updateProfileUI();
+            localStorage.setItem("lastBonusDate", today);
+            alert("🎁 Daily bonus: +50 coins!");
         }
-        const container = document.getElementById("messagesListContainer");
-        let historyHtml = `<div style="max-height:300px; overflow-y:auto; margin-bottom:16px;">`;
-        chatHistory.messages.forEach(msg => {
-            historyHtml += `<div style="background:${msg.from === 'me' ? '#ffdfd4' : '#e9ecef'}; padding:10px; border-radius:20px; margin:6px 0;"><strong>${msg.from === 'me' ? 'You' : otherName}:</strong> ${msg.text}</div>`;
-        });
-        historyHtml += `</div>`;
-        container.innerHTML = historyHtml + `<textarea id="newMsgInput" rows="2" placeholder="Write message..."></textarea><button id="sendMsgToUserBtn" class="btn-primary" style="margin-top:8px;">Send</button>`;
-        document.getElementById("sendMsgToUserBtn").onclick = () => {
-            const msgText = document.getElementById("newMsgInput").value.trim();
-            if(msgText) {
-                chatHistory.messages.push({ from: "me", text: msgText, timestamp: Date.now() });
-                // Simulate auto-reply from other user (optional but fun)
-                const otherUser = users.find(u => u.id === otherId);
-                if(otherUser) {
-                    let otherChat = otherUser.messages.find(m => m.withUserId === currentUser.id);
-                    if(!otherChat) { otherChat = { withUserId: currentUser.id, messages: [] }; otherUser.messages.push(otherChat); }
-                    otherChat.messages.push({ from: otherUser.fullName, text: `✨ Got your message: "${msgText}"`, timestamp: Date.now() });
-                }
-                saveData();
-                openChatWith(currentUser, otherId, otherName);
-            }
-        };
     }
 
-    function renderPostsFeed(currentUser) {
-        const feedContainer = document.getElementById("postsFeed");
-        let allPosts = [];
-        users.forEach(u => {
-            if(u.posts && u.posts.length) {
-                u.posts.forEach(p => { allPosts.push({ ...p, authorName: u.fullName, authorPhoto: u.photo, authorId: u.id }); });
-            }
-        });
-        allPosts.sort((a,b) => b.timestamp - a.timestamp);
-        if(allPosts.length === 0) { feedContainer.innerHTML = "<p>No posts yet. Be the first to share!</p>"; return; }
-        feedContainer.innerHTML = allPosts.map(p => `
-            <div class="post-card">
-                <div style="display:flex; align-items:center; gap:12px;"><img src="${p.authorPhoto}" style="width:45px; height:45px; border-radius:50%; object-fit:cover;"><strong>${p.authorName}</strong><span style="font-size:12px; color:gray;">${new Date(p.timestamp).toLocaleString()}</span></div>
-                <p style="margin-top:12px;">${p.content}</p>
-                <div style="margin-top:12px;"><i class="far fa-heart"></i> ${p.likes || 0} likes  <i class="far fa-comment"></i> Reply</div>
-            </div>
-        `).join('');
-    }
-
-    document.getElementById("createPostBtn").addEventListener("click", () => {
-        if(!activeSession) return;
-        const content = document.getElementById("postContent").value.trim();
-        if(!content) return alert("Write something to post");
-        const current = users.find(u => u.id === activeSession.userId);
-        if(current) {
-            if(!current.posts) current.posts = [];
-            current.posts.unshift({ id: Date.now(), content: content, timestamp: Date.now(), likes: 0 });
-            saveData();
-            document.getElementById("postContent").value = "";
-            renderPostsFeed(current);
-        }
-    });
-
-    document.getElementById("updateBioBtn").addEventListener("click", () => {
-        if(activeSession) {
-            const user = users.find(u => u.id === activeSession.userId);
-            if(user) { user.bio = document.getElementById("userBio").value; saveData(); alert("Bio updated"); }
-        }
-    });
-    document.getElementById("updatePasswordBtn").addEventListener("click", () => {
-        if(activeSession) {
-            const newPwd = document.getElementById("newPasswordField").value;
-            if(newPwd.length < 6) return alert("Min 6 chars");
-            const user = users.find(u => u.id === activeSession.userId);
-            if(user) { user.passwordHash = btoa(newPwd); saveData(); alert("Password changed. Please login again."); logoutUser(); }
-        }
-    });
-    function logoutUser() {
-        if(sessionInterval) clearInterval(sessionInterval);
-        activeSession = null;
-        sessionStorage.removeItem("activeSessionHeart");
-        document.getElementById("dashboardSection").style.display = "none";
-        document.getElementById("registerSection").style.display = "block";
-        document.getElementById("loginSection").style.display = "none";
-        document.getElementById("adminPanel").style.display = "none";
-    }
-    document.getElementById("logoutBtn").addEventListener("click", logoutUser);
-    // Tabs
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            document.querySelectorAll(".tab-pane").forEach(pane => pane.classList.remove("active-pane"));
-            if(btn.getAttribute("data-tab") === "profileTabBtn") document.getElementById("profilePane").classList.add("active-pane");
-            else if(btn.getAttribute("data-tab") === "messagesTabBtn") document.getElementById("messagesPane").classList.add("active-pane");
-            else if(btn.getAttribute("data-tab") === "postsTabBtn") document.getElementById("postsPane").classList.add("active-pane");
-            if(activeSession) { const cur = users.find(u => u.id === activeSession.userId); if(cur && btn.getAttribute("data-tab") === "messagesTabBtn") renderMessagesList(cur); if(btn.getAttribute("data-tab") === "postsTabBtn") renderPostsFeed(cur); }
-        });
-    });
-
-    // ADMIN (Phone: 0906067696, Pass: 21522152)
-    const ADMIN_PHONE = "0906067696";
-    const ADMIN_PASS_HASH = btoa("21522152");
-    document.getElementById("adminLoginLink").addEventListener("click", (e) => {
-        e.preventDefault();
-        const aPhone = prompt("Admin Phone:", "0906067696");
-        const aPass = prompt("Admin Password:");
-        if(aPhone === ADMIN_PHONE && btoa(aPass) === ADMIN_PASS_HASH) {
-            adminLogged = true;
-            renderAdminTable();
-            document.getElementById("registerSection").style.display = "none";
-            document.getElementById("loginSection").style.display = "none";
-            document.getElementById("dashboardSection").style.display = "none";
-            document.getElementById("adminPanel").style.display = "block";
-        } else alert("Invalid admin");
-    });
-    function renderAdminTable() {
-        const tbody = document.getElementById("adminUserTable");
-        tbody.innerHTML = "";
-        users.forEach(u => {
-            const row = tbody.insertRow();
-            row.insertCell(0).innerText = u.fullName;
-            row.insertCell(1).innerText = u.phoneFull;
-            row.insertCell(2).innerText = u.countryCode;
-            row.insertCell(3).innerText = u.dob;
-            row.insertCell(4).innerHTML = `<img src="${u.photo}" width="40" style="border-radius:50%;">`;
-            const delBtn = document.createElement("button"); delBtn.innerText="Delete"; delBtn.className="btn-outline"; delBtn.style.padding="4px 12px";
-            delBtn.onclick = () => { if(confirm(`Delete ${u.fullName}?`)) { users = users.filter(x => x.id !== u.id); saveData(); renderAdminTable(); if(activeSession && activeSession.userId === u.id) logoutUser(); } };
-            row.insertCell(5).appendChild(delBtn);
-        });
-    }
-    document.getElementById("adminLogoutBtn").addEventListener("click", () => { adminLogged=false; document.getElementById("adminPanel").style.display="none"; document.getElementById("registerSection").style.display="block"; });
-    document.getElementById("showLoginLink").addEventListener("click", (e) => { e.preventDefault(); document.getElementById("registerSection").style.display="none"; document.getElementById("loginSection").style.display="block"; });
-    document.getElementById("backToRegisterLink").addEventListener("click", (e) => { e.preventDefault(); document.getElementById("loginSection").style.display="none"; document.getElementById("registerSection").style.display="block"; });
-    function setupToggle(tid, iid) { const t=document.getElementById(tid); const inp=document.getElementById(iid); if(t&&inp) t.addEventListener("click",()=>{ const type=inp.type==="password"?"text":"password"; inp.type=type; t.classList.toggle("fa-eye-slash");}); }
-    setupToggle("toggleRegPwd","password"); setupToggle("toggleLoginPwd","loginPassword");
-    flatpickr("#dob", { dateFormat: "Y-m-d", maxDate: "2006-12-31" });
-    document.getElementById("profilePhotoFile").addEventListener("change", (e) => { if(e.target.files[0]){ const reader=new FileReader(); reader.onload=ev=>{ document.getElementById("photoPreview").innerHTML=`<img src="${ev.target.result}" class="photo-preview">`; }; reader.readAsDataURL(e.target.files[0]); } });
-    function restoreSession() { const saved = sessionStorage.getItem("activeSessionHeart"); if(saved){ const sess=JSON.parse(saved); const user=users.find(u=>u.id===sess.userId); if(user && (Date.now()-sess.lastActive) < 60*60*1000){ activeSession=sess; showDashboard(user); if(sessionInterval) clearInterval(sessionInterval); sessionInterval = setInterval(()=>{ if(activeSession && (Date.now()-activeSession.lastActive) > 3600000){ alert("Session expired"); logoutUser(); location.reload(); } },30000); } else sessionStorage.removeItem("activeSessionHeart"); } }
-    loadData(); restoreSession();
+    loadData();
+    if(currentUser) showMainApp();
+    dailyBonus();
 </script>
 </body>
 </html>
