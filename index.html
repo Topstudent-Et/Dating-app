@@ -2,18 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Telegram Dating · Global Love Connection</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>Telegram Dating | Global Love Connection</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Swiper for smooth swipe animations -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            transition: background-color 0.2s ease, color 0.2s, border-color 0.2s;
-        }
-        /* Light Theme (default) */
+        * { margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.2s ease, color 0.2s, border-color 0.2s; }
         :root {
             --bg-body: #f8fafc;
             --bg-card: #ffffff;
@@ -38,18 +35,15 @@
         }
         body { background: var(--bg-body); color: var(--text-primary); font-family: 'Inter', sans-serif; }
         .app-container { max-width: 550px; margin: 0 auto; background: var(--bg-body); min-height: 100vh; padding-bottom: 80px; position: relative; }
-        /* Header */
         .header { background: var(--navbar-bg); backdrop-filter: blur(12px); padding: 16px 20px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #ff477e, #ff9f4a); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .theme-toggle { background: none; border: 1px solid var(--border); border-radius: 40px; padding: 6px 12px; cursor: pointer; color: var(--text-primary); }
-        /* Bottom Nav */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 550px; margin: 0 auto; background: var(--navbar-bg); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 10px 20px 24px; border-top: 1px solid var(--border); z-index: 100; }
         .nav-item { background: none; border: none; color: var(--text-secondary); font-size: 12px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
         .nav-item.active { color: #ff477e; }
         .tab-content { display: none; padding: 20px 16px; animation: fade 0.2s; }
         .tab-content.active-tab { display: block; }
-        @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-        /* Cards */
+        @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .glass-card { background: var(--bg-card); border-radius: 28px; padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); }
         .btn-primary { background: linear-gradient(105deg, #ff477e, #ff8c42); border: none; color: white; font-weight: 600; padding: 12px; border-radius: 60px; width: 100%; cursor: pointer; }
         .btn-outline { background: transparent; border: 1.5px solid #ff477e; color: #ff477e; padding: 8px 16px; border-radius: 60px; cursor: pointer; }
@@ -59,29 +53,34 @@
         .post-media { margin: 12px 0; border-radius: 20px; overflow: hidden; }
         .post-media img, .post-media video { width: 100%; max-height: 280px; object-fit: cover; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; }
-        .notification-badge { background: #ff477e; color: white; border-radius: 20px; padding: 2px 8px; font-size: 10px; margin-left: 6px; }
+        .notification-badge { background: #ff477e; color: white; border-radius: 20px; padding: 2px 8px; font-size: 10px; margin-left: 6px; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
         .typing-indicator { font-size: 12px; color: #ff477e; font-style: italic; }
+        .swipe-card { background: var(--bg-card); border-radius: 32px; overflow: hidden; box-shadow: var(--shadow); cursor: grab; }
+        .swipe-photo { height: 380px; background-size: cover; background-position: center; }
+        .daily-bonus { background: linear-gradient(135deg, #ffd89b, #c7e9fb); border-radius: 24px; padding: 16px; text-align: center; margin-bottom: 16px; cursor: pointer; }
+        .vip-badge { background: gold; color: #1e293b; padding: 4px 12px; border-radius: 40px; font-size: 11px; font-weight: bold; margin-left: 8px; }
     </style>
 </head>
 <body>
 <div class="app-container">
     <div class="header">
         <div class="logo">🤖 Telegram Dating</div>
-        <button class="theme-toggle" id="themeToggleBtn"><i class="fas fa-moon"></i> <span id="themeText">Dark</span></button>
+        <div><button class="theme-toggle" id="themeToggleBtn"><i class="fas fa-moon"></i> <span id="themeText">Dark</span></button></div>
     </div>
 
     <!-- Telegram Auth Card -->
     <div id="authCard" class="glass-card" style="margin:20px 16px; text-align:center;">
-        <i class="fab fa-telegram" style="font-size: 48px; color: #ff477e;"></i>
-        <h2>Sign in with Telegram</h2>
-        <p>Connect using your Telegram ID & Name</p>
+        <i class="fab fa-telegram" style="font-size: 56px; color: #ff477e;"></i>
+        <h2 style="margin: 12px 0;">Sign in with Telegram</h2>
+        <p style="margin-bottom: 20px;">Connect using your Telegram ID & Name</p>
         <input type="text" id="telegramId" placeholder="Telegram ID (e.g., 123456789)" style="text-align:center;">
         <input type="text" id="telegramName" placeholder="Your Name">
         <input type="file" id="telegramPhoto" accept="image/*" style="display:none">
         <button id="uploadTelegramPhotoBtn" class="btn-outline" style="margin:8px 0;"><i class="fas fa-camera"></i> Upload Photo</button>
         <div id="photoPreview"></div>
         <button id="telegramLoginBtn" class="btn-primary">🚀 Enter World Dating</button>
-        <p style="font-size:12px; margin-top:16px;">© 2026 Telegram Dating — Global Love</p>
+        <p style="font-size:11px; margin-top:16px;">© 2026 Telegram Dating — Global Love | Secure & Private</p>
     </div>
 
     <!-- MAIN APP -->
@@ -103,39 +102,44 @@
         <!-- Post Tab -->
         <div id="postTab" class="tab-content"><div class="glass-card"><textarea id="newPostCaption" rows="2" placeholder="Share your moment..."></textarea><div style="display:flex; gap:12px; margin:12px 0;"><button id="uploadPhotoPost" class="btn-outline"><i class="fas fa-image"></i> Photo</button><button id="uploadVideoPost" class="btn-outline"><i class="fas fa-video"></i> Video</button></div><input type="file" id="postPhotoFile" accept="image/*" style="display:none"><input type="file" id="postVideoFile" accept="video/*" style="display:none"><div id="postMediaPreview"></div><button id="publishPostBtn" class="btn-primary">Publish</button></div></div>
 
-        <!-- Match Tab -->
+        <!-- Match Tab with Swipe -->
         <div id="matchTab" class="tab-content"><div class="flex-between"><h3>✨ Discover</h3><button id="filterBtn" class="btn-outline" style="padding:6px 16px;"><i class="fas fa-sliders-h"></i> Filter</button></div><div id="filterPanel" style="display:none; background:var(--bg-card); border-radius:24px; padding:16px; margin-bottom:16px;"><div class="flex-between"><label>Age: <input type="number" id="filterAgeMin" placeholder="Min" style="width:70px;"> - <input type="number" id="filterAgeMax" placeholder="Max" style="width:70px;"></label><select id="filterGender"><option>All</option><option>Female</option><option>Male</option></select><button id="applyFilterBtn" class="btn-primary" style="padding:8px;">Apply</button></div></div><div id="matchContainer"></div></div>
 
         <!-- Profile Tab -->
-        <div id="profileTab" class="tab-content"><div class="glass-card" style="text-align:center;"><img id="profilePhotoImg" class="photo-preview" style="width:100px;height:100px;"><h3 id="profileName"></h3><p id="profileTelegramId"></p><p id="profileBioText"></p><p id="profileInterestsText"></p><button id="editProfileBtn" class="btn-outline">Edit Profile</button><button id="upgradeVipBtn" class="btn-primary" style="margin-top:12px;">👑 Upgrade VIP</button></div></div>
+        <div id="profileTab" class="tab-content"><div class="glass-card" style="text-align:center;"><img id="profilePhotoImg" class="photo-preview" style="width:100px;height:100px;"><h3 id="profileName"></h3><p id="profileTelegramId"></p><div class="daily-bonus" id="dailyBonusBtn"><i class="fas fa-gift"></i> <span id="dailyBonusText">Daily Bonus: Claim 50 Coins!</span></div><p id="profileCoins">💰 Coins: <span id="userCoins">0</span></p><p id="profileBioText"></p><p id="profileInterestsText"></p><button id="editProfileBtn" class="btn-outline">Edit Profile</button><button id="upgradeVipBtn" class="btn-primary" style="margin-top:12px;">👑 Upgrade VIP ($9.99/month)</button></div></div>
     </div>
 </div>
 
 <script>
-    // ---------- GLOBAL STATE (Telegram ID based) ----------
+    // ========== COMPLETE TELEGRAM DATING PLATFORM ==========
     let currentUser = null;
-    let users = [];        // each: { id, telegramId, name, photo, bio, interests, gender, age, vip, matches, chats }
+    let users = [];
     let posts = [];
     let messages = [];
-    let matches = [];
+    let notifications = [];
     let currentChatWith = null;
     let filters = { ageMin: 18, ageMax: 99, gender: "All" };
     let typingTimeout = null;
+    let dailyBonusClaimed = false;
 
-    function saveAll() { localStorage.setItem("td_users", JSON.stringify(users)); localStorage.setItem("td_posts", JSON.stringify(posts)); localStorage.setItem("td_messages", JSON.stringify(messages)); }
+    function saveAll() { localStorage.setItem("td_users", JSON.stringify(users)); localStorage.setItem("td_posts", JSON.stringify(posts)); localStorage.setItem("td_messages", JSON.stringify(messages)); localStorage.setItem("td_notifications", JSON.stringify(notifications)); }
     function loadData() {
         const u = localStorage.getItem("td_users"); if(u) users = JSON.parse(u);
         const p = localStorage.getItem("td_posts"); if(p) posts = JSON.parse(p);
         const m = localStorage.getItem("td_messages"); if(m) messages = JSON.parse(m);
+        const n = localStorage.getItem("td_notifications"); if(n) notifications = JSON.parse(n);
         if(users.length === 0) {
-            users.push({ id: 1, telegramId: "111111", name: "Emma", age: 24, gender: "Female", bio: "Adventure lover", interests: "Travel, Music", photo: "https://randomuser.me/api/portraits/women/1.jpg", vip: false, matches: [], chats: [] });
-            users.push({ id: 2, telegramId: "222222", name: "Liam", age: 27, gender: "Male", bio: "Coffee geek", interests: "Coffee, Books", photo: "https://randomuser.me/api/portraits/men/2.jpg", vip: false, matches: [], chats: [] });
+            users.push({ id: 1, telegramId: "111111", name: "Emma", age: 24, gender: "Female", bio: "Adventure lover", interests: "Travel, Music", photo: "https://randomuser.me/api/portraits/women/1.jpg", vip: false, coins: 100, matches: [] });
+            users.push({ id: 2, telegramId: "222222", name: "Liam", age: 27, gender: "Male", bio: "Coffee geek", interests: "Coffee, Books", photo: "https://randomuser.me/api/portraits/men/2.jpg", vip: true, coins: 500, matches: [] });
             saveAll();
         }
         if(posts.length === 0) posts.push({ id: 101, userId: 1, mediaType: "image", mediaUrl: "https://picsum.photos/id/29/400/300", caption: "Sunset vibes 🌅", likes: 12, timestamp: Date.now() });
     }
 
-    // Authentication with Telegram ID & Name
+    function addNotification(userId, text) { notifications.push({ id: Date.now(), userId, text, read: false, createdAt: Date.now() }); saveAll(); renderNotifications(); }
+    function renderNotifications() { const count = notifications.filter(n => n.userId === currentUser?.id && !n.read).length; if(count > 0) console.log(`🔔 ${count} new notifications`); }
+
+    // Telegram Auth
     document.getElementById("telegramLoginBtn").addEventListener("click", () => {
         const telegramId = document.getElementById("telegramId").value.trim();
         const name = document.getElementById("telegramName").value.trim();
@@ -144,7 +148,7 @@
         let user = users.find(u => u.telegramId === telegramId);
         const processLogin = (photoBase64) => {
             if(!user) {
-                user = { id: Date.now(), telegramId, name, age: 25, gender: "Female", bio: "New to Telegram Dating!", interests: "Exploring", photo: photoBase64 || "https://randomuser.me/api/portraits/women/68.jpg", vip: false, matches: [], chats: [] };
+                user = { id: Date.now(), telegramId, name, age: 25, gender: "Female", bio: "New to Telegram Dating!", interests: "Exploring", photo: photoBase64 || "https://randomuser.me/api/portraits/women/68.jpg", vip: false, coins: 100, matches: [] };
                 users.push(user);
                 saveAll();
             } else if(photoBase64) { user.photo = photoBase64; saveAll(); }
@@ -156,22 +160,21 @@
         };
         if(photoFile) { const reader = new FileReader(); reader.onload = (e) => processLogin(e.target.result); reader.readAsDataURL(photoFile); } else processLogin(null);
     });
-
     document.getElementById("uploadTelegramPhotoBtn").addEventListener("click", () => document.getElementById("telegramPhoto").click());
     document.getElementById("telegramPhoto").addEventListener("change", (e) => { const f = e.target.files[0]; if(f) { const reader = new FileReader(); reader.onload = (ev) => { document.getElementById("photoPreview").innerHTML = `<img src="${ev.target.result}" class="photo-preview" style="width:80px;">`; }; reader.readAsDataURL(f); } });
 
-    function renderProfile() { if(!currentUser) return; document.getElementById("profilePhotoImg").src = currentUser.photo; document.getElementById("profileName").innerText = currentUser.name; document.getElementById("profileTelegramId").innerHTML = `<i class="fab fa-telegram"></i> ID: ${currentUser.telegramId}`; document.getElementById("profileBioText").innerHTML = `<i class="fas fa-comment"></i> ${currentUser.bio}`; document.getElementById("profileInterestsText").innerHTML = `<i class="fas fa-tag"></i> ${currentUser.interests}`; }
+    function renderProfile() { if(!currentUser) return; document.getElementById("profilePhotoImg").src = currentUser.photo; document.getElementById("profileName").innerHTML = currentUser.name + (currentUser.vip ? '<span class="vip-badge">VIP</span>' : ''); document.getElementById("profileTelegramId").innerHTML = `<i class="fab fa-telegram"></i> ID: ${currentUser.telegramId}`; document.getElementById("userCoins").innerText = currentUser.coins || 0; document.getElementById("profileBioText").innerHTML = `<i class="fas fa-comment"></i> ${currentUser.bio}`; document.getElementById("profileInterestsText").innerHTML = `<i class="fas fa-tag"></i> ${currentUser.interests}`; }
     function renderFeed() { const feedDiv = document.getElementById("postsFeed"); if(!feedDiv) return; const sorted = [...posts].reverse(); feedDiv.innerHTML = sorted.map(post => { const author = users.find(u => u.id === post.userId); return `<div class="post-card"><div class="flex-between"><div><strong>${author?.name || "User"}</strong><span style="font-size:11px;"> ${new Date(post.timestamp).toLocaleString()}</span></div></div><p>${post.caption}</p><div class="post-media">${post.mediaType === "image" ? `<img src="${post.mediaUrl}">` : (post.mediaType === "video" ? `<video controls src="${post.mediaUrl}"></video>` : "")}</div><div class="flex-between"><span><i class="far fa-heart like-post" data-id="${post.id}"></i> ${post.likes || 0}</span><span><i class="far fa-comment"></i> Comment</span></div></div>`; }).join(''); attachLikeEvents(); }
-    function attachLikeEvents() { document.querySelectorAll(".like-post").forEach(btn => { btn.onclick = () => { const id = parseInt(btn.getAttribute("data-id")); const post = posts.find(p => p.id === id); if(post) { post.likes++; saveAll(); renderFeed(); } }; }); }
+    function attachLikeEvents() { document.querySelectorAll(".like-post").forEach(btn => { btn.onclick = () => { const id = parseInt(btn.getAttribute("data-id")); const post = posts.find(p => p.id === id); if(post) { post.likes++; saveAll(); renderFeed(); addNotification(post.userId, `${currentUser.name} liked your post`); } }; }); }
 
-    function renderMatch() { let others = users.filter(u => u.id !== currentUser?.id && !currentUser.matches.includes(u.id)); if(filters.gender !== "All") others = others.filter(u => u.gender === filters.gender); const container = document.getElementById("matchContainer"); if(others.length === 0) { container.innerHTML = "<div class='glass-card'>No more profiles. Adjust filters!</div>"; return; } const p = others[0]; container.innerHTML = `<div class="glass-card" style="text-align:center;"><img src="${p.photo}" style="width:120px;height:120px;border-radius:50%;object-fit:cover;"><h3>${p.name}</h3><p>${p.bio}</p><div style="display:flex; gap:16px; margin-top:16px;"><button id="passBtn" class="btn-outline">❌ Pass</button><button id="likeBtn" class="btn-primary">❤️ Like</button></div></div>`; document.getElementById("passBtn")?.addEventListener("click", () => renderMatch()); document.getElementById("likeBtn")?.addEventListener("click", () => { if(!currentUser.matches.includes(p.id)) { currentUser.matches.push(p.id); if(p.matches && p.matches.includes(currentUser.id)) alert(`🎉 It's a match with ${p.name}! Start chatting.`); else alert(`❤️ You liked ${p.name}!`); saveAll(); renderMatch(); } }); }
+    function renderMatch() { let others = users.filter(u => u.id !== currentUser?.id && !currentUser.matches?.includes(u.id)); if(filters.gender !== "All") others = others.filter(u => u.gender === filters.gender); const container = document.getElementById("matchContainer"); if(others.length === 0) { container.innerHTML = "<div class='glass-card'>No more profiles. Adjust filters!</div>"; return; } const p = others[0]; container.innerHTML = `<div class="swipe-card"><div class="swipe-photo" style="background-image: url('${p.photo}');"></div><div style="padding:20px;"><h3>${p.name}, ${p.age}</h3><p>${p.bio}</p><div style="display:flex; gap:16px; margin-top:16px;"><button id="passBtn" class="btn-outline" style="flex:1;">❌ Pass</button><button id="likeBtn" class="btn-primary" style="flex:1;">❤️ Like</button></div></div></div>`; document.getElementById("passBtn")?.addEventListener("click", () => renderMatch()); document.getElementById("likeBtn")?.addEventListener("click", () => { if(!currentUser.matches.includes(p.id)) { currentUser.matches.push(p.id); addNotification(p.id, `${currentUser.name} liked you! 💕`); if(p.matches && p.matches.includes(currentUser.id)) alert(`🎉 It's a match with ${p.name}! Start chatting.`); else alert(`❤️ You liked ${p.name}!`); saveAll(); renderMatch(); } }); }
     document.getElementById("filterBtn")?.addEventListener("click", () => { const panel = document.getElementById("filterPanel"); panel.style.display = panel.style.display === "none" ? "block" : "none"; });
     document.getElementById("applyFilterBtn")?.addEventListener("click", () => { filters.ageMin = parseInt(document.getElementById("filterAgeMin").value) || 18; filters.ageMax = parseInt(document.getElementById("filterAgeMax").value) || 99; filters.gender = document.getElementById("filterGender").value; renderMatch(); document.getElementById("filterPanel").style.display = "none"; });
 
-    function renderChatsList() { const container = document.getElementById("chatsList"); if(!container) return; const myMatches = users.filter(u => currentUser.matches.includes(u.id)); if(myMatches.length === 0) { container.innerHTML = "<div class='glass-card'>No matches yet. Swipe to connect!</div>"; return; } container.innerHTML = myMatches.map(u => `<div class="chat-item" data-uid="${u.id}" style="cursor:pointer; display:flex; justify-content:space-between;"><div><strong>${u.name}</strong><br><span style="font-size:12px;">${u.telegramId}</span></div><i class="fas fa-comment"></i></div>`).join(''); document.querySelectorAll("[data-uid]").forEach(el => { el.addEventListener("click", () => openChat(parseInt(el.getAttribute("data-uid")))); }); const unreadCount = messages.filter(m => m.to === currentUser?.id && !m.seen).length; const badge = document.getElementById("chatNotifBadge"); if(badge) badge.style.display = unreadCount > 0 ? "inline-block" : "none"; }
+    function renderChatsList() { const container = document.getElementById("chatsList"); if(!container) return; const myMatches = users.filter(u => currentUser.matches?.includes(u.id)); if(myMatches.length === 0) { container.innerHTML = "<div class='glass-card'>No matches yet. Swipe to connect!</div>"; return; } container.innerHTML = myMatches.map(u => `<div class="chat-item" data-uid="${u.id}" style="cursor:pointer; display:flex; justify-content:space-between;"><div><strong>${u.name}</strong><br><span style="font-size:12px;">${u.telegramId}</span></div><i class="fas fa-comment"></i></div>`).join(''); document.querySelectorAll("[data-uid]").forEach(el => { el.addEventListener("click", () => openChat(parseInt(el.getAttribute("data-uid")))); }); const unreadCount = messages.filter(m => m.to === currentUser?.id && !m.seen).length; const badge = document.getElementById("chatNotifBadge"); if(badge) badge.style.display = unreadCount > 0 ? "inline-block" : "none"; }
     function openChat(otherId) { currentChatWith = otherId; const other = users.find(u => u.id === otherId); document.getElementById("chatUserName").innerText = other.name; document.getElementById("chatsList").style.display = "none"; document.getElementById("chatDetail").style.display = "block"; loadChatMessages(otherId); }
     function loadChatMessages(otherId) { const chatMessages = messages.filter(m => (m.from === currentUser.id && m.to === otherId) || (m.from === otherId && m.to === currentUser.id)); chatMessages.sort((a,b) => a.timestamp - b.timestamp); const container = document.getElementById("chatMessagesArea"); container.innerHTML = chatMessages.map(msg => `<div class="chat-message" style="text-align:${msg.from === currentUser.id ? 'right' : 'left'};"><span style="background:${msg.from === currentUser.id ? '#ff477e' : 'var(--border)'}; padding:8px 14px; border-radius:20px; display:inline-block;">${msg.text}</span><br><small>${new Date(msg.timestamp).toLocaleTimeString()}</small></div>`).join(''); container.scrollTop = container.scrollHeight; chatMessages.forEach(msg => { if(msg.to === currentUser.id && !msg.seen) { msg.seen = true; saveAll(); } }); renderChatsList(); }
-    function sendMessage(toId, text) { if(!text.trim()) return; const newMsg = { id: Date.now(), from: currentUser.id, to: toId, text, timestamp: Date.now(), seen: false }; messages.push(newMsg); saveAll(); loadChatMessages(toId); renderChatsList(); }
+    function sendMessage(toId, text) { if(!text.trim()) return; const newMsg = { id: Date.now(), from: currentUser.id, to: toId, text, timestamp: Date.now(), seen: false }; messages.push(newMsg); saveAll(); loadChatMessages(toId); addNotification(toId, `New message from ${currentUser.name}`); renderChatsList(); }
     document.getElementById("sendChatMsgBtn")?.addEventListener("click", () => { const input = document.getElementById("chatInput"); if(currentChatWith && input.value.trim()) { sendMessage(currentChatWith, input.value); input.value = ""; } });
     document.getElementById("backToChats")?.addEventListener("click", () => { document.getElementById("chatDetail").style.display = "none"; document.getElementById("chatsList").style.display = "block"; currentChatWith = null; });
     document.getElementById("chatInput")?.addEventListener("input", () => { if(typingTimeout) clearTimeout(typingTimeout); const indicator = document.getElementById("typingIndicator"); indicator.innerText = "Typing..."; typingTimeout = setTimeout(() => { indicator.innerText = ""; }, 1000); });
@@ -183,8 +186,12 @@
     document.getElementById("postVideoFile")?.addEventListener("change", (e) => { const f = e.target.files[0]; if(f) { const reader = new FileReader(); reader.onload = ev => { pendingMedia = ev.target.result; pendingMediaType = "video"; document.getElementById("postMediaPreview").innerHTML = `<video controls src="${pendingMedia}" style="max-height:150px;border-radius:20px;"></video>`; }; reader.readAsDataURL(f); } });
     document.getElementById("publishPostBtn")?.addEventListener("click", () => { const caption = document.getElementById("newPostCaption").value; if(!caption && !pendingMedia) { alert("Write something or add media"); return; } const newPost = { id: Date.now(), userId: currentUser.id, mediaType: pendingMediaType, mediaUrl: pendingMedia, caption: caption || "Shared a moment", likes: 0, timestamp: Date.now() }; posts.push(newPost); saveAll(); renderFeed(); document.getElementById("newPostCaption").value = ""; pendingMedia = null; pendingMediaType = null; document.getElementById("postMediaPreview").innerHTML = ""; alert("Post published!"); });
     document.getElementById("editProfileBtn")?.addEventListener("click", () => { const newBio = prompt("Edit Bio:", currentUser.bio); if(newBio !== null) currentUser.bio = newBio; const newInterests = prompt("Edit Interests:", currentUser.interests); if(newInterests !== null) currentUser.interests = newInterests; saveAll(); renderProfile(); });
-    document.getElementById("upgradeVipBtn")?.addEventListener("click", () => { currentUser.vip = true; alert("VIP Activated!"); saveAll(); renderProfile(); });
+    document.getElementById("upgradeVipBtn")?.addEventListener("click", () => { if(confirm("Upgrade to VIP for $9.99/month? Unlimited likes & profile boost!")) { currentUser.vip = true; currentUser.coins = (currentUser.coins || 0) + 500; alert("🎉 VIP Activated! You received 500 bonus coins."); saveAll(); renderProfile(); } });
 
+    // Daily Bonus System
+    document.getElementById("dailyBonusBtn")?.addEventListener("click", () => { const lastClaim = localStorage.getItem(`dailyBonus_${currentUser?.id}`); const today = new Date().toDateString(); if(lastClaim === today) { alert("You already claimed today's bonus! Come back tomorrow."); return; } const bonus = 50; currentUser.coins = (currentUser.coins || 0) + bonus; localStorage.setItem(`dailyBonus_${currentUser.id}`, today); saveAll(); renderProfile(); alert(`🎁 You received ${bonus} coins! Total: ${currentUser.coins} coins`); });
+
+    // Tab switching
     document.querySelectorAll(".nav-item").forEach(btn => { btn.addEventListener("click", () => { document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active")); btn.classList.add("active"); const tab = btn.getAttribute("data-tab"); document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active-tab")); if(tab === "home") document.getElementById("homeTab").classList.add("active-tab"); if(tab === "chat") { document.getElementById("chatTab").classList.add("active-tab"); renderChatsList(); document.getElementById("chatDetail").style.display = "none"; document.getElementById("chatsList").style.display = "block"; } if(tab === "post") document.getElementById("postTab").classList.add("active-tab"); if(tab === "match") { document.getElementById("matchTab").classList.add("active-tab"); renderMatch(); } if(tab === "profile") { document.getElementById("profileTab").classList.add("active-tab"); renderProfile(); } }); });
 
     let isDark = false;
