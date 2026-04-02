@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>World Dating | Global Love & Connection</title>
+    <title>TikVibe · Video Social Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -11,541 +11,587 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: background-color 0.25s ease, color 0.2s ease, border-color 0.2s;
-        }
-
-        body {
             font-family: 'Inter', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.5;
         }
-
-        /* Light Theme (default) */
-        :root {
-            --bg-primary: #f8fafc;
-            --bg-secondary: #ffffff;
-            --bg-card: #ffffff;
-            --text-primary: #0f172a;
-            --text-secondary: #334155;
-            --border: #e2e8f0;
-            --accent: #ff477e;
-            --accent-hover: #ff6b9d;
-            --header-glass: rgba(255, 255, 255, 0.85);
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+        body {
+            background: #0a0a0a;
+            color: #ffffff;
         }
-
-        body.dark {
-            --bg-primary: #0a0f1e;
-            --bg-secondary: #111827;
-            --bg-card: #1e293b;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --border: #2d3a5e;
-            --header-glass: rgba(15, 23, 42, 0.9);
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-        }
-
-        .container {
-            max-width: 1280px;
+        /* App Layout */
+        .app-container {
+            max-width: 500px;
             margin: 0 auto;
-            padding: 0 28px;
+            background: #000000;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
         }
-
-        /* Glass navbar */
-        .navbar {
+        /* Video Feed (TikTok style scroll) */
+        .video-feed {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+        .video-card {
+            scroll-snap-align: start;
+            height: 100vh;
+            position: relative;
+            background: #000;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            flex-wrap: wrap;
-            gap: 20px;
-            backdrop-filter: blur(12px);
-            background: var(--header-glass);
-            position: sticky;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        video {
+            position: absolute;
             top: 0;
-            z-index: 100;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ff477e, #ff9f4a);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .nav-controls {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .theme-toggle, .lang-toggle {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 40px;
-            padding: 8px 18px;
-            cursor: pointer;
-            font-weight: 500;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(105deg, #ff477e, #ff8c42);
-            border: none;
-            padding: 12px 28px;
-            border-radius: 60px;
-            font-weight: 700;
-            color: white;
-            cursor: pointer;
-        }
-
-        /* Hero */
-        .hero {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 48px;
-            padding: 60px 0 70px;
-            flex-wrap: wrap;
-        }
-
-        .hero-content h1 {
-            font-size: 3.4rem;
-            font-weight: 800;
-            line-height: 1.2;
-            margin-bottom: 24px;
-        }
-
-        .hero-content p {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            margin-bottom: 32px;
-        }
-
-        /* Feed / Posts Section */
-        .feed-section {
-            margin: 60px 0;
-        }
-
-        .create-post {
-            background: var(--bg-card);
-            border-radius: 32px;
-            padding: 24px;
-            margin-bottom: 32px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-        }
-
-        .post-input {
+            left: 0;
             width: 100%;
-            padding: 16px;
-            border-radius: 28px;
-            border: 1px solid var(--border);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            resize: vertical;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
         }
-
-        .media-buttons {
-            display: flex;
-            gap: 16px;
-            margin-top: 16px;
-        }
-
-        .media-btn {
-            background: none;
-            border: 1px solid var(--border);
-            padding: 8px 18px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .post-card {
-            background: var(--bg-card);
-            border-radius: 32px;
+        .video-overlay {
+            position: relative;
+            z-index: 2;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
             padding: 20px;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-        }
-
-        .post-header {
             display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 16px;
+            justify-content: space-between;
+            align-items: flex-end;
         }
-
-        .avatar {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(145deg, #ff5f7c, #ffaa5e);
-            border-radius: 50%;
+        .video-info {
+            flex: 1;
+        }
+        .video-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            align-items: center;
+        }
+        .action-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .username {
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+        .caption {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 20px 28px;
+            border-top: 0.5px solid #2c2c2c;
+            z-index: 10;
+        }
+        .nav-item {
+            background: none;
+            border: none;
+            color: #aaa;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+        }
+        .nav-item.active {
+            color: #ff3b6f;
+        }
+        /* Modal & forms */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            color: white;
+            backdrop-filter: blur(8px);
         }
-
-        .post-media {
-            margin: 16px 0;
-            border-radius: 28px;
-            overflow: hidden;
-            max-width: 100%;
-        }
-
-        .post-media img, .post-media video {
-            width: 100%;
-            max-height: 400px;
-            object-fit: cover;
-            border-radius: 24px;
-        }
-
-        .post-actions {
-            display: flex;
-            gap: 24px;
-            margin-top: 16px;
-            color: var(--text-secondary);
-        }
-
-        /* grid */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 28px;
-            margin: 48px 0;
-        }
-
-        .feature-card {
-            background: var(--bg-card);
+        .modal-card {
+            background: #1a1a1a;
             border-radius: 32px;
             padding: 28px;
-            text-align: center;
-            border: 1px solid var(--border);
+            width: 90%;
+            max-width: 380px;
+            color: white;
         }
-
-        footer {
-            text-align: center;
-            padding: 40px 0;
-            border-top: 1px solid var(--border);
-            margin-top: 40px;
+        input, textarea {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border-radius: 40px;
+            border: none;
+            background: #2c2c2c;
+            color: white;
         }
-
-        @media (max-width: 780px) {
-            .hero h1 { font-size: 2.2rem; }
-            .container { padding: 0 20px; }
+        .btn-primary {
+            background: #ff3b6f;
+            border: none;
+            padding: 12px;
+            border-radius: 40px;
+            color: white;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 12px;
+            cursor: pointer;
+        }
+        /* Messages & Notifications panels */
+        .panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            max-width: 500px;
+            margin: 0 auto;
+            background: #000;
+            z-index: 20;
+            overflow-y: auto;
+            padding: 60px 20px 20px;
+            transform: translateX(100%);
+            transition: 0.3s;
+        }
+        .panel.open {
+            transform: translateX(0);
+        }
+        .close-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 28px;
+            background: none;
+            border: none;
+            color: white;
+        }
+        .chat-message {
+            background: #2a2a2a;
+            border-radius: 20px;
+            padding: 10px;
+            margin: 8px 0;
+        }
+        .notification-item {
+            background: #1e1e1e;
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <nav class="navbar">
-            <div class="logo">🌍 World Dating</div>
-            <div class="nav-controls">
-                <button class="theme-toggle" id="themeToggleBtn"><i class="fas fa-moon"></i> <span id="themeText">Dark</span></button>
-                <button class="lang-toggle" id="langToggleBtn"><i class="fas fa-globe"></i> <span id="langText">አማርኛ</span></button>
-                <button class="btn-primary" id="getStartedBtn">Get Started</button>
-            </div>
-        </nav>
+<div class="app-container">
+    <!-- Video Feed (TikTok style) -->
+    <div class="video-feed" id="videoFeed"></div>
 
-        <section class="hero">
-            <div class="hero-content">
-                <h1 id="heroTitle">Meet People From Around the World</h1>
-                <p id="heroSub">Connect, chat, and find love globally — share your moments with photos & videos.</p>
-                <button class="btn-primary" id="heroCta">✨ Start Exploring</button>
-            </div>
-            <div style="background: var(--bg-card); border-radius: 40px; padding: 20px; border:1px solid var(--border);">
-                <i class="fas fa-heart" style="font-size: 48px; color:#ff477e;"></i>
-                <p id="demoText">Join 10,000+ happy couples</p>
-            </div>
-        </section>
-
-        <!-- FEED SECTION: posts with video/photo -->
-        <div class="feed-section">
-            <h2 id="feedTitle" style="margin-bottom: 24px;">💬 Latest Moments</h2>
-            <div class="create-post">
-                <textarea id="postContentInput" class="post-input" rows="2" placeholder="Share your story..."></textarea>
-                <div class="media-buttons">
-                    <button id="uploadPhotoBtn" class="media-btn"><i class="fas fa-image"></i> <span id="photoLabel">Photo</span></button>
-                    <button id="uploadVideoBtn" class="media-btn"><i class="fas fa-video"></i> <span id="videoLabel">Video</span></button>
-                    <button id="publishPostBtn" class="btn-primary" style="padding: 8px 20px;"><i class="fas fa-paper-plane"></i> <span id="publishLabel">Publish</span></button>
-                </div>
-                <input type="file" id="photoFileInput" accept="image/*" style="display:none">
-                <input type="file" id="videoFileInput" accept="video/*" style="display:none">
-                <div id="mediaPreview" style="margin-top: 12px;"></div>
-            </div>
-            <div id="postsFeed"></div>
-        </div>
-
-        <div class="features-grid">
-            <div class="feature-card"><i class="fas fa-globe" style="font-size: 32px; color:#ff477e;"></i><h3 id="feat1Title">Global Matching</h3><p id="feat1Desc">Find partners across 150+ countries</p></div>
-            <div class="feature-card"><i class="fas fa-comment-dots" style="font-size: 32px; color:#ff477e;"></i><h3 id="feat2Title">Real-time Chat</h3><p id="feat2Desc">Instant messaging & media share</p></div>
-            <div class="feature-card"><i class="fas fa-gift" style="font-size: 32px; color:#ff477e;"></i><h3 id="feat3Title">Virtual Gifts</h3><p id="feat3Desc">Send love & surprises</p></div>
-        </div>
-
-        <footer>
-            <p id="copyright">© 2025 World Dating — Connect hearts across continents.</p>
-        </footer>
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <button class="nav-item active" data-nav="feed"><i class="fas fa-play-circle"></i><span>Feed</span></button>
+        <button class="nav-item" data-nav="messages"><i class="fas fa-comment-dots"></i><span>Msg</span></button>
+        <button class="nav-item" data-nav="notifications"><i class="fas fa-bell"></i><span>Notif</span></button>
+        <button class="nav-item" data-nav="profile"><i class="fas fa-user"></i><span>Profile</span></button>
     </div>
 
-    <script>
-        // ---------- BILINGUAL DICTIONARY (ENGLISH & AMHARIC) ----------
-        const translations = {
-            en: {
-                heroTitle: "Meet People From Around the World",
-                heroSub: "Connect, chat, and find love globally — share your moments with photos & videos.",
-                feedTitle: "💬 Latest Moments",
-                photoLabel: "Photo",
-                videoLabel: "Video",
-                publishLabel: "Publish",
-                feat1Title: "Global Matching",
-                feat1Desc: "Find partners across 150+ countries",
-                feat2Title: "Real-time Chat",
-                feat2Desc: "Instant messaging & media share",
-                feat3Title: "Virtual Gifts",
-                feat3Desc: "Send love & surprises",
-                copyright: "© 2025 World Dating — Connect hearts across continents.",
-                themeDark: "Dark",
-                themeLight: "Light",
-                langAmharic: "አማርኛ",
-                langEnglish: "English",
-                demoText: "Join 10,000+ happy couples"
-            },
-            am: {
-                heroTitle: "ከዓለም ዙሪያ ሰዎችን ያግኙ",
-                heroSub: "ይገናኙ፣ ይወያዩ እና ፍቅርን በአለም አቀፍ ደረጃ ይፈልጉ — ፎቶ እና ቪዲዮ ያጋሩ",
-                feedTitle: "💬 የቅርብ ጊዜ ልጥፎች",
-                photoLabel: "ፎቶ",
-                videoLabel: "ቪዲዮ",
-                publishLabel: "አሳትም",
-                feat1Title: "ዓለም አቀፍ ማዛመድ",
-                feat1Desc: "ከ150+ አገራት የፍቅር ጓደኛ ይፈልጉ",
-                feat2Title: "የቀጥታ ውይይት",
-                feat2Desc: "ፈጣን መልእክት እና ሚዲያ ማጋራት",
-                feat3Title: "ምናባዊ ስጦታዎች",
-                feat3Desc: "ፍቅር እና አስገራሚ ስጦታዎችን ይላኩ",
-                copyright: "© 2025 World Dating — በአለም አቀፍ ደረጃ ልቦችን ያገናኛል",
-                themeDark: "ጨለማ",
-                themeLight: "ብርሃን",
-                langAmharic: "English",
-                langEnglish: "አማርኛ",
-                demoText: "ከ10,000+ ደስተኛ ጥንዶች ጋር ይቀላቀሉ"
-            }
-        };
+    <!-- Registration / Auth Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-card">
+            <h2 style="text-align:center;">✨ TikVibe</h2>
+            <p style="text-align:center; margin-bottom:16px;">Sign up to watch & share</p>
+            <input type="text" id="regName" placeholder="Full Name">
+            <input type="text" id="regPhone" placeholder="Phone / Email">
+            <input type="password" id="regPassword" placeholder="Password">
+            <button id="registerBtn" class="btn-primary">Register / Login</button>
+            <p style="font-size:12px; text-align:center; margin-top:12px;">© 2026 TikVibe — Connect & Vibe</p>
+        </div>
+    </div>
 
-        let currentLang = 'en';   // 'en' or 'am'
-        let currentTheme = 'light'; // 'light' or 'dark'
+    <!-- Messages Panel -->
+    <div id="messagesPanel" class="panel">
+        <button class="close-panel" id="closeMessagesBtn"><i class="fas fa-arrow-left"></i></button>
+        <h2>💬 Messages</h2>
+        <div id="messagesList"></div>
+        <div id="chatBox" style="display:none; margin-top:20px;">
+            <div id="chatMessagesArea" style="max-height:300px; overflow-y:auto;"></div>
+            <div style="display:flex; gap:8px; margin-top:12px;">
+                <input type="text" id="chatInput" placeholder="Type a message...">
+                <button id="sendChatBtn" class="btn-primary" style="width:auto; padding:10px 18px;">Send</button>
+            </div>
+            <button id="backToChatsBtn" style="background:none; color:#ff3b6f; margin-top:10px;">← Back</button>
+        </div>
+    </div>
 
-        // DOM elements
-        const themeToggleBtn = document.getElementById('themeToggleBtn');
-        const langToggleBtn = document.getElementById('langToggleBtn');
-        const themeTextSpan = document.getElementById('themeText');
-        const langTextSpan = document.getElementById('langText');
+    <!-- Notifications Panel -->
+    <div id="notificationsPanel" class="panel">
+        <button class="close-panel" id="closeNotifBtn"><i class="fas fa-arrow-left"></i></button>
+        <h2>🔔 Notifications</h2>
+        <div id="notificationsList"></div>
+    </div>
 
-        // apply language to all UI texts
-        function applyLanguage() {
-            const t = translations[currentLang];
-            document.getElementById('heroTitle').innerText = t.heroTitle;
-            document.getElementById('heroSub').innerText = t.heroSub;
-            document.getElementById('feedTitle').innerText = t.feedTitle;
-            document.getElementById('photoLabel').innerText = t.photoLabel;
-            document.getElementById('videoLabel').innerText = t.videoLabel;
-            document.getElementById('publishLabel').innerText = t.publishLabel;
-            document.getElementById('feat1Title').innerText = t.feat1Title;
-            document.getElementById('feat1Desc').innerText = t.feat1Desc;
-            document.getElementById('feat2Title').innerText = t.feat2Title;
-            document.getElementById('feat2Desc').innerText = t.feat2Desc;
-            document.getElementById('feat3Title').innerText = t.feat3Title;
-            document.getElementById('feat3Desc').innerText = t.feat3Desc;
-            document.getElementById('copyright').innerText = t.copyright;
-            document.getElementById('demoText').innerText = t.demoText;
-            // toggle button text
-            langTextSpan.innerText = (currentLang === 'en') ? "አማርኛ" : "English";
-            themeTextSpan.innerText = (currentTheme === 'light') ? t.themeDark : t.themeLight;
+    <!-- Profile Panel -->
+    <div id="profilePanel" class="panel">
+        <button class="close-panel" id="closeProfileBtn"><i class="fas fa-arrow-left"></i></button>
+        <h2>👤 My Profile</h2>
+        <div id="profileInfo"></div>
+        <button id="logoutBtn" class="btn-primary" style="background:#555;">Logout</button>
+    </div>
+</div>
+
+<script>
+    // ---------- DATA MODELS ----------
+    let currentUser = null;
+    let users = [];          // { id, name, phone, password, avatar, bio }
+    let videos = [];         // { id, userId, videoUrl, caption, likes, comments, shares, createdAt }
+    let messages = [];       // { id, fromUserId, toUserId, text, timestamp, seen }
+    let notifications = [];  // { id, userId, text, type, read, createdAt }
+    let currentChatWith = null;
+
+    // Helper: save/load localStorage
+    function saveData() {
+        localStorage.setItem("tikvibe_users", JSON.stringify(users));
+        localStorage.setItem("tikvibe_videos", JSON.stringify(videos));
+        localStorage.setItem("tikvibe_messages", JSON.stringify(messages));
+        localStorage.setItem("tikvibe_notifications", JSON.stringify(notifications));
+        if(currentUser) localStorage.setItem("tikvibe_currentUser", JSON.stringify(currentUser));
+    }
+    function loadData() {
+        const u = localStorage.getItem("tikvibe_users");
+        if(u) users = JSON.parse(u);
+        const v = localStorage.getItem("tikvibe_videos");
+        if(v) videos = JSON.parse(v);
+        const m = localStorage.getItem("tikvibe_messages");
+        if(m) messages = JSON.parse(m);
+        const n = localStorage.getItem("tikvibe_notifications");
+        if(n) notifications = JSON.parse(n);
+        const cu = localStorage.getItem("tikvibe_currentUser");
+        if(cu) currentUser = JSON.parse(cu);
+        if(users.length === 0) {
+            // create demo users
+            users.push({ id: 1, name: "Alex", phone: "alex@vibe.com", password: "123", avatar: "A", bio: "Travel & Music" });
+            users.push({ id: 2, name: "Mia", phone: "mia@vibe.com", password: "123", avatar: "M", bio: "Dancer 💃" });
+            users.push({ id: 3, name: "John", phone: "john@vibe.com", password: "123", avatar: "J", bio: "Filmmaker" });
+            saveData();
         }
-
-        // Theme switching
-        function setTheme(theme) {
-            currentTheme = theme;
-            if (theme === 'dark') {
-                document.body.classList.add('dark');
-            } else {
-                document.body.classList.remove('dark');
-            }
-            const t = translations[currentLang];
-            themeTextSpan.innerText = (currentTheme === 'light') ? t.themeDark : t.themeLight;
-            localStorage.setItem('worldDatingTheme', theme);
+        if(videos.length === 0) {
+            // sample videos (using sample mp4 from web)
+            videos.push({ id: 101, userId: 1, videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", caption: "Sunset vibes 🔥", likes: 120, comments: [], shares: 0, createdAt: Date.now() });
+            videos.push({ id: 102, userId: 2, videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFunflies.mp4", caption: "Dance with me 🕺", likes: 340, comments: [], shares: 0, createdAt: Date.now() });
+            videos.push({ id: 103, userId: 3, videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", caption: "Nature escape 🌿", likes: 89, comments: [], shares: 0, createdAt: Date.now() });
+            saveData();
         }
+    }
 
-        function toggleTheme() {
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            setTheme(newTheme);
-        }
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'en' ? 'am' : 'en';
-            applyLanguage();
-            localStorage.setItem('worldDatingLang', currentLang);
-        }
-
-        // ----- POSTS SYSTEM (with photo & video) -----
-        let posts = [];   // each post: { id, text, mediaType, mediaData, timestamp, userName, userAvatar }
-        const currentUserName = "Explorer";
-        const currentUserAvatar = "🌟";
-
-        function renderPosts() {
-            const feedContainer = document.getElementById('postsFeed');
-            if (!feedContainer) return;
-            if (posts.length === 0) {
-                feedContainer.innerHTML = `<div class="post-card" style="text-align:center;">✨ ${currentLang === 'en' ? 'No posts yet. Share your first moment!' : 'እስካሁን ልጥፍ የለም። የመጀመሪያ ልጥፍዎን ያጋሩ!'}</div>`;
-                return;
-            }
-            feedContainer.innerHTML = posts.map(post => `
-                <div class="post-card" data-id="${post.id}">
-                    <div class="post-header">
-                        <div class="avatar">${post.userAvatar || '❤️'}</div>
-                        <div><strong>${post.userName}</strong><br><span style="font-size:12px; color:var(--text-secondary);">${new Date(post.timestamp).toLocaleString()}</span></div>
+    // Render video feed (TikTok scroll)
+    function renderFeed() {
+        const feedDiv = document.getElementById("videoFeed");
+        if(!feedDiv) return;
+        feedDiv.innerHTML = "";
+        videos.forEach(vid => {
+            const user = users.find(u => u.id === vid.userId);
+            const userName = user ? user.name : "Unknown";
+            const card = document.createElement("div");
+            card.className = "video-card";
+            card.setAttribute("data-video-id", vid.id);
+            card.innerHTML = `
+                <video src="${vid.videoUrl}" loop playsinline></video>
+                <div class="video-overlay">
+                    <div class="video-info">
+                        <div class="username">@${userName}</div>
+                        <div class="caption">${vid.caption}</div>
                     </div>
-                    <p style="margin-bottom: 12px;">${escapeHtml(post.text)}</p>
-                    ${post.mediaType && post.mediaData ? `
-                        <div class="post-media">
-                            ${post.mediaType === 'image' ? `<img src="${post.mediaData}" alt="post image">` : 
-                              (post.mediaType === 'video' ? `<video controls src="${post.mediaData}"></video>` : '')}
-                        </div>
-                    ` : ''}
-                    <div class="post-actions">
-                        <span><i class="far fa-heart"></i> ❤️ ${post.likes || 0}</span>
-                        <span><i class="far fa-comment"></i> 💬 ${currentLang === 'en' ? 'Comment' : 'አስተያየት'}</span>
+                    <div class="video-actions">
+                        <button class="action-btn like-btn" data-id="${vid.id}"><i class="far fa-heart"></i><span> ${vid.likes}</span></button>
+                        <button class="action-btn comment-btn" data-id="${vid.id}"><i class="far fa-comment"></i><span> ${vid.comments?.length || 0}</span></button>
+                        <button class="action-btn share-btn" data-id="${vid.id}"><i class="fas fa-share"></i></button>
+                        <button class="action-btn copy-link-btn" data-id="${vid.id}"><i class="fas fa-link"></i></button>
                     </div>
                 </div>
-            `).join('');
-        }
-
-        function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
-
-        function addPost(text, mediaType, mediaData) {
-            if (!text.trim() && !mediaData) return;
-            const newPost = {
-                id: Date.now(),
-                text: text.trim() || (currentLang === 'en' ? 'Shared a moment' : 'አንድ አፍታ አጋርቷል'),
-                mediaType: mediaType || null,
-                mediaData: mediaData || null,
-                timestamp: Date.now(),
-                userName: currentUserName,
-                userAvatar: currentUserAvatar,
-                likes: 0
-            };
-            posts.unshift(newPost);
-            // keep max 50 posts
-            if(posts.length > 50) posts.pop();
-            savePostsToLocal();
-            renderPosts();
-        }
-
-        // LocalStorage persistence
-        function savePostsToLocal() { localStorage.setItem('worldDatingPosts', JSON.stringify(posts)); }
-        function loadPostsFromLocal() {
-            const stored = localStorage.getItem('worldDatingPosts');
-            if(stored) { posts = JSON.parse(stored); renderPosts(); }
-            else { posts = []; renderPosts(); }
-        }
-
-        // Media handling
-        let pendingMedia = null; let pendingMediaType = null;
-        document.getElementById('uploadPhotoBtn').addEventListener('click', () => { document.getElementById('photoFileInput').click(); });
-        document.getElementById('uploadVideoBtn').addEventListener('click', () => { document.getElementById('videoFileInput').click(); });
-        
-        document.getElementById('photoFileInput').addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if(file && file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    pendingMedia = ev.target.result;
-                    pendingMediaType = 'image';
-                    document.getElementById('mediaPreview').innerHTML = `<div style="background:var(--bg-secondary); border-radius:24px; padding:8px;"><img src="${pendingMedia}" style="max-height:150px; border-radius:20px;"><br><small>${currentLang === 'en' ? 'Photo ready' : 'ፎቶ ዝግጁ'}</small></div>`;
-                };
-                reader.readAsDataURL(file);
-            }
+            `;
+            feedDiv.appendChild(card);
         });
-        document.getElementById('videoFileInput').addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if(file && file.type.startsWith('video/')) {
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    pendingMedia = ev.target.result;
-                    pendingMediaType = 'video';
-                    document.getElementById('mediaPreview').innerHTML = `<div style="background:var(--bg-secondary); border-radius:24px; padding:8px;"><video controls src="${pendingMedia}" style="max-height:150px; border-radius:20px;"></video><br><small>${currentLang === 'en' ? 'Video ready' : 'ቪዲዮ ዝግጁ'}</small></div>`;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        document.getElementById('publishPostBtn').addEventListener('click', () => {
-            const content = document.getElementById('postContentInput').value;
-            if(!content.trim() && !pendingMedia) {
-                alert(currentLang === 'en' ? 'Write something or add media' : 'እባክዎ ጽሑፍ ወይም ሚዲያ ይጨምሩ');
-                return;
-            }
-            addPost(content, pendingMediaType, pendingMedia);
-            // reset
-            document.getElementById('postContentInput').value = '';
-            document.getElementById('mediaPreview').innerHTML = '';
-            pendingMedia = null;
-            pendingMediaType = null;
-            document.getElementById('photoFileInput').value = '';
-            document.getElementById('videoFileInput').value = '';
-        });
-
-        // initialize theme from localStorage
-        function initTheme() {
-            const savedTheme = localStorage.getItem('worldDatingTheme');
-            if(savedTheme === 'dark') setTheme('dark');
-            else setTheme('light');
-        }
-        function initLang() {
-            const savedLang = localStorage.getItem('worldDatingLang');
-            if(savedLang === 'am') { currentLang = 'am'; applyLanguage(); }
-            else { currentLang = 'en'; applyLanguage(); }
-        }
-
-        // get started / demo interaction
-        document.getElementById('getStartedBtn').addEventListener('click', () => {
-            document.getElementById('feedTitle').scrollIntoView({ behavior: 'smooth' });
-            if(currentLang === 'en') alert("✨ Welcome! Share your first photo or video to meet people.");
-            else alert("✨ እንኳን ደህና መጡ! ሰዎችን ለማግኘት የመጀመሪያ ፎቶዎን ወይም ቪዲዮዎን ያጋሩ።");
-        });
-        document.getElementById('heroCta').addEventListener('click', () => {
-            document.getElementById('feedTitle').scrollIntoView({ behavior: 'smooth' });
-        });
-
-        // event listeners for toggles
-        themeToggleBtn.addEventListener('click', toggleTheme);
-        langToggleBtn.addEventListener('click', toggleLanguage);
-        
-        // Load existing posts and render
-        loadPostsFromLocal();
-        initTheme();
-        initLang();
-        
-        // Add sample posts for demo (only if no posts exist)
-        if(posts.length === 0) {
-            setTimeout(() => {
-                if(posts.length === 0) {
-                    addPost("Meeting amazing people here! 🌍", null, null);
-                    addPost("Sunset date vibes ❤️", 'image', "https://picsum.photos/id/29/400/300");
+        // attach video observers for autoplay on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target.querySelector("video");
+                if(entry.isIntersecting) {
+                    video.play().catch(e=>{});
+                } else {
+                    video.pause();
                 }
-            }, 500);
+            });
+        }, { threshold: 0.6 });
+        document.querySelectorAll(".video-card").forEach(card => observer.observe(card));
+        attachVideoActions();
+    }
+
+    function attachVideoActions() {
+        // Like
+        document.querySelectorAll(".like-btn").forEach(btn => {
+            btn.removeEventListener("click", likeHandler);
+            btn.addEventListener("click", likeHandler);
+        });
+        // Comment
+        document.querySelectorAll(".comment-btn").forEach(btn => {
+            btn.removeEventListener("click", commentHandler);
+            btn.addEventListener("click", commentHandler);
+        });
+        // Share
+        document.querySelectorAll(".share-btn").forEach(btn => {
+            btn.removeEventListener("click", shareHandler);
+            btn.addEventListener("click", shareHandler);
+        });
+        // Copy link
+        document.querySelectorAll(".copy-link-btn").forEach(btn => {
+            btn.removeEventListener("click", copyLinkHandler);
+            btn.addEventListener("click", copyLinkHandler);
+        });
+    }
+
+    function likeHandler(e) {
+        e.stopPropagation();
+        const videoId = parseInt(this.getAttribute("data-id"));
+        const video = videos.find(v => v.id === videoId);
+        if(video) {
+            video.likes += 1;
+            saveData();
+            renderFeed(); // re-render
+            addNotification(video.userId, `${currentUser?.name} liked your video`, "like");
         }
-    </script>
+    }
+    function commentHandler(e) {
+        e.stopPropagation();
+        const videoId = parseInt(this.getAttribute("data-id"));
+        const commentText = prompt("💬 Write a comment:");
+        if(commentText && commentText.trim()) {
+            const video = videos.find(v => v.id === videoId);
+            if(video) {
+                if(!video.comments) video.comments = [];
+                video.comments.push({ userId: currentUser?.id, text: commentText, createdAt: Date.now() });
+                saveData();
+                renderFeed();
+                addNotification(video.userId, `${currentUser?.name} commented: "${commentText.substring(0,30)}"`, "comment");
+            }
+        }
+    }
+    function shareHandler(e) {
+        e.stopPropagation();
+        const videoId = parseInt(this.getAttribute("data-id"));
+        const video = videos.find(v => v.id === videoId);
+        if(video) {
+            video.shares = (video.shares || 0) + 1;
+            saveData();
+            alert("📤 Shared to feed (demo)");
+            addNotification(video.userId, `${currentUser?.name} shared your video`, "share");
+        }
+    }
+    function copyLinkHandler(e) {
+        e.stopPropagation();
+        const videoId = parseInt(this.getAttribute("data-id"));
+        const link = `https://tikvibe.app/video/${videoId}`;
+        navigator.clipboard.writeText(link);
+        alert("✅ Video link copied to clipboard!");
+    }
+
+    function addNotification(targetUserId, text, type) {
+        if(!currentUser) return;
+        const notif = { id: Date.now(), userId: targetUserId, text: text, type: type, read: false, createdAt: Date.now() };
+        notifications.push(notif);
+        saveData();
+        if(targetUserId === currentUser?.id) renderNotificationsPanel();
+    }
+
+    // Messaging system
+    function renderMessagesList() {
+        const container = document.getElementById("messagesList");
+        if(!container) return;
+        // get conversations: unique users that currentUser has messages with
+        const myMessages = messages.filter(m => m.fromUserId === currentUser?.id || m.toUserId === currentUser?.id);
+        const userIds = new Set();
+        myMessages.forEach(m => {
+            if(m.fromUserId === currentUser?.id) userIds.add(m.toUserId);
+            else userIds.add(m.fromUserId);
+        });
+        const convos = Array.from(userIds).map(uid => users.find(u => u.id === uid)).filter(Boolean);
+        if(convos.length === 0) { container.innerHTML = "<p>No messages yet. Like & comment to start chatting!</p>"; return; }
+        container.innerHTML = convos.map(u => `<div class="chat-message" data-otherid="${u.id}" style="cursor:pointer; display:flex; justify-content:space-between;"><span><strong>${u.name}</strong></span><span><i class="fas fa-comment"></i></span></div>`).join('');
+        document.querySelectorAll("[data-otherid]").forEach(el => {
+            el.addEventListener("click", () => openChat(parseInt(el.getAttribute("data-otherid"))));
+        });
+    }
+
+    function openChat(otherUserId) {
+        currentChatWith = otherUserId;
+        const other = users.find(u => u.id === otherUserId);
+        document.getElementById("chatBox").style.display = "block";
+        document.getElementById("messagesList").style.display = "none";
+        document.getElementById("chatMessagesArea").innerHTML = "";
+        loadChatMessages(otherUserId);
+    }
+
+    function loadChatMessages(otherId) {
+        const chatMessages = messages.filter(m => (m.fromUserId === currentUser?.id && m.toUserId === otherId) || (m.fromUserId === otherId && m.toUserId === currentUser?.id));
+        chatMessages.sort((a,b) => a.timestamp - b.timestamp);
+        const container = document.getElementById("chatMessagesArea");
+        container.innerHTML = chatMessages.map(msg => `<div style="text-align:${msg.fromUserId === currentUser?.id ? 'right' : 'left'}; margin:8px;"><span style="background:${msg.fromUserId === currentUser?.id ? '#ff3b6f' : '#2c2c2c'}; padding:8px 14px; border-radius:20px; display:inline-block;">${msg.text}</span></div>`).join('');
+        // mark as seen
+        chatMessages.forEach(msg => { if(msg.toUserId === currentUser?.id && !msg.seen) { msg.seen = true; } });
+        saveData();
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function sendMessage(toUserId, text) {
+        if(!text.trim()) return;
+        const newMsg = { id: Date.now(), fromUserId: currentUser.id, toUserId: toUserId, text: text, timestamp: Date.now(), seen: false };
+        messages.push(newMsg);
+        saveData();
+        loadChatMessages(toUserId);
+        // add notification for receiver
+        addNotification(toUserId, `New message from ${currentUser.name}`, "message");
+    }
+
+    // Notifications render
+    function renderNotificationsPanel() {
+        const container = document.getElementById("notificationsList");
+        if(!container) return;
+        const myNotifs = notifications.filter(n => n.userId === currentUser?.id).sort((a,b)=>b.createdAt - a.createdAt);
+        if(myNotifs.length === 0) { container.innerHTML = "<p>🔔 No notifications yet</p>"; return; }
+        container.innerHTML = myNotifs.map(n => `<div class="notification-item"><i class="fas fa-bell"></i> ${n.text}<br><small>${new Date(n.createdAt).toLocaleString()}</small></div>`).join('');
+    }
+
+    function renderProfilePanel() {
+        if(!currentUser) return;
+        document.getElementById("profileInfo").innerHTML = `
+            <div style="text-align:center;"><div style="width:80px;height:80px;background:#ff3b6f;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto;">${currentUser.avatar || '👤'}</div>
+            <h3>${currentUser.name}</h3>
+            <p>📞 ${currentUser.phone}</p>
+            <p>✍️ ${currentUser.bio || "Love to vibe!"}</p>
+            </div>
+        `;
+    }
+
+    // Registration / Login logic
+    document.getElementById("registerBtn").addEventListener("click", () => {
+        const name = document.getElementById("regName").value.trim();
+        const phone = document.getElementById("regPhone").value.trim();
+        const pass = document.getElementById("regPassword").value;
+        if(!name || !phone || !pass) { alert("Fill all fields"); return; }
+        let user = users.find(u => u.phone === phone && u.password === pass);
+        if(!user) {
+            // register new
+            const newId = users.length + 1;
+            user = { id: newId, name: name, phone: phone, password: pass, avatar: name.charAt(0), bio: "New to TikVibe" };
+            users.push(user);
+            saveData();
+            alert("Account created!");
+        } else {
+            alert("Welcome back " + user.name);
+        }
+        currentUser = user;
+        localStorage.setItem("tikvibe_currentUser", JSON.stringify(currentUser));
+        document.getElementById("authModal").style.display = "none";
+        renderFeed();
+        renderMessagesList();
+        renderNotificationsPanel();
+        renderProfilePanel();
+    });
+
+    // Navigation between panels
+    const panels = { feed: null, messages: document.getElementById("messagesPanel"), notifications: document.getElementById("notificationsPanel"), profile: document.getElementById("profilePanel") };
+    document.querySelectorAll(".nav-item").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const nav = btn.getAttribute("data-nav");
+            document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            if(nav === "feed") {
+                panels.messages.classList.remove("open");
+                panels.notifications.classList.remove("open");
+                panels.profile.classList.remove("open");
+                renderFeed();
+            } else if(nav === "messages") {
+                panels.messages.classList.add("open");
+                panels.notifications.classList.remove("open");
+                panels.profile.classList.remove("open");
+                renderMessagesList();
+                document.getElementById("chatBox").style.display = "none";
+                document.getElementById("messagesList").style.display = "block";
+            } else if(nav === "notifications") {
+                panels.notifications.classList.add("open");
+                panels.messages.classList.remove("open");
+                panels.profile.classList.remove("open");
+                renderNotificationsPanel();
+            } else if(nav === "profile") {
+                panels.profile.classList.add("open");
+                panels.messages.classList.remove("open");
+                panels.notifications.classList.remove("open");
+                renderProfilePanel();
+            }
+        });
+    });
+    document.getElementById("closeMessagesBtn").addEventListener("click", () => panels.messages.classList.remove("open"));
+    document.getElementById("closeNotifBtn").addEventListener("click", () => panels.notifications.classList.remove("open"));
+    document.getElementById("closeProfileBtn").addEventListener("click", () => panels.profile.classList.remove("open"));
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+        currentUser = null;
+        localStorage.removeItem("tikvibe_currentUser");
+        location.reload();
+    });
+    document.getElementById("sendChatBtn").addEventListener("click", () => {
+        const input = document.getElementById("chatInput");
+        if(currentChatWith && input.value.trim()) {
+            sendMessage(currentChatWith, input.value);
+            input.value = "";
+        }
+    });
+    document.getElementById("backToChatsBtn").addEventListener("click", () => {
+        document.getElementById("chatBox").style.display = "none";
+        document.getElementById("messagesList").style.display = "block";
+        currentChatWith = null;
+    });
+
+    // initial load
+    loadData();
+    if(!currentUser) {
+        document.getElementById("authModal").style.display = "flex";
+    } else {
+        document.getElementById("authModal").style.display = "none";
+        renderFeed();
+        renderMessagesList();
+        renderNotificationsPanel();
+        renderProfilePanel();
+    }
+    // auto-save interval
+    setInterval(() => { if(currentUser) saveData(); }, 5000);
+    // copyright year updated
+    const footerYear = document.createElement("div");
+    footerYear.style.position = "fixed";
+    footerYear.style.bottom = "70px";
+    footerYear.style.left = "0";
+    footerYear.style.right = "0";
+    footerYear.style.textAlign = "center";
+    footerYear.style.fontSize = "10px";
+    footerYear.style.color = "#555";
+    footerYear.innerText = "© 2026 TikVibe — All rights reserved";
+    document.querySelector(".app-container").appendChild(footerYear);
+</script>
 </body>
 </html>
