@@ -1,673 +1,696 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Telegram Dating · Mini App</title>
-  <!-- Telegram WebApp SDK -->
-  <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
-  <!-- Font & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Telegram Dating Pro | Secure Global Dating</title>
+    <!-- Font Awesome 6 & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <!-- Flatpickr for date of birth -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--tg-theme-bg-color, #ffffff);
-      color: var(--tg-theme-text-color, #1f1f2f);
-      transition: background 0.2s, color 0.2s;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f4f7fc;
+            color: #1a2634;
+            line-height: 1.5;
+        }
 
-    /* Main app container */
-    .app-container {
-      max-width: 500px;
-      margin: 0 auto;
-      padding: 16px 20px 90px 20px;
-    }
+        /* App container */
+        .app-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 24px 40px;
+        }
 
-    /* screens */
-    .screen {
-      display: none;
-      animation: fadeIn 0.25s ease;
-    }
+        /* cards & forms */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(2px);
+            border-radius: 32px;
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.1);
+            padding: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
 
-    .screen.active {
-      display: block;
-    }
+        .btn-primary {
+            background: linear-gradient(105deg, #ff4d6d, #ff8c42);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 14px 28px;
+            border-radius: 60px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            box-shadow: 0 8px 18px rgba(255, 77, 109, 0.25);
+        }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px);}
-      to { opacity: 1; transform: translateY(0);}
-    }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(255, 77, 109, 0.35);
+        }
 
-    /* bottom tab bar (Telegram style) */
-    .bottom-tab {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      max-width: 500px;
-      margin: 0 auto;
-      background: var(--tg-theme-secondary-bg-color, #ffffff);
-      backdrop-filter: blur(20px);
-      background: rgba(var(--tg-theme-bg-color-rgb, 255,255,255), 0.96);
-      border-top: 1px solid var(--tg-theme-hint-color, #e2e2e8);
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 20px 22px 20px;
-      z-index: 100;
-    }
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid #ff4d6d;
+            color: #ff4d6d;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
 
-    .tab-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      font-size: 12px;
-      color: var(--tg-theme-hint-color, #8e8e9e);
-      background: none;
-      border: none;
-      font-weight: 500;
-      transition: 0.1s;
-      cursor: pointer;
-    }
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 28px;
+            border: 1px solid #e2e8f0;
+            font-size: 1rem;
+            background: white;
+            transition: 0.2s;
+            outline: none;
+        }
 
-    .tab-item i {
-      font-size: 24px;
-    }
+        input:focus {
+            border-color: #ff8c42;
+            box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.2);
+        }
 
-    .tab-item.active {
-      color: var(--tg-theme-button-color, #ff6a6a);
-    }
+        .form-row {
+            margin-bottom: 22px;
+        }
 
-    /* cards */
-    .card {
-      background: var(--tg-theme-secondary-bg-color, #f8f8fc);
-      border-radius: 28px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-      border: 1px solid var(--tg-theme-hint-color, #ededf2);
-    }
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
 
-    .btn-primary {
-      background: var(--tg-theme-button-color, #ff6a6a);
-      color: var(--tg-theme-button-text-color, white);
-      border: none;
-      padding: 14px 20px;
-      border-radius: 60px;
-      font-weight: 600;
-      width: 100%;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
 
-    .btn-outline {
-      background: transparent;
-      border: 1.5px solid var(--tg-theme-button-color, #ff6a6a);
-      color: var(--tg-theme-button-color, #ff6a6a);
-      padding: 12px 18px;
-      border-radius: 60px;
-      font-weight: 600;
-    }
+        /* tabs & admin panel */
+        .admin-panel {
+            background: #1e2a3a;
+            color: white;
+            border-radius: 28px;
+            padding: 24px;
+            margin-top: 40px;
+        }
 
-    .input-group {
-      margin-bottom: 20px;
-    }
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #0f1720;
+            border-radius: 20px;
+            overflow-x: auto;
+            display: block;
+        }
 
-    .input-group label {
-      font-size: 13px;
-      font-weight: 500;
-      display: block;
-      margin-bottom: 8px;
-      color: var(--tg-theme-hint-color, #6c6c7a);
-    }
+        .user-table th, .user-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #2d3e50;
+        }
 
-    input, select, textarea {
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: 24px;
-      border: 1px solid var(--tg-theme-hint-color, #ddd);
-      background: var(--tg-theme-bg-color, white);
-      font-size: 16px;
-      outline: none;
-    }
+        .badge {
+            background: #ff4d6d;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 600;
+        }
 
-    .swipe-card {
-      background: var(--tg-theme-secondary-bg-color, white);
-      border-radius: 32px;
-      overflow: hidden;
-      box-shadow: 0 12px 28px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-    }
-
-    .profile-photo {
-      height: 280px;
-      background: linear-gradient(135deg, #ff9a6e, #ff4f6c);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 64px;
-      color: white;
-    }
-
-    /* grid */
-    .match-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 12px;
-    }
-    .match-item {
-      background: var(--tg-theme-secondary-bg-color, #f3f3f7);
-      border-radius: 20px;
-      padding: 12px;
-      text-align: center;
-    }
-    .avatar-small {
-      width: 70px;
-      height: 70px;
-      background: #ffb48a;
-      border-radius: 50%;
-      margin: 0 auto 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-    }
-
-    .message-bubble {
-      background: var(--tg-theme-button-color, #eef2ff);
-      padding: 10px 14px;
-      border-radius: 20px;
-      margin-bottom: 8px;
-      max-width: 85%;
-    }
-
-    .flex-between {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-  </style>
+        /* modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            max-width: 450px;
+            width: 90%;
+            border-radius: 36px;
+            padding: 28px;
+        }
+        .toggle-pwd {
+            cursor: pointer;
+            position: absolute;
+            right: 18px;
+            top: 42px;
+            color: #888;
+        }
+        .relative {
+            position: relative;
+        }
+        .photo-preview {
+            width: 80px;
+            height: 80px;
+            background: #f0f2f5;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-top: 8px;
+        }
+        hr {
+            margin: 20px 0;
+        }
+        @media (max-width: 800px) {
+            .grid-2col { grid-template-columns: 1fr; }
+            .app-wrapper { padding: 16px; }
+        }
+    </style>
 </head>
 <body>
-<div class="app-container" id="appContainer">
-  <!-- REGISTRATION SCREEN (step 1) -->
-  <div id="registerScreen" class="screen active">
-    <div style="text-align: center; margin: 24px 0;">
-      <i class="fas fa-heart" style="font-size: 48px; color: var(--tg-theme-button-color, #ff6a6a);"></i>
-      <h2 style="margin: 16px 0 8px;">Welcome to Telegram Dating</h2>
-      <p style="color: var(--tg-theme-hint-color);">Find your perfect match</p>
-    </div>
-    <div class="card">
-      <div class="input-group">
-        <label>Full name</label>
-        <input type="text" id="regName" placeholder="e.g. Hiwot Alemu" value="">
-      </div>
-      <div class="input-group">
-        <label>Age</label>
-        <input type="number" id="regAge" placeholder="18-60" value="24">
-      </div>
-      <div class="input-group">
-        <label>Gender</label>
-        <select id="regGender">
-          <option value="Female">Female</option>
-          <option value="Male">Male</option>
-          <option value="Non-binary">Non-binary</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <label>City (Ethiopia)</label>
-        <input type="text" id="regCity" placeholder="Addis Ababa" value="Addis Ababa">
-      </div>
-      <div class="input-group">
-        <label>Bio (tell about yourself)</label>
-        <textarea rows="2" id="regBio" placeholder="Coffee lover, traveler, looking for real connection..."></textarea>
-      </div>
-      <div class="input-group">
-        <label>Interests (comma separated)</label>
-        <input type="text" id="regInterests" placeholder="Music, Travel, Reading" value="Music, Travel, Coffee">
-      </div>
-      <button class="btn-primary" id="completeRegistrationBtn">✨ Complete profile & Start</button>
-      <p style="font-size: 12px; text-align: center; margin-top: 16px;">By continuing you agree to community guidelines</p>
-    </div>
-  </div>
-
-  <!-- MAIN APP (after registration) -->
-  <div id="mainAppScreen" class="screen">
-    <!-- bottom tab bar -->
-    <div class="bottom-tab">
-      <button class="tab-item" data-tab="swipe"><i class="fas fa-fire"></i><span>Explore</span></button>
-      <button class="tab-item" data-tab="matches"><i class="fas fa-comment-dots"></i><span>Matches</span></button>
-      <button class="tab-item" data-tab="profile"><i class="fas fa-user"></i><span>Profile</span></button>
-      <button class="tab-item" data-tab="premium"><i class="fas fa-crown"></i><span>Premium</span></button>
-    </div>
-
-    <!-- SWIPE / DISCOVER TAB -->
-    <div id="swipeTab" class="tab-content active" style="display: block;">
-      <div style="margin-top: 8px; margin-bottom: 16px;">
-        <h3>❤️ Discover nearby</h3>
-        <p style="font-size: 13px; color: var(--tg-theme-hint-color);">Swipe right to like, left to pass</p>
-      </div>
-      <div id="swipeCardContainer"></div>
-      <div id="noMoreProfiles" style="text-align: center; padding: 40px; display: none;">
-        <i class="fas fa-smile-wink" style="font-size: 48px;"></i>
-        <p>No more profiles nearby. Check again later!</p>
-      </div>
-    </div>
-
-    <!-- MATCHES & CHAT TAB -->
-    <div id="matchesTab" class="tab-content" style="display: none;">
-      <div class="flex-between" style="margin: 8px 0 20px;">
-        <h3>💬 Your matches</h3>
-        <i class="fas fa-search" style="color: var(--tg-theme-hint-color);"></i>
-      </div>
-      <div id="matchesListContainer"></div>
-      <!-- Chat detail panel (hidden) -->
-      <div id="chatDetailPanel" style="display: none; margin-top: 16px;">
-        <div class="flex-between">
-          <button id="backToMatchesBtn" class="btn-outline" style="padding: 6px 12px;"><i class="fas fa-arrow-left"></i> Back</button>
-          <span id="chatWithName"></span>
+<div class="app-wrapper">
+    <!-- REGISTRATION SECTION (default visible) -->
+    <div id="registerSection">
+        <div class="glass-card" style="max-width: 800px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <i class="fas fa-heart" style="font-size: 48px; color: #ff4d6d;"></i>
+                <h2 style="margin-top: 12px;">Telegram Dating · Global Access</h2>
+                <p>Secure registration | ID Verification | OTP protection</p>
+            </div>
+            <form id="registerForm">
+                <div class="grid-2col">
+                    <div class="form-row">
+                        <label>Full Name <span style="color:red;">*</span></label>
+                        <input type="text" id="fullName" placeholder="Asnakech Tadese" required>
+                    </div>
+                    <div class="form-row">
+                        <label>Country / Phone Code</label>
+                        <select id="countryCode">
+                            <option value="+251">🇪🇹 Ethiopia (+251)</option>
+                            <option value="+1">🇺🇸 USA (+1)</option>
+                            <option value="+44">🇬🇧 UK (+44)</option>
+                            <option value="+254">🇰🇪 Kenya (+254)</option>
+                            <option value="+256">🇺🇬 Uganda (+256)</option>
+                            <option value="+255">🇹🇿 Tanzania (+255)</option>
+                            <option value="+27">🇿🇦 South Africa (+27)</option>
+                            <option value="+91">🇮🇳 India (+91)</option>
+                            <option value="+86">🇨🇳 China (+86)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label>Phone Number (without code)</label>
+                    <input type="tel" id="phoneNumber" placeholder="912345678" required>
+                </div>
+                <div class="form-row">
+                    <label>Email (optional)</label>
+                    <input type="email" id="email" placeholder="hello@example.com">
+                </div>
+                <div class="grid-2col">
+                    <div class="form-row relative">
+                        <label>Password (min 6 chars)</label>
+                        <input type="password" id="password" placeholder="••••••" required>
+                        <i class="fas fa-eye toggle-pwd" id="toggleRegPwd" style="top: 44px;"></i>
+                    </div>
+                    <div class="form-row relative">
+                        <label>Confirm Password</label>
+                        <input type="password" id="confirmPwd" placeholder="••••••" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label>Date of Birth (Age verification)</label>
+                    <input type="text" id="dob" placeholder="Select date of birth" required>
+                </div>
+                <div class="form-row">
+                    <label>Profile Photo (URL or upload)</label>
+                    <input type="file" id="profilePhotoFile" accept="image/*">
+                    <div id="photoPreview"></div>
+                </div>
+                <div class="form-row">
+                    <label>Government ID / Passport (upload for verification)</label>
+                    <input type="file" id="idDocument" accept="image/*,application/pdf">
+                    <small style="color:#666;">ID verification ensures real connections</small>
+                </div>
+                <div class="form-row">
+                    <label>OTP Code (6-digit sent to your phone)</label>
+                    <div style="display: flex; gap: 12px;">
+                        <input type="text" id="otpCode" placeholder="123456" style="flex:2;">
+                        <button type="button" id="sendOtpBtn" class="btn-outline" style="width: auto; padding: 0 20px;">Send OTP</button>
+                    </div>
+                    <div id="otpTimer" style="font-size: 12px; margin-top: 6px;"></div>
+                </div>
+                <button type="submit" class="btn-primary" id="registerBtn">✅ Complete Registration</button>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="#" id="adminLoginLink" style="color:#ff4d6d;">🔐 Admin login</a> &nbsp;|&nbsp;
+                    <span style="color:#999;">Already have account? <a href="#" id="showLoginLink">Sign in</a></span>
+                </div>
+            </form>
         </div>
-        <div id="chatMessagesArea" style="margin: 20px 0; max-height: 320px; overflow-y: auto;"></div>
-        <div class="flex-between" style="gap: 8px;">
-          <input type="text" id="chatInput" placeholder="Write a message..." style="flex:1;">
-          <button id="sendMsgBtn" class="btn-primary" style="width: auto; padding: 12px 18px;"><i class="fas fa-paper-plane"></i></button>
-        </div>
-      </div>
     </div>
 
-    <!-- PROFILE TAB -->
-    <div id="profileTab" class="tab-content" style="display: none;">
-      <div style="text-align: center; margin: 16px 0;">
-        <div class="avatar-small" style="width: 100px; height: 100px; font-size: 48px; background: var(--tg-theme-button-color, #ff8e53);">
-          <i class="fas fa-user-circle"></i>
+    <!-- LOGIN SECTION (hidden by default) -->
+    <div id="loginSection" style="display: none;">
+        <div class="glass-card" style="max-width: 500px; margin: 0 auto;">
+            <h2>Welcome Back</h2>
+            <p>Login with phone & password</p>
+            <div class="form-row">
+                <label>Phone (with country code)</label>
+                <input type="text" id="loginPhone" placeholder="+251912345678">
+            </div>
+            <div class="form-row relative">
+                <label>Password</label>
+                <input type="password" id="loginPassword" placeholder="••••••">
+                <i class="fas fa-eye toggle-pwd" id="toggleLoginPwd" style="top: 44px;"></i>
+            </div>
+            <button id="doLoginBtn" class="btn-primary">Sign in</button>
+            <div style="margin-top: 20px; text-align:center;">
+                <a href="#" id="backToRegisterLink">← Create new account</a>
+            </div>
         </div>
-        <h3 id="profileNameDisplay"></h3>
-        <p id="profileCityAge"></p>
-      </div>
-      <div class="card">
-        <h4>About me</h4>
-        <p id="profileBio"></p>
-        <hr style="margin: 16px 0;">
-        <h4>Interests</h4>
-        <p id="profileInterests"></p>
-        <button id="editProfileBtn" class="btn-outline" style="margin-top: 20px;">Edit profile</button>
-        <button id="verifyIdentityBtn" class="btn-outline" style="margin-top: 12px; border-color: green; color: green;">📸 Verify ID (Safety)</button>
-      </div>
-      <div class="card">
-        <h4>Privacy & Safety</h4>
-        <p>✅ Phone verified via Telegram<br>✅ Report / Block users anytime<br>✅ Location hidden after match</p>
-      </div>
     </div>
 
-    <!-- PREMIUM TAB -->
-    <div id="premiumTab" class="tab-content" style="display: none;">
-      <div class="card" style="text-align: center;">
-        <i class="fas fa-crown" style="font-size: 48px; color: gold;"></i>
-        <h3>Telegram Dating Premium</h3>
-        <p>Unlimited likes · See who liked you · Advanced filters · Boost profile</p>
-        <div class="price" style="font-size: 28px; font-weight: 800; margin: 16px 0;">299 ETB <span style="font-size: 14px;">/month</span></div>
-        <button id="upgradePremiumBtn" class="btn-primary">Upgrade via Telebirr</button>
-        <p style="font-size: 12px; margin-top: 16px;">🔓 Also: Super Likes, Incognito mode, Priority support</p>
-      </div>
+    <!-- USER DASHBOARD (after successful login) -->
+    <div id="userDashboard" style="display: none;">
+        <div class="glass-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <h2><i class="fas fa-user-check"></i> Welcome, <span id="dashboardName"></span></h2>
+                <button id="logoutUserBtn" class="btn-outline" style="padding: 8px 20px;">Logout</button>
+            </div>
+            <hr>
+            <div class="grid-2col">
+                <div>
+                    <p><strong>📞 Phone:</strong> <span id="dashboardPhone"></span></p>
+                    <p><strong>🌍 Country:</strong> <span id="dashboardCountry"></span></p>
+                    <p><strong>🎂 Age:</strong> <span id="dashboardAge"></span></p>
+                    <p><strong>✅ ID Verified:</strong> <span id="dashboardIdStatus"></span></p>
+                </div>
+                <div>
+                    <img id="dashboardPhoto" src="" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; background:#ddd;">
+                </div>
+            </div>
+            <div class="form-row">
+                <label>Change Password (optional)</label>
+                <input type="password" id="newPasswordInput" placeholder="New password">
+                <button id="updatePasswordBtn" class="btn-outline" style="margin-top: 10px;">Update Password</button>
+            </div>
+            <div style="margin-top: 30px; background:#fef2e8; border-radius: 24px; padding: 16px;">
+                <i class="fas fa-shield-alt"></i> <strong>Safety first</strong> — your data is encrypted. 1-hour lock: after 1 hour of inactivity you'll be prompted for password again.
+            </div>
+        </div>
     </div>
-  </div>
+
+    <!-- ADMIN PANEL (hidden by default) -->
+    <div id="adminPanel" style="display: none; margin-top: 20px;">
+        <div class="admin-panel">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <h3><i class="fas fa-user-secret"></i> Admin Dashboard | Telegram Dating</h3>
+                <button id="adminLogoutBtn" class="btn-outline" style="background:#2c3e50; border-color:white; color:white;">Exit Admin</button>
+            </div>
+            <p>All registered users (ID, photo, phone, password hash hidden for security)</p>
+            <div style="overflow-x: auto;">
+                <table class="user-table" id="adminUserTable">
+                    <thead>
+                        <tr><th>Full Name</th><th>Phone</th><th>Country</th><th>Email</th><th>ID uploaded</th><th>Photo</th><th>Registered</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody id="adminUserList"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-  // ---------- Mock Data & Global State ----------
-  let currentUser = null;           // registered user object
-  let allProfiles = [];             // list of other users (for swipe)
-  let matches = [];                 // array of matched users { id, name, age, city, avatar, chatHistory }
-  let currentSwipeIndex = 0;
-  let activeChatUserId = null;
-  
-  // Helper: generate random profiles (for demo)
-  function generateMockProfiles(excludeUserId) {
-    const nameList = ["Dawit M.", "Helen T.", "Meron A.", "Samuel K.", "Liya B.", "Natanim F.", "Betty G.", "Yonas D."];
-    const cities = ["Addis Ababa", "Bahir Dar", "Hawassa", "Dire Dawa", "Mekelle", "Jimma"];
-    const bios = ["Adventurous soul, love hiking", "Coffee & book enthusiast", "Tech geek and foodie", "Looking for deep connection", "Dancer & photographer"];
-    const interestsList = ["Music, Travel", "Movies, Sports", "Art, Cooking", "Yoga, Nature", "Tech, Reading"];
-    const profiles = [];
-    for (let i = 0; i < 12; i++) {
-      const id = i+100;
-      if (excludeUserId === id) continue;
-      profiles.push({
-        id: id,
-        name: nameList[i % nameList.length] + (i>5 ? " " + (i+20) : ""),
-        age: 22 + (i % 20),
-        city: cities[i % cities.length],
-        bio: bios[i % bios.length],
-        interests: interestsList[i % interestsList.length],
-        gender: i%2===0 ? "Female" : "Male",
-        avatarIcon: "fas fa-user",
-        liked: false,   // not yet swiped right by currentUser (simulated)
-      });
-    }
-    return profiles;
-  }
+    // ---------- STORAGE & GLOBAL STATE ----------
+    let users = [];           // array of user objects
+    let otpStorage = {};     // { phone: { code, expires } }
+    let activeSession = null; // { userId, lastActive }
+    let adminLogged = false;
+    let sessionTimer = null;
+    const ADMIN_PHONE = "0906067696";
+    const ADMIN_PASSWORD_HASH = btoa("21522152"); // simple hash
 
-  // Load initial matches from localStorage if any
-  function loadMatchesFromStorage() {
-    if (currentUser && localStorage.getItem(`matches_${currentUser.id}`)) {
-      matches = JSON.parse(localStorage.getItem(`matches_${currentUser.id}`));
-      // ensure each match has chatHistory array
-      matches = matches.map(m => ({ ...m, chatHistory: m.chatHistory || [] }));
-    } else {
-      // default demo matches
-      matches = [];
+    // Helper: Save to localStorage
+    function saveUsers() {
+        localStorage.setItem("dating_users", JSON.stringify(users));
     }
-    renderMatchesList();
-  }
+    function loadUsers() {
+        const stored = localStorage.getItem("dating_users");
+        if (stored) users = JSON.parse(stored);
+        else {
+            // demo initial users (optional)
+            users = [];
+        }
+    }
 
-  function saveMatchesToStorage() {
-    if (currentUser) {
-      localStorage.setItem(`matches_${currentUser.id}`, JSON.stringify(matches));
+    // Generate random OTP
+    function generateOTP() {
+        return Math.floor(100000 + Math.random() * 900000).toString();
     }
-  }
 
-  // swipe logic: right swipe = like
-  function likeProfile(profile) {
-    // check if already matched
-    const alreadyMatched = matches.find(m => m.id === profile.id);
-    if (alreadyMatched) {
-      alert("You already matched! Go to chat 💬");
-      return false;
+    // send OTP simulation (in real app, SMS API, here simulated)
+    function sendOTPSim(phoneNumber) {
+        const otp = generateOTP();
+        const expires = Date.now() + 10 * 60 * 1000; // 10 min
+        otpStorage[phoneNumber] = { code: otp, expires };
+        console.log(`📱 OTP for ${phoneNumber}: ${otp}`); // for testing
+        alert(`[DEMO] Your OTP is: ${otp}\n(Valid 10 minutes)`);
+        return otp;
     }
-    // for demo, 50% chance of mutual like (makes it fun)
-    const isMutual = Math.random() > 0.4;
-    if (isMutual) {
-      // create match
-      const newMatch = {
-        id: profile.id,
-        name: profile.name,
-        age: profile.age,
-        city: profile.city,
-        avatarIcon: profile.avatarIcon,
-        chatHistory: [{ sender: "system", text: "✨ You matched! Start the conversation.", timestamp: Date.now() }]
-      };
-      matches.push(newMatch);
-      saveMatchesToStorage();
-      alert(`🎉 It's a match! You and ${profile.name} liked each other. Start chatting!`);
-      renderMatchesList();
-      return true;
-    } else {
-      alert(`👍 You liked ${profile.name}. If they like you back, it's a match!`);
-      return false;
-    }
-  }
 
-  function skipProfile() {
-    // just load next
-    loadNextSwipeCard();
-  }
+    // verify OTP
+    function verifyOTP(phone, enteredOtp) {
+        const record = otpStorage[phone];
+        if (!record) return false;
+        if (Date.now() > record.expires) {
+            delete otpStorage[phone];
+            return false;
+        }
+        if (record.code === enteredOtp) {
+            delete otpStorage[phone];
+            return true;
+        }
+        return false;
+    }
 
-  function loadNextSwipeCard() {
-    if (!allProfiles.length) {
-      document.getElementById("swipeCardContainer").innerHTML = "";
-      document.getElementById("noMoreProfiles").style.display = "block";
-      return;
+    // get age from DOB string (YYYY-MM-DD)
+    function calculateAge(dobStr) {
+        const birth = new Date(dobStr);
+        const diff = Date.now() - birth.getTime();
+        const ageDate = new Date(diff);
+        return Math.abs(ageDate.getUTCFullYear() - 1970);
     }
-    if (currentSwipeIndex >= allProfiles.length) {
-      // reshuffle? but keep simple
-      document.getElementById("swipeCardContainer").innerHTML = "";
-      document.getElementById("noMoreProfiles").style.display = "block";
-      return;
+
+    // convert file to base64
+    function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
     }
-    const p = allProfiles[currentSwipeIndex];
-    const container = document.getElementById("swipeCardContainer");
-    container.innerHTML = `
-      <div class="swipe-card">
-        <div class="profile-photo">
-          <i class="fas fa-heart" style="font-size: 72px;"></i>
-        </div>
-        <div style="padding: 20px;">
-          <div class="flex-between">
-            <h2>${p.name}, ${p.age}</h2>
-            <span style="background: #eee; padding: 4px 12px; border-radius: 40px;">📍 ${p.city}</span>
-          </div>
-          <p style="margin: 12px 0;">${p.bio}</p>
-          <p><i class="fas fa-tag"></i> ${p.interests}</p>
-          <div style="display: flex; gap: 16px; margin-top: 24px;">
-            <button id="swipeLeftBtn" class="btn-outline" style="flex:1;"><i class="fas fa-times"></i> Pass</button>
-            <button id="swipeRightBtn" class="btn-primary" style="flex:1;"><i class="fas fa-heart"></i> Like</button>
-          </div>
-        </div>
-      </div>
-    `;
-    document.getElementById("swipeLeftBtn")?.addEventListener("click", () => {
-      currentSwipeIndex++;
-      loadNextSwipeCard();
+
+    // registration handler
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const fullName = document.getElementById("fullName").value.trim();
+        const countryCode = document.getElementById("countryCode").value;
+        const phoneNumber = document.getElementById("phoneNumber").value.trim();
+        const fullPhone = countryCode + phoneNumber;
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const confirmPwd = document.getElementById("confirmPwd").value;
+        const dob = document.getElementById("dob").value;
+        const otpEntered = document.getElementById("otpCode").value.trim();
+
+        if (!fullName || !phoneNumber || !password || !dob || !otpEntered) {
+            alert("All required fields (*) must be filled");
+            return;
+        }
+        if (password !== confirmPwd) {
+            alert("Passwords do not match");
+            return;
+        }
+        if (password.length < 6) {
+            alert("Password must be at least 6 characters");
+            return;
+        }
+        // OTP verification
+        if (!verifyOTP(fullPhone, otpEntered)) {
+            alert("Invalid or expired OTP. Please request a new code.");
+            return;
+        }
+        // check existing user
+        if (users.find(u => u.phone === fullPhone)) {
+            alert("Phone number already registered. Try login.");
+            return;
+        }
+        // handle photo & id
+        let photoBase64 = "";
+        const photoFile = document.getElementById("profilePhotoFile").files[0];
+        if (photoFile) photoBase64 = await fileToBase64(photoFile);
+        let idBase64 = "";
+        const idFile = document.getElementById("idDocument").files[0];
+        if (idFile) idBase64 = await fileToBase64(idFile);
+
+        const newUser = {
+            id: Date.now(),
+            name: fullName,
+            phone: fullPhone,
+            countryCode: countryCode,
+            email: email,
+            passwordHash: btoa(password), // simple base64 encoding (demo)
+            dob: dob,
+            age: calculateAge(dob),
+            photo: photoBase64 || "https://randomuser.me/api/portraits/women/1.jpg",
+            idDocument: idBase64,
+            verifiedId: idBase64 ? true : false,
+            createdAt: new Date().toISOString()
+        };
+        users.push(newUser);
+        saveUsers();
+        alert("✅ Registration successful! You can now login.");
+        // switch to login
+        document.getElementById("registerSection").style.display = "none";
+        document.getElementById("loginSection").style.display = "block";
+        document.getElementById("loginPhone").value = fullPhone;
     });
-    document.getElementById("swipeRightBtn")?.addEventListener("click", () => {
-      likeProfile(p);
-      currentSwipeIndex++;
-      loadNextSwipeCard();
+
+    // Send OTP button
+    document.getElementById("sendOtpBtn").addEventListener("click", () => {
+        const countryCode = document.getElementById("countryCode").value;
+        const phoneRaw = document.getElementById("phoneNumber").value.trim();
+        if (!phoneRaw) { alert("Enter phone number first"); return; }
+        const fullPhone = countryCode + phoneRaw;
+        const otp = sendOTPSim(fullPhone);
+        let timer = 60;
+        const timerEl = document.getElementById("otpTimer");
+        const interval = setInterval(() => {
+            if (timer <= 0) {
+                clearInterval(interval);
+                timerEl.innerHTML = "";
+            } else {
+                timerEl.innerHTML = `⏳ Resend available in ${timer}s`;
+                timer--;
+            }
+        }, 1000);
+        setTimeout(() => clearInterval(interval), 61000);
     });
-    document.getElementById("noMoreProfiles").style.display = "none";
-  }
 
-  // render matches list
-  function renderMatchesList() {
-    const container = document.getElementById("matchesListContainer");
-    if (!container) return;
-    if (matches.length === 0) {
-      container.innerHTML = `<div class="card" style="text-align:center;">No matches yet. Swipe and like to find connections! ❤️</div>`;
-      return;
-    }
-    container.innerHTML = matches.map(m => `
-      <div class="match-item" data-matchid="${m.id}" style="cursor:pointer; margin-bottom: 12px; display: flex; align-items: center; gap: 12px; background: var(--tg-theme-secondary-bg-color); border-radius: 60px; padding: 8px 16px;">
-        <div class="avatar-small" style="width: 50px; height: 50px; font-size: 24px; background: #ffc3a0;"><i class="fas fa-user"></i></div>
-        <div style="flex:1;">
-          <strong>${m.name}</strong> <span style="font-size:12px;">${m.age}, ${m.city}</span>
-          <div style="font-size:12px; color: var(--tg-theme-hint-color);">${m.chatHistory.length > 1 ? "💬 New messages" : "Say hello!"}</div>
-        </div>
-        <i class="fas fa-comment"></i>
-      </div>
-    `).join('');
-    // attach click event
-    document.querySelectorAll('.match-item').forEach(el => {
-      const id = parseInt(el.getAttribute('data-matchid'));
-      el.addEventListener('click', () => openChat(id));
+    // Login logic
+    document.getElementById("doLoginBtn").addEventListener("click", () => {
+        const loginPhone = document.getElementById("loginPhone").value.trim();
+        const loginPwd = document.getElementById("loginPassword").value;
+        const user = users.find(u => u.phone === loginPhone && btoa(loginPwd) === u.passwordHash);
+        if (!user) {
+            alert("Invalid phone or password");
+            return;
+        }
+        activeSession = { userId: user.id, lastActive: Date.now() };
+        sessionStorage.setItem("activeSession", JSON.stringify(activeSession));
+        // start session timeout (1 hour)
+        if (sessionTimer) clearInterval(sessionTimer);
+        sessionTimer = setInterval(() => {
+            if (activeSession && (Date.now() - activeSession.lastActive) > 60 * 60 * 1000) {
+                alert("🔒 Session expired due to 1 hour inactivity. Please re-enter your password.");
+                logoutUser();
+                window.location.reload();
+            }
+        }, 30000);
+        // show dashboard
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("registerSection").style.display = "none";
+        document.getElementById("userDashboard").style.display = "block";
+        document.getElementById("dashboardName").innerText = user.name;
+        document.getElementById("dashboardPhone").innerText = user.phone;
+        document.getElementById("dashboardCountry").innerText = user.countryCode;
+        document.getElementById("dashboardAge").innerText = user.age;
+        document.getElementById("dashboardIdStatus").innerHTML = user.verifiedId ? "<span style='color:green'>✔ Verified</span>" : "⚠️ Pending";
+        if (user.photo) document.getElementById("dashboardPhoto").src = user.photo;
+        else document.getElementById("dashboardPhoto").src = "https://via.placeholder.com/100";
+        // activity update
+        document.addEventListener("click", () => { if(activeSession) activeSession.lastActive = Date.now(); sessionStorage.setItem("activeSession", JSON.stringify(activeSession)); });
+        document.addEventListener("keydown", () => { if(activeSession) activeSession.lastActive = Date.now(); sessionStorage.setItem("activeSession", JSON.stringify(activeSession)); });
     });
-  }
 
-  function openChat(matchId) {
-    const match = matches.find(m => m.id === matchId);
-    if (!match) return;
-    activeChatUserId = matchId;
-    document.getElementById("chatWithName").innerHTML = `<strong>${match.name}</strong>`;
-    document.getElementById("chatDetailPanel").style.display = "block";
-    document.getElementById("matchesListContainer").style.display = "none";
-    renderChatMessages(matchId);
-  }
-
-  function renderChatMessages(matchId) {
-    const match = matches.find(m => m.id === matchId);
-    if (!match) return;
-    const container = document.getElementById("chatMessagesArea");
-    if (!match.chatHistory) match.chatHistory = [];
-    container.innerHTML = match.chatHistory.map(msg => `
-      <div style="display: flex; justify-content: ${msg.sender === 'me' ? 'flex-end' : 'flex-start'}; margin-bottom: 8px;">
-        <div class="message-bubble" style="background: ${msg.sender === 'me' ? 'var(--tg-theme-button-color, #ff6a6a)' : '#eef2ff'}; color: ${msg.sender === 'me' ? 'white' : 'inherit'}">
-          ${msg.text}
-        </div>
-      </div>
-    `).join('');
-    container.scrollTop = container.scrollHeight;
-  }
-
-  function sendMessageToMatch(matchId, text) {
-    if (!text.trim()) return;
-    const match = matches.find(m => m.id === matchId);
-    if (match) {
-      match.chatHistory = match.chatHistory || [];
-      match.chatHistory.push({ sender: "me", text: text, timestamp: Date.now() });
-      saveMatchesToStorage();
-      renderChatMessages(matchId);
-      // simulate reply after 1 sec (for demo)
-      setTimeout(() => {
-        match.chatHistory.push({ sender: match.name, text: "😊 Thanks for messaging! Let's meet for coffee?", timestamp: Date.now() });
-        saveMatchesToStorage();
-        renderChatMessages(matchId);
-        renderMatchesList(); // update preview
-      }, 800);
-    }
-  }
-
-  // update profile UI
-  function updateProfileUI() {
-    if (!currentUser) return;
-    document.getElementById("profileNameDisplay").innerText = currentUser.name;
-    document.getElementById("profileCityAge").innerText = `${currentUser.city}, ${currentUser.age} yrs`;
-    document.getElementById("profileBio").innerText = currentUser.bio || "No bio yet";
-    document.getElementById("profileInterests").innerText = currentUser.interests || "Not specified";
-  }
-
-  // edit profile modal simulation
-  function editProfileFlow() {
-    const newBio = prompt("Edit your bio:", currentUser.bio);
-    if (newBio !== null) currentUser.bio = newBio;
-    const newInterests = prompt("Edit interests (comma separated):", currentUser.interests);
-    if (newInterests !== null) currentUser.interests = newInterests;
-    const newCity = prompt("City:", currentUser.city);
-    if (newCity !== null) currentUser.city = newCity;
-    updateProfileUI();
-    // save to localStorage
-    localStorage.setItem(`user_${currentUser.id}`, JSON.stringify(currentUser));
-  }
-
-  // Registration completion
-  function registerUser() {
-    const name = document.getElementById("regName").value.trim();
-    const age = parseInt(document.getElementById("regAge").value);
-    const gender = document.getElementById("regGender").value;
-    const city = document.getElementById("regCity").value.trim();
-    const bio = document.getElementById("regBio").value.trim();
-    const interests = document.getElementById("regInterests").value.trim();
-    if (!name || age < 18) {
-      alert("Please enter valid name and age (+18)");
-      return;
-    }
-    const newId = Math.floor(Date.now() / 1000);
-    currentUser = {
-      id: newId,
-      name: name,
-      age: age,
-      gender: gender,
-      city: city,
-      bio: bio || "Ready to meet new people!",
-      interests: interests || "Adventure, Music",
-      verified: true
-    };
-    localStorage.setItem(`user_${newId}`, JSON.stringify(currentUser));
-    localStorage.setItem("activeUserId", newId);
-    // generate other profiles excluding self
-    allProfiles = generateMockProfiles(newId);
-    currentSwipeIndex = 0;
-    // load matches from storage
-    loadMatchesFromStorage();
-    // switch to main app
-    document.getElementById("registerScreen").classList.remove("active");
-    document.getElementById("mainAppScreen").classList.add("active");
-    updateProfileUI();
-    loadNextSwipeCard();
-    // set active tab to swipe
-    setActiveTab('swipe');
-    // init telegram main button if needed
-    if (window.Telegram && Telegram.WebApp) {
-      Telegram.WebApp.ready();
-      Telegram.WebApp.expand();
-    }
-  }
-
-  // Tab switching logic
-  function setActiveTab(tabId) {
-    document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
-    document.getElementById(`${tabId}Tab`).style.display = 'block';
-    document.querySelectorAll('.tab-item').forEach(btn => btn.classList.remove('active'));
-    document.querySelector(`.tab-item[data-tab="${tabId}"]`).classList.add('active');
-    if (tabId === 'matches') {
-      document.getElementById("matchesListContainer").style.display = "block";
-      document.getElementById("chatDetailPanel").style.display = "none";
-      renderMatchesList();
-    }
-    if (tabId === 'profile') updateProfileUI();
-    if (tabId === 'swipe' && allProfiles.length && currentSwipeIndex >= allProfiles.length) {
-      document.getElementById("noMoreProfiles").style.display = "block";
-    }
-  }
-
-  // event listeners for tabs
-  function bindTabs() {
-    document.querySelectorAll('.tab-item').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const tab = btn.getAttribute('data-tab');
-        setActiveTab(tab);
-      });
+    // Update password
+    document.getElementById("updatePasswordBtn").addEventListener("click", () => {
+        if (!activeSession) return;
+        const newPwd = document.getElementById("newPasswordInput").value;
+        if (!newPwd || newPwd.length < 6) { alert("Password must be 6+ chars"); return; }
+        const userIndex = users.findIndex(u => u.id === activeSession.userId);
+        if (userIndex !== -1) {
+            users[userIndex].passwordHash = btoa(newPwd);
+            saveUsers();
+            alert("Password updated successfully. Please login again.");
+            logoutUser();
+        }
     });
-    document.getElementById("editProfileBtn")?.addEventListener("click", editProfileFlow);
-    document.getElementById("upgradePremiumBtn")?.addEventListener("click", () => {
-      alert("🔐 Telegram Dating Premium: Integration with Telebirr would open. Enjoy unlimited features!");
-    });
-    document.getElementById("backToMatchesBtn")?.addEventListener("click", () => {
-      document.getElementById("chatDetailPanel").style.display = "none";
-      document.getElementById("matchesListContainer").style.display = "block";
-      activeChatUserId = null;
-    });
-    document.getElementById("sendMsgBtn")?.addEventListener("click", () => {
-      const input = document.getElementById("chatInput");
-      if (activeChatUserId && input.value.trim()) {
-        sendMessageToMatch(activeChatUserId, input.value);
-        input.value = "";
-      } else if (!activeChatUserId) alert("No chat selected");
-    });
-    document.getElementById("verifyIdentityBtn")?.addEventListener("click", () => {
-      alert("✅ Verification request sent! Your profile gets a blue badge after review (Safety first)");
-    });
-  }
 
-  // Check if user already logged in via localStorage
-  function checkExistingUser() {
-    const savedId = localStorage.getItem("activeUserId");
-    if (savedId) {
-      const userData = localStorage.getItem(`user_${savedId}`);
-      if (userData) {
-        currentUser = JSON.parse(userData);
-        allProfiles = generateMockProfiles(currentUser.id);
-        currentSwipeIndex = 0;
-        loadMatchesFromStorage();
-        document.getElementById("registerScreen").classList.remove("active");
-        document.getElementById("mainAppScreen").classList.add("active");
-        updateProfileUI();
-        loadNextSwipeCard();
-        setActiveTab('swipe');
-        if (window.Telegram && Telegram.WebApp) Telegram.WebApp.ready();
-        return true;
-      }
+    function logoutUser() {
+        activeSession = null;
+        sessionStorage.removeItem("activeSession");
+        if(sessionTimer) clearInterval(sessionTimer);
+        document.getElementById("userDashboard").style.display = "none";
+        document.getElementById("registerSection").style.display = "block";
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("adminPanel").style.display = "none";
+        adminLogged = false;
     }
-    return false;
-  }
 
-  // initialize
-  function init() {
-    bindTabs();
-    document.getElementById("completeRegistrationBtn").addEventListener("click", registerUser);
-    if (!checkExistingUser()) {
-      // show registration and fill some demo values
-      document.getElementById("regName").value = "";
-      document.getElementById("regBio").value = "Looking for genuine connection, love hiking and Ethiopian coffee!";
-      document.getElementById("regInterests").value = "Travel, Music, Cinema";
+    document.getElementById("logoutUserBtn").addEventListener("click", logoutUser);
+
+    // Admin logic
+    document.getElementById("adminLoginLink").addEventListener("click", (e) => {
+        e.preventDefault();
+        const adminPhone = prompt("Enter Admin Phone Number:", "0906067696");
+        const adminPass = prompt("Admin Password:");
+        if (adminPhone === ADMIN_PHONE && btoa(adminPass) === ADMIN_PASSWORD_HASH) {
+            adminLogged = true;
+            renderAdminTable();
+            document.getElementById("registerSection").style.display = "none";
+            document.getElementById("loginSection").style.display = "none";
+            document.getElementById("userDashboard").style.display = "none";
+            document.getElementById("adminPanel").style.display = "block";
+        } else {
+            alert("Invalid admin credentials");
+        }
+    });
+
+    function renderAdminTable() {
+        const tbody = document.getElementById("adminUserList");
+        if (!tbody) return;
+        tbody.innerHTML = "";
+        users.forEach(user => {
+            const row = tbody.insertRow();
+            row.insertCell(0).innerText = user.name;
+            row.insertCell(1).innerText = user.phone;
+            row.insertCell(2).innerText = user.countryCode;
+            row.insertCell(3).innerText = user.email || "-";
+            row.insertCell(4).innerHTML = user.idDocument ? "<span class='badge'>ID uploaded</span>" : "❌";
+            row.insertCell(5).innerHTML = user.photo ? "<i class='fas fa-image'></i> yes" : "no";
+            row.insertCell(6).innerText = new Date(user.createdAt).toLocaleDateString();
+            const actions = row.insertCell(7);
+            const delBtn = document.createElement("button");
+            delBtn.innerText = "Delete";
+            delBtn.className = "btn-outline";
+            delBtn.style.padding = "4px 12px";
+            delBtn.onclick = () => {
+                if(confirm(`Delete user ${user.name}?`)){
+                    users = users.filter(u => u.id !== user.id);
+                    saveUsers();
+                    renderAdminTable();
+                }
+            };
+            actions.appendChild(delBtn);
+        });
     }
-  }
-  init();
+
+    document.getElementById("adminLogoutBtn").addEventListener("click", () => {
+        adminLogged = false;
+        document.getElementById("adminPanel").style.display = "none";
+        document.getElementById("registerSection").style.display = "block";
+    });
+
+    // navigation between login / register
+    document.getElementById("showLoginLink").addEventListener("click", (e) => {
+        e.preventDefault();
+        document.getElementById("registerSection").style.display = "none";
+        document.getElementById("loginSection").style.display = "block";
+    });
+    document.getElementById("backToRegisterLink").addEventListener("click", (e) => {
+        e.preventDefault();
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("registerSection").style.display = "block";
+    });
+
+    // password visibility toggles
+    function toggleVisibility(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        icon.addEventListener("click", () => {
+            const type = input.type === "password" ? "text" : "password";
+            input.type = type;
+            icon.classList.toggle("fa-eye-slash");
+        });
+    }
+    toggleVisibility("password", "toggleRegPwd");
+    toggleVisibility("confirmPwd", "toggleRegPwd");
+    toggleVisibility("loginPassword", "toggleLoginPwd");
+
+    // flatpickr DOB
+    flatpickr("#dob", {
+        dateFormat: "Y-m-d",
+        maxDate: "2006-01-01",
+        minDate: "1940-01-01",
+        defaultDate: "1995-01-01"
+    });
+
+    // photo preview
+    document.getElementById("profilePhotoFile").addEventListener("change", function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const preview = document.getElementById("photoPreview");
+                preview.innerHTML = `<img src="${ev.target.result}" class="photo-preview" />`;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Check existing session from sessionStorage
+    function checkExistingSession() {
+        const saved = sessionStorage.getItem("activeSession");
+        if (saved) {
+            try {
+                const sess = JSON.parse(saved);
+                const userExists = users.find(u => u.id === sess.userId);
+                if (userExists && (Date.now() - sess.lastActive) < 60 * 60 * 1000) {
+                    activeSession = sess;
+                    // simulate auto login
+                    document.getElementById("registerSection").style.display = "none";
+                    document.getElementById("loginSection").style.display = "none";
+                    document.getElementById("userDashboard").style.display = "block";
+                    const u = userExists;
+                    document.getElementById("dashboardName").innerText = u.name;
+                    document.getElementById("dashboardPhone").innerText = u.phone;
+                    document.getElementById("dashboardCountry").innerText = u.countryCode;
+                    document.getElementById("dashboardAge").innerText = u.age;
+                    document.getElementById("dashboardIdStatus").innerHTML = u.verifiedId ? "✔ Verified" : "⚠️ Pending";
+                    document.getElementById("dashboardPhoto").src = u.photo || "https://via.placeholder.com/100";
+                    // start timer again
+                    if(sessionTimer) clearInterval(sessionTimer);
+                    sessionTimer = setInterval(() => {
+                        if (activeSession && (Date.now() - activeSession.lastActive) > 60 * 60 * 1000) {
+                            alert("Session expired due to inactivity.");
+                            logoutUser();
+                            location.reload();
+                        }
+                    }, 30000);
+                    document.addEventListener("click", () => { if(activeSession) activeSession.lastActive = Date.now(); sessionStorage.setItem("activeSession", JSON.stringify(activeSession)); });
+                } else sessionStorage.removeItem("activeSession");
+            } catch(e) { sessionStorage.removeItem("activeSession"); }
+        }
+    }
+
+    loadUsers();
+    checkExistingSession();
 </script>
 </body>
 </html>
+```
