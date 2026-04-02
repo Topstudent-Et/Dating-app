@@ -3,325 +3,281 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Telegram Dating · Global Love Connection</title>
+    <title>Telegram Dating · Global Love</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            transition: background-color 0.2s ease, color 0.2s, border-color 0.2s;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            background: linear-gradient(145deg, #fef9f0 0%, #f2eef9 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
-        /* Light Theme (default) */
+        body.dark {
+            background: #0a0f1e;
+        }
+        /* Theme variables */
         :root {
-            --bg-primary: #f5f7fb;
-            --bg-secondary: #ffffff;
             --bg-card: #ffffff;
             --text-primary: #1e293b;
             --text-secondary: #475569;
             --border: #e2e8f0;
             --accent: #ff477e;
-            --accent-hover: #ff6b9d;
-            --shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.02);
-            --navbar-bg: rgba(255,255,255,0.85);
+            --input-bg: #ffffff;
         }
         body.dark {
-            --bg-primary: #0a0f1e;
-            --bg-secondary: #111827;
             --bg-card: #1e293b;
             --text-primary: #f1f5f9;
             --text-secondary: #cbd5e1;
-            --border: #2d3a5e;
-            --shadow: 0 10px 25px -5px rgba(0,0,0,0.4);
-            --navbar-bg: rgba(15,23,42,0.95);
+            --border: #334155;
+            --input-bg: #0f172a;
         }
-        .app-container {
-            max-width: 500px;
+        .container {
+            max-width: 450px;
+            width: 100%;
             margin: 0 auto;
-            background: var(--bg-primary);
-            min-height: 100vh;
-            position: relative;
-            box-shadow: 0 0 30px rgba(0,0,0,0.1);
         }
-        /* Glass navbar */
-        .navbar {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: var(--navbar-bg);
-            backdrop-filter: blur(12px);
-            padding: 14px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
+        .card {
+            background: var(--bg-card);
+            border-radius: 48px;
+            padding: 32px 28px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            border: 1px solid var(--border);
         }
         .logo {
-            font-size: 1.5rem;
+            font-size: 2rem;
             font-weight: 800;
             background: linear-gradient(135deg, #ff477e, #ff9f4a);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            text-align: center;
+            margin-bottom: 24px;
         }
-        .nav-icons {
-            display: flex;
-            gap: 18px;
-            align-items: center;
-        }
-        .icon-btn {
-            background: none;
-            border: none;
-            font-size: 1.3rem;
-            cursor: pointer;
+        h2 { text-align: center; margin-bottom: 24px; color: var(--text-primary); }
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 60px;
+            border: 1.5px solid var(--border);
+            background: var(--input-bg);
             color: var(--text-primary);
-        }
-        /* Bottom Navigation */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            max-width: 500px;
-            margin: 0 auto;
-            background: var(--navbar-bg);
-            backdrop-filter: blur(20px);
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 20px 24px;
-            border-top: 1px solid var(--border);
-            z-index: 100;
-        }
-        .nav-item {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            cursor: pointer;
-        }
-        .nav-item.active {
-            color: #ff477e;
-        }
-        .tab-content {
-            display: none;
-            padding: 20px 16px 80px;
-            animation: fade 0.2s;
-        }
-        .tab-content.active-tab {
-            display: block;
-        }
-        @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-        /* Cards */
-        .glass-card {
-            background: var(--bg-card);
-            border-radius: 28px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
+            margin-bottom: 16px;
+            outline: none;
         }
         .btn-primary {
             background: linear-gradient(105deg, #ff477e, #ff8c42);
             border: none;
             color: white;
-            font-weight: 600;
-            padding: 12px 24px;
+            font-weight: 700;
+            padding: 14px;
             border-radius: 60px;
-            cursor: pointer;
             width: 100%;
+            cursor: pointer;
+            font-size: 1rem;
         }
         .btn-outline {
             background: transparent;
-            border: 1.5px solid #ff477e;
+            border: 2px solid #ff477e;
             color: #ff477e;
-            padding: 10px 20px;
+            padding: 12px;
             border-radius: 60px;
+            font-weight: 600;
             cursor: pointer;
-        }
-        input, textarea, select {
             width: 100%;
-            padding: 12px 16px;
-            border-radius: 40px;
-            border: 1px solid var(--border);
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            margin-bottom: 12px;
+            text-align: center;
+            display: inline-block;
         }
-        /* Swipe Card */
-        .swipe-card {
-            background: var(--bg-card);
-            border-radius: 32px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-        }
-        .swipe-photo {
-            height: 380px;
-            background-size: cover;
-            background-position: center;
-        }
-        /* Post Feed */
-        .post-card {
-            background: var(--bg-card);
-            border-radius: 24px;
-            padding: 16px;
-            margin-bottom: 16px;
-            border: 1px solid var(--border);
-        }
-        .post-media {
-            margin: 12px 0;
-            border-radius: 20px;
-            overflow: hidden;
-        }
-        .post-media img, .post-media video {
-            width: 100%;
-            max-height: 300px;
-            object-fit: cover;
-        }
-        .action-buttons {
-            display: flex;
-            gap: 24px;
-            margin-top: 12px;
-        }
-        .action-btn {
-            background: none;
-            border: none;
+        .switch-link {
+            text-align: center;
+            margin-top: 20px;
             color: var(--text-secondary);
-            cursor: pointer;
-            font-size: 1.1rem;
         }
-        /* Modal */
-        .modal {
+        .switch-link a {
+            color: #ff477e;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .photo-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 16px;
+            display: block;
+            border: 3px solid #ff477e;
+        }
+        .country-code-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .country-code-row select {
+            width: 130px;
+            margin-bottom: 0;
+        }
+        .country-code-row input {
+            flex: 1;
+        }
+        .gender-group {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .gender-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .theme-toggle {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(8px);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-card {
+            top: 20px;
+            right: 20px;
             background: var(--bg-card);
-            border-radius: 32px;
-            padding: 28px;
-            width: 90%;
-            max-width: 380px;
-        }
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .chat-message {
-            background: var(--bg-secondary);
-            border-radius: 20px;
-            padding: 10px;
-            margin: 8px 0;
-        }
-        hr {
-            border-color: var(--border);
-            margin: 12px 0;
-        }
-        /* Theme toggle specific */
-        .theme-toggle-btn {
-            background: var(--bg-secondary);
             border: 1px solid var(--border);
-            border-radius: 30px;
-            padding: 6px 12px;
+            border-radius: 40px;
+            padding: 8px 16px;
             cursor: pointer;
+            z-index: 100;
         }
+        /* Live indicator */
+        .live-badge {
+            background: #ff3b6f;
+            color: white;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 40px;
+            display: inline-block;
+            margin-left: 8px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
-<div class="app-container">
-    <!-- Navbar -->
-    <div class="navbar">
+<div class="container">
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeToggleBtn"><i class="fas fa-moon"></i> <span id="themeText">Dark</span></button>
+
+    <!-- LOGIN CARD (separate) -->
+    <div id="loginCard" class="card">
         <div class="logo">💕 Telegram Dating</div>
-        <div class="nav-icons">
-            <button class="icon-btn" id="themeToggleBtn"><i class="fas fa-moon"></i></button>
-            <button class="icon-btn" id="notificationIcon"><i class="fas fa-bell"></i></button>
+        <h2>Welcome Back</h2>
+        <input type="text" id="loginPhone" placeholder="Phone (with country code, e.g., +251912345678)">
+        <input type="password" id="loginPassword" placeholder="Password">
+        <button id="doLoginBtn" class="btn-primary">Log In</button>
+        <div class="switch-link">Don't have an account? <a href="#" id="showSignupBtn">Sign Up</a></div>
+        <p style="text-align:center; font-size:12px; margin-top:20px;">© 2026 Telegram Dating — Live & Global</p>
+    </div>
+
+    <!-- SIGNUP CARD (separate) -->
+    <div id="signupCard" class="card hidden">
+        <div class="logo">💕 Telegram Dating</div>
+        <h2>Create Account</h2>
+        
+        <!-- Photo Upload -->
+        <div style="text-align:center;">
+            <img id="signupPhotoPreview" class="photo-preview" src="https://randomuser.me/api/portraits/women/68.jpg" alt="Preview">
+            <input type="file" id="signupPhoto" accept="image/*" style="display:none">
+            <button type="button" id="uploadPhotoBtn" class="btn-outline" style="width:auto; padding:8px 20px; margin-bottom:16px;"><i class="fas fa-camera"></i> Upload Photo</button>
         </div>
+        
+        <input type="text" id="signupName" placeholder="Full Name">
+        
+        <!-- Gender Selection -->
+        <div class="gender-group">
+            <label><input type="radio" name="gender" value="Female"> Female</label>
+            <label><input type="radio" name="gender" value="Male"> Male</label>
+            <label><input type="radio" name="gender" value="Non-binary"> Non-binary</label>
+        </div>
+        
+        <!-- Country Code + Phone (all countries) -->
+        <div class="country-code-row">
+            <select id="countryCodeSelect">
+                <option value="+93">🇦🇫 +93 Afghanistan</option><option value="+355">🇦🇱 +355 Albania</option><option value="+213">🇩🇿 +213 Algeria</option>
+                <option value="+376">🇦🇩 +376 Andorra</option><option value="+244">🇦🇴 +244 Angola</option><option value="+54">🇦🇷 +54 Argentina</option>
+                <option value="+374">🇦🇲 +374 Armenia</option><option value="+61">🇦🇺 +61 Australia</option><option value="+43">🇦🇹 +43 Austria</option>
+                <option value="+994">🇦🇿 +994 Azerbaijan</option><option value="+973">🇧🇭 +973 Bahrain</option><option value="+880">🇧🇩 +880 Bangladesh</option>
+                <option value="+375">🇧🇾 +375 Belarus</option><option value="+32">🇧🇪 +32 Belgium</option><option value="+591">🇧🇴 +591 Bolivia</option>
+                <option value="+387">🇧🇦 +387 Bosnia</option><option value="+55">🇧🇷 +55 Brazil</option><option value="+359">🇧🇬 +359 Bulgaria</option>
+                <option value="+855">🇰🇭 +855 Cambodia</option><option value="+1">🇨🇦 +1 Canada</option><option value="+56">🇨🇱 +56 Chile</option>
+                <option value="+86">🇨🇳 +86 China</option><option value="+57">🇨🇴 +57 Colombia</option><option value="+506">🇨🇷 +506 Costa Rica</option>
+                <option value="+385">🇭🇷 +385 Croatia</option><option value="+53">🇨🇺 +53 Cuba</option><option value="+420">🇨🇿 +420 Czech</option>
+                <option value="+45">🇩🇰 +45 Denmark</option><option value="+593">🇪🇨 +593 Ecuador</option><option value="+20">🇪🇬 +20 Egypt</option>
+                <option value="+503">🇸🇻 +503 El Salvador</option><option value="+372">🇪🇪 +372 Estonia</option><option value="+251">🇪🇹 +251 Ethiopia</option>
+                <option value="+679">🇫🇯 +679 Fiji</option><option value="+358">🇫🇮 +358 Finland</option><option value="+33">🇫🇷 +33 France</option>
+                <option value="+241">🇬🇦 +241 Gabon</option><option value="+220">🇬🇲 +220 Gambia</option><option value="+995">🇬🇪 +995 Georgia</option>
+                <option value="+49">🇩🇪 +49 Germany</option><option value="+233">🇬🇭 +233 Ghana</option><option value="+30">🇬🇷 +30 Greece</option>
+                <option value="+502">🇬🇹 +502 Guatemala</option><option value="+224">🇬🇳 +224 Guinea</option><option value="+509">🇭🇹 +509 Haiti</option>
+                <option value="+504">🇭🇳 +504 Honduras</option><option value="+36">🇭🇺 +36 Hungary</option><option value="+354">🇮🇸 +354 Iceland</option>
+                <option value="+91">🇮🇳 +91 India</option><option value="+62">🇮🇩 +62 Indonesia</option><option value="+98">🇮🇷 +98 Iran</option>
+                <option value="+964">🇮🇶 +96 Iraq</option><option value="+353">🇮🇪 +353 Ireland</option><option value="+972">🇮🇱 +972 Israel</option>
+                <option value="+39">🇮🇹 +39 Italy</option><option value="+81">🇯🇵 +81 Japan</option><option value="+962">🇯🇴 +962 Jordan</option>
+                <option value="+7">🇰🇿 +7 Kazakhstan</option><option value="+254">🇰🇪 +254 Kenya</option><option value="+965">🇰🇼 +965 Kuwait</option>
+                <option value="+996">🇰🇬 +996 Kyrgyzstan</option><option value="+856">🇱🇦 +856 Laos</option><option value="+371">🇱🇻 +371 Latvia</option>
+                <option value="+961">🇱🇧 +961 Lebanon</option><option value="+218">🇱🇾 +218 Libya</option><option value="+423">🇱🇮 +423 Liechtenstein</option>
+                <option value="+370">🇱🇹 +370 Lithuania</option><option value="+352">🇱🇺 +352 Luxembourg</option><option value="+389">🇲🇰 +389 Macedonia</option>
+                <option value="+261">🇲🇬 +261 Madagascar</option><option value="+265">🇲🇼 +265 Malawi</option><option value="+60">🇲🇾 +60 Malaysia</option>
+                <option value="+960">🇲🇻 +960 Maldives</option><option value="+223">🇲🇱 +223 Mali</option><option value="+356">🇲🇹 +356 Malta</option>
+                <option value="+52">🇲🇽 +52 Mexico</option><option value="+373">🇲🇩 +373 Moldova</option><option value="+377">🇲🇨 +377 Monaco</option>
+                <option value="+976">🇲🇳 +976 Mongolia</option><option value="+382">🇲🇪 +382 Montenegro</option><option value="+212">🇲🇦 +212 Morocco</option>
+                <option value="+258">🇲🇿 +258 Mozambique</option><option value="+95">🇲🇲 +95 Myanmar</option><option value="+264">🇳🇦 +264 Namibia</option>
+                <option value="+977">🇳🇵 +977 Nepal</option><option value="+31">🇳🇱 +31 Netherlands</option><option value="+64">🇳🇿 +64 New Zealand</option>
+                <option value="+505">🇳🇮 +505 Nicaragua</option><option value="+227">🇳🇪 +227 Niger</option><option value="+234">🇳🇬 +234 Nigeria</option>
+                <option value="+47">🇳🇴 +47 Norway</option><option value="+968">🇴🇲 +968 Oman</option><option value="+92">🇵🇰 +92 Pakistan</option>
+                <option value="+507">🇵🇦 +507 Panama</option><option value="+595">🇵🇾 +595 Paraguay</option><option value="+51">🇵🇪 +51 Peru</option>
+                <option value="+63">🇵🇭 +63 Philippines</option><option value="+48">🇵🇱 +48 Poland</option><option value="+351">🇵🇹 +351 Portugal</option>
+                <option value="+974">🇶🇦 +974 Qatar</option><option value="+40">🇷🇴 +40 Romania</option><option value="+7">🇷🇺 +7 Russia</option>
+                <option value="+250">🇷🇼 +250 Rwanda</option><option value="+966">🇸🇦 +966 Saudi Arabia</option><option value="+221">🇸🇳 +221 Senegal</option>
+                <option value="+381">🇷🇸 +381 Serbia</option><option value="+65">🇸🇬 +65 Singapore</option><option value="+421">🇸🇰 +421 Slovakia</option>
+                <option value="+386">🇸🇮 +386 Slovenia</option><option value="+27">🇿🇦 +27 South Africa</option><option value="+82">🇰🇷 +82 South Korea</option>
+                <option value="+34">🇪🇸 +34 Spain</option><option value="+94">🇱🇰 +94 Sri Lanka</option><option value="+249">🇸🇩 +249 Sudan</option>
+                <option value="+46">🇸🇪 +46 Sweden</option><option value="+41">🇨🇭 +41 Switzerland</option><option value="+963">🇸🇾 +963 Syria</option>
+                <option value="+886">🇹🇼 +886 Taiwan</option><option value="+255">🇹🇿 +255 Tanzania</option><option value="+66">🇹🇭 +66 Thailand</option>
+                <option value="+90">🇹🇷 +90 Turkey</option><option value="+256">🇺🇬 +256 Uganda</option><option value="+380">🇺🇦 +380 Ukraine</option>
+                <option value="+971">🇦🇪 +971 UAE</option><option value="+44">🇬🇧 +44 UK</option><option value="+1">🇺🇸 +1 USA</option>
+                <option value="+598">🇺🇾 +598 Uruguay</option><option value="+998">🇺🇿 +998 Uzbekistan</option><option value="+58">🇻🇪 +58 Venezuela</option>
+                <option value="+84">🇻🇳 +84 Vietnam</option><option value="+967">🇾🇪 +967 Yemen</option><option value="+260">🇿🇲 +260 Zambia</option><option value="+263">🇿🇼 +263 Zimbabwe</option>
+            </select>
+            <input type="tel" id="signupPhone" placeholder="Phone number">
+        </div>
+        
+        <input type="password" id="signupPassword" placeholder="Password (min 6 chars)">
+        <input type="text" id="signupDob" placeholder="Birth Date (YYYY-MM-DD)">
+        
+        <button id="doSignupBtn" class="btn-primary">Sign Up →</button>
+        <div class="switch-link">Already have an account? <a href="#" id="showLoginBtn">Log In</a></div>
     </div>
 
-    <!-- Tab Content: Swipe (Discover) -->
-    <div id="swipeTab" class="tab-content active-tab">
-        <div class="flex-between"><h3>✨ Discover Matches</h3><button id="filterBtn" class="btn-outline" style="padding:6px 16px;">Filter</button></div>
-        <div id="swipeContainer" style="margin-top: 20px;"></div>
-    </div>
-
-    <!-- Tab Content: Feed (Posts like TikTok) -->
-    <div id="feedTab" class="tab-content">
-        <div class="glass-card" style="padding:16px;">
-            <textarea id="postContent" rows="2" placeholder="Share your moment..."></textarea>
-            <div style="display:flex; gap:12px; margin-top:12px;">
-                <button id="uploadPhotoPostBtn" class="btn-outline" style="flex:1;"><i class="fas fa-image"></i> Photo</button>
-                <button id="uploadVideoPostBtn" class="btn-outline" style="flex:1;"><i class="fas fa-video"></i> Video</button>
-                <button id="publishPostBtn" class="btn-primary" style="width:auto; padding:10px 20px;">Post</button>
+    <!-- DASHBOARD (after login) -->
+    <div id="dashboard" class="card hidden">
+        <div class="flex-between" style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="logo" style="font-size:1.5rem;">💕 Telegram Dating</div>
+            <div><span id="liveIndicator" class="live-badge"><i class="fas fa-circle"></i> LIVE</span></div>
+        </div>
+        <div id="dashboardContent">
+            <h3>Welcome, <span id="welcomeName"></span>!</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Global dating • <span id="userCountry"></span></p>
+            <div style="margin: 20px 0;">
+                <button id="goLiveBtn" class="btn-primary"><i class="fas fa-video"></i> Go Live Now</button>
+                <button id="findMatchesBtn" class="btn-outline" style="margin-top:12px;">🔍 Find Matches</button>
             </div>
-            <input type="file" id="postPhotoFile" accept="image/*" style="display:none">
-            <input type="file" id="postVideoFile" accept="video/*" style="display:none">
+            <div id="liveStreamContainer" style="display:none; margin-top:20px;">
+                <div style="background:#000; border-radius:28px; padding:16px; text-align:center;">
+                    <i class="fas fa-video" style="font-size:48px; color:#ff477e;"></i>
+                    <p style="color:white;">🔴 You are live! Connecting with people worldwide...</p>
+                    <button id="stopLiveBtn" class="btn-outline" style="margin-top:12px;">End Live</button>
+                </div>
+            </div>
+            <div id="matchResult" style="margin-top:20px;"></div>
         </div>
-        <div id="postsFeed"></div>
-    </div>
-
-    <!-- Tab Content: Messages -->
-    <div id="messagesTab" class="tab-content">
-        <h3>💬 Conversations</h3>
-        <div id="messagesList"></div>
-        <div id="chatDetail" style="display:none; margin-top:16px;">
-            <div class="flex-between"><button id="backToMessages" class="btn-outline">← Back</button><span id="chatUserName"></span></div>
-            <div id="chatMessagesArea" style="height:300px; overflow-y:auto; margin:12px 0;"></div>
-            <div style="display:flex; gap:8px;"><input type="text" id="chatInput" placeholder="Type..."><button id="sendChatMsgBtn" class="btn-primary" style="width:auto;">Send</button></div>
-        </div>
-    </div>
-
-    <!-- Tab Content: Profile -->
-    <div id="profileTab" class="tab-content">
-        <div class="glass-card" style="text-align:center;">
-            <img id="profilePhoto" src="https://randomuser.me/api/portraits/women/68.jpg" style="width:100px;height:100px;border-radius:50%;object-fit:cover;">
-            <h3 id="profileName">User</h3>
-            <p id="profileBio">Love to travel and meet new people</p>
-            <button id="editProfileBtn" class="btn-outline">Edit Profile</button>
-            <button id="upgradeVipBtn" class="btn-primary" style="margin-top:12px;">👑 Upgrade VIP</button>
-            <hr>
-            <div class="flex-between"><span>💰 Coins: <span id="coinBalance">100</span></span><button id="buyCoinsBtn" class="btn-outline" style="padding:4px 12px;">Buy</button></div>
-            <button id="logoutBtn" class="btn-outline" style="margin-top:12px; border-color:#ff477e;">Logout</button>
-        </div>
-    </div>
-
-    <!-- Bottom Navigation -->
-    <div class="bottom-nav">
-        <button class="nav-item active" data-tab="swipe"><i class="fas fa-fire"></i><span>Discover</span></button>
-        <button class="nav-item" data-tab="feed"><i class="fas fa-play-circle"></i><span>Feed</span></button>
-        <button class="nav-item" data-tab="messages"><i class="fas fa-comment-dots"></i><span>Chats</span></button>
-        <button class="nav-item" data-tab="profile"><i class="fas fa-user"></i><span>Profile</span></button>
-    </div>
-</div>
-
-<!-- Auth Modal -->
-<div id="authModal" class="modal">
-    <div class="modal-card">
-        <h2 style="text-align:center;">💕 Telegram Dating</h2>
-        <p style="text-align:center;">Sign up to find love worldwide</p>
-        <input type="text" id="regName" placeholder="Full Name">
-        <input type="tel" id="regPhone" placeholder="Phone (with country code)">
-        <input type="password" id="regPassword" placeholder="Password">
-        <input type="text" id="regDob" placeholder="Birth Date (YYYY-MM-DD)">
-        <button id="registerBtn" class="btn-primary">Register / Login</button>
-        <p style="font-size:12px; text-align:center; margin-top:12px;">© 2026 Telegram Dating — Global Love</p>
+        <button id="logoutDashBtn" class="btn-outline" style="margin-top:30px;">Logout</button>
+        <p style="text-align:center; font-size:11px; margin-top:20px;">© 2026 Telegram Dating — Live Global Community</p>
     </div>
 </div>
 
@@ -329,256 +285,191 @@
     // ---------- GLOBAL STATE ----------
     let currentUser = null;
     let users = [];
-    let videos = [];       // posts (video/photo)
-    let matches = [];      // matched user ids
-    let messages = [];
-    let notifications = [];
-    let currentChatWith = null;
+    let isLive = false;
 
-    // Load/Save
-    function saveData() {
-        localStorage.setItem("td_users", JSON.stringify(users));
-        localStorage.setItem("td_posts", JSON.stringify(videos));
-        localStorage.setItem("td_matches", JSON.stringify(matches));
-        localStorage.setItem("td_messages", JSON.stringify(messages));
-        localStorage.setItem("td_notifications", JSON.stringify(notifications));
-        if(currentUser) localStorage.setItem("td_currentUser", JSON.stringify(currentUser));
-    }
-    function loadData() {
-        const u = localStorage.getItem("td_users");
-        if(u) users = JSON.parse(u);
-        const p = localStorage.getItem("td_posts");
-        if(p) videos = JSON.parse(p);
-        const m = localStorage.getItem("td_matches");
-        if(m) matches = JSON.parse(m);
-        const msg = localStorage.getItem("td_messages");
-        if(msg) messages = JSON.parse(msg);
-        const n = localStorage.getItem("td_notifications");
-        if(n) notifications = JSON.parse(n);
-        const cu = localStorage.getItem("td_currentUser");
-        if(cu) currentUser = JSON.parse(cu);
-        if(users.length === 0) {
-            users.push({ id: 1, name: "Emma", phone: "+251911111111", password: "123", dob: "1995-01-01", bio: "Adventure seeker", photo: "https://randomuser.me/api/portraits/women/1.jpg", coins: 100, vip: false });
-            users.push({ id: 2, name: "Liam", phone: "+251922222222", password: "123", dob: "1992-05-12", bio: "Coffee lover", photo: "https://randomuser.me/api/portraits/men/2.jpg", coins: 80, vip: false });
-            users.push({ id: 3, name: "Sofia", phone: "+251933333333", password: "123", dob: "1998-03-22", bio: "Dancer 💃", photo: "https://randomuser.me/api/portraits/women/3.jpg", coins: 120, vip: true });
-            saveData();
-        }
-        if(videos.length === 0) {
-            videos.push({ id: 101, userId: 1, mediaType: "video", mediaUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", caption: "Sunset vibes 🔥", likes: 45, comments: [], shares: 0, timestamp: Date.now() });
-            videos.push({ id: 102, userId: 2, mediaType: "image", mediaUrl: "https://picsum.photos/id/29/400/300", caption: "Nature escape 🌿", likes: 32, comments: [], shares: 0, timestamp: Date.now() });
-            saveData();
+    // Load/Save users
+    function loadUsers() {
+        const stored = localStorage.getItem("td_global_users");
+        if(stored) users = JSON.parse(stored);
+        else {
+            users = [];
+            // demo users
+            users.push({ id: 1, name: "Emma", phone: "+251911111111", password: "123", gender: "Female", dob: "1995-01-01", photo: "https://randomuser.me/api/portraits/women/1.jpg", countryCode: "+251", bio: "Love travel" });
+            users.push({ id: 2, name: "Liam", phone: "+1 555123456", password: "123", gender: "Male", dob: "1992-05-12", photo: "https://randomuser.me/api/portraits/men/2.jpg", countryCode: "+1", bio: "Coffee lover" });
+            saveUsers();
         }
     }
+    function saveUsers() { localStorage.setItem("td_global_users", JSON.stringify(users)); }
 
-    // Helper functions
-    function addNotification(userId, text) {
-        notifications.push({ id: Date.now(), userId, text, read: false, createdAt: Date.now() });
-        saveData();
+    // Helper: get country name from code
+    function getCountryFromCode(code) {
+        const map = { "+251":"Ethiopia", "+1":"USA", "+44":"UK", "+91":"India", "+86":"China", "+55":"Brazil", "+81":"Japan", "+49":"Germany", "+33":"France", "+254":"Kenya" };
+        return map[code] || "Global";
     }
 
-    function renderSwipe() {
-        const otherUsers = users.filter(u => u.id !== currentUser?.id && !matches.includes(u.id));
-        const container = document.getElementById("swipeContainer");
-        if(otherUsers.length === 0) { container.innerHTML = `<div class="glass-card">🎉 No more profiles! Check later.</div>`; return; }
-        const profile = otherUsers[0];
-        container.innerHTML = `
-            <div class="swipe-card">
-                <div class="swipe-photo" style="background-image: url('${profile.photo}');"></div>
-                <div style="padding:20px;">
-                    <h2>${profile.name}, ${new Date().getFullYear() - new Date(profile.dob).getFullYear()}</h2>
-                    <p>${profile.bio}</p>
-                    <div style="display:flex; gap:16px; margin-top:20px;">
-                        <button id="swipeLeftBtn" class="btn-outline" style="flex:1;">❌ Pass</button>
-                        <button id="swipeRightBtn" class="btn-primary" style="flex:1;">❤️ Like</button>
-                    </div>
-                </div>
+    // Signup logic
+    document.getElementById("doSignupBtn")?.addEventListener("click", () => {
+        const name = document.getElementById("signupName").value.trim();
+        const genderElem = document.querySelector('input[name="gender"]:checked');
+        const gender = genderElem ? genderElem.value : "Female";
+        const countryCode = document.getElementById("countryCodeSelect").value;
+        const phoneRaw = document.getElementById("signupPhone").value.trim();
+        const fullPhone = countryCode + phoneRaw;
+        const password = document.getElementById("signupPassword").value;
+        const dob = document.getElementById("signupDob").value;
+        const photoFile = document.getElementById("signupPhoto").files[0];
+        
+        if(!name || !phoneRaw || !password || !dob) { alert("Please fill all fields"); return; }
+        if(password.length < 6) { alert("Password min 6 chars"); return; }
+        if(users.find(u => u.phone === fullPhone)) { alert("Phone already registered. Please login."); return; }
+        
+        const reader = new FileReader();
+        const processSignup = (photoBase64) => {
+            const newUser = {
+                id: Date.now(),
+                name: name,
+                phone: fullPhone,
+                password: password,
+                gender: gender,
+                dob: dob,
+                photo: photoBase64 || "https://randomuser.me/api/portraits/women/68.jpg",
+                countryCode: countryCode,
+                bio: "New to Telegram Dating!",
+                coins: 100,
+                vip: false
+            };
+            users.push(newUser);
+            saveUsers();
+            alert("✅ Signup successful! Please login.");
+            showLogin();
+        };
+        if(photoFile) {
+            const fr = new FileReader();
+            fr.onload = (e) => processSignup(e.target.result);
+            fr.readAsDataURL(photoFile);
+        } else { processSignup(null); }
+    });
+
+    // Login logic
+    document.getElementById("doLoginBtn")?.addEventListener("click", () => {
+        const loginPhone = document.getElementById("loginPhone").value.trim();
+        const loginPwd = document.getElementById("loginPassword").value;
+        const user = users.find(u => u.phone === loginPhone && u.password === loginPwd);
+        if(!user) { alert("Invalid credentials"); return; }
+        currentUser = user;
+        localStorage.setItem("td_current_session", JSON.stringify(currentUser));
+        showDashboard();
+    });
+
+    function showDashboard() {
+        document.getElementById("loginCard").classList.add("hidden");
+        document.getElementById("signupCard").classList.add("hidden");
+        document.getElementById("dashboard").classList.remove("hidden");
+        document.getElementById("welcomeName").innerText = currentUser.name;
+        document.getElementById("userCountry").innerText = getCountryFromCode(currentUser.countryCode);
+    }
+
+    function showLogin() {
+        document.getElementById("signupCard").classList.add("hidden");
+        document.getElementById("dashboard").classList.add("hidden");
+        document.getElementById("loginCard").classList.remove("hidden");
+    }
+    function showSignup() {
+        document.getElementById("loginCard").classList.add("hidden");
+        document.getElementById("dashboard").classList.add("hidden");
+        document.getElementById("signupCard").classList.remove("hidden");
+    }
+
+    // Find matches (swipe simulation)
+    document.getElementById("findMatchesBtn")?.addEventListener("click", () => {
+        const others = users.filter(u => u.id !== currentUser.id);
+        if(others.length === 0) { document.getElementById("matchResult").innerHTML = "<p>No other users yet.</p>"; return; }
+        const randomMatch = others[Math.floor(Math.random() * others.length)];
+        document.getElementById("matchResult").innerHTML = `
+            <div style="background:var(--bg-card); border-radius:32px; padding:20px; text-align:center; border:1px solid var(--border);">
+                <img src="${randomMatch.photo}" style="width:80px; height:80px; border-radius:50%; object-fit:cover;">
+                <h3>${randomMatch.name}, ${new Date().getFullYear() - new Date(randomMatch.dob).getFullYear()}</h3>
+                <p>${randomMatch.bio}</p>
+                <button id="likeMatchBtn" class="btn-primary" style="margin-top:12px;"><i class="fas fa-heart"></i> Like & Match</button>
             </div>
         `;
-        document.getElementById("swipeLeftBtn")?.addEventListener("click", () => { renderSwipe(); });
-        document.getElementById("swipeRightBtn")?.addEventListener("click", () => {
-            if(!matches.includes(profile.id)) {
-                matches.push(profile.id);
-                addNotification(profile.id, `${currentUser.name} liked you! 💕`);
-                // check mutual
-                const otherMatches = JSON.parse(localStorage.getItem("td_matches") || "[]");
-                if(otherMatches.includes(currentUser.id)) {
-                    alert(`🎉 It's a match with ${profile.name}! Start chatting.`);
-                    addNotification(profile.id, `You matched with ${currentUser.name}!`);
-                }
-                saveData();
-            }
-            renderSwipe();
+        document.getElementById("likeMatchBtn")?.addEventListener("click", () => {
+            alert(`💞 You matched with ${randomMatch.name}! Start chatting.`);
         });
-    }
+    });
 
-    function renderFeed() {
-        const feedDiv = document.getElementById("postsFeed");
-        if(!feedDiv) return;
-        const sorted = [...videos].reverse();
-        feedDiv.innerHTML = sorted.map(post => {
-            const user = users.find(u => u.id === post.userId);
-            return `
-                <div class="post-card" data-id="${post.id}">
-                    <div class="flex-between"><div><strong>${user?.name || "User"}</strong> <span style="font-size:11px;">${new Date(post.timestamp).toLocaleString()}</span></div></div>
-                    <p>${post.caption}</p>
-                    <div class="post-media">${post.mediaType === "image" ? `<img src="${post.mediaUrl}">` : `<video controls src="${post.mediaUrl}"></video>`}</div>
-                    <div class="action-buttons">
-                        <button class="action-btn like-post" data-id="${post.id}"><i class="far fa-heart"></i> ${post.likes}</button>
-                        <button class="action-btn comment-post" data-id="${post.id}"><i class="far fa-comment"></i> ${post.comments?.length || 0}</button>
-                        <button class="action-btn share-post" data-id="${post.id}"><i class="fas fa-share"></i></button>
-                        <button class="action-btn copy-post" data-id="${post.id}"><i class="fas fa-link"></i></button>
-                    </div>
+    // Live feature
+    document.getElementById("goLiveBtn")?.addEventListener("click", () => {
+        isLive = true;
+        document.getElementById("liveStreamContainer").style.display = "block";
+        document.getElementById("liveIndicator").innerHTML = '<i class="fas fa-circle"></i> LIVE NOW';
+        // Simulate live viewers
+        let viewers = 0;
+        const interval = setInterval(() => {
+            if(!isLive) { clearInterval(interval); return; }
+            viewers += Math.floor(Math.random() * 5);
+            document.getElementById("liveStreamContainer").innerHTML = `
+                <div style="background:#000; border-radius:28px; padding:16px; text-align:center;">
+                    <i class="fas fa-video" style="font-size:48px; color:#ff477e;"></i>
+                    <p style="color:white;">🔴 LIVE: ${currentUser.name} is streaming</p>
+                    <p style="color:#ffaa66;">👁️ ${viewers} watching worldwide</p>
+                    <button id="stopLiveBtn" class="btn-outline" style="margin-top:12px;">End Live</button>
                 </div>
             `;
-        }).join('');
-        attachPostEvents();
-    }
-
-    function attachPostEvents() {
-        document.querySelectorAll(".like-post").forEach(btn => {
-            btn.onclick = () => { const id = parseInt(btn.getAttribute("data-id")); const post = videos.find(p => p.id === id); if(post){ post.likes++; saveData(); renderFeed(); addNotification(post.userId, `${currentUser.name} liked your post`); } };
-        });
-        document.querySelectorAll(".comment-post").forEach(btn => {
-            btn.onclick = () => { const id = parseInt(btn.getAttribute("data-id")); const comment = prompt("Write a comment:"); if(comment){ const post = videos.find(p => p.id === id); if(post){ if(!post.comments) post.comments=[]; post.comments.push({userId:currentUser.id, text:comment}); saveData(); renderFeed(); addNotification(post.userId, `${currentUser.name} commented: "${comment.slice(0,30)}"`); } } };
-        });
-        document.querySelectorAll(".share-post").forEach(btn => {
-            btn.onclick = () => { alert("📤 Shared to feed!"); };
-        });
-        document.querySelectorAll(".copy-post").forEach(btn => {
-            btn.onclick = () => { const id = btn.getAttribute("data-id"); navigator.clipboard.writeText(`https://tdating.app/post/${id}`); alert("Link copied!"); };
-        });
-    }
-
-    function renderMessages() {
-        const container = document.getElementById("messagesList");
-        if(!container) return;
-        const myMatches = matches.filter(mid => users.find(u => u.id === mid));
-        if(myMatches.length === 0) { container.innerHTML = "<p>No matches yet. Swipe to connect!</p>"; return; }
-        container.innerHTML = myMatches.map(mid => {
-            const u = users.find(u => u.id === mid);
-            return `<div class="chat-message" data-uid="${u.id}" style="cursor:pointer; display:flex; justify-content:space-between;"><span><strong>${u.name}</strong></span><span><i class="fas fa-comment"></i></span></div>`;
-        }).join('');
-        document.querySelectorAll("[data-uid]").forEach(el => {
-            el.addEventListener("click", () => openChat(parseInt(el.getAttribute("data-uid"))));
-        });
-    }
-
-    function openChat(otherId) {
-        currentChatWith = otherId;
-        const other = users.find(u => u.id === otherId);
-        document.getElementById("chatUserName").innerText = other.name;
-        document.getElementById("messagesList").style.display = "none";
-        document.getElementById("chatDetail").style.display = "block";
-        loadChatMessages(otherId);
-    }
-
-    function loadChatMessages(otherId) {
-        const chatMessages = messages.filter(m => (m.from === currentUser.id && m.to === otherId) || (m.from === otherId && m.to === currentUser.id));
-        const container = document.getElementById("chatMessagesArea");
-        container.innerHTML = chatMessages.map(msg => `<div style="text-align:${msg.from === currentUser.id ? 'right' : 'left'}; margin:8px;"><span style="background:${msg.from === currentUser.id ? '#ff477e' : '#2c2c2c'}; padding:8px 14px; border-radius:20px; display:inline-block;">${msg.text}</span></div>`).join('');
-        container.scrollTop = container.scrollHeight;
-    }
-
-    function sendMessage(toId, text) {
-        if(!text.trim()) return;
-        messages.push({ id: Date.now(), from: currentUser.id, to: toId, text, timestamp: Date.now() });
-        saveData();
-        loadChatMessages(toId);
-        addNotification(toId, `New message from ${currentUser.name}`);
-    }
-
-    // Registration
-    document.getElementById("registerBtn")?.addEventListener("click", () => {
-        const name = document.getElementById("regName").value.trim();
-        const phone = document.getElementById("regPhone").value.trim();
-        const pass = document.getElementById("regPassword").value;
-        const dob = document.getElementById("regDob").value;
-        if(!name || !phone || !pass || !dob) { alert("Fill all fields"); return; }
-        let user = users.find(u => u.phone === phone && u.password === pass);
-        if(!user) {
-            user = { id: Date.now(), name, phone, password: pass, dob, bio: "New to Telegram Dating", photo: "https://randomuser.me/api/portraits/women/68.jpg", coins: 100, vip: false };
-            users.push(user);
-            saveData();
-            alert("Account created!");
-        } else { alert("Welcome back " + user.name); }
-        currentUser = user;
-        saveData();
-        document.getElementById("authModal").style.display = "none";
-        document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active-tab"));
-        document.getElementById("swipeTab").classList.add("active-tab");
-        renderSwipe();
-        renderFeed();
-        renderMessages();
-        document.getElementById("profileName").innerText = currentUser.name;
-        document.getElementById("profileBio").innerText = currentUser.bio;
-        document.getElementById("coinBalance").innerText = currentUser.coins;
-        document.getElementById("profilePhoto").src = currentUser.photo;
+            document.getElementById("stopLiveBtn")?.addEventListener("click", () => {
+                isLive = false;
+                document.getElementById("liveStreamContainer").style.display = "none";
+                document.getElementById("liveIndicator").innerHTML = '<i class="fas fa-circle"></i> LIVE';
+                alert("Live ended. Thanks for streaming!");
+            });
+        }, 3000);
+        document.getElementById("stopLiveBtn")?.addEventListener("click", () => { isLive = false; clearInterval(interval); });
     });
+
+    document.getElementById("logoutDashBtn")?.addEventListener("click", () => {
+        currentUser = null;
+        localStorage.removeItem("td_current_session");
+        showLogin();
+    });
+
+    // Photo preview for signup
+    document.getElementById("uploadPhotoBtn")?.addEventListener("click", () => document.getElementById("signupPhoto").click());
+    document.getElementById("signupPhoto")?.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if(file) {
+            const reader = new FileReader();
+            reader.onload = (ev) => { document.getElementById("signupPhotoPreview").src = ev.target.result; };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Switch between login/signup
+    document.getElementById("showSignupBtn")?.addEventListener("click", (e) => { e.preventDefault(); showSignup(); });
+    document.getElementById("showLoginBtn")?.addEventListener("click", (e) => { e.preventDefault(); showLogin(); });
 
     // Theme Toggle (Dark/Light)
     let isDark = false;
-    document.getElementById("themeToggleBtn").addEventListener("click", () => {
+    document.getElementById("themeToggleBtn")?.addEventListener("click", () => {
         isDark = !isDark;
         if(isDark) document.body.classList.add("dark");
         else document.body.classList.remove("dark");
         localStorage.setItem("td_theme", isDark ? "dark" : "light");
+        document.getElementById("themeText").innerText = isDark ? "Light" : "Dark";
     });
     const savedTheme = localStorage.getItem("td_theme");
-    if(savedTheme === "dark") { isDark = true; document.body.classList.add("dark"); }
+    if(savedTheme === "dark") { isDark = true; document.body.classList.add("dark"); document.getElementById("themeText").innerText = "Light"; }
+    else { document.getElementById("themeText").innerText = "Dark"; }
 
-    // Tab switching
-    document.querySelectorAll(".nav-item").forEach(btn => {
-        btn.addEventListener("click", () => {
-            document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            const tab = btn.getAttribute("data-tab");
-            document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active-tab"));
-            document.getElementById(`${tab}Tab`).classList.add("active-tab");
-            if(tab === "swipe") renderSwipe();
-            if(tab === "feed") renderFeed();
-            if(tab === "messages") { renderMessages(); document.getElementById("chatDetail").style.display = "none"; document.getElementById("messagesList").style.display = "block"; }
-            if(tab === "profile") { document.getElementById("profileName").innerText = currentUser?.name; document.getElementById("profileBio").innerText = currentUser?.bio; }
-        });
-    });
+    // Auto session restore
+    const savedSession = localStorage.getItem("td_current_session");
+    if(savedSession) {
+        currentUser = JSON.parse(savedSession);
+        const exists = users.find(u => u.id === currentUser.id);
+        if(exists) showDashboard();
+        else showLogin();
+    } else { showLogin(); }
 
-    // Post creation
-    let pendingMedia = null, pendingMediaType = null;
-    document.getElementById("uploadPhotoPostBtn")?.addEventListener("click", () => document.getElementById("postPhotoFile").click());
-    document.getElementById("uploadVideoPostBtn")?.addEventListener("click", () => document.getElementById("postVideoFile").click());
-    document.getElementById("postPhotoFile")?.addEventListener("change", (e) => { const f = e.target.files[0]; if(f){ const r = new FileReader(); r.onload = ev => { pendingMedia = ev.target.result; pendingMediaType = "image"; alert("Photo ready"); }; r.readAsDataURL(f); } });
-    document.getElementById("postVideoFile")?.addEventListener("change", (e) => { const f = e.target.files[0]; if(f){ const r = new FileReader(); r.onload = ev => { pendingMedia = ev.target.result; pendingMediaType = "video"; alert("Video ready"); }; r.readAsDataURL(f); } });
-    document.getElementById("publishPostBtn")?.addEventListener("click", () => {
-        const caption = document.getElementById("postContent").value;
-        if(!caption && !pendingMedia) { alert("Write something or add media"); return; }
-        const newPost = { id: Date.now(), userId: currentUser.id, mediaType: pendingMediaType || null, mediaUrl: pendingMedia || null, caption: caption || "Shared a moment", likes: 0, comments: [], shares: 0, timestamp: Date.now() };
-        videos.push(newPost);
-        saveData();
-        renderFeed();
-        document.getElementById("postContent").value = "";
-        pendingMedia = null; pendingMediaType = null;
-    });
-
-    // Messages
-    document.getElementById("sendChatMsgBtn")?.addEventListener("click", () => {
-        const input = document.getElementById("chatInput");
-        if(currentChatWith && input.value.trim()) { sendMessage(currentChatWith, input.value); input.value = ""; }
-    });
-    document.getElementById("backToMessages")?.addEventListener("click", () => {
-        document.getElementById("chatDetail").style.display = "none";
-        document.getElementById("messagesList").style.display = "block";
-        currentChatWith = null;
-    });
-
-    // VIP & Coins
-    document.getElementById("upgradeVipBtn")?.addEventListener("click", () => { if(currentUser){ currentUser.vip = true; alert("VIP Activated! Unlimited likes & gifts"); saveData(); } });
-    document.getElementById("buyCoinsBtn")?.addEventListener("click", () => { if(currentUser){ currentUser.coins += 500; alert("500 coins added! 💎"); saveData(); document.getElementById("coinBalance").innerText = currentUser.coins; } });
-    document.getElementById("logoutBtn")?.addEventListener("click", () => { currentUser = null; localStorage.removeItem("td_currentUser"); location.reload(); });
-    document.getElementById("notificationIcon")?.addEventListener("click", () => { alert(`🔔 You have ${notifications.filter(n => n.userId === currentUser?.id && !n.read).length} new notifications`); });
-
-    // Initial load
-    loadData();
-    if(!currentUser) document.getElementById("authModal").style.display = "flex";
-    else { document.getElementById("authModal").style.display = "none"; renderSwipe(); renderFeed(); renderMessages(); document.getElementById("profileName").innerText = currentUser.name; document.getElementById("profileBio").innerText = currentUser.bio; document.getElementById("coinBalance").innerText = currentUser.coins; document.getElementById("profilePhoto").src = currentUser.photo; }
+    loadUsers();
 </script>
 </body>
 </html>
