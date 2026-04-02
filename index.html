@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>World Dating · Light Theme</title>
+    <title>World Dating | Global Love Connection</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -12,8 +12,9 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Inter', sans-serif;
+            transition: background-color 0.2s ease, color 0.2s, border-color 0.2s;
         }
-        /* LIGHT THEME (default) */
+        /* Light Theme (default) */
         :root {
             --bg-body: #f8fafc;
             --bg-card: #ffffff;
@@ -24,12 +25,22 @@
             --accent-hover: #ff6b9d;
             --shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.02);
             --input-bg: #ffffff;
+            --navbar-bg: rgba(255,255,255,0.95);
+        }
+        body.dark {
+            --bg-body: #0a0f1e;
+            --bg-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --border: #2d3a5e;
+            --shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+            --input-bg: #0f172a;
+            --navbar-bg: rgba(15,23,42,0.95);
         }
         body {
             background: var(--bg-body);
             color: var(--text-primary);
         }
-        /* Layout */
         .app-container {
             max-width: 550px;
             margin: 0 auto;
@@ -40,7 +51,8 @@
         }
         /* Header */
         .header {
-            background: var(--bg-card);
+            background: var(--navbar-bg);
+            backdrop-filter: blur(12px);
             padding: 16px 20px;
             border-bottom: 1px solid var(--border);
             position: sticky;
@@ -58,6 +70,14 @@
             background-clip: text;
             color: transparent;
         }
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 6px 12px;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
         /* Bottom Navigation */
         .bottom-nav {
             position: fixed;
@@ -66,8 +86,8 @@
             right: 0;
             max-width: 550px;
             margin: 0 auto;
-            background: var(--bg-card);
-            backdrop-filter: blur(10px);
+            background: var(--navbar-bg);
+            backdrop-filter: blur(20px);
             display: flex;
             justify-content: space-around;
             padding: 10px 20px 24px;
@@ -85,19 +105,11 @@
             gap: 4px;
             cursor: pointer;
         }
-        .nav-item.active {
-            color: #ff477e;
-        }
-        .tab-content {
-            display: none;
-            padding: 20px 16px;
-            animation: fade 0.2s;
-        }
-        .tab-content.active-tab {
-            display: block;
-        }
+        .nav-item.active { color: #ff477e; }
+        .tab-content { display: none; padding: 20px 16px; animation: fade 0.2s; }
+        .tab-content.active-tab { display: block; }
         @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-        /* Cards & Forms */
+        /* Cards */
         .glass-card {
             background: var(--bg-card);
             border-radius: 28px;
@@ -143,176 +155,107 @@
             display: block;
             border: 2px solid #ff477e;
         }
-        .country-row {
-            display: flex;
-            gap: 10px;
-        }
-        .country-row select {
-            width: 130px;
-            margin-bottom: 0;
-        }
-        .post-card {
+        .country-row { display: flex; gap: 10px; }
+        .country-row select { width: 130px; margin-bottom: 0; }
+        .post-card, .match-card, .chat-item {
             background: var(--bg-card);
             border-radius: 24px;
             padding: 16px;
             margin-bottom: 16px;
             border: 1px solid var(--border);
         }
-        .post-media {
-            margin: 12px 0;
+        .post-media { margin: 12px 0; border-radius: 20px; overflow: hidden; }
+        .post-media img, .post-media video { width: 100%; max-height: 280px; object-fit: cover; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .notification-badge {
+            background: #ff477e;
+            color: white;
             border-radius: 20px;
-            overflow: hidden;
+            padding: 2px 8px;
+            font-size: 10px;
+            margin-left: 6px;
         }
-        .post-media img, .post-media video {
-            width: 100%;
-            max-height: 280px;
-            object-fit: cover;
+        .chat-message {
+            background: var(--bg-body);
+            border-radius: 20px;
+            padding: 10px;
+            margin: 8px 0;
         }
-        .match-card {
-            background: var(--bg-card);
-            border-radius: 24px;
-            padding: 16px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .avatar-sm {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .typing-indicator { font-size: 12px; color: #ff477e; font-style: italic; }
     </style>
 </head>
 <body>
 <div class="app-container">
-    <!-- Header -->
     <div class="header">
         <div class="logo">🌍 World Dating</div>
-        <i class="fas fa-heart" style="color:#ff477e;"></i>
+        <button class="theme-toggle" id="themeToggleBtn"><i class="fas fa-moon"></i> <span id="themeText">Dark</span></button>
     </div>
 
-    <!-- REGISTRATION MODAL (first time) -->
+    <!-- REGISTRATION MODAL -->
     <div id="registerModal" class="glass-card" style="margin:20px 16px; text-align:center;">
         <h2>Create Account</h2>
-        <div style="text-align:center;">
-            <img id="regPhotoPreview" class="photo-preview" src="https://randomuser.me/api/portraits/women/68.jpg">
-            <input type="file" id="regPhotoInput" accept="image/*" style="display:none">
-            <button id="uploadPhotoRegBtn" class="btn-outline" style="margin-bottom:12px;"><i class="fas fa-camera"></i> Upload Photo</button>
-        </div>
+        <div><img id="regPhotoPreview" class="photo-preview" src="https://randomuser.me/api/portraits/women/68.jpg"><input type="file" id="regPhotoInput" accept="image/*" style="display:none"><button id="uploadPhotoRegBtn" class="btn-outline" style="margin-bottom:12px;"><i class="fas fa-camera"></i> Upload Photo</button></div>
         <input type="text" id="regName" placeholder="Full Name">
-        <div class="country-row">
-            <select id="countryCodeSelect">
-                <option value="+93">🇦🇫 +93</option><option value="+355">🇦🇱 +355</option><option value="+213">🇩🇿 +213</option>
-                <option value="+376">🇦🇩 +376</option><option value="+244">🇦🇴 +244</option><option value="+54">🇦🇷 +54</option>
-                <option value="+374">🇦🇲 +374</option><option value="+61">🇦🇺 +61</option><option value="+43">🇦🇹 +43</option>
-                <option value="+994">🇦🇿 +994</option><option value="+973">🇧🇭 +973</option><option value="+880">🇧🇩 +880</option>
-                <option value="+375">🇧🇾 +375</option><option value="+32">🇧🇪 +32</option><option value="+591">🇧🇴 +591</option>
-                <option value="+387">🇧🇦 +387</option><option value="+55">🇧🇷 +55</option><option value="+359">🇧🇬 +359</option>
-                <option value="+855">🇰🇭 +855</option><option value="+1">🇨🇦 +1</option><option value="+56">🇨🇱 +56</option>
-                <option value="+86">🇨🇳 +86</option><option value="+57">🇨🇴 +57</option><option value="+506">🇨🇷 +506</option>
-                <option value="+385">🇭🇷 +385</option><option value="+53">🇨🇺 +53</option><option value="+420">🇨🇿 +420</option>
-                <option value="+45">🇩🇰 +45</option><option value="+593">🇪🇨 +593</option><option value="+20">🇪🇬 +20</option>
-                <option value="+503">🇸🇻 +503</option><option value="+372">🇪🇪 +372</option><option value="+251">🇪🇹 +251</option>
-                <option value="+679">🇫🇯 +679</option><option value="+358">🇫🇮 +358</option><option value="+33">🇫🇷 +33</option>
-                <option value="+241">🇬🇦 +241</option><option value="+220">🇬🇲 +220</option><option value="+995">🇬🇪 +995</option>
-                <option value="+49">🇩🇪 +49</option><option value="+233">🇬🇭 +233</option><option value="+30">🇬🇷 +30</option>
-                <option value="+502">🇬🇹 +502</option><option value="+224">🇬🇳 +224</option><option value="+509">🇭🇹 +509</option>
-                <option value="+504">🇭🇳 +504</option><option value="+36">🇭🇺 +36</option><option value="+354">🇮🇸 +354</option>
-                <option value="+91">🇮🇳 +91</option><option value="+62">🇮🇩 +62</option><option value="+98">🇮🇷 +98</option>
-                <option value="+964">🇮🇶 +964</option><option value="+353">🇮🇪 +353</option><option value="+972">🇮🇱 +972</option>
-                <option value="+39">🇮🇹 +39</option><option value="+81">🇯🇵 +81</option><option value="+962">🇯🇴 +962</option>
-                <option value="+7">🇰🇿 +7</option><option value="+254">🇰🇪 +254</option><option value="+965">🇰🇼 +965</option>
-                <option value="+996">🇰🇬 +996</option><option value="+856">🇱🇦 +856</option><option value="+371">🇱🇻 +371</option>
-                <option value="+961">🇱🇧 +961</option><option value="+218">🇱🇾 +218</option><option value="+423">🇱🇮 +423</option>
-                <option value="+370">🇱🇹 +370</option><option value="+352">🇱🇺 +352</option><option value="+389">🇲🇰 +389</option>
-                <option value="+261">🇲🇬 +261</option><option value="+265">🇲🇼 +265</option><option value="+60">🇲🇾 +60</option>
-                <option value="+960">🇲🇻 +960</option><option value="+223">🇲🇱 +223</option><option value="+356">🇲🇹 +356</option>
-                <option value="+52">🇲🇽 +52</option><option value="+373">🇲🇩 +373</option><option value="+377">🇲🇨 +377</option>
-                <option value="+976">🇲🇳 +976</option><option value="+382">🇲🇪 +382</option><option value="+212">🇲🇦 +212</option>
-                <option value="+258">🇲🇿 +258</option><option value="+95">🇲🇲 +95</option><option value="+264">🇳🇦 +264</option>
-                <option value="+977">🇳🇵 +977</option><option value="+31">🇳🇱 +31</option><option value="+64">🇳🇿 +64</option>
-                <option value="+505">🇳🇮 +505</option><option value="+227">🇳🇪 +227</option><option value="+234">🇳🇬 +234</option>
-                <option value="+47">🇳🇴 +47</option><option value="+968">🇴🇲 +968</option><option value="+92">🇵🇰 +92</option>
-                <option value="+507">🇵🇦 +507</option><option value="+595">🇵🇾 +595</option><option value="+51">🇵🇪 +51</option>
-                <option value="+63">🇵🇭 +63</option><option value="+48">🇵🇱 +48</option><option value="+351">🇵🇹 +351</option>
-                <option value="+974">🇶🇦 +974</option><option value="+40">🇷🇴 +40</option><option value="+7">🇷🇺 +7</option>
-                <option value="+250">🇷🇼 +250</option><option value="+966">🇸🇦 +966</option><option value="+221">🇸🇳 +221</option>
-                <option value="+381">🇷🇸 +381</option><option value="+65">🇸🇬 +65</option><option value="+421">🇸🇰 +421</option>
-                <option value="+386">🇸🇮 +386</option><option value="+27">🇿🇦 +27</option><option value="+82">🇰🇷 +82</option>
-                <option value="+34">🇪🇸 +34</option><option value="+94">🇱🇰 +94</option><option value="+249">🇸🇩 +249</option>
-                <option value="+46">🇸🇪 +46</option><option value="+41">🇨🇭 +41</option><option value="+963">🇸🇾 +963</option>
-                <option value="+886">🇹🇼 +886</option><option value="+255">🇹🇿 +255</option><option value="+66">🇹🇭 +66</option>
-                <option value="+90">🇹🇷 +90</option><option value="+256">🇺🇬 +256</option><option value="+380">🇺🇦 +380</option>
-                <option value="+971">🇦🇪 +971</option><option value="+44">🇬🇧 +44</option><option value="+1">🇺🇸 +1</option>
-                <option value="+598">🇺🇾 +598</option><option value="+998">🇺🇿 +998</option><option value="+58">🇻🇪 +58</option>
-                <option value="+84">🇻🇳 +84</option><option value="+967">🇾🇪 +967</option><option value="+260">🇿🇲 +260</option>
-                <option value="+263">🇿🇼 +263</option>
-            </select>
-            <input type="tel" id="regPhone" placeholder="Phone number">
-        </div>
-        <select id="regGender">
-            <option>Female</option><option>Male</option><option>Non-binary</option>
-        </select>
+        <div class="country-row"><select id="countryCodeSelect"><option value="+251">🇪🇹 +251 Ethiopia</option><option value="+1">🇺🇸 +1 USA</option><option value="+44">🇬🇧 +44 UK</option><option value="+91">🇮🇳 +91 India</option><option value="+86">🇨🇳 +86 China</option><option value="+55">🇧🇷 +55 Brazil</option><option value="+81">🇯🇵 +81 Japan</option><option value="+49">🇩🇪 +49 Germany</option><option value="+33">🇫🇷 +33 France</option><option value="+254">🇰🇪 +254 Kenya</option><option value="+27">🇿🇦 +27 SA</option></select><input type="tel" id="regPhone" placeholder="Phone number"></div>
+        <select id="regGender"><option>Female</option><option>Male</option><option>Non-binary</option></select>
         <input type="password" id="regPassword" placeholder="Password (min 6 chars)">
         <textarea id="regBio" rows="2" placeholder="Bio: Tell about yourself..."></textarea>
         <input type="text" id="regInterests" placeholder="Interests (e.g., Travel, Music, Coffee)">
         <button id="completeRegisterBtn" class="btn-primary">Start Dating →</button>
     </div>
 
-    <!-- MAIN DASHBOARD (hidden until registered) -->
+    <!-- MAIN APP -->
     <div id="mainApp" style="display:none;">
-        <!-- Bottom Navigation -->
         <div class="bottom-nav">
             <button class="nav-item active" data-tab="home"><i class="fas fa-home"></i><span>Home</span></button>
-            <button class="nav-item" data-tab="profile"><i class="fas fa-user"></i><span>Profile</span></button>
+            <button class="nav-item" data-tab="chat"><i class="fas fa-comment-dots"></i><span>Chat</span><span id="chatNotifBadge" style="display:none;" class="notification-badge">●</span></button>
             <button class="nav-item" data-tab="post"><i class="fas fa-plus-circle"></i><span>Post</span></button>
             <button class="nav-item" data-tab="match"><i class="fas fa-heart"></i><span>Match</span></button>
+            <button class="nav-item" data-tab="profile"><i class="fas fa-user"></i><span>Profile</span></button>
         </div>
 
         <!-- Home Tab (Feed) -->
-        <div id="homeTab" class="tab-content active-tab">
-            <h3>💬 Latest Moments</h3>
-            <div id="postsFeed"></div>
+        <div id="homeTab" class="tab-content active-tab"><h3>💬 Latest Moments</h3><div id="postsFeed"></div></div>
+
+        <!-- Chat Tab -->
+        <div id="chatTab" class="tab-content">
+            <h3>💬 Messages</h3>
+            <div id="chatsList"></div>
+            <div id="chatDetail" style="display:none;">
+                <div class="flex-between"><button id="backToChats" class="btn-outline">← Back</button><span id="chatUserName"></span></div>
+                <div id="chatMessagesArea" style="height:300px; overflow-y:auto; margin:12px 0;"></div>
+                <div class="flex-between" style="gap:8px;"><input type="text" id="chatInput" placeholder="Type a message..."><button id="sendChatMsgBtn" class="btn-primary" style="width:auto; padding:10px 18px;">Send</button></div>
+                <div id="typingIndicator" class="typing-indicator"></div>
+            </div>
+        </div>
+
+        <!-- Post Tab -->
+        <div id="postTab" class="tab-content">
+            <div class="glass-card"><textarea id="newPostCaption" rows="2" placeholder="Share your moment..."></textarea>
+            <div style="display:flex; gap:12px; margin:12px 0;"><button id="uploadPhotoPost" class="btn-outline"><i class="fas fa-image"></i> Photo</button><button id="uploadVideoPost" class="btn-outline"><i class="fas fa-video"></i> Video</button></div>
+            <input type="file" id="postPhotoFile" accept="image/*" style="display:none"><input type="file" id="postVideoFile" accept="video/*" style="display:none">
+            <div id="postMediaPreview"></div><button id="publishPostBtn" class="btn-primary">Publish</button></div>
+        </div>
+
+        <!-- Match Tab with Filters -->
+        <div id="matchTab" class="tab-content">
+            <div class="flex-between"><h3>✨ Discover</h3><button id="filterBtn" class="btn-outline" style="padding:6px 16px;"><i class="fas fa-sliders-h"></i> Filter</button></div>
+            <div id="filterPanel" style="display:none; background:var(--bg-card); border-radius:24px; padding:16px; margin-bottom:16px;">
+                <div class="flex-between"><label>Age: <input type="number" id="filterAgeMin" placeholder="Min" style="width:70px;"> - <input type="number" id="filterAgeMax" placeholder="Max" style="width:70px;"></label>
+                <select id="filterGender"><option>All</option><option>Female</option><option>Male</option></select>
+                <button id="applyFilterBtn" class="btn-primary" style="padding:8px;">Apply</button></div>
+            </div>
+            <div id="matchContainer"></div>
         </div>
 
         <!-- Profile Tab -->
         <div id="profileTab" class="tab-content">
             <div class="glass-card" style="text-align:center;">
-                <img id="profilePhotoImg" class="photo-preview" src="" style="width:100px;height:100px;">
-                <h3 id="profileName"></h3>
-                <p id="profilePhone"></p>
-                <p id="profileBioText"></p>
-                <p id="profileInterestsText"></p>
+                <img id="profilePhotoImg" class="photo-preview" style="width:100px;height:100px;"><h3 id="profileName"></h3>
+                <p id="profilePhone"></p><p id="profileBioText"></p><p id="profileInterestsText"></p>
                 <button id="editProfileBtn" class="btn-outline">Edit Profile</button>
+                <button id="upgradeVipBtn" class="btn-primary" style="margin-top:12px;">👑 Upgrade VIP</button>
             </div>
-        </div>
-
-        <!-- Post Tab (Create Post) -->
-        <div id="postTab" class="tab-content">
-            <div class="glass-card">
-                <textarea id="newPostCaption" rows="2" placeholder="Share your moment..."></textarea>
-                <div style="display:flex; gap:12px; margin:12px 0;">
-                    <button id="uploadPhotoPost" class="btn-outline"><i class="fas fa-image"></i> Photo</button>
-                    <button id="uploadVideoPost" class="btn-outline"><i class="fas fa-video"></i> Video</button>
-                </div>
-                <input type="file" id="postPhotoFile" accept="image/*" style="display:none">
-                <input type="file" id="postVideoFile" accept="video/*" style="display:none">
-                <div id="postMediaPreview"></div>
-                <button id="publishPostBtn" class="btn-primary">Publish</button>
-            </div>
-        </div>
-
-        <!-- Match Tab (Swipe) -->
-        <div id="matchTab" class="tab-content">
-            <h3>✨ Discover Matches</h3>
-            <div id="matchContainer"></div>
         </div>
     </div>
 </div>
@@ -323,29 +266,25 @@
     let users = [];
     let posts = [];
     let matches = [];
+    let messages = []; // { id, from, to, text, timestamp, seen }
+    let notifications = [];
+    let currentChatWith = null;
+    let typingTimeout = null;
 
-    // Load/Save localStorage
+    function saveAll() { localStorage.setItem("wd_users", JSON.stringify(users)); localStorage.setItem("wd_posts", JSON.stringify(posts)); localStorage.setItem("wd_messages", JSON.stringify(messages)); localStorage.setItem("wd_notifications", JSON.stringify(notifications)); }
     function loadData() {
-        const u = localStorage.getItem("wd_users");
-        if(u) users = JSON.parse(u);
-        const p = localStorage.getItem("wd_posts");
-        if(p) posts = JSON.parse(p);
-        if(users.length === 0) {
-            users.push({ id: 1, name: "Emma", phone: "+251911111111", password: "123", gender: "Female", bio: "Adventure lover", interests: "Travel, Music", photo: "https://randomuser.me/api/portraits/women/1.jpg", countryCode: "+251" });
-            users.push({ id: 2, name: "Liam", phone: "+1 555123456", password: "123", gender: "Male", bio: "Coffee geek", interests: "Coffee, Books", photo: "https://randomuser.me/api/portraits/men/2.jpg", countryCode: "+1" });
-        }
-        if(posts.length === 0) {
-            posts.push({ id: 101, userId: 1, mediaType: "image", mediaUrl: "https://picsum.photos/id/29/400/300", caption: "Sunset vibes 🌅", likes: 12, timestamp: Date.now() });
-        }
-        saveAll();
+        const u = localStorage.getItem("wd_users"); if(u) users = JSON.parse(u);
+        const p = localStorage.getItem("wd_posts"); if(p) posts = JSON.parse(p);
+        const m = localStorage.getItem("wd_messages"); if(m) messages = JSON.parse(m);
+        const n = localStorage.getItem("wd_notifications"); if(n) notifications = JSON.parse(n);
+        if(users.length === 0) { users.push({ id: 1, name: "Emma", phone: "+251911111111", password: "123", gender: "Female", bio: "Adventure lover", interests: "Travel, Music", photo: "https://randomuser.me/api/portraits/women/1.jpg", countryCode: "+251", vip: false }); users.push({ id: 2, name: "Liam", phone: "+1 555123456", password: "123", gender: "Male", bio: "Coffee geek", interests: "Coffee, Books", photo: "https://randomuser.me/api/portraits/men/2.jpg", countryCode: "+1", vip: false }); saveAll(); }
+        if(posts.length === 0) posts.push({ id: 101, userId: 1, mediaType: "image", mediaUrl: "https://picsum.photos/id/29/400/300", caption: "Sunset vibes 🌅", likes: 12, timestamp: Date.now() });
     }
-    function saveAll() {
-        localStorage.setItem("wd_users", JSON.stringify(users));
-        localStorage.setItem("wd_posts", JSON.stringify(posts));
-    }
+
+    function addNotification(userId, text, type) { notifications.push({ id: Date.now(), userId, text, type, read: false, createdAt: Date.now() }); saveAll(); renderNotifications(); }
 
     // Registration
-    document.getElementById("completeRegisterBtn").addEventListener("click", () => {
+    document.getElementById("completeRegisterBtn")?.addEventListener("click", () => {
         const name = document.getElementById("regName").value.trim();
         const countryCode = document.getElementById("countryCodeSelect").value;
         const phoneRaw = document.getElementById("regPhone").value.trim();
@@ -358,157 +297,67 @@
         if(!name || !phoneRaw || !password) { alert("Fill required fields"); return; }
         if(password.length < 6) { alert("Password min 6 chars"); return; }
         if(users.find(u => u.phone === fullPhone)) { alert("Phone already registered"); return; }
-        
-        const processReg = (photoBase64) => {
-            const newUser = {
-                id: Date.now(),
-                name: name,
-                phone: fullPhone,
-                password: password,
-                gender: gender,
-                bio: bio || "New to World Dating!",
-                interests: interests || "Exploring",
-                photo: photoBase64 || "https://randomuser.me/api/portraits/women/68.jpg",
-                countryCode: countryCode
-            };
-            users.push(newUser);
-            saveAll();
-            currentUser = newUser;
-            localStorage.setItem("wd_current", JSON.stringify(currentUser));
-            showMainApp();
-        };
-        if(photoFile) {
-            const reader = new FileReader();
-            reader.onload = (e) => processReg(e.target.result);
-            reader.readAsDataURL(photoFile);
-        } else { processReg(null); }
+        const processReg = (photoBase64) => { const newUser = { id: Date.now(), name, phone: fullPhone, password, gender, bio: bio || "New to World Dating!", interests: interests || "Exploring", photo: photoBase64 || "https://randomuser.me/api/portraits/women/68.jpg", countryCode, vip: false }; users.push(newUser); saveAll(); currentUser = newUser; localStorage.setItem("wd_current", JSON.stringify(currentUser)); showMainApp(); };
+        if(photoFile) { const reader = new FileReader(); reader.onload = (e) => processReg(e.target.result); reader.readAsDataURL(photoFile); } else processReg(null);
     });
 
     function showMainApp() {
         document.getElementById("registerModal").style.display = "none";
         document.getElementById("mainApp").style.display = "block";
-        renderProfile();
-        renderFeed();
-        renderMatch();
+        renderProfile(); renderFeed(); renderMatch(); renderChatsList(); renderNotifications();
     }
 
-    function renderProfile() {
-        if(!currentUser) return;
-        document.getElementById("profilePhotoImg").src = currentUser.photo;
-        document.getElementById("profileName").innerText = currentUser.name;
-        document.getElementById("profilePhone").innerHTML = `<i class="fas fa-phone"></i> ${currentUser.phone}`;
-        document.getElementById("profileBioText").innerHTML = `<i class="fas fa-comment"></i> ${currentUser.bio}`;
-        document.getElementById("profileInterestsText").innerHTML = `<i class="fas fa-tag"></i> ${currentUser.interests}`;
-    }
+    function renderProfile() { if(!currentUser) return; document.getElementById("profilePhotoImg").src = currentUser.photo; document.getElementById("profileName").innerText = currentUser.name; document.getElementById("profilePhone").innerHTML = `<i class="fas fa-phone"></i> ${currentUser.phone}`; document.getElementById("profileBioText").innerHTML = `<i class="fas fa-comment"></i> ${currentUser.bio}`; document.getElementById("profileInterestsText").innerHTML = `<i class="fas fa-tag"></i> ${currentUser.interests}`; }
+    function renderFeed() { const feedDiv = document.getElementById("postsFeed"); if(!feedDiv) return; const sorted = [...posts].reverse(); feedDiv.innerHTML = sorted.map(post => { const author = users.find(u => u.id === post.userId); return `<div class="post-card"><div class="flex-between"><div><strong>${author?.name || "User"}</strong><span style="font-size:11px; margin-left:8px;">${new Date(post.timestamp).toLocaleString()}</span></div></div><p>${post.caption}</p><div class="post-media">${post.mediaType === "image" ? `<img src="${post.mediaUrl}">` : (post.mediaType === "video" ? `<video controls src="${post.mediaUrl}"></video>` : "")}</div><div class="flex-between"><span><i class="far fa-heart like-post" data-id="${post.id}"></i> ${post.likes || 0}</span><span><i class="far fa-comment"></i> Comment</span></div></div>`; }).join(''); attachLikeEvents(); }
+    function attachLikeEvents() { document.querySelectorAll(".like-post").forEach(btn => { btn.onclick = () => { const id = parseInt(btn.getAttribute("data-id")); const post = posts.find(p => p.id === id); if(post) { post.likes++; saveAll(); renderFeed(); addNotification(post.userId, `${currentUser.name} liked your post`, "like"); } }; }); }
 
-    function renderFeed() {
-        const feedDiv = document.getElementById("postsFeed");
-        if(!feedDiv) return;
-        const sorted = [...posts].reverse();
-        feedDiv.innerHTML = sorted.map(post => {
-            const author = users.find(u => u.id === post.userId);
-            return `
-                <div class="post-card">
-                    <div class="flex-between"><div><strong>${author?.name || "User"}</strong><span style="font-size:11px; margin-left:8px;">${new Date(post.timestamp).toLocaleString()}</span></div></div>
-                    <p>${post.caption}</p>
-                    <div class="post-media">${post.mediaType === "image" ? `<img src="${post.mediaUrl}">` : (post.mediaType === "video" ? `<video controls src="${post.mediaUrl}"></video>` : "")}</div>
-                    <div class="flex-between"><span><i class="far fa-heart"></i> ${post.likes || 0}</span><span><i class="far fa-comment"></i> Comment</span></div>
-                </div>
-            `;
-        }).join('');
-    }
+    // Match with Filters
+    let filters = { ageMin: 18, ageMax: 99, gender: "All" };
+    function getAge(dobStr) { if(!dobStr) return 25; const birth = new Date(dobStr); return Math.floor((Date.now() - birth) / 31557600000); }
+    function renderMatch() { let others = users.filter(u => u.id !== currentUser?.id && !matches.includes(u.id)); if(filters.gender !== "All") others = others.filter(u => u.gender === filters.gender); const container = document.getElementById("matchContainer"); if(others.length === 0) { container.innerHTML = "<div class='glass-card'>No more profiles. Adjust filters!</div>"; return; } const p = others[0]; container.innerHTML = `<div class="glass-card" style="text-align:center;"><img src="${p.photo}" style="width:120px;height:120px;border-radius:50%;object-fit:cover;"><h3>${p.name}</h3><p>${p.bio}</p><div style="display:flex; gap:16px; margin-top:16px;"><button id="passBtn" class="btn-outline">❌ Pass</button><button id="likeBtn" class="btn-primary">❤️ Like</button></div></div>`; document.getElementById("passBtn")?.addEventListener("click", () => renderMatch()); document.getElementById("likeBtn")?.addEventListener("click", () => { if(!matches.includes(p.id)) matches.push(p.id); addNotification(p.id, `${currentUser.name} liked you! 💕`, "like"); if(users.find(u => u.id === p.id && matches.includes(currentUser.id))) alert(`🎉 It's a match with ${p.name}! Start chatting.`); else alert(`❤️ You liked ${p.name}!`); renderMatch(); }); }
+    document.getElementById("filterBtn")?.addEventListener("click", () => { const panel = document.getElementById("filterPanel"); panel.style.display = panel.style.display === "none" ? "block" : "none"; });
+    document.getElementById("applyFilterBtn")?.addEventListener("click", () => { filters.ageMin = parseInt(document.getElementById("filterAgeMin").value) || 18; filters.ageMax = parseInt(document.getElementById("filterAgeMax").value) || 99; filters.gender = document.getElementById("filterGender").value; renderMatch(); document.getElementById("filterPanel").style.display = "none"; });
 
-    // Match system (simple swipe)
-    function renderMatch() {
-        const others = users.filter(u => u.id !== currentUser?.id && !matches.includes(u.id));
-        const container = document.getElementById("matchContainer");
-        if(others.length === 0) { container.innerHTML = "<div class='glass-card'>No more profiles. Check later!</div>"; return; }
-        const p = others[0];
-        container.innerHTML = `
-            <div class="glass-card" style="text-align:center;">
-                <img src="${p.photo}" style="width:120px;height:120px;border-radius:50%;object-fit:cover;">
-                <h3>${p.name}, ${p.gender}</h3>
-                <p>${p.bio}</p>
-                <div style="display:flex; gap:16px; margin-top:16px;">
-                    <button id="passBtn" class="btn-outline">❌ Pass</button>
-                    <button id="likeBtn" class="btn-primary">❤️ Like</button>
-                </div>
-            </div>
-        `;
-        document.getElementById("passBtn")?.addEventListener("click", () => renderMatch());
-        document.getElementById("likeBtn")?.addEventListener("click", () => {
-            if(!matches.includes(p.id)) matches.push(p.id);
-            alert(`💕 You liked ${p.name}! If mutual, it's a match.`);
-            renderMatch();
-        });
-    }
+    // Chat System
+    function renderChatsList() { const container = document.getElementById("chatsList"); if(!container) return; const myMatches = users.filter(u => matches.includes(u.id)); if(myMatches.length === 0) { container.innerHTML = "<div class='glass-card'>No matches yet. Swipe to connect!</div>"; return; } container.innerHTML = myMatches.map(u => `<div class="chat-item" data-uid="${u.id}" style="cursor:pointer; display:flex; justify-content:space-between;"><div><strong>${u.name}</strong><br><span style="font-size:12px;">${u.countryCode}</span></div><i class="fas fa-comment"></i></div>`).join(''); document.querySelectorAll("[data-uid]").forEach(el => { el.addEventListener("click", () => openChat(parseInt(el.getAttribute("data-uid")))); }); const unreadCount = messages.filter(m => m.to === currentUser?.id && !m.seen).length; const badge = document.getElementById("chatNotifBadge"); if(badge) badge.style.display = unreadCount > 0 ? "inline-block" : "none"; }
+    function openChat(otherId) { currentChatWith = otherId; const other = users.find(u => u.id === otherId); document.getElementById("chatUserName").innerText = other.name; document.getElementById("chatsList").style.display = "none"; document.getElementById("chatDetail").style.display = "block"; loadChatMessages(otherId); }
+    function loadChatMessages(otherId) { const chatMessages = messages.filter(m => (m.from === currentUser.id && m.to === otherId) || (m.from === otherId && m.to === currentUser.id)); chatMessages.sort((a,b) => a.timestamp - b.timestamp); const container = document.getElementById("chatMessagesArea"); container.innerHTML = chatMessages.map(msg => `<div class="chat-message" style="text-align:${msg.from === currentUser.id ? 'right' : 'left'};"><span style="background:${msg.from === currentUser.id ? '#ff477e' : 'var(--border)'}; padding:8px 14px; border-radius:20px; display:inline-block;">${msg.text}</span><br><small>${new Date(msg.timestamp).toLocaleTimeString()}</small></div>`).join(''); container.scrollTop = container.scrollHeight; chatMessages.forEach(msg => { if(msg.to === currentUser.id && !msg.seen) { msg.seen = true; addNotification(msg.from, `${currentUser.name} read your message`, "read"); } }); saveAll(); renderChatsList(); }
+    function sendMessage(toId, text) { if(!text.trim()) return; const newMsg = { id: Date.now(), from: currentUser.id, to: toId, text, timestamp: Date.now(), seen: false }; messages.push(newMsg); saveAll(); loadChatMessages(toId); addNotification(toId, `New message from ${currentUser.name}`, "message"); renderChatsList(); }
+    document.getElementById("sendChatMsgBtn")?.addEventListener("click", () => { const input = document.getElementById("chatInput"); if(currentChatWith && input.value.trim()) { sendMessage(currentChatWith, input.value); input.value = ""; } });
+    document.getElementById("backToChats")?.addEventListener("click", () => { document.getElementById("chatDetail").style.display = "none"; document.getElementById("chatsList").style.display = "block"; currentChatWith = null; });
+    // Typing indicator simulation
+    document.getElementById("chatInput")?.addEventListener("input", () => { if(typingTimeout) clearTimeout(typingTimeout); const indicator = document.getElementById("typingIndicator"); indicator.innerText = "Typing..."; typingTimeout = setTimeout(() => { indicator.innerText = ""; }, 1000); });
 
     // Post creation
     let pendingMedia = null, pendingMediaType = null;
     document.getElementById("uploadPhotoPost")?.addEventListener("click", () => document.getElementById("postPhotoFile").click());
     document.getElementById("uploadVideoPost")?.addEventListener("click", () => document.getElementById("postVideoFile").click());
-    document.getElementById("postPhotoFile")?.addEventListener("change", (e) => {
-        const f = e.target.files[0];
-        if(f) { const r = new FileReader(); r.onload = ev => { pendingMedia = ev.target.result; pendingMediaType = "image"; document.getElementById("postMediaPreview").innerHTML = `<img src="${pendingMedia}" style="max-height:150px;border-radius:20px;">`; }; r.readAsDataURL(f); }
-    });
-    document.getElementById("postVideoFile")?.addEventListener("change", (e) => {
-        const f = e.target.files[0];
-        if(f) { const r = new FileReader(); r.onload = ev => { pendingMedia = ev.target.result; pendingMediaType = "video"; document.getElementById("postMediaPreview").innerHTML = `<video controls src="${pendingMedia}" style="max-height:150px;border-radius:20px;"></video>`; }; r.readAsDataURL(f); }
-    });
-    document.getElementById("publishPostBtn")?.addEventListener("click", () => {
-        const caption = document.getElementById("newPostCaption").value;
-        if(!caption && !pendingMedia) { alert("Write something or add media"); return; }
-        const newPost = { id: Date.now(), userId: currentUser.id, mediaType: pendingMediaType, mediaUrl: pendingMedia, caption: caption || "Shared a moment", likes: 0, timestamp: Date.now() };
-        posts.push(newPost);
-        saveAll();
-        renderFeed();
-        document.getElementById("newPostCaption").value = "";
-        pendingMedia = null; pendingMediaType = null;
-        document.getElementById("postMediaPreview").innerHTML = "";
-        alert("Post published!");
-    });
+    document.getElementById("postPhotoFile")?.addEventListener("change", (e) => { const f = e.target.files[0]; if(f) { const r = new FileReader(); r.onload = ev => { pendingMedia = ev.target.result; pendingMediaType = "image"; document.getElementById("postMediaPreview").innerHTML = `<img src="${pendingMedia}" style="max-height:150px;border-radius:20px;">`; }; r.readAsDataURL(f); } });
+    document.getElementById("postVideoFile")?.addEventListener("change", (e) => { const f = e.target.files[0]; if(f) { const r = new FileReader(); r.onload = ev => { pendingMedia = ev.target.result; pendingMediaType = "video"; document.getElementById("postMediaPreview").innerHTML = `<video controls src="${pendingMedia}" style="max-height:150px;border-radius:20px;"></video>`; }; r.readAsDataURL(f); } });
+    document.getElementById("publishPostBtn")?.addEventListener("click", () => { const caption = document.getElementById("newPostCaption").value; if(!caption && !pendingMedia) { alert("Write something or add media"); return; } const newPost = { id: Date.now(), userId: currentUser.id, mediaType: pendingMediaType, mediaUrl: pendingMedia, caption: caption || "Shared a moment", likes: 0, timestamp: Date.now() }; posts.push(newPost); saveAll(); renderFeed(); document.getElementById("newPostCaption").value = ""; pendingMedia = null; pendingMediaType = null; document.getElementById("postMediaPreview").innerHTML = ""; alert("Post published!"); });
 
-    // Edit profile
-    document.getElementById("editProfileBtn")?.addEventListener("click", () => {
-        const newBio = prompt("Edit Bio:", currentUser.bio);
-        if(newBio !== null) currentUser.bio = newBio;
-        const newInterests = prompt("Edit Interests:", currentUser.interests);
-        if(newInterests !== null) currentUser.interests = newInterests;
-        saveAll();
-        renderProfile();
-    });
+    // Edit profile & VIP
+    document.getElementById("editProfileBtn")?.addEventListener("click", () => { const newBio = prompt("Edit Bio:", currentUser.bio); if(newBio !== null) currentUser.bio = newBio; const newInterests = prompt("Edit Interests:", currentUser.interests); if(newInterests !== null) currentUser.interests = newInterests; saveAll(); renderProfile(); });
+    document.getElementById("upgradeVipBtn")?.addEventListener("click", () => { currentUser.vip = true; alert("VIP Activated! Unlimited likes & profile boost"); saveAll(); renderProfile(); });
 
-    // Photo upload registration preview
+    // Photo upload registration
     document.getElementById("uploadPhotoRegBtn")?.addEventListener("click", () => document.getElementById("regPhotoInput").click());
-    document.getElementById("regPhotoInput")?.addEventListener("change", (e) => {
-        const file = e.target.files[0];
-        if(file) { const reader = new FileReader(); reader.onload = (ev) => { document.getElementById("regPhotoPreview").src = ev.target.result; }; reader.readAsDataURL(file); }
-    });
+    document.getElementById("regPhotoInput")?.addEventListener("change", (e) => { const file = e.target.files[0]; if(file) { const reader = new FileReader(); reader.onload = (ev) => { document.getElementById("regPhotoPreview").src = ev.target.result; }; reader.readAsDataURL(file); } });
+
+    // Notifications render (UI only for now)
+    function renderNotifications() { const count = notifications.filter(n => n.userId === currentUser?.id && !n.read).length; if(count > 0) console.log(`📢 ${count} new notifications`); }
 
     // Tab switching
-    document.querySelectorAll(".nav-item").forEach(btn => {
-        btn.addEventListener("click", () => {
-            document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            const tab = btn.getAttribute("data-tab");
-            document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active-tab"));
-            if(tab === "home") document.getElementById("homeTab").classList.add("active-tab");
-            if(tab === "profile") document.getElementById("profileTab").classList.add("active-tab");
-            if(tab === "post") document.getElementById("postTab").classList.add("active-tab");
-            if(tab === "match") { document.getElementById("matchTab").classList.add("active-tab"); renderMatch(); }
-        });
-    });
+    document.querySelectorAll(".nav-item").forEach(btn => { btn.addEventListener("click", () => { document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active")); btn.classList.add("active"); const tab = btn.getAttribute("data-tab"); document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active-tab")); if(tab === "home") document.getElementById("homeTab").classList.add("active-tab"); if(tab === "chat") { document.getElementById("chatTab").classList.add("active-tab"); renderChatsList(); document.getElementById("chatDetail").style.display = "none"; document.getElementById("chatsList").style.display = "block"; } if(tab === "post") document.getElementById("postTab").classList.add("active-tab"); if(tab === "match") { document.getElementById("matchTab").classList.add("active-tab"); renderMatch(); } if(tab === "profile") { document.getElementById("profileTab").classList.add("active-tab"); renderProfile(); } }); });
+
+    // Theme Toggle
+    let isDark = false;
+    document.getElementById("themeToggleBtn")?.addEventListener("click", () => { isDark = !isDark; if(isDark) document.body.classList.add("dark"); else document.body.classList.remove("dark"); localStorage.setItem("wd_theme", isDark ? "dark" : "light"); document.getElementById("themeText").innerText = isDark ? "Light" : "Dark"; });
+    const savedTheme = localStorage.getItem("wd_theme"); if(savedTheme === "dark") { isDark = true; document.body.classList.add("dark"); document.getElementById("themeText").innerText = "Light"; }
 
     // Restore session
-    const savedUser = localStorage.getItem("wd_current");
-    loadData();
-    if(savedUser) {
-        currentUser = JSON.parse(savedUser);
-        if(users.find(u => u.id === currentUser.id)) showMainApp();
-        else document.getElementById("registerModal").style.display = "block";
-    } else {
-        document.getElementById("registerModal").style.display = "block";
-    }
+    const savedUser = localStorage.getItem("wd_current"); loadData();
+    if(savedUser) { currentUser = JSON.parse(savedUser); if(users.find(u => u.id === currentUser.id)) showMainApp(); else document.getElementById("registerModal").style.display = "block"; } else document.getElementById("registerModal").style.display = "block";
 </script>
 </body>
 </html>
