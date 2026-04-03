@@ -2,979 +2,147 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <meta name="description" content="World Dating - Professional Dating Platform">
-    <meta name="theme-color" content="#ff6b8b">
-    <title>World Dating | Find Your Love</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DatingSpark | Global Connection. Real Chemistry.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            transition: background 0.3s ease, color 0.3s ease;
-            min-height: 100vh;
-        }
-
-        /* LIGHT THEME */
-        body.light {
-            background: #f5f7fb;
-            color: #1a1a2e;
-        }
-        body.light .card {
-            background: #ffffff;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.05);
-            border: 1px solid #eef2f6;
-        }
-        body.light .sticky-header {
-            background: rgba(255,255,255,0.98);
-            box-shadow: 0 2px 20px rgba(0,0,0,0.03);
-            border-bottom: 1px solid #eef2f6;
-        }
-        body.light .nav-btn {
-            color: #555;
-        }
-        body.light .user-card {
-            background: #fafbfc;
-            border: 1px solid #eef2f6;
-        }
-        body.light input, body.light select, body.light textarea {
-            background: #ffffff;
-            color: #1a1a2e;
-            border: 1px solid #e1e8ed;
-        }
-        body.light .logo h1 {
-            background: linear-gradient(135deg, #c2185b, #ff6b8b);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        body.light .hero {
-            background: linear-gradient(135deg, #ffe0e7 0%, #fff0f3 100%);
-        }
-        body.light .bottom-nav {
-            background: rgba(255,255,255,0.98);
-            border-top: 1px solid #eef2f6;
-        }
-        body.light .bottom-nav-item.active {
-            color: #ff6b8b;
-        }
-
-        /* DARK THEME */
-        body.dark {
-            background: #0a0a1a;
-            color: #e4e6eb;
-        }
-        body.dark .card {
-            background: rgba(30, 30, 50, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,107,139,0.15);
-            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
-        }
-        body.dark .sticky-header {
-            background: rgba(10, 10, 26, 0.98);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255,107,139,0.1);
-        }
-        body.dark .nav-btn {
-            color: #b0b3b8;
-        }
-        body.dark .user-card {
-            background: rgba(20, 20, 35, 0.8);
-            border: 1px solid rgba(255,107,139,0.1);
-        }
-        body.dark input, body.dark select, body.dark textarea {
-            background: rgba(20, 20, 35, 0.9);
-            color: #e4e6eb;
-            border: 1px solid rgba(255,107,139,0.2);
-        }
-        body.dark .logo h1 {
-            background: linear-gradient(135deg, #ff6b8b, #ffd700);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        body.dark .hero {
-            background: linear-gradient(135deg, rgba(255,107,139,0.1), rgba(0,0,0,0.3));
-        }
-        body.dark .bottom-nav {
-            background: rgba(10, 10, 26, 0.98);
-            border-top: 1px solid rgba(255,107,139,0.1);
-        }
-        body.dark .bottom-nav-item.active {
-            color: #ff6b8b;
-        }
-
-        /* GLOBAL STYLES */
-        .app-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 20px 80px 20px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sticky-header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 12px 20px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            border-radius: 60px;
-            margin-top: 15px;
-            background: transparent;
-        }
-
-        .logo h1 {
-            font-size: 24px;
-            letter-spacing: -0.5px;
-        }
-        .logo p {
-            font-size: 10px;
-            opacity: 0.7;
-        }
-
-        .theme-toggle {
-            background: rgba(255,107,139,0.15);
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 18px;
-            transition: 0.3s;
-            color: inherit;
-        }
-        .theme-toggle:hover {
-            background: rgba(255,107,139,0.3);
-            transform: scale(1.05);
-        }
-
-        /* Bottom Navigation */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 12px 20px;
-            backdrop-filter: blur(20px);
-            z-index: 1000;
-            max-width: 500px;
-            margin: 0 auto;
-            border-radius: 30px 30px 0 0;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
-        }
-        
-        @media (min-width: 768px) {
-            .bottom-nav {
-                left: 50%;
-                transform: translateX(-50%);
-                width: 100%;
-                max-width: 500px;
-                border-radius: 30px 30px 20px 20px;
-            }
-        }
-
-        .bottom-nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px 16px;
-            border-radius: 30px;
-            transition: 0.2s;
-            font-size: 12px;
-            color: #888;
-        }
-        .bottom-nav-item i {
-            font-size: 22px;
-        }
-        .bottom-nav-item.active {
-            color: #ff6b8b;
-            background: rgba(255,107,139,0.1);
-        }
-        .bottom-nav-item:hover {
-            transform: translateY(-3px);
-        }
-
-        .card {
-            border-radius: 28px;
-            padding: 24px;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .hero {
-            border-radius: 40px;
-            padding: 50px 30px;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .hero h2 {
-            font-size: 42px;
-            font-weight: 800;
-            margin-bottom: 12px;
-        }
-        .hero p {
-            font-size: 16px;
-            opacity: 0.85;
-        }
-
-        .input-group {
-            position: relative;
-            margin-bottom: 18px;
-        }
-        .input-group i {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #ff8da1;
-            font-size: 18px;
-            z-index: 1;
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 14px 20px 14px 48px;
-            border-radius: 50px;
-            font-size: 15px;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-        textarea {
-            border-radius: 24px;
-            padding: 14px 20px;
-            resize: vertical;
-        }
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #ff6b8b;
-            box-shadow: 0 0 0 3px rgba(255,107,139,0.15);
-        }
-        button {
-            background: linear-gradient(135deg, #ff6b8b, #c2185b);
-            color: white;
-            border: none;
-            padding: 14px 24px;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 100%;
-            font-size: 15px;
-        }
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(194,24,91,0.35);
-        }
-        .btn-outline {
-            background: transparent;
-            border: 2px solid #ff6b8b;
-            color: #ff6b8b;
-        }
-        .btn-outline:hover {
-            background: #ff6b8b;
-            color: white;
-        }
-
-        .flex-row {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .user-card {
-            border-radius: 24px;
-            padding: 16px;
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: 0.2s;
-            cursor: pointer;
-        }
-        .user-card:hover {
-            transform: translateX(5px);
-        }
-        .user-avatar {
-            width: 65px;
-            height: 65px;
-            background: linear-gradient(145deg, #ffb347, #ff6b8b);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            overflow: hidden;
-            flex-shrink: 0;
-            color: white;
-        }
-        .user-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-            margin-left: auto;
-        }
-        .icon-btn {
-            background: rgba(255,107,139,0.15);
-            padding: 8px 14px;
-            width: auto;
-            border-radius: 40px;
-            font-size: 12px;
-        }
-
-        .stat-card {
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            flex: 1;
-            min-width: 120px;
-        }
-        .stat-card i {
-            font-size: 36px;
-            color: #ff6b8b;
-            margin-bottom: 10px;
-        }
-        .stat-card h3 {
-            font-size: 28px;
-            font-weight: 800;
-        }
-
-        .search-box {
-            margin-bottom: 20px;
-        }
-        .search-box input {
-            padding-left: 48px;
-        }
-
-        .message-item {
-            padding: 12px;
-            border-radius: 20px;
-            margin-bottom: 10px;
-            background: rgba(255,107,139,0.08);
-        }
-
-        footer {
-            margin-top: 40px;
-            text-align: center;
-            padding: 20px;
-            font-size: 12px;
-            opacity: 0.7;
-        }
-
-        @media (max-width: 768px) {
-            .app-container { padding: 0 16px 80px 16px; }
-            .hero h2 { font-size: 28px; }
-            .hero { padding: 35px 20px; }
-            .user-card { flex-wrap: wrap; }
-            .action-buttons { margin-left: 0; width: 100%; justify-content: flex-end; }
-        }
-
-        .hide { display: none !important; }
-        .error { color: #ff4444; font-size: 12px; margin-top: -5px; margin-bottom: 10px; }
-        .success { color: #00c851; }
-        
-        .profile-photo-upload {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .profile-photo-preview {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: linear-gradient(145deg, #ffb347, #ff6b8b);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            font-size: 40px;
-            overflow: hidden;
-            cursor: pointer;
-            color: white;
-        }
-        .profile-photo-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .photo-upload-btn {
-            background: rgba(255,107,139,0.15);
-            color: #ff6b8b;
-            padding: 8px 20px;
-            width: auto;
-            font-size: 13px;
-        }
-        
-        .pending-approval {
-            text-align: center;
-            padding: 40px 20px;
-        }
-        .pending-approval i {
-            font-size: 64px;
-            color: #ff6b8b;
-            margin-bottom: 20px;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #050505; color: #ffffff; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .gradient-text { background: linear-gradient(90deg, #818cf8, #c084fc, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-primary { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); transition: all 0.3s ease; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(124, 58, 237, 0.5); }
+        .hero-mesh { background: radial-gradient(circle at 50% -20%, #2e1065 0%, #050505 70%); }
+        .swipe-card { transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: grab; }
+        .swipe-card:active { cursor: grabbing; }
     </style>
 </head>
-<body class="light">
-<div class="app-container" id="app">
-    <div class="sticky-header">
-        <div class="logo">
-            <h1><i class="fas fa-globe-americas"></i> World Dating</h1>
-            <p>Find your perfect match</p>
+<body class="selection:bg-indigo-500/30">
+
+    <nav class="fixed top-0 w-full z-50 glass border-b border-white/5 py-4 px-6 md:px-16 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 bg-gradient-to-tr from-indigo-500 to-pink-500 rounded-lg flex items-center justify-center">
+                <i class="fas fa-fire text-white text-sm"></i>
+            </div>
+            <span class="text-xl font-extrabold tracking-tighter uppercase italic">DatingSpark</span>
         </div>
-        <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
-    </div>
-    
-    <div id="mainContent"></div>
-    
-    <footer>
-        <div>© 2026 World Dating | Premium Dating Platform</div>
+        <div class="hidden md:flex space-x-10 text-sm font-medium text-gray-400">
+            <a href="#" class="hover:text-white transition">Explore</a>
+            <a href="#" class="hover:text-white transition">Safety</a>
+            <a href="#" class="hover:text-white transition">Success Stories</a>
+            <a href="#" class="hover:text-white transition">Premium</a>
+        </div>
+        <div class="flex items-center space-x-6">
+            <a href="#" class="hidden sm:block text-sm font-semibold hover:text-indigo-400 transition">Log In</a>
+            <button class="btn-primary px-6 py-2.5 rounded-full text-sm font-bold">Sign Up</button>
+        </div>
+    </nav>
+
+    <section class="hero-mesh min-h-screen pt-32 pb-20 px-6 flex flex-col items-center justify-center text-center">
+        <div class="inline-flex items-center space-x-2 glass px-4 py-2 rounded-full mb-8 border-white/10">
+            <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+            </span>
+            <span class="text-xs font-bold tracking-widest uppercase text-indigo-300">1.2 Million Active Matches Today</span>
+        </div>
+        
+        <h1 class="text-5xl md:text-8xl font-extrabold tracking-tight mb-8 leading-[1.1]">
+            Start Something <br> <span class="gradient-text italic">Real.</span>
+        </h1>
+        
+        <p class="text-gray-400 text-lg md:text-xl max-w-2xl mb-12 font-light leading-relaxed">
+            Experience the world's most advanced matching algorithm. We connect minds, not just profiles. Available in 190+ countries.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-5 w-full max-w-md">
+            <button class="btn-primary flex-1 py-4 rounded-2xl font-bold text-lg">Create Account</button>
+            <button class="glass flex-1 py-4 rounded-2xl font-bold text-lg hover:bg-white/10 transition">Download App</button>
+        </div>
+
+        <div class="mt-20 relative w-full max-w-xs h-[450px] mx-auto md:scale-110">
+            <div class="swipe-card absolute inset-0 glass rounded-[2.5rem] p-4 border-white/10 shadow-2xl rotate-[-6deg] translate-x-[-40px]">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover rounded-[2rem] opacity-50 grayscale" alt="Profile">
+            </div>
+            <div class="swipe-card absolute inset-0 glass rounded-[2.5rem] p-4 border-white/10 shadow-2xl rotate-[6deg] translate-x-[40px]">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover rounded-[2rem] opacity-50 grayscale" alt="Profile">
+            </div>
+            <div class="swipe-card absolute inset-0 glass rounded-[3rem] p-4 border-white/20 shadow-2xl z-10 bg-slate-900">
+                <div class="relative w-full h-full rounded-[2.5rem] overflow-hidden group">
+                    <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover" alt="Main Profile">
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 to-transparent">
+                        <div class="flex justify-between items-end">
+                            <div>
+                                <h3 class="text-2xl font-bold">Liam, 26</h3>
+                                <p class="text-sm text-gray-300 flex items-center mt-1">
+                                    <i class="fas fa-map-marker-alt text-indigo-400 mr-2"></i> 2 miles away
+                                </p>
+                            </div>
+                            <div class="bg-indigo-500 h-10 w-10 rounded-full flex items-center justify-center">
+                                <i class="fas fa-info text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-32 px-6 md:px-16 bg-[#080808]">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-20">
+                <h2 class="text-3xl md:text-5xl font-bold mb-6 italic italic">Engineered for Connection</h2>
+                <div class="h-1 w-20 bg-indigo-500"></div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass p-10 rounded-[2rem] border-white/5 hover:border-indigo-500/30 transition group">
+                    <div class="w-14 h-14 glass rounded-2xl flex items-center justify-center mb-8 group-hover:bg-indigo-500/20 transition">
+                        <i class="fas fa-brain text-2xl text-indigo-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Neural Matching</h3>
+                    <p class="text-gray-500 leading-relaxed">Our AI analyzes core personality traits to find someone who shares your mindset, not just your hobbies.</p>
+                </div>
+
+                <div class="glass p-10 rounded-[2rem] border-white/5 hover:border-pink-500/30 transition group">
+                    <div class="w-14 h-14 glass rounded-2xl flex items-center justify-center mb-8 group-hover:bg-pink-500/20 transition">
+                        <i class="fas fa-fingerprint text-2xl text-pink-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Verification+</h3>
+                    <p class="text-gray-500 leading-relaxed">Mandatory multi-step identity verification ensures that every Spark is 100% human. No bots, ever.</p>
+                </div>
+
+                <div class="glass p-10 rounded-[2rem] border-white/5 hover:border-violet-500/30 transition group">
+                    <div class="w-14 h-14 glass rounded-2xl flex items-center justify-center mb-8 group-hover:bg-violet-500/20 transition">
+                        <i class="fas fa-lock text-2xl text-violet-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Privacy Shield</h3>
+                    <p class="text-gray-500 leading-relaxed">Your data is your own. End-to-end encrypted chats and invisible browsing modes give you total control.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-16 px-6 border-t border-white/5 bg-black">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="flex items-center space-x-2">
+                <span class="text-xl font-extrabold italic tracking-tighter">DATINGSPARK</span>
+            </div>
+            <div class="flex space-x-8 text-xs font-bold uppercase tracking-widest text-gray-600">
+                <a href="#" class="hover:text-white transition">Privacy</a>
+                <a href="#" class="hover:text-white transition">Terms</a>
+                <a href="#" class="hover:text-white transition">Cookies</a>
+                <a href="#" class="hover:text-white transition">Contact</a>
+            </div>
+            <div class="flex space-x-6 text-gray-500">
+                <i class="fab fa-instagram hover:text-pink-500 cursor-pointer"></i>
+                <i class="fab fa-twitter hover:text-blue-400 cursor-pointer"></i>
+                <i class="fab fa-tiktok hover:text-white cursor-pointer"></i>
+            </div>
+        </div>
+        <p class="text-center text-gray-700 text-[10px] mt-10 tracking-[0.2em] uppercase font-bold">&copy; 2026 DatingSpark International. All Rights Reserved.</p>
     </footer>
-</div>
 
-<!-- Bottom Navigation -->
-<div class="bottom-nav" id="bottomNav">
-    <button class="bottom-nav-item" data-tab="home"><i class="fas fa-home"></i><span>Home</span></button>
-    <button class="bottom-nav-item" data-tab="match"><i class="fas fa-search"></i><span>Match</span></button>
-    <button class="bottom-nav-item" data-tab="message"><i class="fas fa-envelope"></i><span>Message</span></button>
-    <button class="bottom-nav-item" data-tab="profile"><i class="fas fa-user"></i><span>Profile</span></button>
-</div>
-
-<script>
-    let currentUser = null;
-    let allUsers = [];
-    let pendingUsers = [];
-    let currentTab = "home";
-    let isAdminMode = false;
-    let searchQuery = "";
-    const STORAGE_KEY = "world_dating_final_v2";
-    const PENDING_KEY = "world_dating_pending";
-
-    function loadStoredData() {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if(stored) {
-            allUsers = JSON.parse(stored);
-        } else {
-            allUsers = [];
-        }
-        const pending = localStorage.getItem(PENDING_KEY);
-        if(pending) {
-            pendingUsers = JSON.parse(pending);
-        } else {
-            pendingUsers = [];
-        }
-        const savedSession = sessionStorage.getItem("currentUserId");
-        if(savedSession) {
-            const found = allUsers.find(u => u.id === savedSession);
-            if(found) currentUser = found;
-        }
-    }
-    
-    function saveToLocal() { 
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(allUsers)); 
-    }
-    
-    function savePending() {
-        localStorage.setItem(PENDING_KEY, JSON.stringify(pendingUsers));
-    }
-    
-    function saveCurrentUserToSession() { 
-        if(currentUser) sessionStorage.setItem("currentUserId", currentUser.id); 
-        else sessionStorage.removeItem("currentUserId"); 
-    }
-
-    // Register - saves telegram name, no emoji
-    function registerUser(telegram, gender, age, password) {
-        if(!telegram || telegram.trim().length < 3) return "Valid Telegram username required";
-        if(!gender) return "Please select gender";
-        if(!age || age < 18) return "Minimum age 18 required";
-        if(!password || password.length < 3) return "Password must be at least 3 characters";
-        
-        // Check if already registered and approved
-        if(allUsers.find(u => u.telegram === telegram)) return "Telegram username already registered!";
-        if(pendingUsers.find(u => u.telegram === telegram)) return "You have already registered. Please wait for approval.";
-        
-        const newUser = {
-            id: "pending_"+Date.now()+Math.random(),
-            telegram: telegram.trim(),
-            fullname: telegram.trim(),
-            gender: gender,
-            age: parseInt(age),
-            photo: null,
-            country: "Ethiopia",
-            password: password,
-            liked: [],
-            receivedLikes: [],
-            messages: [],
-            lastLogin: Date.now(),
-            pending: true
-        };
-        pendingUsers.push(newUser);
-        savePending();
-        return "PENDING";
-    }
-
-    function approveUser(pendingId) {
-        const pendingIndex = pendingUsers.findIndex(u => u.id === pendingId);
-        if(pendingIndex !== -1) {
-            const pending = pendingUsers[pendingIndex];
-            const newUser = {
-                ...pending,
-                id: "u"+Date.now()+Math.random(),
-                pending: false
-            };
-            delete newUser.pending;
-            allUsers.push(newUser);
-            pendingUsers.splice(pendingIndex, 1);
-            saveToLocal();
-            savePending();
-            render();
-            return true;
-        }
-        return false;
-    }
-
-    function rejectUser(pendingId) {
-        const pendingIndex = pendingUsers.findIndex(u => u.id === pendingId);
-        if(pendingIndex !== -1) {
-            pendingUsers.splice(pendingIndex, 1);
-            savePending();
-            render();
-            return true;
-        }
-        return false;
-    }
-
-    function loginUser(telegram, password) {
-        const user = allUsers.find(u => u.telegram === telegram);
-        if(!user) return "Telegram username not found or not approved yet";
-        if(user.password !== password) return "Incorrect password";
-        currentUser = user;
-        user.lastLogin = Date.now();
-        saveToLocal();
-        saveCurrentUserToSession();
-        return "SUCCESS";
-    }
-
-    function adminLogin(phone, password) {
-        if(phone === "0910016861" && password === "215221") {
-            isAdminMode = true;
-            currentUser = null;
-            return "SUCCESS";
-        }
-        return "Invalid admin credentials";
-    }
-
-    function updateUserPhoto(photoData) {
-        if(currentUser) {
-            currentUser.photo = photoData;
-            const userIndex = allUsers.findIndex(u => u.id === currentUser.id);
-            if(userIndex !== -1) allUsers[userIndex].photo = photoData;
-            saveToLocal();
-            render();
-        }
-    }
-
-    function sendLike(targetId) {
-        if(!currentUser) return;
-        const target = allUsers.find(u => u.id === targetId);
-        if(!target || currentUser.liked.includes(targetId)) { 
-            alert("You already liked this person"); 
-            return; 
-        }
-        currentUser.liked.push(targetId);
-        target.receivedLikes.push(currentUser.id);
-        saveToLocal();
-        render();
-    }
-
-    function sendMessage(targetId, msg) {
-        if(!currentUser || !msg?.trim()) return;
-        const target = allUsers.find(u => u.id === targetId);
-        if(target) {
-            const messageObj = { from: currentUser.id, to: targetId, text: msg, time: Date.now(), read: false };
-            currentUser.messages = currentUser.messages || [];
-            currentUser.messages.push(messageObj);
-            target.messages = target.messages || [];
-            target.messages.push(messageObj);
-            saveToLocal();
-            render();
-        }
-    }
-
-    function getOppositeGenderUsers() {
-        if(!currentUser) return [];
-        const opposite = currentUser.gender === "male" ? "female" : "male";
-        let users = allUsers.filter(u => u.id !== currentUser.id && u.gender === opposite);
-        if(searchQuery) {
-            users = users.filter(u => u.telegram.toLowerCase().includes(searchQuery.toLowerCase()));
-        }
-        return users;
-    }
-
-    function getMatches() {
-        if(!currentUser) return [];
-        return allUsers.filter(u => currentUser.liked.includes(u.id) && u.receivedLikes.includes(currentUser.id));
-    }
-
-    function getUserMessages() {
-        if(!currentUser) return [];
-        const received = (currentUser.messages || []).filter(m => m.to === currentUser.id);
-        const sent = (currentUser.messages || []).filter(m => m.from === currentUser.id);
-        const all = [...received, ...sent];
-        return all.sort((a,b)=>b.time - a.time);
-    }
-
-    // Admin Panel with pending users
-    function renderAdminPanel() {
-        const totalUsers = allUsers.length;
-        const totalLikes = allUsers.reduce((sum, u) => sum + u.liked.length, 0);
-        const totalPending = pendingUsers.length;
-        
-        let html = `
-            <div class="card">
-                <h2><i class="fas fa-shield-alt"></i> Admin Panel</h2>
-                <div class="flex-row" style="margin-top: 20px">
-                    <div class="stat-card"><i class="fas fa-users"></i><h3>${totalUsers}</h3><p>Approved Members</p></div>
-                    <div class="stat-card"><i class="fas fa-clock"></i><h3>${totalPending}</h3><p>Pending Approval</p></div>
-                    <div class="stat-card"><i class="fas fa-heart"></i><h3>${totalLikes}</h3><p>Total Likes</p></div>
-                </div>`;
-        
-        if(totalPending > 0) {
-            html += `<h3 style="margin-top: 20px">Pending Approvals (${totalPending})</h3>`;
-            pendingUsers.forEach(u => {
-                html += `
-                    <div class="user-card">
-                        <div class="user-avatar">${u.photo ? (u.photo.includes('data:image') ? `<img src="${u.photo}">` : '📷') : '📷'}</div>
-                        <div><strong>${u.telegram}</strong><br>${u.gender} | ${u.age} years</div>
-                        <div class="action-buttons">
-                            <button class="icon-btn approve-btn" data-id="${u.id}" style="background:#00c85120; color:#00c851"><i class="fas fa-check"></i> Approve</button>
-                            <button class="icon-btn reject-btn" data-id="${u.id}" style="background:#ff444420; color:#ff4444"><i class="fas fa-times"></i> Reject</button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-        
-        html += `<h3 style="margin-top: 20px">Approved Members (${totalUsers})</h3>`;
-        allUsers.forEach(u => {
-            html += `
-                <div class="user-card">
-                    <div class="user-avatar">${u.photo && u.photo.includes('data:image') ? `<img src="${u.photo}">` : (u.photo || '📷')}</div>
-                    <div><strong>${u.telegram}</strong><br>${u.gender} | ${u.age} | ${u.country}</div>
-                </div>
-            `;
-        });
-        
-        html += `<button id="adminLogoutBtn" class="btn-outline" style="margin-top: 20px"><i class="fas fa-sign-out-alt"></i> Logout</button>
-        </div>`;
-        return html;
-    }
-
-    // Pending approval page
-    function renderPendingPage() {
-        return `
-            <div class="card pending-approval">
-                <i class="fas fa-clock"></i>
-                <h2>Registration Submitted</h2>
-                <p>Your registration has been received. Please wait for admin approval.</p>
-                <p style="margin-top: 15px; font-size: 14px;">You will be notified once your account is approved.</p>
-                <button id="backToLoginBtn" class="btn-outline" style="margin-top: 20px; width: auto; padding: 10px 30px;"><i class="fas fa-arrow-left"></i> Back to Login</button>
-            </div>
-        `;
-    }
-
-    function renderHome() {
-        if(isAdminMode) return renderAdminPanel();
-        if(!currentUser) {
-            return `
-                <div class="hero">
-                    <h2>Find Your Love</h2>
-                    <p>Connect with amazing people from around the world</p>
-                </div>
-                <div class="card" id="authCard">
-                    <div style="display:flex; gap:12px; margin-bottom:20px">
-                        <button id="showLoginBtn" style="background:#ff6b8b; width:auto; padding:10px 28px">Login</button>
-                        <button id="showSignupBtn" class="btn-outline" style="width:auto; padding:10px 28px">Sign Up</button>
-                    </div>
-                    <div id="authMsg" class="error"></div>
-                    <div id="loginForm">
-                        <div class="input-group"><i class="fab fa-telegram"></i><input type="text" id="loginTelegram" placeholder="Telegram Username"></div>
-                        <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="loginPassword" placeholder="Password"></div>
-                        <button id="doLoginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
-                        <button id="adminLoginBtn" class="btn-outline" style="margin-top:12px"><i class="fas fa-user-shield"></i> Admin Login</button>
-                    </div>
-                    <div id="signupForm" class="hide">
-                        <div class="input-group"><i class="fab fa-telegram"></i><input type="text" id="signupTelegram" placeholder="Telegram Username (e.g., @username)"></div>
-                        <div class="flex-row">
-                            <div class="input-group" style="flex:1"><i class="fas fa-venus-mars"></i><select id="signupGender"><option value="">Gender</option><option value="male">Male</option><option value="female">Female</option></select></div>
-                            <div class="input-group" style="flex:1"><i class="fas fa-calendar"></i><input type="number" id="signupAge" placeholder="Age"></div>
-                        </div>
-                        <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="signupPassword" placeholder="Password"></div>
-                        <button id="doSignupBtn"><i class="fas fa-user-plus"></i> Register</button>
-                        <p style="font-size: 12px; text-align: center; margin-top: 15px; opacity: 0.7;">After registration, your account will be reviewed by admin.</p>
-                    </div>
-                </div>
-            `;
-        }
-        
-        const oppositeUsers = getOppositeGenderUsers();
-        const matches = getMatches();
-        
-        let html = `<div class="hero"><h2>Welcome, ${currentUser.telegram}!</h2><p>Find your perfect match</p></div>`;
-        
-        html += `<div class="flex-row" style="margin-bottom: 20px">
-            <div class="stat-card"><i class="fas fa-heart"></i><h3>${currentUser.liked.length}</h3><p>Likes</p></div>
-            <div class="stat-card"><i class="fas fa-handshake"></i><h3>${matches.length}</h3><p>Matches</p></div>
-            <div class="stat-card"><i class="fas fa-envelope"></i><h3>${(currentUser.messages || []).length}</h3><p>Messages</p></div>
-        </div>`;
-        
-        html += `<div class="card"><h3><i class="fas fa-users"></i> Suggested Matches</h3>`;
-        if(oppositeUsers.length === 0) html += `<p>No users found.</p>`;
-        else oppositeUsers.forEach(u => {
-            const likedAlready = currentUser.liked.includes(u.id);
-            html += `<div class="user-card">
-                <div class="user-avatar">${u.photo && u.photo.includes('data:image') ? `<img src="${u.photo}">` : (u.photo || '📷')}</div>
-                <div><strong>${u.telegram}</strong>, ${u.age}<br><small>${u.country}</small></div>
-                <div class="action-buttons">
-                    ${!likedAlready ? `<button class="icon-btn like-btn" data-id="${u.id}"><i class="fas fa-heart"></i> Like</button>` : `<button disabled style="background:gray; padding:6px 12px; border-radius:40px;">Liked</button>`}
-                    <button class="icon-btn msg-btn" data-id="${u.id}"><i class="fas fa-comment"></i> Msg</button>
-                </div>
-            </div>`;
-        });
-        html += `</div>`;
-        return html;
-    }
-
-    function renderMatch() {
-        if(!currentUser || isAdminMode) return "";
-        const oppositeUsers = getOppositeGenderUsers();
-        let html = `<div class="card">
-            <h3><i class="fas fa-search"></i> Find People</h3>
-            <div class="search-box input-group"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search by Telegram username..." value="${searchQuery}"></div>
-        </div>`;
-        
-        html += `<div class="card"><h3><i class="fas fa-users"></i> Search Results (${oppositeUsers.length})</h3>`;
-        if(oppositeUsers.length === 0) html += `<p>No users found.</p>`;
-        else oppositeUsers.forEach(u => {
-            const likedAlready = currentUser.liked.includes(u.id);
-            html += `<div class="user-card">
-                <div class="user-avatar">${u.photo && u.photo.includes('data:image') ? `<img src="${u.photo}">` : (u.photo || '📷')}</div>
-                <div><strong>${u.telegram}</strong>, ${u.age}<br><small>${u.country}</small></div>
-                <div class="action-buttons">
-                    ${!likedAlready ? `<button class="icon-btn like-btn" data-id="${u.id}"><i class="fas fa-heart"></i> Like</button>` : `<button disabled style="background:gray;">Liked</button>`}
-                    <button class="icon-btn msg-btn" data-id="${u.id}"><i class="fas fa-comment"></i> Msg</button>
-                </div>
-            </div>`;
-        });
-        html += `</div>`;
-        return html;
-    }
-
-    function renderMessage() {
-        if(!currentUser || isAdminMode) return "";
-        const messages = getUserMessages();
-        let html = `<div class="card"><h3><i class="fas fa-inbox"></i> Messages (${messages.length})</h3>`;
-        if(messages.length === 0) html += `<p>No messages yet.</p>`;
-        else messages.forEach(msg => {
-            const sender = allUsers.find(u => u.id === msg.from);
-            const receiver = allUsers.find(u => u.id === msg.to);
-            const otherPerson = sender?.id === currentUser.id ? receiver : sender;
-            html += `<div class="message-item">
-                <strong>${otherPerson?.telegram || 'Unknown'}</strong> 
-                <small>${new Date(msg.time).toLocaleString()}</small>
-                <p style="margin-top:8px">${msg.text}</p>
-            </div>`;
-        });
-        html += `</div>`;
-        return html;
-    }
-
-    function renderProfile() {
-        if(!currentUser || isAdminMode) return "";
-        return `<div class="card" style="text-align:center">
-            <div class="profile-photo-upload">
-                <div class="profile-photo-preview" id="photoPreview">
-                    ${currentUser.photo && currentUser.photo.includes('data:image') ? `<img src="${currentUser.photo}" id="profileImg">` : (currentUser.photo || '📷')}
-                </div>
-                <input type="file" id="photoUploadInput" accept="image/*" style="display:none">
-                <button class="photo-upload-btn" id="uploadPhotoBtn"><i class="fas fa-camera"></i> Upload Photo</button>
-            </div>
-            <h2>${currentUser.telegram}</h2>
-            <p><i class="fas fa-venus-mars"></i> ${currentUser.gender === 'male' ? 'Male' : 'Female'} | ${currentUser.age} years</p>
-            <p><i class="fas fa-globe"></i> ${currentUser.country}</p>
-            <button id="logoutBtn" class="btn-outline" style="margin-top: 20px; width: auto; padding: 12px 32px"><i class="fas fa-sign-out-alt"></i> Logout</button>
-        </div>`;
-    }
-
-    function render() {
-        const mainDiv = document.getElementById("mainContent");
-        
-        // Check if user is in pending state (registered but not approved)
-        if(!currentUser && !isAdminMode) {
-            const pendingTelegram = sessionStorage.getItem("pendingTelegram");
-            if(pendingTelegram && pendingUsers.find(u => u.telegram === pendingTelegram)) {
-                mainDiv.innerHTML = renderPendingPage();
-                document.getElementById("backToLoginBtn")?.addEventListener("click", () => {
-                    sessionStorage.removeItem("pendingTelegram");
-                    render();
-                });
-                return;
-            }
-        }
-        
-        let content = "";
-        if(isAdminMode) content = renderAdminPanel();
-        else if(currentTab === 'home') content = renderHome();
-        else if(currentTab === 'match') content = renderMatch();
-        else if(currentTab === 'message') content = renderMessage();
-        else if(currentTab === 'profile') content = renderProfile();
-        else content = renderHome();
-        
-        mainDiv.innerHTML = content;
-        
-        // Bottom nav active state
-        document.querySelectorAll(".bottom-nav-item").forEach(btn => {
-            const tab = btn.getAttribute("data-tab");
-            if(tab === currentTab && currentUser && !isAdminMode) btn.classList.add("active");
-            else btn.classList.remove("active");
-            if(currentUser && !isAdminMode) {
-                btn.addEventListener("click", () => {
-                    currentTab = tab;
-                    searchQuery = "";
-                    render();
-                });
-            }
-        });
-        
-        // Search functionality
-        const searchInput = document.getElementById("searchInput");
-        if(searchInput) {
-            searchInput.addEventListener("input", (e) => {
-                searchQuery = e.target.value;
-                render();
-            });
-        }
-        
-        // Photo upload
-        const uploadBtn = document.getElementById("uploadPhotoBtn");
-        const photoInput = document.getElementById("photoUploadInput");
-        if(uploadBtn && photoInput) {
-            uploadBtn.addEventListener("click", () => photoInput.click());
-            photoInput.addEventListener("change", (e) => {
-                const file = e.target.files[0];
-                if(file && file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = function(ev) {
-                        updateUserPhoto(ev.target.result);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
-        
-        // Admin approve/reject
-        document.querySelectorAll(".approve-btn").forEach(btn => {
-            btn.addEventListener("click", () => approveUser(btn.getAttribute("data-id")));
-        });
-        document.querySelectorAll(".reject-btn").forEach(btn => {
-            btn.addEventListener("click", () => rejectUser(btn.getAttribute("data-id")));
-        });
-        
-        if(currentUser && !isAdminMode) {
-            document.getElementById("logoutBtn")?.addEventListener("click", () => { 
-                currentUser = null; 
-                isAdminMode = false; 
-                saveCurrentUserToSession(); 
-                currentTab = "home"; 
-                render(); 
-            });
-        }
-        if(isAdminMode) {
-            document.getElementById("adminLogoutBtn")?.addEventListener("click", () => { 
-                isAdminMode = false; 
-                currentUser = null; 
-                render(); 
-            });
-        }
-        
-        document.querySelectorAll(".like-btn").forEach(btn => btn.addEventListener("click", () => sendLike(btn.getAttribute("data-id"))));
-        document.querySelectorAll(".msg-btn").forEach(btn => btn.addEventListener("click", () => {
-            const msg = prompt("Type your message:");
-            if(msg) sendMessage(btn.getAttribute("data-id"), msg);
-        }));
-        
-        if(!currentUser && !isAdminMode) {
-            document.getElementById("showLoginBtn")?.addEventListener("click", () => { 
-                document.getElementById("loginForm").classList.remove("hide"); 
-                document.getElementById("signupForm").classList.add("hide"); 
-                document.getElementById("authMsg").innerText = "";
-            });
-            document.getElementById("showSignupBtn")?.addEventListener("click", () => { 
-                document.getElementById("loginForm").classList.add("hide"); 
-                document.getElementById("signupForm").classList.remove("hide"); 
-                document.getElementById("authMsg").innerText = "";
-            });
-            document.getElementById("doLoginBtn")?.addEventListener("click", () => {
-                const res = loginUser(document.getElementById("loginTelegram").value, document.getElementById("loginPassword").value);
-                if(res === "SUCCESS") render();
-                else document.getElementById("authMsg").innerText = res;
-            });
-            document.getElementById("doSignupBtn")?.addEventListener("click", () => {
-                const res = registerUser(
-                    document.getElementById("signupTelegram").value,
-                    document.getElementById("signupGender").value,
-                    document.getElementById("signupAge").value,
-                    document.getElementById("signupPassword").value
-                );
-                if(res === "PENDING") {
-                    const telegram = document.getElementById("signupTelegram").value;
-                    sessionStorage.setItem("pendingTelegram", telegram);
-                    render();
-                } else if(res !== "SUCCESS") {
-                    document.getElementById("authMsg").innerText = res;
-                }
-            });
-            document.getElementById("adminLoginBtn")?.addEventListener("click", () => {
-                const res = adminLogin(document.getElementById("loginTelegram").value, document.getElementById("loginPassword").value);
-                if(res === "SUCCESS") render();
-                else document.getElementById("authMsg").innerText = res;
-            });
-        }
-    }
-
-    // Theme Toggle
-    document.getElementById("themeToggle").addEventListener("click", () => {
-        document.body.classList.toggle("dark");
-        document.body.classList.toggle("light");
-        const icon = document.querySelector("#themeToggle i");
-        icon.className = document.body.classList.contains("dark") ? "fas fa-sun" : "fas fa-moon";
-    });
-    
-    loadStoredData();
-    render();
-</script>
 </body>
 </html>
