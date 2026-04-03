@@ -3,200 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WorldDating | Global Elite</title>
+    <title>WorldDating Mini App</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
-        body { font-family: 'Outfit', sans-serif; background: #050505; color: white; margin: 0; overflow: hidden; }
-        .app-container { max-width: 450px; margin: 0 auto; height: 100vh; background: #0a0a0a; position: relative; overflow-y: auto; overflow-x: hidden; }
-        .page { display: none; padding: 20px; animation: fadeIn 0.3s ease; height: 100%; }
+        body { font-family: 'Inter', sans-serif; background-color: #000; color: white; overflow: hidden; }
+        .app-container { width: 100vw; height: 100vh; position: relative; }
+        .page { display: none; padding: 20px; height: 100%; overflow-y: auto; }
         .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .input-style { width: 100%; padding: 14px; border-radius: 15px; background: #151515; border: 1px solid #222; outline: none; margin-bottom: 15px; }
-        .btn-primary { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); padding: 16px; border-radius: 15px; font-weight: bold; width: 100%; }
-        .nav-bar { display: none; position: fixed; bottom: 0; width: 450px; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); border-top: 1px solid #222; z-index: 100; }
-        .nav-item { flex: 1; text-align: center; padding: 15px; color: #555; transition: 0.3s; cursor: pointer; }
-        .nav-item.active { color: #a855f7; }
-        .match-card { position: relative; height: 500px; border-radius: 30px; overflow: hidden; border: 1px solid #222; }
+        .input-field { width: 100%; padding: 15px; border-radius: 12px; background: #1a1a1a; border: 1px solid #333; margin-bottom: 12px; color: white; }
+        .btn-main { background: #8b5cf6; padding: 15px; border-radius: 12px; width: 100%; font-weight: bold; }
+        .nav-bar { display: none; position: fixed; bottom: 0; width: 100%; background: #0a0a0a; border-top: 1px solid #222; justify-content: space-around; padding: 15px; }
+        .nav-item { color: #666; cursor: pointer; }
+        .nav-item.active { color: #8b5cf6; }
     </style>
 </head>
 <body>
 
-<div class="app-container" id="main-scroll">
+<div class="app-container">
 
-    <div id="login-page" class="page active pt-20 text-center">
-        <h1 class="text-4xl font-bold mb-2">World Dating</h1>
-        <p class="text-gray-500 mb-10">Sign in to start matching</p>
-        <input type="email" placeholder="Email" class="input-style">
-        <input type="password" placeholder="Password" class="input-style">
-        <button onclick="handleLogin()" class="btn-primary">Login</button>
-        <p class="mt-6 text-gray-400">Don't have an account? <span onclick="showPage('signup-page')" class="text-purple-500 cursor-pointer">Sign Up</span></p>
+    <div id="login-page" class="page active pt-10">
+        <h1 class="text-3xl font-bold text-center mb-8">Login</h1>
+        <div id="login-error" class="text-red-500 text-sm mb-4 text-center hidden italic italic">Invalid Email or Password!</div>
+        <input type="email" id="login-email" placeholder="Email" class="input-field">
+        <input type="password" id="login-pass" placeholder="Password" class="input-field">
+        <button onclick="processLogin()" class="btn-main mb-4">Login</button>
+        <p class="text-center text-gray-500">Don't have an account? <span onclick="showPage('signup-page')" class="text-purple-400 cursor-pointer">Register</span></p>
     </div>
 
-    <div id="signup-page" class="page pt-10">
-        <h2 class="text-2xl font-bold mb-6">Create Account</h2>
-        <div class="space-y-2 pb-10">
-            <input type="text" id="reg-name" placeholder="Full Name" class="input-style">
-            <input type="number" id="reg-age" placeholder="Age" class="input-style">
-            <select id="reg-gender" class="input-style">
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-            </select>
-            <select id="reg-country" class="input-style">
-                <option value="">Select Country</option>
-                </select>
-            <input type="email" placeholder="Email" class="input-style">
-            <input type="password" placeholder="Password" class="input-style">
-            <button onclick="handleLogin()" class="btn-primary">Register</button>
-            <p onclick="showPage('login-page')" class="text-center mt-4 text-gray-500">Back to Login</p>
-        </div>
+    <div id="signup-page" class="page pt-5">
+        <h1 class="text-2xl font-bold mb-6">Create Account</h1>
+        <input type="text" id="reg-name" placeholder="Full Name" class="input-field">
+        <input type="email" id="reg-email" placeholder="Email" class="input-field">
+        <input type="password" id="reg-pass" placeholder="Create Password" class="input-field">
+        <select id="reg-gender" class="input-field">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+        <button onclick="processSignup()" class="btn-main">Create Account</button>
+        <p onclick="showPage('login-page')" class="text-center mt-4 text-gray-500 cursor-pointer">Back to Login</p>
     </div>
 
-    <div id="home-page" class="page pt-6">
+    <div id="home-page" class="page pt-5">
         <div class="flex justify-between items-center mb-6">
-            <span class="text-xl font-bold italic tracking-tighter">WorldDating</span>
-            <i class="fas fa-filter text-gray-500"></i>
+            <h2 class="text-xl font-bold">Matches</h2>
+            <i class="fas fa-cog text-gray-400"></i>
         </div>
-        <div id="match-container" class="match-card shadow-2xl">
-            <img id="m-img" src="" class="w-full h-full object-cover">
-            <div class="absolute bottom-0 w-full p-6 bg-gradient-to-t from-black via-black/40 to-transparent">
-                <h3 id="m-name" class="text-2xl font-bold">Loading...</h3>
-                <p id="m-loc" class="text-gray-300 text-sm italic"></p>
-                <div class="flex gap-4 mt-4">
-                    <button onclick="nextMatch()" class="flex-1 bg-white/10 p-4 rounded-xl text-red-500"><i class="fas fa-times"></i></button>
-                    <button onclick="nextMatch()" class="flex-1 bg-white/10 p-4 rounded-xl text-green-500"><i class="fas fa-heart"></i></button>
-                </div>
-            </div>
+        <div class="bg-gray-900 rounded-3xl h-[450px] flex flex-col justify-end p-6 border border-white/5">
+            <h3 class="text-2xl font-bold">Welcome!</h3>
+            <p class="text-gray-400">Successfully Logged in as <span id="user-display" class="text-purple-400"></span></p>
         </div>
     </div>
 
-    <div id="message-page" class="page pt-6">
-        <h2 class="text-2xl font-bold mb-6">Chats</h2>
-        <div id="chat-list" class="space-y-4">
-            </div>
-    </div>
-
-    <div id="profile-page" class="page pt-10 text-center">
-        <div class="w-32 h-32 mx-auto rounded-full border-4 border-purple-600 p-1 mb-4 shadow-lg shadow-purple-500/20">
-            <img src="https://ui-avatars.com/api/?name=User&background=random" class="w-full h-full rounded-full" id="p-avatar">
-        </div>
-        <h3 id="p-name" class="text-2xl font-bold">User Name</h3>
-        <p id="p-detail" class="text-gray-500">Age • Country</p>
-        <button onclick="location.reload()" class="mt-20 text-red-500 font-bold flex items-center justify-center w-full">
-            <i class="fas fa-sign-out-alt mr-2"></i> Logout
-        </button>
-    </div>
-
-    <nav id="nav-bar" class="nav-bar flex">
-        <div onclick="showPage('home-page')" class="nav-item active" id="n-home"><i class="fas fa-fire"></i></div>
-        <div onclick="showPage('message-page')" class="nav-item" id="n-message"><i class="fas fa-comment-dots"></i></div>
-        <div onclick="showPage('profile-page')" class="nav-item" id="n-profile"><i class="fas fa-user-circle"></i></div>
+    <nav id="nav-bar" class="nav-bar">
+        <div onclick="showPage('home-page')" class="nav-item active"><i class="fas fa-fire text-2xl"></i></div>
+        <div class="nav-item"><i class="fas fa-comment text-2xl"></i></div>
+        <div onclick="logout()" class="nav-item"><i class="fas fa-user text-2xl"></i></div>
     </nav>
 
 </div>
 
 <script>
-    // 1. Full Country List with Flags
-    const countries = [
-        {n: "Afghanistan", f: "🇦🇫"}, {n: "Albania", f: "🇦🇱"}, {n: "Algeria", f: "🇩🇿"}, {n: "Andorra", f: "🇦🇩"}, {n: "Angola", f: "🇦🇴"},
-        {n: "Argentina", f: "🇦🇷"}, {n: "Armenia", f: "🇦🇲"}, {n: "Australia", f: "🇦🇺"}, {n: "Austria", f: "🇦🇹"}, {n: "Azerbaijan", f: "🇦🇿"},
-        {n: "Bahamas", f: "🇧🇸"}, {n: "Bahrain", f: "🇧🇭"}, {n: "Bangladesh", f: "🇧🇩"}, {n: "Barbados", f: "🇧🇧"}, {n: "Belarus", f: "🇧🇾"},
-        {n: "Belgium", f: "🇧🇪"}, {n: "Belize", f: "🇧🇿"}, {n: "Benin", f: "🇧🇯"}, {n: "Bhutan", f: "🇧🇹"}, {n: "Bolivia", f: "🇧🇴"},
-        {n: "Brazil", f: "🇧🇷"}, {n: "Bulgaria", f: "🇧🇬"}, {n: "Burkina Faso", f: "🇧🇫"}, {n: "Burundi", f: "🇧🇮"}, {n: "Cambodia", f: "🇰🇭"},
-        {n: "Cameroon", f: "🇨🇲"}, {n: "Canada", f: "🇨🇦"}, {n: "Chad", f: "🇹🇩"}, {n: "Chile", f: "🇨🇱"}, {n: "China", f: "🇨🇳"},
-        {n: "Colombia", f: "🇨🇴"}, {n: "Costa Rica", f: "🇨🇷"}, {n: "Croatia", f: "🇭🇷"}, {n: "Cuba", f: "🇨🇺"}, {n: "Cyprus", f: "🇨🇾"},
-        {n: "Denmark", f: "🇩🇰"}, {n: "Djibouti", f: "🇩🇯"}, {n: "Egypt", f: "🇪🇬"}, {n: "Ethiopia", f: "🇪🇹"}, {n: "Finland", f: "🇫🇮"},
-        {n: "France", f: "🇫🇷"}, {n: "Germany", f: "🇩🇪"}, {n: "Ghana", f: "🇬🇭"}, {n: "Greece", f: "🇬🇷"}, {n: "India", f: "🇮🇳"},
-        {n: "Indonesia", f: "🇮🇩"}, {n: "Iran", f: "🇮🇷"}, {n: "Iraq", f: "🇮🇶"}, {n: "Ireland", f: "🇮🇪"}, {n: "Israel", f: "🇮🇱"},
-        {n: "Italy", f: "🇮🇹"}, {n: "Jamaica", f: "🇯🇲"}, {n: "Japan", f: "🇯🇵"}, {n: "Kenya", f: "🇰🇪"}, {n: "Korea", f: "🇰🇷"},
-        {n: "Mexico", f: "🇲🇽"}, {n: "Morocco", f: "🇲🇦"}, {n: "Nigeria", f: "🇳🇬"}, {n: "Norway", f: "🇳🇴"}, {n: "Pakistan", f: "🇵🇰"},
-        {n: "Russia", f: "🇷🇺"}, {n: "Saudi Arabia", f: "🇸🇦"}, {n: "South Africa", f: "🇿🇦"}, {n: "Spain", f: "🇪🇸"}, {n: "Sweden", f: "🇸🇪"},
-        {n: "Turkey", f: "🇹🇷"}, {n: "UAE", f: "🇦🇪"}, {n: "UK", f: "🇬🇧"}, {n: "USA", f: "🇺🇸"}
-        // Add more as needed...
-    ];
+    // Initialize Telegram WebApp
+    const tg = window.Telegram.WebApp;
+    tg.expand();
 
-    // 2. Load Countries into Select
-    const countrySelect = document.getElementById('reg-country');
-    countries.forEach(c => {
-        let opt = document.createElement('option');
-        opt.value = `${c.f} ${c.n}`;
-        opt.innerHTML = `${c.f} ${c.n}`;
-        countrySelect.appendChild(opt);
-    });
-
-    // 3. Mock Registered Database (Opposite Genders)
-    const usersDB = [
-        {n: "Sophia", a: 22, g: "Female", c: "🇺🇸 USA", i: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400"},
-        {n: "Elena", a: 24, g: "Female", c: "🇪🇸 Spain", i: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400"},
-        {n: "Liam", a: 26, g: "Male", c: "🇬🇧 UK", i: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400"},
-        {n: "Marcus", a: 28, g: "Male", c: "🇩🇪 Germany", i: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400"},
-        {n: "Hanna", a: 21, g: "Female", c: "🇪🇹 Ethiopia", i: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400"}
-    ];
-
-    let userGender = "";
-    let currentIndex = 0;
-
-    // 4. Page Routing Logic
     function showPage(id) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         
-        // Handle Nav Highlights
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        const navId = 'n-' + id.split('-')[0];
-        if(document.getElementById(navId)) document.getElementById(navId).classList.add('active');
+        // Error መልዕክት ካለ እንዲጠፋ
+        document.getElementById('login-error').classList.add('hidden');
     }
 
-    function handleLogin() {
-        const name = document.getElementById('reg-name').value || "Guest User";
-        const age = document.getElementById('reg-age').value || "24";
-        const country = document.getElementById('reg-country').value || "🌍 Global";
-        userGender = document.getElementById('reg-gender').value || "Male";
+    // ምዝገባን ማስቀመጥ (Sign Up)
+    function processSignup() {
+        const name = document.getElementById('reg-name').value;
+        const email = document.getElementById('reg-email').value;
+        const pass = document.getElementById('reg-pass').value;
+        const gender = document.getElementById('reg-gender').value;
 
-        // Update Profile
-        document.getElementById('p-name').innerText = name;
-        document.getElementById('p-detail').innerText = `${age} • ${country}`;
-        document.getElementById('p-avatar').src = `https://ui-avatars.com/api/?name=${name}&background=A855F7&color=fff`;
+        if(!name || !email || !pass) {
+            alert("Please fill all fields!");
+            return;
+        }
 
-        // Start App
-        document.getElementById('nav-bar').style.display = 'flex';
-        showPage('home-page');
-        loadMatches();
-        loadChatList();
+        // መረጃውን በ Local Storage ሴቭ እናደርጋለን (ዳታቤዝ እስኪኖር)
+        const userData = { name, email, pass, gender };
+        localStorage.setItem(email, JSON.stringify(userData));
+
+        alert("Registration Successful! Now Login.");
+        showPage('login-page');
     }
 
-    function loadMatches() {
-        // Filter by opposite gender
-        const filtered = usersDB.filter(u => u.g !== userGender);
-        const match = filtered[currentIndex % filtered.length];
-        
-        document.getElementById('m-img').src = match.i;
-        document.getElementById('m-name').innerText = `${match.n}, ${match.a}`;
-        document.getElementById('m-loc').innerText = match.c;
+    // መግቢያ ማጣሪያ (Login Validation)
+    function processLogin() {
+        const email = document.getElementById('login-email').value;
+        const pass = document.getElementById('login-pass').value;
+
+        // መረጃውን ከ Local Storage እንፈልጋለን
+        const savedData = localStorage.getItem(email);
+
+        if (savedData) {
+            const user = JSON.parse(savedData);
+            
+            // የይለፍ ቃል ማረጋገጥ
+            if (user.pass === pass) {
+                // መረጃው ልክ ከሆነ አፑን ክፈት
+                document.getElementById('user-display').innerText = user.name;
+                document.getElementById('nav-bar').style.display = 'flex';
+                showPage('home-page');
+            } else {
+                // የይለፍ ቃል ከተሳሳተ
+                document.getElementById('login-error').classList.remove('hidden');
+            }
+        } else {
+            // ኢሜይሉ ካልተመዘገበ
+            document.getElementById('login-error').classList.remove('hidden');
+        }
     }
 
-    function nextMatch() {
-        currentIndex++;
-        loadMatches();
-    }
-
-    function loadChatList() {
-        const filtered = usersDB.filter(u => u.g !== userGender);
-        const list = document.getElementById('chat-list');
-        list.innerHTML = "";
-        filtered.forEach(u => {
-            list.innerHTML += `
-                <div class="flex items-center gap-4 bg-white/5 p-4 rounded-2xl">
-                    <img src="${u.i}" class="w-12 h-12 rounded-full object-cover">
-                    <div>
-                        <p class="font-bold">${u.n}</p>
-                        <p class="text-xs text-purple-400 italic">Matched with you</p>
-                    </div>
-                </div>
-            `;
-        });
+    function logout() {
+        document.getElementById('nav-bar').style.display = 'none';
+        showPage('login-page');
     }
 </script>
 
