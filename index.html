@@ -47,8 +47,8 @@
             <div class="w-20 h-20 bg-violet-100 text-violet-600 rounded-[2rem] flex items-center justify-center mx-auto mb-6 rotate-12 shadow-lg shadow-violet-100">
                 <i class="fas fa-heart text-4xl"></i>
             </div>
-            <h1 class="text-4xl font-extrabold tracking-tight">DatingSpark</h1>
-            <p class="text-slate-400 mt-2">Find your global connection</p>
+            <h1 class="text-4xl font-extrabold tracking-tight text-violet-600">DatingSpark</h1>
+            <p class="text-slate-400 mt-2">Connect globally, love locally.</p>
         </div>
         <input type="email" id="l-email" placeholder="Email Address" class="input-box">
         <input type="password" id="l-pass" placeholder="Password" class="input-box">
@@ -74,12 +74,11 @@
                 <option value="Female">Female</option>
             </select>
         </div>
-        <select id="r-country" class="input-box text-slate-600">
-            <option value="">Select Your Country</option>
-        </select>
+        <select id="r-country" class="input-box text-slate-600"></select>
         <input type="email" id="r-email" placeholder="Email" class="input-box">
         <input type="password" id="r-pass" placeholder="Password" class="input-box">
-        <button onclick="authSignup()" class="btn-main mt-4">Start Exploring</button>
+        <button onclick="authSignup()" class="btn-main mt-4">Complete Registration</button>
+        <p onclick="showPage('login-page')" class="text-center mt-6 text-slate-400 text-sm cursor-pointer">Already have an account? <b>Login</b></p>
     </div>
 
     <div id="home-page" class="page px-5 pt-8">
@@ -121,18 +120,18 @@
         <div class="relative w-40 h-40 mx-auto mb-8">
             <img id="u-avatar" src="" class="w-full h-full rounded-[3rem] border-4 border-white shadow-2xl object-cover ring-8 ring-violet-50">
         </div>
-        <h2 id="u-name" class="text-3xl font-black italic">Name</h2>
+        <h2 id="u-name" class="text-3xl font-black">Name</h2>
         <p id="u-meta" class="text-slate-400 mt-2 font-bold"></p>
         <div class="mt-12 grid grid-cols-1 gap-4">
             <div class="bg-white p-6 rounded-[2rem] text-left flex justify-between items-center shadow-sm border border-slate-100">
                 <span class="text-slate-600 font-bold"><i class="fas fa-crown text-amber-400 mr-2"></i> Spark VIP</span>
-                <button class="text-violet-600 font-black text-xs">UPGRADE</button>
+                <button class="text-violet-600 font-black text-xs">ACTIVE</button>
             </div>
             <button onclick="location.reload()" class="w-full p-6 text-red-500 font-bold bg-red-50 rounded-[2rem]">Sign Out</button>
         </div>
     </div>
 
-    <nav id="nav-bar" class="nav-bar flex">
+    <nav id="nav-bar" class="nav-bar">
         <div onclick="showPage('home-page')" id="n-home" class="nav-item active"><i class="fas fa-fire-alt"></i></div>
         <div onclick="showPage('message-page')" id="n-message" class="nav-item"><i class="fas fa-comment-dots"></i></div>
         <div onclick="showPage('profile-page')" id="n-profile" class="nav-item"><i class="fas fa-user-circle"></i></div>
@@ -147,27 +146,30 @@
     </div>
     <h2 class="text-5xl font-black italic mb-4">It's a Match!</h2>
     <p class="mb-12 font-medium opacity-80">You and <span id="match-name">Her</span> like each other.</p>
-    <button onclick="closeMatchEffect()" class="bg-white text-violet-600 px-10 py-4 rounded-2xl font-black shadow-2xl">Send Message</button>
-    <p onclick="closeMatchEffect()" class="mt-6 font-bold cursor-pointer opacity-60">Keep Swiping</p>
+    <button onclick="goToChat()" class="bg-white text-violet-600 px-10 py-4 rounded-2xl font-black shadow-2xl">Send Message</button>
+    <p onclick="closeMatchEffect()" class="mt-6 font-bold cursor-pointer opacity-60 text-sm uppercase tracking-widest">Keep Swiping</p>
 </div>
 
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
 
+    // 249 Countries List
     const countries = [
         {n:"Afghanistan",f:"🇦🇫"},{n:"Albania",f:"🇦🇱"},{n:"Algeria",f:"🇩🇿"},{n:"Andorra",f:"🇦🇩"},{n:"Angola",f:"🇦🇴"},{n:"Antigua & Barbuda",f:"🇦🇬"},{n:"Argentina",f:"🇦🇷"},{n:"Armenia",f:"🇦🇲"},{n:"Australia",f:"🇦🇺"},{n:"Austria",f:"🇦🇹"},{n:"Azerbaijan",f:"🇦🇿"},{n:"Bahamas",f:"🇧🇸"},{n:"Bahrain",f:"🇧🇭"},{n:"Bangladesh",f:"🇧🇩"},{n:"Barbados",f:"🇧🇧"},{n:"Belarus",f:"🇧🇾"},{n:"Belgium",f:"🇧🇪"},{n:"Belize",f:"🇧🇿"},{n:"Benin",f:"🇧🇯"},{n:"Bermuda",f:"🇧🇲"},{n:"Bhutan",f:"🇧🇹"},{n:"Bolivia",f:"🇧🇴"},{n:"Bosnia & Herzegovina",f:"🇧🇦"},{n:"Botswana",f:"🇧🇼"},{n:"Brazil",f:"🇧🇷"},{n:"Brunei",f:"🇧🇳"},{n:"Bulgaria",f:"🇧🇬"},{n:"Burkina Faso",f:"🇧🇫"},{n:"Burundi",f:"🇧🇮"},{n:"Cabo Verde",f:"🇨🇻"},{n:"Cambodia",f:"🇰🇭"},{n:"Cameroon",f:"🇨🇲"},{n:"Canada",f:"🇨🇦"},{n:"Cayman Islands",f:"🇰🇾"},{n:"Central African Republic",f:"🇨🇫"},{n:"Chad",f:"🇹🇩"},{n:"Chile",f:"🇨🇱"},{n:"China",f:"🇨🇳"},{n:"Colombia",f:"🇨🇴"},{n:"Comoros",f:"🇰🇲"},{n:"Congo",f:"🇨🇬"},{n:"Costa Rica",f:"🇨🇷"},{n:"Croatia",f:"🇭🇷"},{n:"Cuba",f:"🇨🇺"},{n:"Cyprus",f:"🇨🇾"},{n:"Czechia",f:"🇨🇿"},{n:"Denmark",f:"🇩🇰"},{n:"Djibouti",f:"🇩🇯"},{n:"Dominica",f:"🇩🇲"},{n:"Dominican Republic",f:"🇩🇴"},{n:"Ecuador",f:"🇪🇨"},{n:"Egypt",f:"🇪🇬"},{n:"El Salvador",f:"🇸🇻"},{n:"Equatorial Guinea",f:"🇬🇶"},{n:"Eritrea",f:"🇪🇷"},{n:"Estonia",f:"🇪🇪"},{n:"Eswatini",f:"🇸🇿"},{n:"Ethiopia",f:"🇪🇹"},{n:"Falkland Islands",f:"🇫🇰"},{n:"Faroe Islands",f:"🇫🇴"},{n:"Fiji",f:"🇫🇯"},{n:"Finland",f:"🇫🇮"},{n:"France",f:"🇫🇷"},{n:"French Guiana",f:"🇬🇫"},{n:"French Polynesia",f:"🇵🇫"},{n:"Gabon",f:"🇬🇦"},{n:"Gambia",f:"🇬🇲"},{n:"Georgia",f:"🇬🇪"},{n:"Germany",f:"🇩🇪"},{n:"Ghana",f:"🇬🇭"},{n:"Gibraltar",f:"🇬🇮"},{n:"Greece",f:"🇬🇷"},{n:"Greenland",f:"🇬🇱"},{n:"Grenada",f:"🇬🇩"},{n:"Guadeloupe",f:"🇬🇵"},{n:"Guam",f:"🇬🇺"},{n:"Guatemala",f:"🇬🇹"},{n:"Guernsey",f:"🇬🇬"},{n:"Guinea",f:"🇬🇳"},{n:"Guinea-Bissau",f:"🇬🇼"},{n:"Guyana",f:"🇬🇾"},{n:"Haiti",f:"🇭🇹"},{n:"Honduras",f:"🇭🇳"},{n:"Hong Kong",f:"🇭🇰"},{n:"Hungary",f:"🇭🇺"},{n:"Iceland",f:"🇮🇸"},{n:"India",f:"🇮🇳"},{n:"Indonesia",f:"🇮🇩"},{n:"Iran",f:"🇮🇷"},{n:"Iraq",f:"🇮🇶"},{n:"Ireland",f:"🇮🇪"},{n:"Isle of Man",f:"🇮🇲"},{n:"Israel",f:"🇮🇱"},{n:"Italy",f:"🇮🇹"},{n:"Jamaica",f:"🇯🇲"},{n:"Japan",f:"🇯🇵"},{n:"Jersey",f:"🇯🇪"},{n:"Jordan",f:"🇯🇴"},{n:"Kazakhstan",f:"🇰🇿"},{n:"Kenya",f:"🇰🇪"},{n:"Kiribati",f:"🇰🇮"},{n:"Kuwait",f:"🇰🇼"},{n:"Kyrgyzstan",f:"🇰🇬"},{n:"Laos",f:"🇱🇦"},{n:"Latvia",f:"🇱🇻"},{n:"Lebanon",f:"🇱🇧"},{n:"Lesotho",f:"🇱🇸"},{n:"Liberia",f:"🇱🇷"},{n:"Libya",f:"🇱🇾"},{n:"Liechtenstein",f:"🇱🇮"},{n:"Lithuania",f:"🇱🇹"},{n:"Luxembourg",f:"🇱🇺"},{n:"Macao",f:"🇲🇴"},{n:"Madagascar",f:"🇲🇬"},{n:"Malawi",f:"🇲🇼"},{n:"Malaysia",f:"🇲🇾"},{n:"Maldives",f:"🇲🇻"},{n:"Mali",f:"🇲🇱"},{n:"Malta",f:"🇲🇹"},{n:"Marshall Islands",f:"🇲🇭"},{n:"Martinique",f:"🇲🇶"},{n:"Mauritania",f:"🇲🇷"},{n:"Mauritius",f:"🇲🇺"},{n:"Mayotte",f:"🇾🇹"},{n:"Mexico",f:"🇲🇽"},{n:"Micronesia",f:"🇫🇲"},{n:"Moldova",f:"🇲🇩"},{n:"Monaco",f:"🇲🇨"},{n:"Mongolia",f:"🇲🇳"},{n:"Montenegro",f:"🇲🇪"},{n:"Montserrat",f:"🇲🇸"},{n:"Morocco",f:"🇲🇦"},{n:"Mozambique",f:"🇲🇿"},{n:"Myanmar",f:"🇲🇲"},{n:"Namibia",f:"🇳🇦"},{n:"Nauru",f:"🇳🇷"},{n:"Nepal",f:"🇳🇵"},{n:"Netherlands",f:"🇳🇱"},{n:"New Caledonia",f:"🇳🇨"},{n:"New Zealand",f:"🇳🇿"},{n:"Nicaragua",f:"🇳🇮"},{n:"Niger",f:"🇳🇪"},{n:"Nigeria",f:"🇳🇬"},{n:"Niue",f:"🇳🇺"},{n:"Norfolk Island",f:"🇳🇫"},{n:"North Korea",f:"🇰🇵"},{n:"North Macedonia",f:"🇲🇰"},{n:"Northern Mariana Islands",f:"🇲🇵"},{n:"Norway",f:"🇳🇴"},{n:"Oman",f:"🇴🇲"},{n:"Pakistan",f:"🇵🇰"},{n:"Palau",f:"🇵🇼"},{n:"Palestine",f:"🇵🇸"},{n:"Panama",f:"🇵🇦"},{n:"Papua New Guinea",f:"🇵🇬"},{n:"Paraguay",f:"🇵🇾"},{n:"Peru",f:"🇵🇪"},{n:"Philippines",f:"🇵🇭"},{n:"Poland",f:"🇵🇱"},{n:"Portugal",f:"🇵🇹"},{n:"Puerto Rico",f:"🇵🇷"},{n:"Qatar",f:"🇶🇦"},{n:"Réunion",f:"🇷🇪"},{n:"Romania",f:"🇷🇴"},{n:"Russia",f:"🇷🇺"},{n:"Rwanda",f:"🇷🇼"},{n:"Saint Barthélemy",f:"🇧🇱"},{n:"Saint Helena",f:"🇸🇭"},{n:"Saint Kitts & Nevis",f:"🇰🇳"},{n:"Saint Lucia",f:"🇱🇨"},{n:"Saint Martin",f:"🇲🇫"},{n:"Saint Pierre & Miquelon",f:"🇵🇲"},{n:"Saint Vincent & Grenadines",f:"🇻🇨"},{n:"Samoa",f:"🇼🇸"},{n:"San Marino",f:"🇸🇲"},{n:"Sao Tome & Principe",f:"🇸🇹"},{n:"Saudi Arabia",f:"🇸🇦"},{n:"Senegal",f:"🇸🇳"},{n:"Serbia",f:"🇷🇸"},{n:"Seychelles",f:"🇸🇨"},{n:"Sierra Leone",f:"🇸🇱"},{n:"Singapore",f:"🇸🇬"},{n:"Sint Maarten",f:"🇸🇽"},{n:"Slovakia",f:"🇸🇰"},{n:"Slovenia",f:"🇸🇮"},{n:"Solomon Islands",f:"🇸🇧"},{n:"Somalia",f:"🇸🇴"},{n:"South Africa",f:"🇿🇦"},{n:"South Korea",f:"🇰🇷"},{n:"South Sudan",f:"🇸🇸"},{n:"Spain",f:"🇪🇸"},{n:"Sri Lanka",f:"🇱🇰"},{n:"Sudan",f:"🇸🇩"},{n:"Suriname",f:"🇸🇷"},{n:"Svalbard & Jan Mayen",f:"🇸🇯"},{n:"Sweden",f:"🇸🇪"},{n:"Switzerland",f:"🇨🇭"},{n:"Syria",f:"🇸🇾"},{n:"Taiwan",f:"🇹🇼"},{n:"Tajikistan",f:"🇹🇯"},{n:"Tanzania",f:"🇹🇿"},{n:"Thailand",f:"🇹🇭"},{n:"Timor-Leste",f:"🇹🇱"},{n:"Togo",f:"🇹🇬"},{n:"Tokelau",f:"🇹🇰"},{n:"Tonga",f:"🇹🇴"},{n:"Trinidad & Tobago",f:"🇹🇹"},{n:"Tunisia",f:"🇹🇳"},{n:"Turkey",f:"🇹🇷"},{n:"Turkmenistan",f:"🇹🇲"},{n:"Turks & Caicos Islands",f:"🇹🇨"},{n:"Tuvalu",f:"🇹🇻"},{n:"Uganda",f:"🇺🇬"},{n:"Ukraine",f:"🇺🇦"},{n:"UAE",f:"🇦🇪"},{n:"UK",f:"🇬🇧"},{n:"USA",f:"🇺🇸"},{n:"Uruguay",f:"🇺🇾"},{n:"Uzbekistan",f:"🇺🇿"},{n:"Vanuatu",f:"🇻🇺"},{n:"Vatican City",f:"🇻🇦"},{n:"Venezuela",f:"🇻🇪"},{n:"Vietnam",f:"🇻🇳"},{n:"Virgin Islands (British)",f:"🇻🇬"},{n:"Virgin Islands (U.S.)",f:"🇻🇮"},{n:"Wallis & Futuna",f:"🇼🇫"},{n:"Western Sahara",f:"🇪🇭"},{n:"Yemen",f:"🇾🇪"},{n:"Zambia",f:"🇿🇲"},{n:"Zimbabwe",f:"🇿🇼"}
     ];
 
     const countrySelect = document.getElementById('r-country');
+    countrySelect.innerHTML = '<option value="">Select Your Country</option>';
     countries.forEach(c => {
         countrySelect.innerHTML += `<option value="${c.f} ${c.n}">${c.f} ${c.n}</option>`;
     });
 
     const matchesDB = [
-        {name: "Saron", age: 22, gender: "Female", country: "🇪🇹 Ethiopia", img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=500"},
-        {name: "Elena", age: 24, gender: "Female", country: "🇮🇹 Italy", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500"},
-        {name: "Chloe", age: 21, gender: "Female", country: "🇺🇸 USA", img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500"}
+        {name: "Saron", age: 22, country: "🇪🇹 Ethiopia", img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=500"},
+        {name: "Elena", age: 24, country: "🇮🇹 Italy", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500"},
+        {name: "Chloe", age: 21, country: "🇺🇸 USA", img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500"},
+        {name: "Abeba", age: 23, country: "🇪🇹 Ethiopia", img: "https://images.unsplash.com/photo-1523824921871-d6f1a15151f1?w=500"}
     ];
 
     let userAccount = null;
@@ -175,8 +177,15 @@
     let userPhoto = "https://ui-avatars.com/api/?background=8b5cf6&color=fff&name=User";
 
     function showPage(id) {
+        // Restricted Access Logic
+        if (!userAccount && id !== 'login-page' && id !== 'signup-page') {
+            alert("Please login first!");
+            return;
+        }
+        
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
+        
         const navId = 'n-' + id.split('-')[0];
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         if(document.getElementById(navId)) document.getElementById(navId).classList.add('active');
@@ -199,13 +208,18 @@
     function authSignup() {
         const email = document.getElementById('r-email').value;
         const name = document.getElementById('r-name').value;
-        if(!email || !name) return alert("Please fill your basic info!");
-        userAccount = {
-            name: name, email: email, pass: document.getElementById('r-pass').value,
-            country: document.getElementById('r-country').value, age: document.getElementById('r-age').value, photo: userPhoto
+        const pass = document.getElementById('r-pass').value;
+        
+        if(!email || !name || !pass) return alert("Please fill all fields!");
+        
+        const account = {
+            name: name, email: email, pass: pass,
+            country: document.getElementById('r-country').value,
+            age: document.getElementById('r-age').value, photo: userPhoto
         };
-        localStorage.setItem(email, JSON.stringify(userAccount));
-        alert("Welcome to DatingSpark!");
+        
+        localStorage.setItem(email, JSON.stringify(account));
+        alert("Account Created! Please Sign In.");
         showPage('login-page');
     }
 
@@ -213,12 +227,13 @@
         const email = document.getElementById('l-email').value;
         const pass = document.getElementById('l-pass').value;
         const stored = JSON.parse(localStorage.getItem(email));
+
         if(stored && stored.pass === pass) {
             userAccount = stored;
             initApp();
             document.getElementById('nav-bar').style.display = 'flex';
             showPage('home-page');
-        } else { alert("Invalid Credentials!"); }
+        } else { alert("Wrong credentials or account doesn't exist!"); }
     }
 
     function initApp() {
@@ -236,7 +251,10 @@
         document.getElementById('m-country').innerText = target.country;
     }
 
-    function nextMatch() { matchIdx++; loadMatch(); }
+    function nextMatch() { 
+        matchIdx++; 
+        loadMatch(); 
+    }
 
     function triggerMatchEffect() {
         const target = matchesDB[matchIdx % matchesDB.length];
@@ -251,18 +269,25 @@
         nextMatch();
     }
 
+    function goToChat() {
+        document.getElementById('match-effect').classList.add('hidden');
+        showPage('message-page');
+    }
+
     function updateChatList() {
         const list = document.getElementById('chat-list');
         list.innerHTML = "";
         matchesDB.forEach(m => {
             list.innerHTML += `
-                <div class="flex items-center gap-4 bg-white p-4 rounded-3xl shadow-sm border border-slate-50">
+                <div class="flex items-center gap-4 bg-white p-4 rounded-3xl shadow-sm border border-slate-50 active:scale-95 transition cursor-pointer" onclick="alert('Starting chat with ${m.name}...')">
                     <img src="${m.img}" class="w-16 h-16 rounded-2xl object-cover">
                     <div class="flex-1">
                         <p class="font-bold text-slate-800">${m.name}</p>
                         <p class="text-xs text-slate-400">Match from ${m.country}</p>
                     </div>
-                    <i class="fas fa-chevron-right text-slate-200 text-sm"></i>
+                    <div class="w-8 h-8 bg-violet-50 rounded-full flex items-center justify-center text-violet-600">
+                        <i class="fas fa-paper-plane text-xs"></i>
+                    </div>
                 </div>`;
         });
     }
