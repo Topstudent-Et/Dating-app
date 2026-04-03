@@ -2,133 +2,243 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WorldDating Mini App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WorldDating | Global Mini App</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #000; color: white; overflow: hidden; }
-        .app-container { width: 100vw; height: 100vh; position: relative; }
-        .page { display: none; padding: 20px; height: 100%; overflow-y: auto; }
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
+        body { font-family: 'Outfit', sans-serif; background: #000; color: white; overflow: hidden; }
+        .page { display: none; height: 100vh; padding-bottom: 80px; overflow-y: auto; animation: fadeIn 0.3s ease; }
         .page.active { display: block; }
-        .input-field { width: 100%; padding: 15px; border-radius: 12px; background: #1a1a1a; border: 1px solid #333; margin-bottom: 12px; color: white; }
-        .btn-main { background: #8b5cf6; padding: 15px; border-radius: 12px; width: 100%; font-weight: bold; }
-        .nav-bar { display: none; position: fixed; bottom: 0; width: 100%; background: #0a0a0a; border-top: 1px solid #222; justify-content: space-around; padding: 15px; }
-        .nav-item { color: #666; cursor: pointer; }
-        .nav-item.active { color: #8b5cf6; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .nav-bar { display: none; position: fixed; bottom: 0; width: 100%; background: rgba(10,10,10,0.95); backdrop-filter: blur(15px); border-top: 1px solid #222; z-index: 100; }
+        .nav-item { flex: 1; text-align: center; padding: 15px; color: #555; transition: 0.3s; }
+        .nav-item.active { color: #a855f7; }
+        .input-style { width: 100%; padding: 16px; border-radius: 18px; background: #1a1a1a; border: 1px solid #333; outline: none; margin-bottom: 12px; }
+        .btn-grad { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); padding: 16px; border-radius: 18px; font-weight: bold; width: 100%; }
+        .match-card { height: 75vh; border-radius: 35px; overflow: hidden; position: relative; border: 1px solid #222; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
 
-    <div id="login-page" class="page active pt-10">
-        <h1 class="text-3xl font-bold text-center mb-8">Login</h1>
-        <div id="login-error" class="text-red-500 text-sm mb-4 text-center hidden italic italic">Invalid Email or Password!</div>
-        <input type="email" id="login-email" placeholder="Email" class="input-field">
-        <input type="password" id="login-pass" placeholder="Password" class="input-field">
-        <button onclick="processLogin()" class="btn-main mb-4">Login</button>
-        <p class="text-center text-gray-500">Don't have an account? <span onclick="showPage('signup-page')" class="text-purple-400 cursor-pointer">Register</span></p>
-    </div>
-
-    <div id="signup-page" class="page pt-5">
-        <h1 class="text-2xl font-bold mb-6">Create Account</h1>
-        <input type="text" id="reg-name" placeholder="Full Name" class="input-field">
-        <input type="email" id="reg-email" placeholder="Email" class="input-field">
-        <input type="password" id="reg-pass" placeholder="Create Password" class="input-field">
-        <select id="reg-gender" class="input-field">
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-        </select>
-        <button onclick="processSignup()" class="btn-main">Create Account</button>
-        <p onclick="showPage('login-page')" class="text-center mt-4 text-gray-500 cursor-pointer">Back to Login</p>
-    </div>
-
-    <div id="home-page" class="page pt-5">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-bold">Matches</h2>
-            <i class="fas fa-cog text-gray-400"></i>
+    <div id="login-page" class="page active px-6 pt-20">
+        <div class="text-center mb-10">
+            <div class="w-20 h-20 bg-purple-600 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-xl shadow-purple-500/20">
+                <i class="fas fa-fire-alt text-4xl text-white"></i>
+            </div>
+            <h1 class="text-3xl font-extrabold tracking-tight">WorldDating</h1>
+            <p class="text-gray-500 mt-2">Global connections start here.</p>
         </div>
-        <div class="bg-gray-900 rounded-3xl h-[450px] flex flex-col justify-end p-6 border border-white/5">
-            <h3 class="text-2xl font-bold">Welcome!</h3>
-            <p class="text-gray-400">Successfully Logged in as <span id="user-display" class="text-purple-400"></span></p>
+        <div id="login-error" class="hidden text-red-500 text-sm text-center mb-4 italic">Invalid email or password!</div>
+        <input type="email" id="l-email" placeholder="Email Address" class="input-style">
+        <input type="password" id="l-pass" placeholder="Password" class="input-style">
+        <p onclick="showPage('forgot-page')" class="text-right text-xs text-purple-400 mb-6 cursor-pointer">Forgot Password?</p>
+        <button onclick="authLogin()" class="btn-grad shadow-lg shadow-purple-500/30">Sign In</button>
+        <p class="text-center mt-10 text-gray-500">New user? <span onclick="showPage('signup-page')" class="text-purple-400 font-bold cursor-pointer">Create Account</span></p>
+    </div>
+
+    <div id="forgot-page" class="page px-6 pt-20 text-center">
+        <h2 class="text-2xl font-bold mb-4">Reset Password</h2>
+        <p class="text-gray-500 mb-8">Enter your email to receive a recovery link.</p>
+        <input type="email" placeholder="Email Address" class="input-style">
+        <button onclick="alert('Recovery link sent to your email!'); showPage('login-page')" class="btn-grad">Send Link</button>
+        <p onclick="showPage('login-page')" class="mt-6 text-purple-400 cursor-pointer">Back to Login</p>
+    </div>
+
+    <div id="signup-page" class="page px-6 pt-10">
+        <h2 class="text-2xl font-bold mb-6 italic italic">Join the World</h2>
+        <div class="space-y-1">
+            <input type="text" id="r-name" placeholder="Full Name" class="input-style">
+            <div class="grid grid-cols-2 gap-3">
+                <input type="number" id="r-age" placeholder="Age" class="input-style">
+                <select id="r-gender" class="input-style">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            <select id="r-country" class="input-style">
+                <option value="">Select Country</option>
+                </select>
+            <input type="email" id="r-email" placeholder="Email Address" class="input-style">
+            <input type="password" id="r-pass" placeholder="Create Password" class="input-style">
+            <button onclick="authSignup()" class="btn-grad mt-4">Create My Profile</button>
+            <p onclick="showPage('login-page')" class="text-center mt-6 text-gray-500 pb-10">Already have an account? <span class="text-purple-400 font-bold">Login</span></p>
         </div>
     </div>
 
-    <nav id="nav-bar" class="nav-bar">
-        <div onclick="showPage('home-page')" class="nav-item active"><i class="fas fa-fire text-2xl"></i></div>
-        <div class="nav-item"><i class="fas fa-comment text-2xl"></i></div>
-        <div onclick="logout()" class="nav-item"><i class="fas fa-user text-2xl"></i></div>
+    <div id="home-page" class="page px-4 pt-4">
+        <div class="flex justify-between items-center mb-4 px-2">
+            <span class="text-xl font-bold italic">Discovery</span>
+            <div class="flex gap-4">
+                <i class="fas fa-sliders-h text-gray-400"></i>
+                <i class="fas fa-crown text-yellow-500"></i>
+            </div>
+        </div>
+        <div id="match-card" class="match-card">
+            <img id="m-img" src="" class="w-full h-full object-cover">
+            <div class="absolute bottom-0 w-full p-8 bg-gradient-to-t from-black via-black/60 to-transparent">
+                <h3 id="m-info" class="text-3xl font-bold">Name, Age</h3>
+                <p id="m-country" class="text-gray-300 text-sm mt-1">Location</p>
+                <div class="flex gap-4 mt-6">
+                    <button onclick="nextMatch()" class="flex-1 bg-white/10 backdrop-blur-md p-4 rounded-2xl text-red-500 text-xl"><i class="fas fa-times"></i></button>
+                    <button onclick="nextMatch()" class="flex-1 bg-white/10 backdrop-blur-md p-4 rounded-2xl text-green-500 text-xl"><i class="fas fa-heart"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="message-page" class="page px-4 pt-6">
+        <h2 class="text-2xl font-bold mb-6">Messages</h2>
+        <div id="chat-list" class="space-y-4">
+            </div>
+    </div>
+
+    <div id="profile-page" class="page px-6 pt-10 text-center">
+        <div class="relative w-32 h-32 mx-auto mb-6">
+            <img src="https://ui-avatars.com/api/?background=a855f7&color=fff&name=User" id="u-avatar" class="w-full h-full rounded-full border-4 border-purple-600 p-1">
+            <div class="absolute bottom-0 right-0 bg-purple-500 w-8 h-8 rounded-full border-4 border-black flex items-center justify-center">
+                <i class="fas fa-pen text-[10px]"></i>
+            </div>
+        </div>
+        <h2 id="u-name" class="text-2xl font-bold">User Name</h2>
+        <p id="u-meta" class="text-gray-500 text-sm">Age • Country</p>
+        
+        <div class="grid grid-cols-2 gap-4 mt-10">
+            <div class="bg-white/5 p-6 rounded-[2rem] border border-white/5">
+                <i class="fas fa-shield-alt text-purple-400 mb-2"></i>
+                <p class="text-xs uppercase font-bold text-gray-500">Security</p>
+            </div>
+            <div class="bg-white/5 p-6 rounded-[2rem] border border-white/5">
+                <i class="fas fa-cog text-gray-400 mb-2"></i>
+                <p class="text-xs uppercase font-bold text-gray-500">Settings</p>
+            </div>
+        </div>
+        <button onclick="location.reload()" class="w-full mt-10 p-4 text-red-500 font-bold bg-red-500/10 rounded-2xl">Logout</button>
+    </div>
+
+    <nav id="nav-bar" class="nav-bar flex">
+        <div onclick="showPage('home-page')" id="n-home" class="nav-item active"><i class="fas fa-fire-alt text-xl"></i></div>
+        <div onclick="showPage('message-page')" id="n-message" class="nav-item"><i class="fas fa-comment-alt text-xl"></i></div>
+        <div onclick="showPage('profile-page')" id="n-profile" class="nav-item"><i class="fas fa-user-circle text-xl"></i></div>
     </nav>
 
 </div>
 
 <script>
-    // Initialize Telegram WebApp
     const tg = window.Telegram.WebApp;
     tg.expand();
+
+    // 1. Database of Countries (Global)
+    const countries = [
+        {n: "Ethiopia", f: "🇪🇹"}, {n: "USA", f: "🇺🇸"}, {n: "UK", f: "🇬🇧"}, {n: "Germany", f: "🇩🇪"}, 
+        {n: "Canada", f: "🇨🇦"}, {n: "France", f: "🇫🇷"}, {n: "Japan", f: "🇯🇵"}, {n: "Brazil", f: "🇧🇷"},
+        {n: "UAE", f: "🇦🇪"}, {n: "Kenya", f: "🇰🇪"}, {n: "South Africa", f: "🇿🇦"}, {n: "Nigeria", f: "🇳🇬"}
+    ];
+
+    // 2. Global Users Data
+    const usersDB = [
+        {name: "Sophia", age: 22, gender: "Female", country: "🇺🇸 USA", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500"},
+        {name: "Amelia", age: 24, gender: "Female", country: "🇬🇧 UK", img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500"},
+        {name: "Liam", age: 26, gender: "Male", country: "🇨🇦 Canada", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500"},
+        {name: "Hanna", age: 23, gender: "Female", country: "🇪🇹 Ethiopia", img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=500"},
+        {name: "Marcus", age: 27, gender: "Male", country: "🇩🇪 Germany", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500"}
+    ];
+
+    // Load countries on startup
+    const countryEl = document.getElementById('r-country');
+    countries.forEach(c => {
+        countryEl.innerHTML += `<option value="${c.f} ${c.n}">${c.f} ${c.n}</option>`;
+    });
+
+    let currentGender = "";
+    let matchIdx = 0;
 
     function showPage(id) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        
-        // Error መልዕክት ካለ እንዲጠፋ
-        document.getElementById('login-error').classList.add('hidden');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        const navId = 'n-' + id.split('-')[0];
+        if(document.getElementById(navId)) document.getElementById(navId).classList.add('active');
     }
 
-    // ምዝገባን ማስቀመጥ (Sign Up)
-    function processSignup() {
-        const name = document.getElementById('reg-name').value;
-        const email = document.getElementById('reg-email').value;
-        const pass = document.getElementById('reg-pass').value;
-        const gender = document.getElementById('reg-gender').value;
+    // SIGNUP LOGIC
+    function authSignup() {
+        const name = document.getElementById('r-name').value;
+        const email = document.getElementById('r-email').value;
+        const pass = document.getElementById('r-pass').value;
+        const gender = document.getElementById('r-gender').value;
+        const age = document.getElementById('r-age').value;
+        const country = document.getElementById('r-country').value;
 
-        if(!name || !email || !pass) {
-            alert("Please fill all fields!");
-            return;
-        }
+        if(!name || !email || !pass) return alert("Fill all fields!");
 
-        // መረጃውን በ Local Storage ሴቭ እናደርጋለን (ዳታቤዝ እስኪኖር)
-        const userData = { name, email, pass, gender };
+        const userData = { name, email, pass, gender, age, country };
         localStorage.setItem(email, JSON.stringify(userData));
-
-        alert("Registration Successful! Now Login.");
+        alert("Registration Successful! Please Login.");
         showPage('login-page');
     }
 
-    // መግቢያ ማጣሪያ (Login Validation)
-    function processLogin() {
-        const email = document.getElementById('login-email').value;
-        const pass = document.getElementById('login-pass').value;
+    // LOGIN LOGIC (With Validation)
+    function authLogin() {
+        const email = document.getElementById('l-email').value;
+        const pass = document.getElementById('l-pass').value;
+        const stored = localStorage.getItem(email);
 
-        // መረጃውን ከ Local Storage እንፈልጋለን
-        const savedData = localStorage.getItem(email);
-
-        if (savedData) {
-            const user = JSON.parse(savedData);
-            
-            // የይለፍ ቃል ማረጋገጥ
-            if (user.pass === pass) {
-                // መረጃው ልክ ከሆነ አፑን ክፈት
-                document.getElementById('user-display').innerText = user.name;
+        if(stored) {
+            const user = JSON.parse(stored);
+            if(user.pass === pass) {
+                currentGender = user.gender;
+                setupProfile(user);
                 document.getElementById('nav-bar').style.display = 'flex';
                 showPage('home-page');
+                loadMatches();
             } else {
-                // የይለፍ ቃል ከተሳሳተ
                 document.getElementById('login-error').classList.remove('hidden');
             }
         } else {
-            // ኢሜይሉ ካልተመዘገበ
             document.getElementById('login-error').classList.remove('hidden');
         }
     }
 
-    function logout() {
-        document.getElementById('nav-bar').style.display = 'none';
-        showPage('login-page');
+    function setupProfile(user) {
+        document.getElementById('u-name').innerText = user.name;
+        document.getElementById('u-meta').innerText = `${user.age} • ${user.country}`;
+        document.getElementById('u-avatar').src = `https://ui-avatars.com/api/?background=a855f7&color=fff&name=${user.name}`;
+    }
+
+    function loadMatches() {
+        const filtered = usersDB.filter(u => u.gender !== currentGender);
+        const match = filtered[matchIdx % filtered.length];
+        document.getElementById('m-img').src = match.img;
+        document.getElementById('m-info').innerText = `${match.name}, ${match.age}`;
+        document.getElementById('m-country').innerText = match.country;
+        loadChatList(filtered);
+    }
+
+    function nextMatch() {
+        matchIdx++;
+        loadMatches();
+    }
+
+    function loadChatList(matches) {
+        const list = document.getElementById('chat-list');
+        list.innerHTML = "";
+        matches.forEach(m => {
+            list.innerHTML += `
+                <div class="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5">
+                    <img src="${m.img}" class="w-14 h-14 rounded-full object-cover">
+                    <div class="flex-1">
+                        <div class="flex justify-between items-center"><span class="font-bold">${m.name}</span> <span class="text-[10px] text-gray-500">2:30 PM</span></div>
+                        <p class="text-xs text-purple-400 italic">Matched from ${m.country}</p>
+                    </div>
+                </div>
+            `;
+        });
     }
 </script>
-
 </body>
 </html>
