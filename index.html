@@ -3,276 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WorldDating Pro | Telegram Mini App</title>
+    <title>WorldDating | Global Discovery</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
-        body { font-family: 'Outfit', sans-serif; background: #000; color: white; overflow: hidden; }
-        .page { display: none; height: 100vh; padding-bottom: 90px; overflow-y: auto; transition: all 0.3s ease; }
-        .page.active { display: block; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .nav-bar { display: none; position: fixed; bottom: 0; width: 100%; background: rgba(10,10,10,0.95); backdrop-filter: blur(15px); border-top: 1px solid #222; z-index: 100; justify-content: space-around; padding: 15px 0; }
-        .nav-item { color: #444; font-size: 1.4rem; cursor: pointer; transition: 0.3s; }
-        .nav-item.active { color: #a855f7; transform: scale(1.1); }
-        .input-style { width: 100%; padding: 16px; border-radius: 18px; background: #111; border: 1px solid #333; outline: none; margin-bottom: 12px; color: white; }
-        .btn-grad { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); padding: 16px; border-radius: 18px; font-weight: bold; width: 100%; transition: 0.3s; }
-        .btn-grad:active { transform: scale(0.98); }
-        .glass { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        :root { --primary: #8b5cf6; --secondary: #ec4899; --bg: #f8fafc; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: #1e293b; overflow: hidden; }
+        .page { display: none; height: 100vh; padding-bottom: 90px; overflow-y: auto; }
+        .page.active { display: block; animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .nav-bar { display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); z-index: 100; justify-content: space-around; padding: 12px 0; }
+        .nav-item { color: #94a3b8; font-size: 1.2rem; transition: 0.3s; }
+        .nav-item.active { color: var(--primary); transform: scale(1.2); }
+        .input-box { width: 100%; padding: 16px; border-radius: 16px; background: white; border: 1px solid #e2e8f0; outline: none; margin-bottom: 12px; }
+        .btn-main { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; padding: 16px; border-radius: 16px; font-weight: 700; width: 100%; box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.3); }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-
-    <div id="login-page" class="page active px-6 pt-20">
-        <div class="text-center mb-12">
-            <div class="w-20 h-20 bg-purple-600 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-500/30">
-                <i class="fas fa-heart text-4xl text-white"></i>
+    <div id="login-page" class="page active px-8 pt-24 text-center">
+        <div class="mb-10 text-center">
+            <div class="w-20 h-20 bg-violet-100 text-violet-600 rounded-3xl flex items-center justify-center mx-auto mb-6 rotate-12">
+                <i class="fas fa-heart text-4xl"></i>
             </div>
-            <h1 class="text-3xl font-bold">እንኳን ደህና መጡ</h1>
-            <p class="text-gray-500 mt-2 italic">ለመቀጠል መጀመሪያ ይግቡ</p>
+            <h1 class="text-4xl font-extrabold tracking-tight">WorldDating</h1>
+            <p class="text-slate-500 mt-2">Connect with the world today.</p>
         </div>
-        <div id="login-error" class="hidden text-red-500 text-center mb-4 text-sm italic">ያልተመዘገበ አካውንት ወይም የተሳሳተ መረጃ!</div>
-        <input type="email" id="l-email" placeholder="Email Address" class="input-style">
-        <input type="password" id="l-pass" placeholder="Password" class="input-style">
-        <button onclick="authLogin()" class="btn-grad shadow-xl shadow-purple-500/20">Sign In</button>
-        <p class="text-center mt-10 text-gray-500">አዲስ ተጠቃሚ ነዎት? <span onclick="showPage('signup-page')" class="text-purple-400 font-bold cursor-pointer">ይመዝገቡ</span></p>
+        <input type="email" id="l-email" placeholder="Email Address" class="input-box">
+        <input type="password" id="l-pass" placeholder="Password" class="input-box">
+        <button onclick="authLogin()" class="btn-main mt-4">Sign In</button>
+        <p class="mt-8 text-slate-500">New explorer? <span onclick="showPage('signup-page')" class="text-violet-600 font-bold cursor-pointer underline">Join Now</span></p>
     </div>
 
-    <div id="signup-page" class="page px-6 pt-10">
-        <h2 class="text-2xl font-bold mb-6">አዲስ ፕሮፋይል ይክፈቱ</h2>
-        <div class="flex justify-center mb-6">
-            <div onclick="document.getElementById('r-photo').click()" class="w-24 h-24 bg-gray-900 rounded-full border-2 border-dashed border-purple-500 flex flex-col items-center justify-center cursor-pointer overflow-hidden relative">
-                <img id="img-preview" class="absolute w-full h-full object-cover hidden">
-                <i class="fas fa-user-plus text-gray-500"></i>
-                <span class="text-[9px] text-gray-400 mt-1">ፎቶ ያስገቡ</span>
-            </div>
-            <input type="file" id="r-photo" class="hidden" accept="image/*" onchange="previewImage(this)">
-        </div>
-        <input type="text" id="r-name" placeholder="ሙሉ ስም" class="input-style">
+    <div id="signup-page" class="page px-8 pt-10">
+        <h2 class="text-3xl font-extrabold mb-8">Create Profile</h2>
+        <input type="text" id="r-name" placeholder="Full Name" class="input-box">
         <div class="grid grid-cols-2 gap-3">
-            <input type="number" id="r-age" placeholder="እድሜ" class="input-style">
-            <select id="r-gender" class="input-style">
-                <option value="Male">ወንድ</option>
-                <option value="Female">ሴት</option>
+            <input type="number" id="r-age" placeholder="Age" class="input-box">
+            <select id="r-gender" class="input-box">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
             </select>
         </div>
-        <select id="r-country" class="input-style h-14">
-            <option value="">ሀገር ይምረጡ (249)</option>
+        <select id="r-country" class="input-box">
+            <option value="">Select Country</option>
         </select>
-        <input type="email" id="r-email" placeholder="Email" class="input-style">
-        <input type="password" id="r-pass" placeholder="Password" class="input-style">
-        <button onclick="authSignup()" class="btn-grad mt-2">ተመዝገብ</button>
-        <p onclick="showPage('login-page')" class="text-center mt-6 text-gray-500 cursor-pointer italic">ተመልሰው ይግቡ</p>
+        <input type="email" id="r-email" placeholder="Email" class="input-box">
+        <input type="password" id="r-pass" placeholder="Password" class="input-box">
+        <button onclick="authSignup()" class="btn-main mt-4">Start Journey</button>
     </div>
 
-    <div id="home-page" class="page px-4 pt-4">
-        <div class="flex justify-between items-center mb-6 px-2">
-            <h2 class="text-xl font-bold italic">Discovery</h2>
-            <div onclick="document.getElementById('post-file').click()" class="w-10 h-10 glass flex items-center justify-center text-purple-400 cursor-pointer">
-                <i class="fas fa-camera"></i>
-            </div>
-            <input type="file" id="post-file" class="hidden" onchange="alert('ፎቶው በተሳካ ሁኔታ ተለጥፏል!')">
+    <div id="home-page" class="page px-5 pt-6">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-extrabold">Discovery</h2>
+            <i class="fas fa-plus-circle text-2xl text-violet-600"></i>
         </div>
-        
-        <div id="match-card" class="relative h-[560px] rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl">
+        <div id="match-card" class="relative h-[580px] rounded-[32px] overflow-hidden bg-white shadow-xl">
             <img id="m-img" src="" class="w-full h-full object-cover">
-            <div class="absolute bottom-0 w-full p-8 bg-gradient-to-t from-black via-black/80 to-transparent">
-                <h3 id="m-info" class="text-3xl font-bold">Loading...</h3>
-                <p id="m-country" class="text-gray-400 text-sm mt-1"></p>
-                <div class="flex gap-4 mt-6">
-                    <button onclick="nextMatch()" class="flex-1 glass p-4 rounded-2xl text-red-500 hover:bg-red-500/10 transition"><i class="fas fa-times text-xl"></i></button>
-                    <button onclick="nextMatch()" class="flex-1 glass p-4 rounded-2xl text-green-500 hover:bg-green-500/10 transition"><i class="fas fa-heart text-xl"></i></button>
+            <div class="absolute bottom-0 w-full p-8 bg-gradient-to-t from-black/80 to-transparent">
+                <h3 id="m-info" class="text-white text-3xl font-bold"></h3>
+                <p id="m-country" class="text-slate-200"></p>
+                <div class="flex gap-4 mt-8">
+                    <button onclick="nextMatch()" class="flex-1 bg-white/20 p-4 rounded-2xl text-white"><i class="fas fa-times"></i></button>
+                    <button onclick="nextMatch()" class="flex-1 bg-white p-4 rounded-2xl text-pink-600"><i class="fas fa-heart"></i></button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="message-page" class="page px-4 pt-6">
-        <h2 class="text-2xl font-bold mb-6 italic italic">መልዕክቶች</h2>
-        <div id="chat-list" class="space-y-4">
-            </div>
-    </div>
-
-    <div id="chat-view" class="page px-0">
-        <div class="p-4 flex items-center gap-4 border-b border-white/10 bg-black/50 sticky top-0 backdrop-blur-md">
-            <i onclick="showPage('message-page')" class="fas fa-arrow-left text-purple-500"></i>
-            <img id="chat-avatar" src="" class="w-10 h-10 rounded-full object-cover border border-purple-500">
-            <h2 id="chatting-with" class="font-bold">Chat</h2>
-        </div>
-        <div id="chat-box" class="h-[75vh] overflow-y-auto p-4 space-y-4 flex flex-col">
-            </div>
-        <div class="fixed bottom-0 w-full p-4 bg-black flex gap-2 border-t border-white/5">
-            <input type="text" id="chat-input" placeholder="መልዕክት ይጻፉ..." class="flex-1 input-style mb-0">
-            <button onclick="sendMessage()" class="w-14 h-14 rounded-2xl bg-purple-600 flex items-center justify-center shadow-lg shadow-purple-600/30">
-                <i class="fas fa-paper-plane"></i>
-            </button>
-        </div>
-    </div>
-
-    <div id="profile-page" class="page px-6 pt-10 text-center">
-        <div class="relative w-32 h-32 mx-auto mb-6">
-            <img id="u-avatar" src="" class="w-full h-full rounded-full border-4 border-purple-600 object-cover shadow-2xl">
-            <div class="absolute bottom-1 right-1 bg-purple-500 w-8 h-8 rounded-full border-4 border-black flex items-center justify-center">
-                <i class="fas fa-check text-[10px]"></i>
-            </div>
-        </div>
-        <h2 id="u-name" class="text-2xl font-bold italic italic">Name</h2>
-        <p id="u-meta" class="text-gray-500 text-sm">Age • Country</p>
-        
-        <div class="mt-10 space-y-3">
-            <div class="glass p-5 text-left flex justify-between items-center">
-                <div class="flex items-center gap-3"><i class="fas fa-envelope text-purple-500"></i> <span>Email</span></div>
-                <span id="u-email" class="text-gray-400 text-xs italic italic"></span>
-            </div>
-            <button onclick="alert('ማስተካከያ ገጽ በቅርቡ ይከፈታል!')" class="glass p-5 text-left flex justify-between items-center w-full">
-                <div class="flex items-center gap-3"><i class="fas fa-edit text-purple-500"></i> <span>Edit Profile</span></div>
-                <i class="fas fa-chevron-right text-gray-600"></i>
-            </button>
-        </div>
-        <button onclick="location.reload()" class="w-full mt-10 p-5 text-red-500 font-bold glass">Logout</button>
-    </div>
-
-    <nav id="nav-bar" class="nav-bar">
-        <div onclick="showPage('home-page')" id="n-home" class="nav-item active"><i class="fas fa-fire-alt"></i></div>
-        <div onclick="showPage('message-page')" id="n-message" class="nav-item"><i class="fas fa-comment-alt"></i></div>
-        <div onclick="showPage('profile-page')" id="n-profile" class="nav-item"><i class="fas fa-user-circle"></i></div>
+    <nav id="nav-bar" class="nav-bar flex">
+        <div onclick="showPage('home-page')" id="n-home" class="nav-item active"><i class="fas fa-compass"></i></div>
+        <div onclick="showPage('message-page')" id="n-message" class="nav-item"><i class="fas fa-comment-dots"></i></div>
+        <div onclick="showPage('profile-page')" id="n-profile" class="nav-item"><i class="fas fa-user"></i></div>
     </nav>
-
 </div>
 
 <script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
-
-    // 1. 249 ሀገራት ዝርዝር (ዲናሚክ)
-    const countries = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua & Deps", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Central African Rep", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "East Timor", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Ivory Coast", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea North", "Korea South", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russian Federation", "Rwanda", "St Kitts & Nevis", "St Lucia", "Saint Vincent & the Grenadines", "Samoa", "San Marino", "Sao Tome & Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Togo", "Tonga", "Trinidad & Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"];
-    const countryEl = document.getElementById('r-country');
-    countries.forEach(c => countryEl.innerHTML += `<option value="${c}">${c}</option>`);
-
-    // 2. Mock Database (ለሙከራ የተቀመጡ ሰዎች)
-    const matchesDB = [
-        {name: "Sophia", age: 22, gender: "Female", country: "USA", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500"},
-        {name: "Elena", age: 23, gender: "Female", country: "Ethiopia", img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=500"},
-        {name: "Amelia", age: 24, gender: "Female", country: "UK", img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500"},
-        {name: "Marcus", age: 26, gender: "Male", country: "Germany", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500"}
+    const countryList = [
+        {n:"Afghanistan",f:"🇦🇫"},{n:"Albania",f:"🇦🇱"},{n:"Algeria",f:"🇩🇿"},{n:"Andorra",f:"🇦🇩"},{n:"Angola",f:"🇦🇴"},{n:"Antigua and Barbuda",f:"🇦🇬"},{n:"Argentina",f:"🇦🇷"},{n:"Armenia",f:"🇦🇲"},{n:"Australia",f:"🇦🇺"},{n:"Austria",f:"🇦🇹"},{n:"Azerbaijan",f:"🇦🇿"},{n:"Bahamas",f:"🇧🇸"},{n:"Bahrain",f:"🇧🇭"},{n:"Bangladesh",f:"🇧🇩"},{n:"Barbados",f:"🇧🇧"},{n:"Belarus",f:"🇧🇾"},{n:"Belgium",f:"🇧🇪"},{n:"Belize",f:"🇧🇿"},{n:"Benin",f:"🇧🇯"},{n:"Bhutan",f:"🇧🇹"},{n:"Bolivia",f:"🇧🇴"},{n:"Bosnia and Herzegovina",f:"🇧🇦"},{n:"Botswana",f:"🇧🇼"},{n:"Brazil",f:"🇧🇷"},{n:"Brunei",f:"🇧🇳"},{n:"Bulgaria",f:"🇧🇬"},{n:"Burkina Faso",f:"🇧🇫"},{n:"Burundi",f:"🇧🇮"},{n:"Cabo Verde",f:"🇨🇻"},{n:"Cambodia",f:"🇰🇭"},{n:"Cameroon",f:"🇨🇲"},{n:"Canada",f:"🇨🇦"},{n:"Central African Republic",f:"🇨🇫"},{n:"Chad",f:"🇹🇩"},{n:"Chile",f:"🇨🇱"},{n:"China",f:"🇨🇳"},{n:"Colombia",f:"🇨🇴"},{n:"Comoros",f:"🇰🇲"},{n:"Congo",f:"🇨🇬"},{n:"Costa Rica",f:"🇨🇷"},{n:"Croatia",f:"🇭🇷"},{n:"Cuba",f:"🇨🇺"},{n:"Cyprus",f:"🇨🇾"},{n:"Czechia",f:"🇨🇿"},{n:"Denmark",f:"🇩🇰"},{n:"Djibouti",f:"🇩🇯"},{n:"Dominica",f:"🇩🇲"},{n:"Dominican Republic",f:"🇩🇴"},{n:"Ecuador",f:"🇪🇨"},{n:"Egypt",f:"🇪🇬"},{n:"El Salvador",f:"🇸🇻"},{n:"Equatorial Guinea",f:"🇬🇶"},{n:"Eritrea",f:"🇪🇷"},{n:"Estonia",f:"🇪🇪"},{n:"Eswatini",f:"🇸🇿"},{n:"Ethiopia",f:"🇪🇹"},{n:"Fiji",f:"🇫🇯"},{n:"Finland",f:"🇫🇮"},{n:"France",f:"🇫🇷"},{n:"Gabon",f:"🇬🇦"},{n:"Gambia",f:"🇬🇲"},{n:"Georgia",f:"🇬🇪"},{n:"Germany",f:"🇩🇪"},{n:"Ghana",f:"🇬🇭"},{n:"Greece",f:"🇬🇷"},{n:"Grenada",f:"🇬🇩"},{n:"Guatemala",f:"🇬🇹"},{n:"Guinea",f:"🇬🇳"},{n:"Guinea-Bissau",f:"🇬🇼"},{n:"Guyana",f:"🇬🇾"},{n:"Haiti",f:"🇭🇹"},{n:"Honduras",f:"🇭🇳"},{n:"Hungary",f:"🇭🇺"},{n:"Iceland",f:"🇮🇸"},{n:"India",f:"🇮🇳"},{n:"Indonesia",f:"🇮🇩"},{n:"Iran",f:"🇮🇷"},{n:"Iraq",f:"🇮🇶"},{n:"Ireland",f:"🇮🇪"},{n:"Israel",f:"🇮🇱"},{n:"Italy",f:"🇮🇹"},{n:"Jamaica",f:"🇯🇲"},{n:"Japan",f:"🇯🇵"},{n:"Jordan",f:"🇯🇴"},{n:"Kazakhstan",f:"🇰🇿"},{n:"Kenya",f:"🇰🇪"},{n:"Kiribati",f:"🇰🇮"},{n:"Kuwait",f:"🇰🇼"},{n:"Kyrgyzstan",f:"🇰🇬"},{n:"Laos",f:"🇱🇦"},{n:"Latvia",f:"🇱🇻"},{n:"Lebanon",f:"🇱🇧"},{n:"Lesotho",f:"🇱🇸"},{n:"Liberia",f:"🇱🇷"},{n:"Libya",f:"🇱🇾"},{n:"Liechtenstein",f:"🇱🇮"},{n:"Lithuania",f:"🇱🇹"},{n:"Luxembourg",f:"🇱🇺"},{n:"Madagascar",f:"🇲🇬"},{n:"Malawi",f:"🇲🇼"},{n:"Malaysia",f:"🇲🇾"},{n:"Maldives",f:"🇲🇻"},{n:"Mali",f:"🇲🇱"},{n:"Malta",f:"🇲🇹"},{n:"Marshall Islands",f:"🇲🇭"},{n:"Mauritania",f:"🇲🇷"},{n:"Mauritius",f:"🇲🇺"},{n:"Mexico",f:"🇲🇽"},{n:"Micronesia",f:"🇫🇲"},{n:"Moldova",f:"🇲🇩"},{n:"Monaco",f:"🇲🇨"},{n:"Mongolia",f:"🇲🇳"},{n:"Montenegro",f:"🇲🇪"},{n:"Morocco",f:"🇲🇦"},{n:"Mozambique",f:"🇲🇿"},{n:"Myanmar",f:"🇲🇲"},{n:"Namibia",f:"🇳🇦"},{n:"Nauru",f:"🇳🇷"},{n:"Nepal",f:"🇳🇵"},{n:"Netherlands",f:"🇳🇱"},{n:"New Zealand",f:"🇳🇿"},{n:"Nicaragua",f:"🇳🇮"},{n:"Niger",f:"🇳🇪"},{n:"Nigeria",f:"🇳🇬"},{n:"North Korea",f:"🇰🇵"},{n:"North Macedonia",f:"🇲🇰"},{n:"Norway",f:"🇳🇴"},{n:"Oman",f:"🇴🇲"},{n:"Pakistan",f:"🇵🇰"},{n:"Palau",f:"🇵🇼"},{n:"Palestine",f:"🇵🇸"},{n:"Panama",f:"🇵🇦"},{n:"Papua New Guinea",f:"🇵🇬"},{n:"Paraguay",f:"🇵🇾"},{n:"Peru",f:"🇵🇪"},{n:"Philippines",f:"🇵🇭"},{n:"Poland",f:"🇵🇱"},{n:"Portugal",f:"🇵🇹"},{n:"Qatar",f:"🇶🇦"},{n:"Romania",f:"🇷🇴"},{n:"Russia",f:"🇷🇺"},{n:"Rwanda",f:"🇷🇼"},{n:"Saint Kitts and Nevis",f:"🇰🇳"},{n:"Saint Lucia",f:"🇱🇨"},{n:"Samoa",f:"🇼🇸"},{n:"San Marino",f:"🇸🇲"},{n:"Saudi Arabia",f:"🇸🇦"},{n:"Senegal",f:"🇸🇳"},{n:"Serbia",f:"🇷🇸"},{n:"Seychelles",f:"🇸🇨"},{n:"Sierra Leone",f:"🇸🇱"},{n:"Singapore",f:"🇸🇬"},{n:"Slovakia",f:"🇸🇰"},{n:"Slovenia",f:"🇸🇮"},{n:"Solomon Islands",f:"🇸🇧"},{n:"Somalia",f:"🇸🇴"},{n:"South Africa",f:"🇿🇦"},{n:"South Korea",f:"🇰🇷"},{n:"South Sudan",f:"🇸🇸"},{n:"Spain",f:"🇪🇸"},{n:"Sri Lanka",f:"🇱🇰"},{n:"Sudan",f:"🇸🇩"},{n:"Suriname",f:"🇸🇷"},{n:"Sweden",f:"🇸🇪"},{n:"Switzerland",f:"🇨🇭"},{n:"Syria",f:"🇸🇾"},{n:"Taiwan",f:"🇹🇼"},{n:"Tajikistan",f:"🇹🇯"},{n:"Tanzania",f:"🇹🇿"},{n:"Thailand",f:"🇹🇭"},{n:"Timor-Leste",f:"🇹🇱"},{n:"Togo",f:"🇹🇬"},{n:"Tonga",f:"🇹🇴"},{n:"Trinidad and Tobago",f:"🇹🇹"},{n:"Tunisia",f:"🇹🇳"},{n:"Turkey",f:"🇹🇷"},{n:"Turkmenistan",f:"🇹🇲"},{n:"Tuvalu",f:"🇹🇻"},{n:"Uganda",f:"🇺🇬"},{n:"Ukraine",f:"🇺🇦"},{n:"UAE",f:"🇦🇪"},{n:"UK",f:"🇬🇧"},{n:"USA",f:"🇺🇸"},{n:"Uruguay",f:"🇺🇾"},{n:"Uzbekistan",f:"🇺🇿"},{n:"Vanuatu",f:"🇻🇺"},{n:"Vatican City",f:"🇻🇦"},{n:"Venezuela",f:"🇻🇪"},{n:"Vietnam",f:"🇻🇳"},{n:"Yemen",f:"🇾🇪"},{n:"Zambia",f:"🇿🇲"},{n:"Zimbabwe",f:"🇿🇼"}
     ];
 
-    let currentUser = null;
-    let matchIdx = 0;
+    const countrySelect = document.getElementById('r-country');
+    countryList.forEach(c => {
+        countrySelect.innerHTML += `<option value="${c.f} ${c.n}">${c.f} ${c.n}</option>`;
+    });
 
-    // 3. Page Navigation Logic (ጥብቅ ማጣሪያ ያለው)
+    let userAccount = null;
     function showPage(id) {
-        // Strict Check: Login ካልተደረገ ወደ ሌላ ገጽ አያሳልፍም
-        if (!currentUser && id !== 'login-page' && id !== 'signup-page') {
-            document.getElementById('login-error').classList.remove('hidden');
-            id = 'login-page';
-        }
-        
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        
-        // Navigation Icon Update
-        const navId = 'n-' + id.split('-')[0];
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        if(document.getElementById(navId)) document.getElementById(navId).classList.add('active');
     }
 
-    // 4. Image Preview
-    function previewImage(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = e => {
-                const prev = document.getElementById('img-preview');
-                prev.src = e.target.result;
-                prev.classList.remove('hidden');
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    // 5. Authentication Logic (Signup & Login)
     function authSignup() {
-        const name = document.getElementById('r-name').value;
         const email = document.getElementById('r-email').value;
         const pass = document.getElementById('r-pass').value;
-        const gender = document.getElementById('r-gender').value;
-        const age = document.getElementById('r-age').value;
+        const name = document.getElementById('r-name').value;
         const country = document.getElementById('r-country').value;
-
-        if(!name || !email || !pass || !country) return alert("እባክዎ ሁሉንም መረጃዎች በትክክል ይሙሉ!");
-
-        const userData = { name, email, pass, gender, age, country };
-        localStorage.setItem(email, JSON.stringify(userData));
-        alert("በተሳካ ሁኔታ ተመዝግበዋል! አሁን ይግቡ።");
+        if(!email || !pass) return alert("Fill all!");
+        localStorage.setItem(email, JSON.stringify({name, email, pass, country, age: document.getElementById('r-age').value}));
         showPage('login-page');
     }
 
     function authLogin() {
         const email = document.getElementById('l-email').value;
         const pass = document.getElementById('l-pass').value;
-        const stored = localStorage.getItem(email);
-
-        if(stored) {
-            const user = JSON.parse(stored);
-            if(user.pass === pass) {
-                currentUser = user;
-                setupProfile();
-                document.getElementById('nav-bar').style.display = 'flex';
-                showPage('home-page');
-            } else { alert("የተሳሳተ የይለፍ ቃል!"); }
-        } else { document.getElementById('login-error').classList.remove('hidden'); }
+        const stored = JSON.parse(localStorage.getItem(email));
+        if(stored && stored.pass === pass) {
+            userAccount = stored;
+            document.getElementById('nav-bar').style.display = 'flex';
+            showPage('home-page');
+            loadMatch();
+        } else { alert("Error!"); }
     }
 
-    function setupProfile() {
-        document.getElementById('u-name').innerText = currentUser.name;
-        document.getElementById('u-email').innerText = currentUser.email;
-        document.getElementById('u-meta').innerText = `${currentUser.age} • ${currentUser.country}`;
-        document.getElementById('u-avatar').src = `https://ui-avatars.com/api/?background=a855f7&color=fff&name=${currentUser.name}`;
-        loadMatches();
+    function loadMatch() {
+        const m = {name: "Elena", age: 23, country: "🇪🇹 Ethiopia", img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=500"};
+        document.getElementById('m-img').src = m.img;
+        document.getElementById('m-info').innerText = `${m.name}, ${m.age}`;
+        document.getElementById('m-country').innerText = m.country;
     }
-
-    // 6. Match & Discovery Logic
-    function loadMatches() {
-        const filtered = matchesDB.filter(u => u.gender !== currentUser.gender);
-        const match = filtered[matchIdx % filtered.length];
-        
-        document.getElementById('m-img').src = match.img;
-        document.getElementById('m-info').innerText = `${match.name}, ${match.age}`;
-        document.getElementById('m-country').innerText = match.country;
-        
-        // Update Message List
-        const list = document.getElementById('chat-list');
-        list.innerHTML = "";
-        filtered.forEach(m => {
-            list.innerHTML += `
-                <div onclick="openChat('${m.name}', '${m.img}')" class="flex items-center gap-4 glass p-4 cursor-pointer hover:bg-white/10 transition">
-                    <img src="${m.img}" class="w-14 h-14 rounded-full object-cover">
-                    <div><p class="font-bold">${m.name}</p><p class="text-xs text-purple-400 italic italic">አዲስ ማች ተገኝቷል!</p></div>
-                </div>`;
-        });
-    }
-
-    function nextMatch() { matchIdx++; loadMatches(); }
-
-    // 7. Chat Logic
-    function openChat(name, img) {
-        document.getElementById('chatting-with').innerText = name;
-        document.getElementById('chat-avatar').src = img;
-        document.getElementById('chat-box').innerHTML = `<div class="bg-purple-600/20 self-start p-3 rounded-2xl text-xs max-w-[80%] italic italic">ሰላም! እንዴት ነህ/ሽ?</div>`; 
-        showPage('chat-view');
-    }
-
-    function sendMessage() {
-        const input = document.getElementById('chat-input');
-        if(!input.value) return;
-        const box = document.getElementById('chat-box');
-        box.innerHTML += `<div class="bg-purple-600 self-end p-4 rounded-2xl text-sm max-w-[80%] shadow-lg shadow-purple-500/20">${input.value}</div>`;
-        input.value = "";
-        box.scrollTop = box.scrollHeight;
-    }
+    
+    function nextMatch() { loadMatch(); }
 </script>
 </body>
 </html>
