@@ -10,14 +10,25 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
         :root { --primary: #8b5cf6; --secondary: #ec4899; --bg: #f8fafc; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: #1e293b; overflow: hidden; }
-        .page { display: none; height: 100vh; flex-direction: column; }
+        
+        .page { display: none; height: 100vh; flex-direction: column; overflow-y: auto; }
         .page.active { display: flex; animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .nav-bar { display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; background: white; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); z-index: 100; justify-content: space-around; padding: 15px 0; border: 1px solid #f1f5f9; }
+
+        .nav-bar { 
+            display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; background: rgba(255, 255, 255, 0.98); border-radius: 28px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1); z-index: 100; justify-content: space-around; padding: 16px 0;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
         .nav-item { color: #cbd5e1; font-size: 1.4rem; transition: 0.3s; cursor: pointer; }
-        .nav-item.active { color: var(--primary); }
-        .input-box { width: 100%; padding: 14px; border-radius: 15px; background: white; border: 1px solid #e2e8f0; outline: none; margin-bottom: 10px; font-size: 14px; }
-        .btn-main { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 15px; border-radius: 15px; font-weight: 700; width: 100%; }
+        .nav-item.active { color: var(--primary); transform: scale(1.1); }
+
+        .input-box { width: 100%; padding: 15px; border-radius: 18px; background: white; border: 1px solid #e2e8f0; outline: none; margin-bottom: 12px; font-size: 15px; transition: 0.3s; }
+        .input-box:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1); }
+        .btn-main { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 16px; border-radius: 18px; font-weight: 700; width: 100%; box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3); }
+        
+        .match-card { height: 65vh; border-radius: 35px; overflow: hidden; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
         #video-call-ui { display: none; position: fixed; inset: 0; background: black; z-index: 2000; }
     </style>
 </head>
@@ -26,149 +37,145 @@
 <div class="app-container">
 
     <div id="login-page" class="page active px-8 pt-20 text-center">
-        <div class="mb-10 text-violet-600"><i class="fas fa-heart-pulse text-6xl"></i></div>
+        <div class="mb-10"><i class="fas fa-heart-pulse text-6xl text-violet-600"></i></div>
         <h1 class="text-3xl font-extrabold mb-2">DatingSpark</h1>
-        <p class="text-slate-400 mb-8">Sign in to find your spark</p>
+        <p class="text-slate-400 mb-8">Login to find your perfect match</p>
         <input type="tel" id="l-phone" placeholder="Phone Number" class="input-box">
         <input type="password" id="l-pass" placeholder="Password" class="input-box">
         <button onclick="authLogin()" class="btn-main mt-4">Sign In</button>
-        <p class="mt-8 text-sm">New user? <span onclick="showPage('signup-page')" class="text-violet-600 font-bold cursor-pointer underline">Register</span></p>
+        <p class="mt-8 text-sm">New user? <span onclick="showPage('signup-page')" class="text-violet-600 font-bold cursor-pointer underline">Create Account</span></p>
     </div>
 
-    <div id="signup-page" class="page px-8 pt-8 overflow-y-auto">
-        <h2 class="text-2xl font-bold mb-4">Create Account</h2>
-        <div class="flex justify-center mb-4">
-            <div onclick="document.getElementById('r-photo').click()" class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center border-2 border-dashed border-slate-300 relative overflow-hidden">
+    <div id="signup-page" class="page px-8 pt-8">
+        <h2 class="text-2xl font-bold mb-4">Register</h2>
+        <div class="flex justify-center mb-6">
+            <div onclick="document.getElementById('r-photo').click()" class="w-28 h-28 bg-slate-100 rounded-full flex items-center justify-center border-2 border-dashed border-slate-300 relative overflow-hidden group">
                 <img id="img-preview" class="absolute inset-0 w-full h-full object-cover hidden">
-                <i class="fas fa-camera text-slate-400"></i>
+                <i class="fas fa-camera text-slate-300 text-xl group-hover:text-violet-400 transition"></i>
             </div>
             <input type="file" id="r-photo" class="hidden" accept="image/*" onchange="previewImage(this)">
         </div>
         <input type="text" id="r-name" placeholder="Full Name" class="input-box">
-        <input type="number" id="r-age" placeholder="Age" class="input-box">
-        <select id="r-gender" class="input-box"><option value="Male">Male</option><option value="Female">Female</option></select>
+        <div class="grid grid-cols-2 gap-3">
+            <input type="number" id="r-age" placeholder="Age" class="input-box">
+            <select id="r-gender" class="input-box"><option value="Male">Male</option><option value="Female">Female</option></select>
+        </div>
         <select id="r-country" class="input-box"></select>
         <input type="tel" id="r-phone" placeholder="Phone Number" class="input-box">
-        <input type="password" id="r-pass" placeholder="Create Password" class="input-box">
-        <button onclick="handleSignup()" class="btn-main mt-2">Get Code</button>
+        <input type="password" id="r-pass" placeholder="Password" class="input-box">
+        <button onclick="handleSignup()" class="btn-main mt-2">Get Verification Code</button>
     </div>
 
     <div id="verify-page" class="page px-8 pt-20 text-center">
-        <h2 class="text-2xl font-bold">Verify Phone</h2>
-        <p class="text-slate-400 mt-2 mb-6">Copy and paste the code below</p>
-        <div id="otp-display" class="bg-violet-50 p-6 rounded-2xl text-3xl font-black tracking-widest text-violet-600 mb-6 cursor-pointer" onclick="copyOTP()">000000</div>
-        <input type="text" id="v-input" placeholder="Paste Code Here" class="input-box text-center text-xl tracking-widest">
-        <button onclick="confirmVerify()" class="btn-main mt-4">Verify & Enter</button>
+        <h2 class="text-2xl font-bold">Verification</h2>
+        <p class="text-slate-400 mt-2 mb-8">Click the code to copy it, then paste below.</p>
+        <div id="otp-display" class="bg-violet-100 p-8 rounded-3xl text-4xl font-black tracking-[0.5em] text-violet-600 mb-8 cursor-pointer active:scale-95 transition" onclick="copyOTP()">000000</div>
+        <input type="text" id="v-input" placeholder="Enter Code" class="input-box text-center text-2xl tracking-widest font-bold">
+        <button onclick="confirmVerify()" class="btn-main mt-4">Confirm & Join</button>
     </div>
 
-    <div id="home-page" class="page px-4 pt-6">
-        <div class="flex justify-between items-center mb-4 px-2">
-            <h2 class="text-2xl font-black">Discovery</h2>
-            <i class="fas fa-bell text-slate-300"></i>
+    <div id="home-page" class="page px-5 pt-8">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-3xl font-black">Discovery</h2>
+            <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm"><i class="fas fa-sliders-h text-violet-600"></i></div>
         </div>
-        <div id="card-container" class="relative flex-1 mb-24">
-            <div id="match-card" class="h-full w-full rounded-[30px] overflow-hidden shadow-xl relative">
-                <img id="m-img" class="w-full h-full object-cover">
-                <div class="absolute bottom-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent text-white">
-                    <h3 id="m-info" class="text-2xl font-bold">Name, Age</h3>
-                    <p id="m-country" class="text-sm opacity-80"></p>
-                    <div class="flex gap-4 mt-6">
-                        <button onclick="nextMatch()" class="flex-1 bg-white/20 backdrop-blur-md py-3 rounded-xl"><i class="fas fa-times"></i></button>
-                        <button onclick="likeMatch()" class="flex-1 bg-pink-500 py-3 rounded-xl"><i class="fas fa-heart"></i></button>
-                    </div>
+        <div class="match-card">
+            <img id="m-img" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent p-8 flex flex-col justify-end">
+                <h3 id="m-info" class="text-white text-3xl font-bold mb-1">Name, 20</h3>
+                <p id="m-country-text" class="text-slate-300 font-medium"></p>
+                <div class="flex gap-4 mt-8">
+                    <button onclick="nextMatch()" class="flex-1 bg-white/10 backdrop-blur-md py-4 rounded-2xl text-white border border-white/20 active:scale-90 transition"><i class="fas fa-times text-xl"></i></button>
+                    <button onclick="likeMatch()" class="flex-1 bg-pink-500 py-4 rounded-2xl text-white shadow-lg active:scale-90 transition"><i class="fas fa-heart text-xl"></i></button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="message-page" class="page px-6 pt-10">
-        <h2 class="text-2xl font-black mb-6">Messages</h2>
+    <div id="message-page" class="page px-6 pt-12">
+        <h2 class="text-3xl font-black mb-8">Messages</h2>
         <div id="chat-list" class="space-y-4"></div>
     </div>
 
     <div id="chat-active" class="page bg-white">
-        <div class="p-4 border-b flex items-center gap-3">
-            <i onclick="showPage('message-page')" class="fas fa-arrow-left text-slate-400"></i>
-            <img id="c-avatar" class="w-10 h-10 rounded-full object-cover">
-            <div class="flex-1"><h4 id="c-name" class="font-bold text-sm">Name</h4></div>
-            <button onclick="startVideoCall()" class="text-violet-600 px-3"><i class="fas fa-video"></i></button>
+        <div class="p-5 border-b flex items-center gap-4">
+            <i onclick="showPage('message-page')" class="fas fa-chevron-left text-slate-400"></i>
+            <img id="c-avatar" class="w-12 h-12 rounded-full object-cover">
+            <div class="flex-1"><h4 id="c-name" class="font-bold">Name</h4><p class="text-[10px] text-green-500 font-bold uppercase">Online</p></div>
+            <button onclick="startVideoCall()" class="w-10 h-10 bg-violet-50 text-violet-600 rounded-full flex items-center justify-center"><i class="fas fa-video"></i></button>
         </div>
-        <div id="chat-body" class="flex-1 p-4 bg-slate-50 overflow-y-auto space-y-3">
-            <div class="bg-white p-3 rounded-2xl shadow-sm text-sm max-w-[80%]">Hi! Nice to meet you.</div>
-        </div>
-        <div class="p-3 border-t flex gap-2">
-            <input type="text" id="msg-input" placeholder="Say something..." class="flex-1 bg-slate-100 p-3 rounded-xl outline-none">
-            <button onclick="sendMessage()" class="bg-violet-600 text-white w-12 h-12 rounded-xl"><i class="fas fa-paper-plane"></i></button>
+        <div id="chat-body" class="flex-1 p-6 bg-slate-50 overflow-y-auto space-y-4"></div>
+        <div class="p-4 border-t flex gap-3">
+            <input type="text" id="msg-input" placeholder="Type message..." class="flex-1 bg-slate-100 p-4 rounded-2xl outline-none">
+            <button onclick="sendMessage()" class="w-14 h-14 bg-violet-600 text-white rounded-2xl shadow-lg"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 
-    <div id="profile-page" class="page px-8 pt-10 text-center overflow-y-auto pb-24">
-        <div class="relative w-32 h-32 mx-auto mb-4">
-            <img id="u-photo" class="w-full h-full rounded-full object-cover border-4 border-white shadow-lg">
-            <label for="u-photo-change" class="absolute bottom-0 right-0 bg-violet-600 text-white w-8 h-8 rounded-full flex items-center justify-center border-2 border-white cursor-pointer">
-                <i class="fas fa-pencil-alt text-xs"></i>
+    <div id="profile-page" class="page px-8 pt-12 text-center pb-32">
+        <div class="relative w-36 h-36 mx-auto mb-6">
+            <img id="u-photo" class="w-full h-full rounded-[2.5rem] object-cover border-4 border-white shadow-2xl">
+            <label for="u-photo-change" class="absolute -bottom-2 -right-2 bg-violet-600 text-white w-10 h-10 rounded-full flex items-center justify-center border-4 border-white cursor-pointer shadow-lg">
+                <i class="fas fa-camera text-sm"></i>
             </label>
             <input type="file" id="u-photo-change" class="hidden" onchange="updateProfilePhoto(this)">
         </div>
-        <div class="flex items-center justify-center gap-2 mb-1">
-            <input type="text" id="u-name-input" class="text-2xl font-bold text-center bg-transparent border-none outline-none w-full" onchange="updateName(this.value)">
-        </div>
-        <p id="u-meta" class="text-slate-400 text-sm mb-6"></p>
-        <div class="space-y-3 text-left">
-            <div class="bg-white p-4 rounded-xl flex justify-between items-center shadow-sm">
-                <span>Account Status</span><span class="text-green-500 font-bold">Verified</span>
+        <input type="text" id="u-name-input" class="text-3xl font-black text-center bg-transparent border-none outline-none w-full mb-1" onchange="updateProfileData()">
+        <p id="u-meta" class="text-slate-400 font-bold mb-10"></p>
+        
+        <div class="space-y-4 text-left">
+            <div class="bg-white p-5 rounded-3xl flex justify-between items-center shadow-sm border border-slate-50">
+                <span class="font-bold text-slate-700">Account Type</span>
+                <span class="text-violet-600 font-black text-xs bg-violet-50 px-3 py-1 rounded-full">PREMIUM</span>
             </div>
-            <button onclick="location.reload()" class="w-full p-4 text-red-500 font-bold bg-red-50 rounded-xl">Log Out</button>
+            <button onclick="location.reload()" class="w-full p-5 text-red-500 font-bold bg-red-50 rounded-3xl active:scale-95 transition">Logout Account</button>
         </div>
     </div>
 
     <nav id="nav-bar" class="nav-bar">
         <div onclick="showPage('home-page')" id="n-home" class="nav-item active"><i class="fas fa-fire"></i></div>
-        <div onclick="showPage('message-page')" id="n-message" class="nav-item"><i class="fas fa-comment"></i></div>
+        <div onclick="showPage('message-page')" id="n-message" class="nav-item"><i class="fas fa-comment-dots"></i></div>
         <div onclick="showPage('profile-page')" id="n-profile" class="nav-item"><i class="fas fa-user"></i></div>
     </nav>
 
     <div id="video-call-ui">
+        <img id="vc-img" class="w-full h-full object-cover opacity-50">
         <div class="absolute inset-0 flex flex-col items-center justify-center text-white">
-            <img id="vc-img" class="w-full h-full object-cover opacity-60">
-            <div class="absolute top-20 text-center">
-                <h2 id="vc-name" class="text-3xl font-bold">Name</h2>
-                <p>Connecting video call...</p>
+            <div class="mb-10 text-center">
+                <h2 id="vc-name" class="text-4xl font-black mb-2">Name</h2>
+                <p class="animate-pulse">Connecting video...</p>
             </div>
-            <div class="absolute bottom-20 flex gap-10">
-                <button onclick="endCall()" class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center text-2xl"><i class="fas fa-phone-slash"></i></button>
-            </div>
+            <button onclick="endCall()" class="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center text-3xl shadow-2xl shadow-red-500/50"><i class="fas fa-phone-slash"></i></button>
         </div>
     </div>
 
 </div>
 
 <script>
-    // 249 Countries Data
-    const countryData = [
-        {n:"Afghanistan",f:"🇦🇫"},{n:"Albania",f:"🇦🇱"},{n:"Algeria",f:"🇩🇿"},{n:"Andorra",f:"🇦🇩"},{n:"Angola",f:"🇦🇴"},{n:"Antigua & Barbuda",f:"🇦🇬"},{n:"Argentina",f:"🇦🇷"},{n:"Armenia",f:"🇦🇲"},{n:"Australia",f:"🇦🇺"},{n:"Austria",f:"🇦🇹"},{n:"Azerbaijan",f:"🇦🇿"},{n:"Bahamas",f:"🇧🇸"},{n:"Bahrain",f:"🇧🇭"},{n:"Bangladesh",f:"🇧🇩"},{n:"Barbados",f:"🇧🇧"},{n:"Belarus",f:"🇧🇾"},{n:"Belgium",f:"🇧🇪"},{n:"Belize",f:"🇧🇿"},{n:"Benin",f:"🇧🇯"},{n:"Bermuda",f:"🇧🇲"},{n:"Bhutan",f:"🇧🇹"},{n:"Bolivia",f:"🇧🇴"},{n:"Bosnia & Herzegovina",f:"🇧🇦"},{n:"Botswana",f:"🇧🇼"},{n:"Brazil",f:"🇧🇷"},{n:"Brunei",f:"🇧🇳"},{n:"Bulgaria",f:"🇧🇬"},{n:"Burkina Faso",f:"🇧🇫"},{n:"Burundi",f:"🇧🇮"},{n:"Cabo Verde",f:"🇨🇻"},{n:"Cambodia",f:"🇰🇭"},{n:"Cameroon",f:"🇨🇲"},{n:"Canada",f:"🇨🇦"},{n:"Cayman Islands",f:"🇰🇾"},{n:"Central African Republic",f:"🇨🇫"},{n:"Chad",f:"🇹🇩"},{n:"Chile",f:"🇨🇱"},{n:"China",f:"🇨🇳"},{n:"Colombia",f:"🇨🇴"},{n:"Comoros",f:"🇰🇲"},{n:"Congo",f:"🇨🇬"},{n:"Costa Rica",f:"🇨🇷"},{n:"Croatia",f:"🇭🇷"},{n:"Cuba",f:"🇨🇺"},{n:"Cyprus",f:"🇨🇾"},{n:"Czechia",f:"🇨🇿"},{n:"Denmark",f:"🇩🇰"},{n:"Djibouti",f:"🇩🇯"},{n:"Dominica",f:"🇩🇲"},{n:"Dominican Republic",f:"🇩🇴"},{n:"Ecuador",f:"🇪🇨"},{n:"Egypt",f:"🇪🇬"},{n:"El Salvador",f:"🇸🇻"},{n:"Equatorial Guinea",f:"🇬🇶"},{n:"Eritrea",f:"🇪🇷"},{n:"Estonia",f:"🇪🇪"},{n:"Eswatini",f:"🇸🇿"},{n:"Ethiopia",f:"🇪🇹"},{n:"Falkland Islands",f:"🇫🇰"},{n:"Faroe Islands",f:"🇫🇴"},{n:"Fiji",f:"🇫🇯"},{n:"Finland",f:"🇫🇮"},{n:"France",f:"🇫🇷"},{n:"French Guiana",f:"🇬🇫"},{n:"French Polynesia",f:"🇵🇫"},{n:"Gabon",f:"🇬🇦"},{n:"Gambia",f:"🇬🇲"},{n:"Georgia",f:"🇬🇪"},{n:"Germany",f:"🇩🇪"},{n:"Ghana",f:"🇬🇭"},{n:"Gibraltar",f:"🇬🇮"},{n:"Greece",f:"🇬🇷"},{n:"Greenland",f:"🇬🇱"},{n:"Grenada",f:"🇬🇩"},{n:"Guadeloupe",f:"🇬🇵"},{n:"Guam",f:"🇬🇺"},{n:"Guatemala",f:"🇬🇹"},{n:"Guernsey",f:"🇬🇬"},{n:"Guinea",f:"🇬🇳"},{n:"Guinea-Bissau",f:"🇬🇼"},{n:"Guyana",f:"🇬🇾"},{n:"Haiti",f:"🇭🇹"},{n:"Honduras",f:"🇭🇳"},{n:"Hong Kong",f:"🇭🇰"},{n:"Hungary",f:"🇭🇺"},{n:"Iceland",f:"🇮🇸"},{n:"India",f:"🇮🇳"},{n:"Indonesia",f:"🇮🇩"},{n:"Iran",f:"🇮🇷"},{n:"Iraq",f:"🇮🇶"},{n:"Ireland",f:"🇮🇪"},{n:"Isle of Man",f:"🇮🇲"},{n:"Israel",f:"🇮🇱"},{n:"Italy",f:"🇮🇹"},{n:"Jamaica",f:"🇯🇲"},{n:"Japan",f:"🇯🇵"},{n:"Jersey",f:"🇯🇪"},{n:"Jordan",f:"🇯🇴"},{n:"Kazakhstan",f:"🇰🇿"},{n:"Kenya",f:"🇰🇪"},{n:"Kiribati",f:"🇰🇮"},{n:"Kuwait",f:"🇰🇼"},{n:"Kyrgyzstan",f:"🇰🇬"},{n:"Laos",f:"🇱🇦"},{n:"Latvia",f:"🇱🇻"},{n:"Lebanon",f:"🇱🇧"},{n:"Lesotho",f:"🇱🇸"},{n:"Liberia",f:"🇱🇷"},{n:"Libya",f:"🇱🇾"},{n:"Liechtenstein",f:"🇱🇮"},{n:"Lithuania",f:"🇱🇹"},{n:"Luxembourg",f:"🇱🇺"},{n:"Macao",f:"🇲🇴"},{n:"Madagascar",f:"🇲🇬"},{n:"Malawi",f:"🇲🇼"},{n:"Malaysia",f:"🇲🇾"},{n:"Maldives",f:"🇲🇻"},{n:"Mali",f:"🇲🇱"},{n:"Malta",f:"🇲🇹"},{n:"Marshall Islands",f:"🇲🇭"},{n:"Martinique",f:"🇲🇶"},{n:"Mauritania",f:"🇲🇷"},{n:"Mauritius",f:"🇲🇺"},{n:"Mayotte",f:"🇾🇹"},{n:"Mexico",f:"🇲🇽"},{n:"Micronesia",f:"🇫🇲"},{n:"Moldova",f:"🇲🇩"},{n:"Monaco",f:"🇲🇨"},{n:"Mongolia",f:"🇲🇳"},{n:"Montenegro",f:"🇲🇪"},{n:"Montserrat",f:"🇲🇸"},{n:"Morocco",f:"🇲🇦"},{n:"Mozambique",f:"🇲🇿"},{n:"Myanmar",f:"🇲🇲"},{n:"Namibia",f:"🇳🇦"},{n:"Nauru",f:"🇳🇷"},{n:"Nepal",f:"🇳評"},{n:"Netherlands",f:"🇳🇱"},{n:"New Caledonia",f:"🇳🇨"},{n:"New Zealand",f:"🇳🇿"},{n:"Nicaragua",f:"🇳🇮"},{n:"Niger",f:"🇳🇪"},{n:"Nigeria",f:"🇳🇬"},{n:"Niue",f:"🇳🇺"},{n:"Norfolk Island",f:"🇳🇫"},{n:"North Korea",f:"🇰🇵"},{n:"North Macedonia",f:"🇲🇰"},{n:"Northern Mariana Islands",f:"🇲🇵"},{n:"Norway",f:"🇳🇴"},{n:"Oman",f:"🇴🇲"},{n:"Pakistan",f:"🇵🇰"},{n:"Palau",f:"🇵🇼"},{n:"Palestine",f:"🇵🇸"},{n:"Panama",f:"🇵🇦"},{n:"Papua New Guinea",f:"🇵🇬"},{n:"Paraguay",f:"🇵🇾"},{n:"Peru",f:"🇵🇪"},{n:"Philippines",f:"🇵🇭"},{n:"Poland",f:"🇵🇱"},{n:"Portugal",f:"🇵🇹"},{n:"Puerto Rico",f:"🇵🇷"},{n:"Qatar",f:"🇶🇦"},{n:"Réunion",f:"🇷🇪"},{n:"Romania",f:"🇷🇴"},{n:"Russia",f:"🇷🇺"},{n:"Rwanda",f:"🇷🇼"},{n:"Saint Barthélemy",f:"🇧🇱"},{n:"Saint Helena",f:"🇸🇭"},{n:"Saint Kitts & Nevis",f:"🇰🇳"},{n:"Saint Lucia",f:"🇱🇨"},{n:"Saint Martin",f:"🇲🇫"},{n:"Saint Pierre & Miquelon",f:"🇵🇲"},{n:"Saint Vincent & Grenadines",f:"🇻🇨"},{n:"Samoa",f:"🇼🇸"},{n:"San Marino",f:"🇸🇲"},{n:"Sao Tome & Principe",f:"🇸🇹"},{n:"Saudi Arabia",f:"🇸🇦"},{n:"Senegal",f:"🇸🇳"},{n:"Serbia",f:"🇷🇸"},{n:"Seychelles",f:"🇸🇨"},{n:"Sierra Leone",f:"🇸🇱"},{n:"Singapore",f:"🇸🇬"},{n:"Sint Maarten",f:"🇸🇽"},{n:"Slovakia",f:"🇸🇰"},{n:"Slovenia",f:"🇸🇮"},{n:"Solomon Islands",f:"🇸🇧"},{n:"Somalia",f:"🇸🇴"},{n:"South Africa",f:"🇿🇦"},{n:"South Korea",f:"🇰🇷"},{n:"South Sudan",f:"🇸🇸"},{n:"Spain",f:"🇪🇸"},{n:"Sri Lanka",f:"🇱🇰"},{n:"Sudan",f:"🇸🇩"},{n:"Suriname",f:"🇸🇷"},{n:"Svalbard & Jan Mayen",f:"🇸🇯"},{n:"Sweden",f:"🇸🇪"},{n:"Switzerland",f:"🇨🇭"},{n:"Syria",f:"🇸🇾"},{n:"Taiwan",f:"🇹🇼"},{n:"Tajikistan",f:"🇹🇯"},{n:"Tanzania",f:"🇹🇿"},{n:"Thailand",f:"🇹🇭"},{n:"Timor-Leste",f:"🇹🇱"},{n:"Togo",f:"🇹🇬"},{n:"Tokelau",f:"🇹🇰"},{n:"Tonga",f:"🇹🇴"},{n:"Trinidad & Tobago",f:"🇹🇹"},{n:"Tunisia",f:"🇹🇳"},{n:"Turkey",f:"🇹🇷"},{n:"Turkmenistan",f:"🇹🇲"},{n:"Turks & Caicos Islands",f:"🇹🇨"},{n:"Tuvalu",f:"🇹🇻"},{n:"Uganda",f:"🇺🇬"},{n:"Ukraine",f:"🇺🇦"},{n:"UAE",f:"🇦🇪"},{n:"UK",f:"🇬🇧"},{n:"USA",f:"🇺🇸"},{n:"Uruguay",f:"🇺🇾"},{n:"Uzbekistan",f:"🇺🇿"},{n:"Vanuatu",f:"🇻🇺"},{n:"Vatican City",f:"🇻🇦"},{n:"Venezuela",f:"🇻🇪"},{n:"Vietnam",f:"🇻🇳"},{n:"Virgin Islands (British)",f:"🇻🇬"},{n:"Virgin Islands (U.S.)",f:"🇻🇮"},{n:"Wallis & Futuna",f:"🇼🇫"},{n:"Western Sahara",f:"🇪🇭"},{n:"Yemen",f:"🇾🇪"},{n:"Zambia",f:"🇿🇲"},{n:"Zimbabwe",f:"🇿🇼"}
+    // 249 Countries (Full List)
+    const countries = [
+        {n:"Afghanistan",f:"🇦🇫"},{n:"Albania",f:"🇦🇱"},{n:"Algeria",f:"🇩🇿"},{n:"Andorra",f:"🇦🇩"},{n:"Angola",f:"🇦🇴"},{n:"Antigua & Barbuda",f:"🇦🇬"},{n:"Argentina",f:"🇦🇷"},{n:"Armenia",f:"🇦🇲"},{n:"Australia",f:"🇦🇺"},{n:"Austria",f:"🇦🇹"},{n:"Azerbaijan",f:"🇦🇿"},{n:"Bahamas",f:"🇧🇸"},{n:"Bahrain",f:"🇧🇭"},{n:"Bangladesh",f:"🇧🇩"},{n:"Barbados",f:"🇧🇧"},{n:"Belarus",f:"🇧🇾"},{n:"Belgium",f:"🇧🇪"},{n:"Belize",f:"🇧🇿"},{n:"Benin",f:"🇧🇯"},{n:"Bermuda",f:"🇧🇲"},{n:"Bhutan",f:"🇧🇹"},{n:"Bolivia",f:"🇧🇴"},{n:"Bosnia & Herzegovina",f:"🇧🇦"},{n:"Botswana",f:"🇧🇼"},{n:"Brazil",f:"🇧🇷"},{n:"Brunei",f:"🇧🇳"},{n:"Bulgaria",f:"🇧🇬"},{n:"Burkina Faso",f:"🇧🇫"},{n:"Burundi",f:"🇧🇮"},{n:"Cabo Verde",f:"🇨🇻"},{n:"Cambodia",f:"🇰🇭"},{n:"Cameroon",f:"🇨🇲"},{n:"Canada",f:"🇨🇦"},{n:"Cayman Islands",f:"🇰🇾"},{n:"Central African Republic",f:"🇨🇫"},{n:"Chad",f:"🇹🇩"},{n:"Chile",f:"🇨🇱"},{n:"China",f:"🇨🇳"},{n:"Colombia",f:"🇨🇴"},{n:"Comoros",f:"🇰🇲"},{n:"Congo",f:"🇨🇬"},{n:"Costa Rica",f:"🇨🇷"},{n:"Croatia",f:"🇭🇷"},{n:"Cuba",f:"🇨🇺"},{n:"Cyprus",f:"🇨🇾"},{n:"Czechia",f:"🇨🇿"},{n:"Denmark",f:"🇩🇰"},{n:"Djibouti",f:"🇩🇯"},{n:"Dominica",f:"🇩🇲"},{n:"Dominican Republic",f:"🇩🇴"},{n:"Ecuador",f:"🇪🇨"},{n:"Egypt",f:"🇪🇬"},{n:"El Salvador",f:"🇸🇻"},{n:"Equatorial Guinea",f:"🇬🇶"},{n:"Eritrea",f:"🇪🇷"},{n:"Estonia",f:"🇪🇪"},{n:"Eswatini",f:"🇸🇿"},{n:"Ethiopia",f:"🇪🇹"},{n:"Falkland Islands",f:"🇫🇰"},{n:"Faroe Islands",f:"🇫🇴"},{n:"Fiji",f:"🇫🇯"},{n:"Finland",f:"🇫🇮"},{n:"France",f:"🇫🇷"},{n:"French Guiana",f:"🇬🇫"},{n:"French Polynesia",f:"🇵🇫"},{n:"Gabon",f:"🇬🇦"},{n:"Gambia",f:"🇬🇲"},{n:"Georgia",f:"🇬🇪"},{n:"Germany",f:"🇩🇪"},{n:"Ghana",f:"🇬🇭"},{n:"Gibraltar",f:"🇬🇮"},{n:"Greece",f:"🇬🇷"},{n:"Greenland",f:"🇬🇱"},{n:"Grenada",f:"🇬🇩"},{n:"Guadeloupe",f:"🇬🇵"},{n:"Guam",f:"🇬🇺"},{n:"Guatemala",f:"🇬🇹"},{n:"Guernsey",f:"🇬🇬"},{n:"Guinea",f:"🇬🇳"},{n:"Guinea-Bissau",f:"🇬🇼"},{n:"Guyana",f:"🇬🇾"},{n:"Haiti",f:"🇭🇹"},{n:"Honduras",f:"🇭🇳"},{n:"Hong Kong",f:"🇭🇰"},{n:"Hungary",f:"🇭🇺"},{n:"Iceland",f:"🇮🇸"},{n:"India",f:"🇮🇳"},{n:"Indonesia",f:"🇮🇩"},{n:"Iran",f:"🇮🇷"},{n:"Iraq",f:"🇮🇶"},{n:"Ireland",f:"🇮🇪"},{n:"Isle of Man",f:"🇮🇲"},{n:"Israel",f:"🇮🇱"},{n:"Italy",f:"🇮🇹"},{n:"Jamaica",f:"🇯🇲"},{n:"Japan",f:"🇯🇵"},{n:"Jersey",f:"🇯🇪"},{n:"Jordan",f:"🇯🇴"},{n:"Kazakhstan",f:"🇰🇿"},{n:"Kenya",f:"🇰🇪"},{n:"Kiribati",f:"🇰🇮"},{n:"Kuwait",f:"🇰🇼"},{n:"Kyrgyzstan",f:"🇰🇬"},{n:"Laos",f:"🇱🇦"},{n:"Latvia",f:"🇱🇻"},{n:"Lebanon",f:"🇱🇧"},{n:"Lesotho",f:"🇱🇸"},{n:"Liberia",f:"🇱🇷"},{n:"Libya",f:"🇱🇾"},{n:"Liechtenstein",f:"🇱🇮"},{n:"Lithuania",f:"🇱🇹"},{n:"Luxembourg",f:"🇱🇺"},{n:"Macao",f:"🇲🇴"},{n:"Madagascar",f:"🇲🇬"},{n:"Malawi",f:"🇲🇼"},{n:"Malaysia",f:"🇲🇾"},{n:"Maldives",f:"🇲🇻"},{n:"Mali",f:"🇲🇱"},{n:"Malta",f:"🇲🇹"},{n:"Marshall Islands",f:"🇲🇭"},{n:"Martinique",f:"🇲🇶"},{n:"Mauritania",f:"🇲🇷"},{n:"Mauritius",f:"🇲🇺"},{n:"Mayotte",f:"🇾🇹"},{n:"Mexico",f:"🇲🇽"},{n:"Micronesia",f:"🇫🇲"},{n:"Moldova",f:"🇲🇩"},{n:"Monaco",f:"🇲🇨"},{n:"Mongolia",f:"🇲🇳"},{n:"Montenegro",f:"🇲🇪"},{n:"Montserrat",f:"🇲🇸"},{n:"Morocco",f:"🇲🇦"},{n:"Mozambique",f:"🇲🇿"},{n:"Myanmar",f:"🇲🇲"},{n:"Namibia",f:"🇳🇦"},{n:"Nauru",f:"🇳🇷"},{n:"Nepal",f:"🇳🇵"},{n:"Netherlands",f:"🇳🇱"},{n:"New Caledonia",f:"🇳🇨"},{n:"New Zealand",f:"🇳🇿"},{n:"Nicaragua",f:"🇳🇮"},{n:"Niger",f:"🇳🇪"},{n:"Nigeria",f:"🇳🇬"},{n:"Niue",f:"🇳🇺"},{n:"Norfolk Island",f:"🇳🇫"},{n:"North Korea",f:"🇰🇵"},{n:"North Macedonia",f:"🇲🇰"},{n:"Northern Mariana Islands",f:"🇲🇵"},{n:"Norway",f:"🇳🇴"},{n:"Oman",f:"🇴🇲"},{n:"Pakistan",f:"🇵🇰"},{n:"Palau",f:"🇵🇼"},{n:"Palestine",f:"🇵🇸"},{n:"Panama",f:"🇵🇦"},{n:"Papua New Guinea",f:"🇵🇬"},{n:"Paraguay",f:"🇵🇾"},{n:"Peru",f:"🇵🇪"},{n:"Philippines",f:"🇵🇭"},{n:"Poland",f:"🇵🇱"},{n:"Portugal",f:"🇵🇹"},{n:"Puerto Rico",f:"🇵🇷"},{n:"Qatar",f:"🇶🇦"},{n:"Réunion",f:"🇷🇪"},{n:"Romania",f:"🇷🇴"},{n:"Russia",f:"🇷🇺"},{n:"Rwanda",f:"🇷🇼"},{n:"Saint Barthélemy",f:"🇧🇱"},{n:"Saint Helena",f:"🇸🇭"},{n:"Saint Kitts & Nevis",f:"🇰🇳"},{n:"Saint Lucia",f:"🇱🇨"},{n:"Saint Martin",f:"🇲🇫"},{n:"Saint Pierre & Miquelon",f:"🇵🇲"},{n:"Saint Vincent & Grenadines",f:"🇻🇨"},{n:"Samoa",f:"🇼🇸"},{n:"San Marino",f:"🇸🇲"},{n:"Sao Tome & Principe",f:"🇸🇹"},{n:"Saudi Arabia",f:"🇸🇦"},{n:"Senegal",f:"🇸🇳"},{n:"Serbia",f:"🇷🇸"},{n:"Seychelles",f:"🇸🇨"},{n:"Sierra Leone",f:"🇸🇱"},{n:"Singapore",f:"🇸🇬"},{n:"Sint Maarten",f:"🇸🇽"},{n:"Slovakia",f:"🇸🇰"},{n:"Slovenia",f:"🇸🇮"},{n:"Solomon Islands",f:"🇸🇧"},{n:"Somalia",f:"🇸🇴"},{n:"South Africa",f:"🇿🇦"},{n:"South Korea",f:"🇰🇷"},{n:"South Sudan",f:"🇸🇸"},{n:"Spain",f:"🇪🇸"},{n:"Sri Lanka",f:"🇱🇰"},{n:"Sudan",f:"🇸🇩"},{n:"Suriname",f:"🇸🇷"},{n:"Svalbard & Jan Mayen",f:"🇸🇯"},{n:"Sweden",f:"🇸🇪"},{n:"Switzerland",f:"🇨🇭"},{n:"Syria",f:"🇸🇾"},{n:"Taiwan",f:"🇹🇼"},{n:"Tajikistan",f:"🇹🇯"},{n:"Tanzania",f:"🇹🇿"},{n:"Thailand",f:"🇹🇭"},{n:"Timor-Leste",f:"🇹🇱"},{n:"Togo",f:"🇹🇬"},{n:"Tokelau",f:"🇹🇰"},{n:"Tonga",f:"🇹🇴"},{n:"Trinidad & Tobago",f:"🇹🇹"},{n:"Tunisia",f:"🇹🇳"},{n:"Turkey",f:"🇹🇷"},{n:"Turkmenistan",f:"🇹🇲"},{n:"Turks & Caicos Islands",f:"🇹🇨"},{n:"Tuvalu",f:"🇹🇻"},{n:"Uganda",f:"🇺🇬"},{n:"Ukraine",f:"🇺🇦"},{n:"UAE",f:"🇦🇪"},{n:"UK",f:"🇬🇧"},{n:"USA",f:"🇺🇸"},{n:"Uruguay",f:"🇺🇾"},{n:"Uzbekistan",f:"🇺🇿"},{n:"Vanuatu",f:"🇻🇺"},{n:"Vatican City",f:"🇻🇦"},{n:"Venezuela",f:"🇻🇪"},{n:"Vietnam",f:"🇻🇳"},{n:"Virgin Islands (British)",f:"🇻🇬"},{n:"Virgin Islands (U.S.)",f:"🇻🇮"},{n:"Wallis & Futuna",f:"🇼🇫"},{n:"Western Sahara",f:"🇪🇭"},{n:"Yemen",f:"🇾🇪"},{n:"Zambia",f:"🇿🇲"},{n:"Zimbabwe",f:"🇿🇼"}
     ];
 
-    const cSelect = document.getElementById('r-country');
-    countryData.forEach(c => cSelect.innerHTML += `<option value="${c.f} ${c.n}">${c.f} ${c.n}</option>`);
+    const sel = document.getElementById('r-country');
+    countries.forEach(c => sel.innerHTML += `<option value="${c.f} ${c.n}">${c.f} ${c.n}</option>`);
 
-    const usersDB = [];
     const matchesDB = [
         {name: "Saron", age: 22, gender: "Female", country: "🇪🇹 Ethiopia", img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=500"},
         {name: "Elena", age: 24, gender: "Female", country: "🇮🇹 Italy", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500"},
-        {name: "Michael", age: 26, gender: "Male", country: "🇺🇸 USA", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500"},
-        {name: "Abeba", age: 23, gender: "Female", country: "🇪🇹 Ethiopia", img: "https://images.unsplash.com/photo-1523824921871-d6f1a15151f1?w=500"}
+        {name: "Meti", age: 21, gender: "Female", country: "🇪🇹 Ethiopia", img: "https://images.unsplash.com/photo-1523824921871-d6f1a15151f1?w=500"},
+        {name: "Dawit", age: 25, gender: "Male", country: "🇪🇹 Ethiopia", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500"}
     ];
 
     let currentUser = null;
+    let tempUser = null;
     let generatedOTP = "";
     let matchIdx = 0;
-    let userImg = null;
+    let userImgData = null;
 
     function showPage(id) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        document.getElementById('nav-bar').style.display = (id==='login-page'||id==='signup-page'||id==='verify-page'||id==='chat-active') ? 'none' : 'flex';
+        document.getElementById('nav-bar').style.display = (['login-page','signup-page','verify-page','chat-active'].includes(id)) ? 'none' : 'flex';
         const nId = 'n-' + id.split('-')[0];
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         if(document.getElementById(nId)) document.getElementById(nId).classList.add('active');
@@ -178,8 +185,8 @@
         if (input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = e => {
-                userImg = e.target.result;
-                document.getElementById('img-preview').src = userImg;
+                userImgData = e.target.result;
+                document.getElementById('img-preview').src = userImgData;
                 document.getElementById('img-preview').classList.remove('hidden');
             }
             reader.readAsDataURL(input.files[0]);
@@ -189,33 +196,36 @@
     function handleSignup() {
         const name = document.getElementById('r-name').value;
         const phone = document.getElementById('r-phone').value;
-        if(!name || !phone || !userImg) return alert("Fill everything including photo!");
+        if(!name || !phone || !userImgData) return alert("Please fill all details and upload a photo!");
         
         generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
         document.getElementById('otp-display').innerText = generatedOTP;
         
-        currentUser = {
+        tempUser = {
             name: name, age: document.getElementById('r-age').value,
             gender: document.getElementById('r-gender').value,
             phone: phone, pass: document.getElementById('r-pass').value,
             country: document.getElementById('r-country').value,
-            photo: userImg
+            photo: userImgData
         };
         showPage('verify-page');
     }
 
     function copyOTP() {
         navigator.clipboard.writeText(generatedOTP);
-        alert("Code Copied!");
+        alert("Verification code copied!");
     }
 
     function confirmVerify() {
-        if(document.getElementById('v-input').value === generatedOTP) {
+        const input = document.getElementById('v-input').value;
+        if(input === generatedOTP) {
+            currentUser = tempUser;
             localStorage.setItem(currentUser.phone, JSON.stringify(currentUser));
-            alert("Success!");
             initApp();
             showPage('home-page');
-        } else alert("Wrong code!");
+        } else {
+            alert("Incorrect code! Please try again.");
+        }
     }
 
     function authLogin() {
@@ -226,75 +236,80 @@
             currentUser = stored;
             initApp();
             showPage('home-page');
-        } else alert("Invalid credentials!");
+        } else alert("Invalid phone or password!");
     }
 
     function initApp() {
         document.getElementById('u-photo').src = currentUser.photo;
         document.getElementById('u-name-input').value = currentUser.name;
         document.getElementById('u-meta').innerText = `${currentUser.age} • ${currentUser.country}`;
-        loadMatches();
-        loadChatList();
+        loadDiscovery();
+        loadMessages();
     }
 
-    function loadMatches() {
-        // Filter for opposite gender
-        const list = matchesDB.filter(m => m.gender !== currentUser.gender);
-        if(list.length > 0) {
-            const target = list[matchIdx % list.length];
-            document.getElementById('m-img').src = target.img;
-            document.getElementById('m-info').innerText = `${target.name}, ${target.age}`;
-            document.getElementById('m-country').innerText = target.country;
+    function loadDiscovery() {
+        const filtered = matchesDB.filter(m => m.gender !== currentUser.gender);
+        if(filtered.length > 0) {
+            const m = filtered[matchIdx % filtered.length];
+            document.getElementById('m-img').src = m.img;
+            document.getElementById('m-info').innerText = `${m.name}, ${m.age}`;
+            document.getElementById('m-country-text').innerText = m.country;
         }
     }
 
-    function nextMatch() { matchIdx++; loadMatches(); }
+    function nextMatch() { matchIdx++; loadDiscovery(); }
 
     function likeMatch() {
-        const list = matchesDB.filter(m => m.gender !== currentUser.gender);
-        const target = list[matchIdx % list.length];
-        alert("Matched with " + target.name);
-        openChat(target);
+        const filtered = matchesDB.filter(m => m.gender !== currentUser.gender);
+        const m = filtered[matchIdx % filtered.length];
+        alert("It's a Match with " + m.name + "!");
+        openChat(m);
     }
 
-    function loadChatList() {
+    function loadMessages() {
         const list = document.getElementById('chat-list');
         list.innerHTML = "";
         matchesDB.filter(m => m.gender !== currentUser.gender).forEach(m => {
-            list.innerHTML += `<div onclick='openChat(${JSON.stringify(m)})' class="flex items-center gap-4 bg-white p-3 rounded-2xl shadow-sm">
-                <img src="${m.img}" class="w-14 h-14 rounded-full object-cover">
-                <div><p class="font-bold">${m.name}</p><p class="text-xs text-slate-400">Match from ${m.country}</p></div>
-            </div>`;
+            list.innerHTML += `
+                <div onclick='openChat(${JSON.stringify(m)})' class="flex items-center gap-4 bg-white p-4 rounded-[2rem] shadow-sm border border-slate-50 active:scale-95 transition">
+                    <img src="${m.img}" class="w-16 h-16 rounded-2xl object-cover">
+                    <div class="flex-1"><p class="font-bold">${m.name}</p><p class="text-xs text-slate-400">Matched from ${m.country}</p></div>
+                    <i class="fas fa-chevron-right text-slate-300 text-xs"></i>
+                </div>`;
         });
     }
 
-    let activePartner = null;
+    let activeChatPartner = null;
     function openChat(partner) {
-        activePartner = partner;
+        activeChatPartner = partner;
         document.getElementById('c-avatar').src = partner.img;
         document.getElementById('c-name').innerText = partner.name;
+        document.getElementById('chat-body').innerHTML = `<div class="bg-white p-4 rounded-2xl rounded-bl-none shadow-sm text-sm max-w-[80%]">Hey! I'm ${partner.name}. Let's chat!</div>`;
         showPage('chat-active');
     }
 
     function sendMessage() {
-        const val = document.getElementById('msg-input').value;
-        if(val) {
-            const msg = `<div class="bg-violet-600 text-white p-3 rounded-2xl rounded-br-none text-sm ml-auto max-w-[80%]">${val}</div>`;
-            document.getElementById('chat-body').innerHTML += msg;
-            document.getElementById('msg-input').value = "";
+        const input = document.getElementById('msg-input');
+        if(input.value) {
+            document.getElementById('chat-body').innerHTML += `<div class="bg-violet-600 text-white p-4 rounded-2xl rounded-br-none text-sm ml-auto max-w-[80%] shadow-lg">${input.value}</div>`;
+            input.value = "";
+            document.getElementById('chat-body').scrollTop = document.getElementById('chat-body').scrollHeight;
         }
     }
 
     function startVideoCall() {
-        document.getElementById('vc-img').src = activePartner.img;
-        document.getElementById('vc-name').innerText = activePartner.name;
+        document.getElementById('vc-img').src = activeChatPartner.img;
+        document.getElementById('vc-name').innerText = activeChatPartner.name;
         document.getElementById('video-call-ui').style.display = 'block';
     }
 
     function endCall() { document.getElementById('video-call-ui').style.display = 'none'; }
 
-    function updateName(val) { currentUser.name = val; localStorage.setItem(currentUser.phone, JSON.stringify(currentUser)); }
-    
+    function updateProfileData() {
+        currentUser.name = document.getElementById('u-name-input').value;
+        localStorage.setItem(currentUser.phone, JSON.stringify(currentUser));
+    }
+
     function updateProfilePhoto(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
