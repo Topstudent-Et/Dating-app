@@ -2,221 +2,861 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Telegram Dating Premium | Global Love</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>WORLD GAMES - Aviator</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; transition: all 0.2s ease; }
-        :root {
-            --bg-body: #f8fafc; --bg-card: #ffffff; --text-primary: #0f172a;
-            --text-secondary: #334155; --border: #e2e8f0; --accent: #ff477e;
-            --shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
-        body.dark {
-            --bg-body: #0a0f1e; --bg-card: #1e293b; --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1; --border: #2d3a5e;
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0e1a 0%, #0f1422 100%);
+            color: #fff;
+            min-height: 100vh;
         }
-        body { background: var(--bg-body); color: var(--text-primary); font-family: 'Inter', sans-serif; }
-        .app-container { max-width: 550px; margin: 0 auto; background: var(--bg-body); min-height: 100vh; padding-bottom: 80px; }
-        .header { background: var(--bg-card); padding: 16px 20px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #ff477e, #ff9f4a); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 550px; margin: 0 auto; background: var(--bg-card); display: flex; justify-content: space-around; padding: 10px 20px 24px; border-top: 1px solid var(--border); z-index: 100; }
-        .nav-item { background: none; border: none; color: var(--text-secondary); font-size: 12px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
-        .nav-item.active { color: #ff477e; }
-        .tab-content { display: none; padding: 20px 16px; animation: fade 0.2s; }
-        .tab-content.active-tab { display: block; }
-        @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-        .glass-card { background: var(--bg-card); border-radius: 28px; padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); }
-        .btn-primary { background: linear-gradient(105deg, #ff477e, #ff8c42); border: none; color: white; font-weight: 600; padding: 12px; border-radius: 60px; width: 100%; cursor: pointer; }
-        .btn-outline { background: transparent; border: 1.5px solid #ff477e; color: #ff477e; padding: 8px 16px; border-radius: 60px; cursor: pointer; }
-        input, select, textarea { width: 100%; padding: 12px 16px; border-radius: 60px; border: 1px solid var(--border); background: var(--bg-card); margin-bottom: 14px; outline: none; }
-        .swipe-card { background: var(--bg-card); border-radius: 32px; overflow: hidden; box-shadow: var(--shadow); cursor: pointer; }
-        .swipe-photo { height: 380px; background-size: cover; background-position: center; }
-        .flex-between { display: flex; justify-content: space-between; align-items: center; }
-        .vip-badge { background: gold; color: #1e293b; padding: 4px 12px; border-radius: 40px; font-size: 11px; font-weight: bold; }
-        .online-dot { width: 10px; height: 10px; background: #22c55e; border-radius: 50%; display: inline-block; margin-left: 8px; }
+
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: linear-gradient(180deg, #0a0e1a 0%, #0c1020 100%);
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 70px;
+        }
+
+        /* Header */
+        .app-header {
+            background: linear-gradient(135deg, #0a0e1a 0%, #0b0f1a 100%);
+            padding: 15px 16px;
+            border-bottom: 1px solid rgba(255, 51, 51, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: #FFD700;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .header-title {
+            flex: 1;
+            font-size: 18px;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(10, 14, 26, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            border-top: 1px solid rgba(255, 51, 51, 0.3);
+            padding: 8px 0;
+            z-index: 99;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 11px;
+            cursor: pointer;
+            padding: 8px;
+            transition: all 0.2s;
+        }
+
+        .nav-item.active {
+            color: #FFD700;
+        }
+
+        .nav-icon {
+            font-size: 22px;
+        }
+
+        /* Pages */
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card {
+            background: rgba(17, 25, 40, 0.95);
+            border-radius: 20px;
+            padding: 16px;
+            margin: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #FFD700;
+            margin-bottom: 12px;
+        }
+
+        /* Practice Mode Warning */
+        .practice-warning {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 12px;
+            text-align: center;
+            border: 1px solid #FFD700;
+        }
+
+        .practice-warning h2 {
+            color: #FFD700;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .practice-warning p {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 15px;
+        }
+
+        .warning-btn {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: #0a0e1a;
+            cursor: pointer;
+        }
+
+        /* Aviator Game */
+        .aviator-card {
+            background: rgba(17, 25, 40, 0.95);
+            border-radius: 20px;
+            margin: 12px;
+            overflow: hidden;
+        }
+
+        .balance-top {
+            background: linear-gradient(135deg, #1a1a2e, #0f0f1a);
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .balance-top span:first-child { color: #aaa; }
+        .balance-top span:last-child { color: #FFD700; }
+
+        .recent-crashes {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 12px 16px;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .crash-bubble {
+            background: rgba(255, 51, 51, 0.2);
+            border: 1px solid rgba(255, 51, 51, 0.5);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 13px;
+            color: #ff8888;
+        }
+
+        .fun-mode-badge {
+            background: linear-gradient(135deg, #ffaa00, #ff6600);
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            margin: 10px 16px;
+            color: #000;
+        }
+
+        .graph-container {
+            position: relative;
+            background: #000;
+            border-radius: 16px;
+            border: 3px solid #ff3333;
+            margin: 0 16px;
+            height: 280px;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .multiplier-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .multiplier-value {
+            font-size: 48px;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 0 0 20px rgba(255,215,0,0.8);
+        }
+
+        .plane-icon {
+            position: absolute;
+            font-size: 32px;
+            pointer-events: none;
+            z-index: 10;
+            filter: drop-shadow(0 0 5px #FFD700);
+        }
+
+        .bet-controls {
+            padding: 16px;
+        }
+
+        .bet-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0,0,0,0.5);
+            border-radius: 60px;
+            padding: 8px 16px;
+            margin-bottom: 16px;
+        }
+
+        .bet-amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .bet-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .bet-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 30px;
+            font-size: 20px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-start {
+            flex: 1;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            padding: 14px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: #0a0e1a;
+            cursor: pointer;
+        }
+
+        .btn-cashout {
+            flex: 1;
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            border: none;
+            padding: 14px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Invite Page */
+        .invite-card {
+            text-align: center;
+        }
+
+        .bonus-amount {
+            font-size: 48px;
+            font-weight: bold;
+            color: #FFD700;
+            margin: 10px 0;
+        }
+
+        .invite-code {
+            background: rgba(0,0,0,0.5);
+            padding: 12px;
+            border-radius: 40px;
+            font-size: 18px;
+            letter-spacing: 2px;
+            margin: 15px 0;
+        }
+
+        .claim-btn {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            padding: 14px;
+            border-radius: 40px;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .friends-list {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .friend-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Profile Page */
+        .profile-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 15px;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background: rgba(255,215,0,0.1);
+        }
+
+        .language-selector, .theme-selector {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 12px;
+        }
+
+        .language-selector.show, .theme-selector.show {
+            display: block;
+        }
+
+        .lang-option, .theme-option {
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+
+        .lang-option:hover, .theme-option:hover {
+            background: rgba(255,215,0,0.2);
+        }
+
+        /* Result Message */
+        .result-message {
+            text-align: center;
+            padding: 10px;
+            margin: 10px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
 <div class="app-container">
-    <div class="header"><div class="logo">💖 Telegram Dating</div><button class="theme-toggle" id="themeToggleBtn" style="background:none; border:1px solid var(--border); border-radius:40px; padding:6px 12px;">🌙</button></div>
-
-    <!-- Auth Modal -->
-    <div id="authModal" class="glass-card" style="margin:20px 16px; text-align:center;">
-        <i class="fab fa-telegram" style="font-size: 56px; color: #ff477e;"></i>
-        <h2>Welcome to Telegram Dating</h2>
-        <div id="authTabs" class="flex-between" style="margin: 20px 0;"><button id="showLoginTab" class="btn-outline" style="flex:1; margin-right:8px;">Login</button><button id="showSignupTab" class="btn-outline" style="flex:1;">Sign Up</button></div>
-        <div id="loginForm"><input type="email" id="loginEmail" placeholder="Email"><input type="password" id="loginPassword" placeholder="Password"><button id="doLoginBtn" class="btn-primary">Login</button><button id="googleLoginBtn" class="btn-outline" style="margin-top:10px;"><i class="fab fa-google"></i> Continue with Google</button><button id="telegramLoginBtn" class="btn-outline" style="margin-top:10px;"><i class="fab fa-telegram"></i> Continue with Telegram</button></div>
-        <div id="signupForm" style="display:none;"><input type="text" id="signupName" placeholder="Full Name"><input type="email" id="signupEmail" placeholder="Email"><input type="password" id="signupPassword" placeholder="Password"><select id="signupGender"><option>Female</option><option>Male</option></select><input type="text" id="signupLocation" placeholder="City (e.g., Addis Ababa)"><button id="doSignupBtn" class="btn-primary">Create Account</button></div>
+    <!-- Dynamic Header -->
+    <div class="app-header" id="appHeader">
+        <button class="back-btn" id="backBtn" style="display: none;">←</button>
+        <div class="header-title" id="headerTitle">WORLD GAMES</div>
     </div>
 
-    <!-- Main App -->
-    <div id="mainApp" style="display:none;">
-        <div class="bottom-nav">
-            <button class="nav-item active" data-tab="home"><i class="fas fa-home"></i><span>Home</span></button>
-            <button class="nav-item" data-tab="match"><i class="fas fa-heart"></i><span>Match</span></button>
-            <button class="nav-item" data-tab="chat"><i class="fas fa-comment-dots"></i><span>Chat</span></button>
-            <button class="nav-item" data-tab="profile"><i class="fas fa-user"></i><span>Profile</span></button>
+    <!-- Practice Mode Warning Page -->
+    <div id="warningPage" class="page active">
+        <div class="practice-warning">
+            <h2>🛡️ YOUR MONEY IS SAFE</h2>
+            <h2>WELCOME TO PRACTICE MODE!</h2>
+            <p style="margin-top: 15px;"><strong>Important Information</strong></p>
+            <p>No real money is involved. All currency is virtual and for practice only.</p>
+            <p style="margin-top: 10px;"><strong>Have Fun & Learn</strong></p>
+            <p>Enjoy learning game strategies and having fun without any financial risk!</p>
+            <p style="margin-top: 10px; font-size: 11px;">By continuing, you acknowledge that this app is for entertainment and practice purposes only.</p>
+            <button class="warning-btn" id="acceptWarningBtn">🎮 Got It? Let's Play!</button>
         </div>
-        <div id="homeTab" class="tab-content active-tab"><h3>💬 Feed</h3><div id="postsFeed"><div class="glass-card">Welcome to Telegram Dating! Start matching now.</div></div></div>
-        <div id="matchTab" class="tab-content"><h3>✨ Discover Nearby</h3><div id="matchContainer"></div></div>
-        <div id="chatTab" class="tab-content"><h3>💬 Messages</h3><div id="chatsList"></div><div id="chatDetail" style="display:none;"><div class="flex-between"><button id="backToChats" class="btn-outline">← Back</button><span id="chatUserName"></span><span id="chatUserStatus"></span></div><div id="chatMessagesArea" style="height:300px; overflow-y:auto; margin:12px 0;"></div><div class="flex-between" style="gap:8px;"><input type="text" id="chatInput" placeholder="Type a message..."><button id="sendChatMsgBtn" class="btn-primary" style="width:auto; padding:10px 18px;">Send</button></div></div></div>
-        <div id="profileTab" class="tab-content"><div class="glass-card" style="text-align:center;"><img id="profilePhoto" src="https://randomuser.me/api/portraits/women/68.jpg" style="width:100px;height:100px;border-radius:50%;"><h3 id="profileName"></h3><p id="profileLocation"></p><p id="profileBio"></p><p id="profileInterests"></p><button id="editProfileBtn" class="btn-outline">Edit Profile</button><button id="upgradeVipBtn" class="btn-primary" style="margin-top:12px;">👑 Upgrade VIP - $9.99/mo</button><button id="logoutBtn" class="btn-outline" style="margin-top:12px;">Logout</button></div></div>
+    </div>
+
+    <!-- Games Page (Aviator) -->
+    <div id="gamesPage" class="page">
+        <div class="aviator-card">
+            <div class="balance-top">
+                <span>💰 BALANCE</span>
+                <span id="gameBalance">50,000.00 ETB</span>
+            </div>
+            
+            <div class="recent-crashes" id="recentCrashes">
+                <span class="crash-bubble">1.31x</span>
+                <span class="crash-bubble">1.98x</span>
+                <span class="crash-bubble">2.29x</span>
+                <span class="crash-bubble">1.50x</span>
+                <span class="crash-bubble">16.69x</span>
+                <span class="crash-bubble">1.21x</span>
+                <span class="crash-bubble">1.42x</span>
+            </div>
+            
+            <div class="fun-mode-badge">🎮 FUN MODE</div>
+            
+            <div class="graph-container" id="graphContainer">
+                <canvas id="aviatorCanvas" width="500" height="280"></canvas>
+                <div class="multiplier-center">
+                    <div class="multiplier-value" id="multiplierDisplay">1.00x</div>
+                </div>
+                <div id="planeIcon" class="plane-icon">✈️</div>
+            </div>
+            
+            <div class="bet-controls">
+                <div class="bet-row">
+                    <span>BET AMOUNT</span>
+                    <div class="bet-buttons">
+                        <button class="bet-btn" id="decBet">-</button>
+                        <span class="bet-amount" id="betAmount">4.00</span>
+                        <button class="bet-btn" id="incBet">+</button>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn-start" id="startBtn">🚀 START</button>
+                    <button class="btn-cashout" id="cashOutBtn">💰 CASH OUT</button>
+                </div>
+            </div>
+            <div id="gameResult" class="result-message"></div>
+        </div>
+    </div>
+
+    <!-- Invite Page -->
+    <div id="invitePage" class="page">
+        <div class="card invite-card">
+            <div class="card-title">👥 Invite Friends</div>
+            <div class="bonus-amount">+100 Birr</div>
+            <p>Per Friend</p>
+            <p style="font-size: 13px; color: #aaa;">You'll receive 100 Birr per friend.</p>
+            
+            <div class="invite-code" id="inviteCode">Loading...</div>
+            <button class="claim-btn" id="copyInviteBtn">📋 Invite a friend</button>
+            
+            <div style="margin-top: 20px;">
+                <p><strong>BALANCE</strong></p>
+                <p style="font-size: 24px; color: #FFD700;" id="inviteBalance">0 Birr</p>
+                <button class="claim-btn" id="claimRewardBtn" style="margin-top: 10px; background: #00cc88;">🎁 Claim reward</button>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <p><strong>FRIENDS (0 INVITED)</strong></p>
+                <div id="friendsList">
+                    <p style="color: #aaa; text-align: center; padding: 20px;">You haven't invited any friends yet</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Page -->
+    <div id="profilePage" class="page">
+        <div class="card">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">👤</div>
+                <h3 id="profileName">Dawit_Fikadu21</h3>
+            </div>
+            
+            <div class="menu-item" id="couponsBtn">
+                <span>🎫 Coupons</span>
+                <span>›</span>
+            </div>
+            <div class="menu-item" id="ticketsBtn">
+                <span>🎟️ Tickets</span>
+                <span>›</span>
+            </div>
+            <div class="menu-item" id="languageBtn">
+                <span>🌐 Language</span>
+                <span id="currentLang">English ›</span>
+            </div>
+            <div id="languageSelector" class="language-selector">
+                <div class="lang-option" data-lang="English">English</div>
+                <div class="lang-option" data-lang="አማርኛ">አማርኛ</div>
+                <div class="lang-option" data-lang="Oromiffa">Oromiffa</div>
+            </div>
+            
+            <div class="menu-item" id="themeBtn">
+                <span>🎨 Change Theme</span>
+                <span id="currentTheme">Dark ›</span>
+            </div>
+            <div id="themeSelector" class="theme-selector">
+                <div class="theme-option" data-theme="dark">🌙 Dark</div>
+                <div class="theme-option" data-theme="light">☀️ Light</div>
+            </div>
+            
+            <div class="menu-item" id="contactBtn">
+                <span>📞 GET HELP</span>
+                <span>›</span>
+            </div>
+            <div style="padding: 12px; background: rgba(0,0,0,0.3); border-radius: 12px; margin-top: 10px;">
+                <p style="font-size: 12px; color: #aaa;">Contact us</p>
+                <p style="font-size: 11px;">@SafriGamesSupportBot</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <button class="nav-item" data-page="games">
+            <span class="nav-icon">🎮</span>
+            <span>Games</span>
+        </button>
+        <button class="nav-item" data-page="invite">
+            <span class="nav-icon">👥</span>
+            <span>Invite</span>
+        </button>
+        <button class="nav-item" data-page="profile">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </button>
     </div>
 </div>
 
 <script>
-    // ========== FIREBASE CONFIG (Replace with your own) ==========
-    const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_AUTH_DOMAIN",
-        projectId: "YOUR_PROJECT_ID",
-        storageBucket: "YOUR_STORAGE_BUCKET",
-        messagingSenderId: "YOUR_SENDER_ID",
-        appId: "YOUR_APP_ID"
+    // ============ USER DATA ============
+    let currentUser = {
+        name: "Dawit_Fikadu21",
+        balance: 50000,
+        inviteCode: "DAWIT" + Math.floor(Math.random() * 10000),
+        invitedFriends: [],
+        claimedRewards: 0
     };
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    const storage = firebase.storage();
-
-    // ========== GLOBAL STATE ==========
-    let currentUser = null;
-    let currentUserData = null;
-    let currentChatWith = null;
-    let usersCache = [];
-
-    // Auth UI Toggle
-    document.getElementById("showLoginTab").onclick = () => { document.getElementById("loginForm").style.display = "block"; document.getElementById("signupForm").style.display = "none"; };
-    document.getElementById("showSignupTab").onclick = () => { document.getElementById("loginForm").style.display = "none"; document.getElementById("signupForm").style.display = "block"; };
-
-    // Signup
-    document.getElementById("doSignupBtn").onclick = async () => {
-        const email = document.getElementById("signupEmail").value;
-        const password = document.getElementById("signupPassword").value;
-        const name = document.getElementById("signupName").value;
-        const gender = document.getElementById("signupGender").value;
-        const location = document.getElementById("signupLocation").value;
-        try {
-            const cred = await auth.createUserWithEmailAndPassword(email, password);
-            await db.collection("users").doc(cred.user.uid).set({
-                uid: cred.user.uid, name, email, gender, location, bio: "New to Telegram Dating!", interests: "", photo: "https://randomuser.me/api/portraits/women/68.jpg", vip: false, coins: 100, likes: [], matches: [], online: true, lastSeen: Date.now()
-            });
-            alert("Account created! Please login.");
-        } catch(e) { alert(e.message); }
-    };
-
-    // Login
-    document.getElementById("doLoginBtn").onclick = async () => {
-        const email = document.getElementById("loginEmail").value;
-        const password = document.getElementById("loginPassword").value;
-        try {
-            await auth.signInWithEmailAndPassword(email, password);
-        } catch(e) { alert(e.message); }
-    };
-
-    // Google Login
-    document.getElementById("googleLoginBtn").onclick = async () => {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        try { await auth.signInWithPopup(provider); } catch(e) { alert(e.message); }
-    };
-
-    // Telegram Login Simulated (redirect would go here)
-    document.getElementById("telegramLoginBtn").onclick = () => { alert("Telegram login: In production, use Telegram Login Widget"); };
-
-    // Auth State Listener
-    auth.onAuthStateChanged(async (user) => {
-        if (user) {
-            currentUser = user;
-            const doc = await db.collection("users").doc(user.uid).get();
-            if (doc.exists) currentUserData = doc.data();
-            else { currentUserData = { uid: user.uid, name: user.email.split('@')[0], email: user.email, gender: "Female", location: "Addis Ababa", bio: "Love to meet new people!", interests: "", photo: "https://randomuser.me/api/portraits/women/68.jpg", vip: false, coins: 100, likes: [], matches: [], online: true, lastSeen: Date.now() }; await db.collection("users").doc(user.uid).set(currentUserData); }
-            await db.collection("users").doc(user.uid).update({ online: true, lastSeen: Date.now() });
-            document.getElementById("authModal").style.display = "none";
-            document.getElementById("mainApp").style.display = "block";
-            loadUsers(); renderProfile(); renderMatch(); renderChatsList();
-            // Set online status on disconnect
-            window.addEventListener("beforeunload", () => { db.collection("users").doc(user.uid).update({ online: false, lastSeen: Date.now() }); });
+    
+    let balance = 50000;
+    let multiplier = 1;
+    let playing = false;
+    let currentBet = 4;
+    let intervalId = null;
+    let crashPoint = null;
+    let recentCrashes = [1.31, 1.98, 2.29, 1.50, 16.69, 1.21, 1.42];
+    
+    // ============ DOM Elements ============
+    const warningPage = document.getElementById('warningPage');
+    const gamesPage = document.getElementById('gamesPage');
+    const invitePage = document.getElementById('invitePage');
+    const profilePage = document.getElementById('profilePage');
+    const navItems = document.querySelectorAll('.nav-item');
+    const backBtn = document.getElementById('backBtn');
+    const headerTitle = document.getElementById('headerTitle');
+    
+    // ============ Show Page Function ============
+    function showPage(pageId, title) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId + 'Page').classList.add('active');
+        headerTitle.innerText = title || 'WORLD GAMES';
+        
+        navItems.forEach(item => {
+            if(item.dataset.page === pageId) item.classList.add('active');
+            else item.classList.remove('active');
+        });
+        
+        if(pageId === 'games') {
+            backBtn.style.display = 'none';
+            setTimeout(() => resizeCanvas(), 100);
+            updateGameBalance();
         } else {
-            document.getElementById("authModal").style.display = "block";
-            document.getElementById("mainApp").style.display = "none";
+            backBtn.style.display = 'block';
         }
+    }
+    
+    // ============ Update Balance ============
+    function updateGameBalance() {
+        document.getElementById('gameBalance').innerText = balance.toLocaleString() + ' ETB';
+        document.getElementById('inviteBalance').innerText = balance + ' Birr';
+    }
+    
+    // ============ AVIATOR CANVAS ============
+    const canvas = document.getElementById('aviatorCanvas');
+    let ctx = canvas.getContext('2d');
+    let planeX = 0, planeY = 0;
+    
+    function resizeCanvas() {
+        const container = document.getElementById('graphContainer');
+        const rect = container.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+        drawGraph();
+    }
+    window.addEventListener('resize', resizeCanvas);
+    
+    function drawGraph() {
+        if(!ctx) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.strokeStyle = '#ff6666';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(0, canvas.height);
+        for(let i=0; i<=100; i++) {
+            let t = i/100;
+            let x = t * canvas.width;
+            let y = canvas.height - (Math.pow(t, 0.55) * canvas.height * 0.85);
+            if(i===0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        
+        ctx.strokeStyle = '#ff3333';
+        ctx.lineWidth = 0.5;
+        for(let i=0; i<=5; i++) {
+            let y = canvas.height - (i/5 * canvas.height);
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(canvas.width, y);
+            ctx.stroke();
+        }
+    }
+    
+    function addTrail(x, y) {
+        const trail = document.createElement('div');
+        trail.className = 'trail-point';
+        trail.style.cssText = `position:absolute; width:6px; height:6px; background:#ff6666; border-radius:50%; left:${x-3}px; top:${y-3}px; pointer-events:none; z-index:8; box-shadow:0 0 6px red;`;
+        document.getElementById('graphContainer').appendChild(trail);
+        setTimeout(() => trail.remove(), 400);
+    }
+    
+    function updatePlanePosition(mult) {
+        let t = Math.min(0.95, (mult-1)/12);
+        let x = t * canvas.width;
+        let y = canvas.height - (Math.pow(t, 0.55) * canvas.height * 0.85);
+        planeX = x; planeY = y;
+        const plane = document.getElementById('planeIcon');
+        plane.style.left = (x - 18) + 'px';
+        plane.style.top = (y - 22) + 'px';
+        plane.style.display = 'block';
+        if(mult > 1.1) addTrail(x - 5, y - 3);
+    }
+    
+    function createExplosion(x, y) {
+        const explosion = document.createElement('div');
+        explosion.style.cssText = `position:absolute; font-size:48px; pointer-events:none; left:${x-30}px; top:${y-30}px; z-index:20; animation: explodeAnim 0.5s ease-out forwards;`;
+        explosion.innerHTML = '💥💥';
+        document.getElementById('graphContainer').appendChild(explosion);
+        setTimeout(() => explosion.remove(), 500);
+    }
+    
+    function startGame() {
+        if(playing) { showGameMessage("Game in progress!", "error"); return; }
+        if(currentBet > balance) { showGameMessage("Insufficient balance!", "error"); return; }
+        
+        balance -= currentBet;
+        updateGameBalance();
+        
+        multiplier = 1;
+        playing = true;
+        document.getElementById('multiplierDisplay').innerText = '1.00x';
+        crashPoint = Math.random() * 5 + 1.1;
+        
+        const plane = document.getElementById('planeIcon');
+        plane.style.display = 'block';
+        plane.style.left = '0px';
+        plane.style.top = (canvas.height - 20) + 'px';
+        
+        intervalId = setInterval(() => {
+            if(!playing) return;
+            multiplier += 0.04;
+            document.getElementById('multiplierDisplay').innerText = multiplier.toFixed(2) + 'x';
+            updatePlanePosition(multiplier);
+            drawGraph();
+            
+            if(multiplier >= crashPoint) {
+                clearInterval(intervalId);
+                playing = false;
+                createExplosion(planeX, planeY);
+                document.getElementById('planeIcon').style.display = 'none';
+                showGameMessage(`💥 CRASHED at ${crashPoint.toFixed(2)}x! Lost ${currentBet} ETB`, "error");
+                
+                recentCrashes.unshift(crashPoint);
+                if(recentCrashes.length > 8) recentCrashes.pop();
+                updateRecentCrashes();
+            }
+        }, 45);
+    }
+    
+    function cashOut() {
+        if(!playing) { showGameMessage("No active flight!", "error"); return; }
+        clearInterval(intervalId);
+        playing = false;
+        const win = currentBet * multiplier;
+        balance += win;
+        updateGameBalance();
+        showGameMessage(`✅ CASHED OUT! Won ${win.toFixed(2)} ETB at ${multiplier.toFixed(2)}x`, "success");
+        document.getElementById('planeIcon').style.display = 'none';
+    }
+    
+    function showGameMessage(msg, type) {
+        const div = document.getElementById('gameResult');
+        div.innerHTML = msg;
+        div.style.background = type === 'error' ? 'rgba(255,71,87,0.3)' : 'rgba(0,255,100,0.3)';
+        setTimeout(() => { if(div.innerHTML === msg) div.innerHTML = ''; }, 3000);
+    }
+    
+    function updateRecentCrashes() {
+        const container = document.getElementById('recentCrashes');
+        container.innerHTML = recentCrashes.slice(0, 8).map(c => `<span class="crash-bubble">${c.toFixed(2)}x</span>`).join('');
+    }
+    
+    // Add animation style
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes explodeAnim {
+            0% { transform: scale(0.3); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+        .trail-point {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #ff6666;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: trailFade 0.4s ease-out forwards;
+        }
+        @keyframes trailFade {
+            0% { opacity: 0.8; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.3); }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // ============ Event Listeners ============
+    document.getElementById('acceptWarningBtn').addEventListener('click', () => {
+        warningPage.classList.remove('active');
+        showPage('games', 'WORLD GAMES');
     });
-
-    async function loadUsers() { const snap = await db.collection("users").get(); usersCache = snap.docs.map(d => d.data()); }
-    function renderProfile() { if(!currentUserData) return; document.getElementById("profileName").innerHTML = currentUserData.name + (currentUserData.vip ? ' <span class="vip-badge">VIP</span>' : ''); document.getElementById("profileLocation").innerHTML = `<i class="fas fa-map-marker-alt"></i> ${currentUserData.location}`; document.getElementById("profileBio").innerHTML = currentUserData.bio; document.getElementById("profileInterests").innerHTML = `<i class="fas fa-tag"></i> ${currentUserData.interests || "Add interests"}`; document.getElementById("profilePhoto").src = currentUserData.photo; }
-    document.getElementById("editProfileBtn").onclick = () => { const newBio = prompt("Edit Bio:", currentUserData.bio); if(newBio) { currentUserData.bio = newBio; db.collection("users").doc(currentUser.uid).update({ bio: newBio }); renderProfile(); } };
-    document.getElementById("upgradeVipBtn").onclick = async () => { if(confirm("Upgrade to VIP for $9.99/month?")) { currentUserData.vip = true; await db.collection("users").doc(currentUser.uid).update({ vip: true, coins: firebase.firestore.FieldValue.increment(500) }); alert("VIP Activated! +500 coins"); renderProfile(); } };
-    document.getElementById("logoutBtn").onclick = async () => { await db.collection("users").doc(currentUser.uid).update({ online: false }); await auth.signOut(); location.reload(); };
-
-    // Matching System (Tinder Style)
-    async function renderMatch() {
-        const others = usersCache.filter(u => u.uid !== currentUser.uid && !currentUserData.likes?.includes(u.uid) && !currentUserData.matches?.includes(u.uid));
-        if(others.length === 0) { document.getElementById("matchContainer").innerHTML = "<div class='glass-card'>No more profiles!</div>"; return; }
-        const p = others[0];
-        document.getElementById("matchContainer").innerHTML = `<div class="swipe-card"><div class="swipe-photo" style="background-image: url('${p.photo}');"></div><div style="padding:20px;"><h3>${p.name}, ${p.age || 25}</h3><p>${p.bio}</p><div style="display:flex; gap:16px;"><button id="likeBtn" class="btn-primary" style="flex:1;">❤️ Like</button><button id="superlikeBtn" class="btn-outline" style="flex:1;">⭐ Super Like</button><button id="passBtn" class="btn-outline" style="flex:1;">❌ Pass</button></div></div></div>`;
-        document.getElementById("likeBtn").onclick = async () => { await handleLike(p.uid, false); renderMatch(); };
-        document.getElementById("superlikeBtn").onclick = async () => { if(currentUserData.vip || currentUserData.coins >= 50) { await handleLike(p.uid, true); if(!currentUserData.vip) await db.collection("users").doc(currentUser.uid).update({ coins: currentUserData.coins - 50 }); renderMatch(); } else alert("VIP or 50 coins required for Super Like!"); };
-        document.getElementById("passBtn").onclick = () => renderMatch();
-    }
-    async function handleLike(targetUid, isSuper) {
-        const target = usersCache.find(u => u.uid === targetUid);
-        if(target.likes?.includes(currentUser.uid)) {
-            // Mutual match!
-            await db.collection("users").doc(currentUser.uid).update({ matches: firebase.firestore.FieldValue.arrayUnion(targetUid) });
-            await db.collection("users").doc(targetUid).update({ matches: firebase.firestore.FieldValue.arrayUnion(currentUser.uid) });
-            alert(`🎉 It's a match with ${target.name}! Start chatting.`);
-        } else {
-            await db.collection("users").doc(currentUser.uid).update({ likes: firebase.firestore.FieldValue.arrayUnion(targetUid) });
-            alert(`👍 You liked ${target.name}${isSuper ? ' with Super Like!' : ''}`);
-        }
-        loadUsers();
-    }
-
-    // Chat System
-    async function renderChatsList() {
-        const matches = usersCache.filter(u => currentUserData.matches?.includes(u.uid));
-        const container = document.getElementById("chatsList");
-        if(matches.length === 0) { container.innerHTML = "<div class='glass-card'>No matches yet. Swipe to connect!</div>"; return; }
-        container.innerHTML = matches.map(u => `<div class="glass-card" data-uid="${u.uid}" style="cursor:pointer;"><div class="flex-between"><div><strong>${u.name}</strong> ${u.online ? '<span class="online-dot"></span>' : ''}<br><small>${u.location}</small></div><i class="fas fa-comment"></i></div></div>`).join('');
-        document.querySelectorAll("[data-uid]").forEach(el => el.onclick = () => openChat(el.getAttribute("data-uid")));
-    }
-    async function openChat(otherId) {
-        currentChatWith = otherId;
-        const other = usersCache.find(u => u.uid === otherId);
-        document.getElementById("chatUserName").innerHTML = other.name; document.getElementById("chatUserStatus").innerHTML = other.online ? '<span class="online-dot"></span> Online' : 'Offline';
-        document.getElementById("chatsList").style.display = "none"; document.getElementById("chatDetail").style.display = "block";
-        const snap = await db.collection("chats").where("participants", "array-contains", currentUser.uid).get();
-        let chatId = null;
-        snap.forEach(doc => { if(doc.data().participants.includes(otherId)) chatId = doc.id; });
-        if(!chatId) { const newChat = await db.collection("chats").add({ participants: [currentUser.uid, otherId], messages: [] }); chatId = newChat.id; }
-        db.collection("chats").doc(chatId).onSnapshot((doc) => { if(doc.exists) { const data = doc.data(); const messagesDiv = document.getElementById("chatMessagesArea"); messagesDiv.innerHTML = (data.messages || []).map(m => `<div style="text-align:${m.from === currentUser.uid ? 'right' : 'left'}; margin:8px;"><span style="background:${m.from === currentUser.uid ? '#ff477e' : 'var(--border)'}; padding:8px 14px; border-radius:20px; display:inline-block;">${m.text}</span></div>`).join(''); messagesDiv.scrollTop = messagesDiv.scrollHeight; } });
-    }
-    document.getElementById("sendChatMsgBtn").onclick = async () => {
-        if(!currentChatWith) return;
-        const text = document.getElementById("chatInput").value.trim();
-        if(!text) return;
-        const snap = await db.collection("chats").where("participants", "array-contains", currentUser.uid).get();
-        let chatId = null;
-        snap.forEach(doc => { if(doc.data().participants.includes(currentChatWith)) chatId = doc.id; });
-        if(chatId) { await db.collection("chats").doc(chatId).update({ messages: firebase.firestore.FieldValue.arrayUnion({ from: currentUser.uid, text, timestamp: Date.now() }) }); }
-        document.getElementById("chatInput").value = "";
-    };
-    document.getElementById("backToChats").onclick = () => { document.getElementById("chatDetail").style.display = "none"; document.getElementById("chatsList").style.display = "block"; currentChatWith = null; };
-
-    // Theme Toggle
-    let isDark = false;
-    document.getElementById("themeToggleBtn").onclick = () => { isDark = !isDark; if(isDark) document.body.classList.add("dark"); else document.body.classList.remove("dark"); };
-
-    // Tab switching
-    document.querySelectorAll(".nav-item").forEach(btn => { btn.onclick = () => { document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active")); btn.classList.add("active"); const tab = btn.getAttribute("data-tab"); document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active-tab")); document.getElementById(`${tab}Tab`).classList.add("active-tab"); if(tab === "match") renderMatch(); if(tab === "chat") renderChatsList(); }; });
+    
+    document.getElementById('decBet').addEventListener('click', () => {
+        if(currentBet > 1) currentBet = Math.max(1, currentBet - 1);
+        document.getElementById('betAmount').innerText = currentBet.toFixed(2);
+    });
+    
+    document.getElementById('incBet').addEventListener('click', () => {
+        currentBet = Math.min(500, currentBet + 1);
+        document.getElementById('betAmount').innerText = currentBet.toFixed(2);
+    });
+    
+    document.getElementById('startBtn').addEventListener('click', startGame);
+    document.getElementById('cashOutBtn').addEventListener('click', cashOut);
+    
+    // Invite Page
+    document.getElementById('inviteCode').innerText = currentUser.inviteCode;
+    document.getElementById('copyInviteBtn').addEventListener('click', () => {
+        navigator.clipboard.writeText(currentUser.inviteCode);
+        alert('Invite code copied: ' + currentUser.inviteCode);
+    });
+    
+    document.getElementById('claimRewardBtn').addEventListener('click', () => {
+        alert('Claim reward feature - Add bonus after friend joins');
+    });
+    
+    // Profile Page - Language
+    document.getElementById('languageBtn').addEventListener('click', () => {
+        const selector = document.getElementById('languageSelector');
+        selector.classList.toggle('show');
+    });
+    
+    document.querySelectorAll('.lang-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+            document.getElementById('currentLang').innerText = opt.dataset.lang + ' ›';
+            document.getElementById('languageSelector').classList.remove('show');
+            alert('Language changed to ' + opt.dataset.lang);
+        });
+    });
+    
+    // Theme
+    document.getElementById('themeBtn').addEventListener('click', () => {
+        const selector = document.getElementById('themeSelector');
+        selector.classList.toggle('show');
+    });
+    
+    document.querySelectorAll('.theme-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+            document.getElementById('currentTheme').innerText = opt.dataset.theme === 'dark' ? '🌙 Dark ›' : '☀️ Light ›';
+            document.getElementById('themeSelector').classList.remove('show');
+            alert('Theme changed to ' + opt.dataset.theme);
+        });
+    });
+    
+    document.getElementById('couponsBtn').addEventListener('click', () => alert('No coupons available'));
+    document.getElementById('ticketsBtn').addEventListener('click', () => alert('No tickets available'));
+    document.getElementById('contactBtn').addEventListener('click', () => alert('Contact @SafriGamesSupportBot'));
+    
+    // Navigation
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            showPage(item.dataset.page, item.dataset.page === 'games' ? 'WORLD GAMES' : 
+                     (item.dataset.page === 'invite' ? 'Invite Friends' : 'Profile'));
+        });
+    });
+    
+    backBtn.addEventListener('click', () => {
+        showPage('games', 'WORLD GAMES');
+    });
+    
+    // Initial setup
+    resizeCanvas();
+    setInterval(() => { if(!playing) drawGraph(); }, 100);
+    updateGameBalance();
+    updateRecentCrashes();
 </script>
 </body>
 </html>
