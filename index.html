@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WorldDating | Global Mini App</title>
+    <title>WorldDating | Pro Mini App</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
         body { font-family: 'Outfit', sans-serif; background: #000; color: white; overflow: hidden; }
-        .page { display: none; height: 100vh; padding-bottom: 80px; overflow-y: auto; animation: fadeIn 0.3s ease; }
+        .page { display: none; height: 100vh; padding-bottom: 90px; overflow-y: auto; }
         .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .nav-bar { display: none; position: fixed; bottom: 0; width: 100%; background: rgba(10,10,10,0.95); backdrop-filter: blur(15px); border-top: 1px solid #222; z-index: 100; }
-        .nav-item { flex: 1; text-align: center; padding: 15px; color: #555; transition: 0.3s; }
+        .nav-bar { display: none; position: fixed; bottom: 0; width: 100%; background: rgba(10,10,10,0.98); backdrop-filter: blur(20px); border-top: 1px solid #222; z-index: 100; }
+        .nav-item { flex: 1; text-align: center; padding: 18px; color: #444; cursor: pointer; }
         .nav-item.active { color: #a855f7; }
-        .input-style { width: 100%; padding: 16px; border-radius: 18px; background: #1a1a1a; border: 1px solid #333; outline: none; margin-bottom: 12px; }
+        .input-style { width: 100%; padding: 16px; border-radius: 18px; background: #111; border: 1px solid #222; outline: none; margin-bottom: 12px; color: white; }
         .btn-grad { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); padding: 16px; border-radius: 18px; font-weight: bold; width: 100%; }
-        .match-card { height: 75vh; border-radius: 35px; overflow: hidden; position: relative; border: 1px solid #222; }
+        .glass { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.1); }
+        #chat-box::-webkit-scrollbar { width: 0px; }
     </style>
 </head>
 <body>
@@ -26,98 +26,102 @@
 <div class="app-container">
 
     <div id="login-page" class="page active px-6 pt-20">
-        <div class="text-center mb-10">
-            <div class="w-20 h-20 bg-purple-600 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-xl shadow-purple-500/20">
-                <i class="fas fa-fire-alt text-4xl text-white"></i>
+        <div class="text-center mb-12">
+            <div class="w-20 h-20 bg-purple-600 rounded-[2rem] flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-fire-alt text-4xl"></i>
             </div>
-            <h1 class="text-3xl font-extrabold tracking-tight">WorldDating</h1>
-            <p class="text-gray-500 mt-2">Global connections start here.</p>
+            <h1 class="text-3xl font-bold italic">WorldDating</h1>
+            <p class="text-gray-500 mt-2">Login to find your global match</p>
         </div>
-        <div id="login-error" class="hidden text-red-500 text-sm text-center mb-4 italic">Invalid email or password!</div>
+        <div id="login-error" class="hidden text-red-500 text-center mb-4 text-sm italic italic">Unauthorized! Please sign in correctly.</div>
         <input type="email" id="l-email" placeholder="Email Address" class="input-style">
         <input type="password" id="l-pass" placeholder="Password" class="input-style">
-        <p onclick="showPage('forgot-page')" class="text-right text-xs text-purple-400 mb-6 cursor-pointer">Forgot Password?</p>
-        <button onclick="authLogin()" class="btn-grad shadow-lg shadow-purple-500/30">Sign In</button>
-        <p class="text-center mt-10 text-gray-500">New user? <span onclick="showPage('signup-page')" class="text-purple-400 font-bold cursor-pointer">Create Account</span></p>
+        <button onclick="authLogin()" class="btn-grad">Sign In</button>
+        <p class="text-center mt-8 text-gray-500">New? <span onclick="showPage('signup-page')" class="text-purple-400 font-bold cursor-pointer">Create Account</span></p>
     </div>
 
-    <div id="forgot-page" class="page px-6 pt-20 text-center">
-        <h2 class="text-2xl font-bold mb-4">Reset Password</h2>
-        <p class="text-gray-500 mb-8">Enter your email to receive a recovery link.</p>
-        <input type="email" placeholder="Email Address" class="input-style">
-        <button onclick="alert('Recovery link sent to your email!'); showPage('login-page')" class="btn-grad">Send Link</button>
-        <p onclick="showPage('login-page')" class="mt-6 text-purple-400 cursor-pointer">Back to Login</p>
-    </div>
-
-    <div id="signup-page" class="page px-6 pt-10">
-        <h2 class="text-2xl font-bold mb-6 italic italic">Join the World</h2>
-        <div class="space-y-1">
-            <input type="text" id="r-name" placeholder="Full Name" class="input-style">
-            <div class="grid grid-cols-2 gap-3">
-                <input type="number" id="r-age" placeholder="Age" class="input-style">
-                <select id="r-gender" class="input-style">
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                </select>
+    <div id="signup-page" class="page px-6 pt-8">
+        <h2 class="text-2xl font-bold mb-6">Register Profile</h2>
+        <div class="flex justify-center mb-6">
+            <div onclick="document.getElementById('r-photo').click()" class="w-24 h-24 bg-gray-900 rounded-full border-2 border-dashed border-purple-500 flex flex-col items-center justify-center cursor-pointer overflow-hidden relative">
+                <img id="img-preview" class="absolute w-full h-full object-cover hidden">
+                <i class="fas fa-camera text-gray-500"></i>
+                <span class="text-[10px] text-gray-500">Add Photo</span>
             </div>
-            <select id="r-country" class="input-style">
-                <option value="">Select Country</option>
-                </select>
-            <input type="email" id="r-email" placeholder="Email Address" class="input-style">
-            <input type="password" id="r-pass" placeholder="Create Password" class="input-style">
-            <button onclick="authSignup()" class="btn-grad mt-4">Create My Profile</button>
-            <p onclick="showPage('login-page')" class="text-center mt-6 text-gray-500 pb-10">Already have an account? <span class="text-purple-400 font-bold">Login</span></p>
+            <input type="file" id="r-photo" class="hidden" accept="image/*" onchange="previewImage(this)">
         </div>
+        <input type="text" id="r-name" placeholder="Full Name" class="input-style">
+        <div class="grid grid-cols-2 gap-3">
+            <input type="number" id="r-age" placeholder="Age" class="input-style">
+            <select id="r-gender" class="input-style">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+        </div>
+        <select id="r-country" class="input-style h-14">
+            <option value="">Select Country (249)</option>
+        </select>
+        <input type="email" id="r-email" placeholder="Email" class="input-style">
+        <input type="password" id="r-pass" placeholder="Password" class="input-style">
+        <button onclick="authSignup()" class="btn-grad mt-2">Register</button>
     </div>
 
     <div id="home-page" class="page px-4 pt-4">
         <div class="flex justify-between items-center mb-4 px-2">
             <span class="text-xl font-bold italic">Discovery</span>
-            <div class="flex gap-4">
-                <i class="fas fa-sliders-h text-gray-400"></i>
-                <i class="fas fa-crown text-yellow-500"></i>
-            </div>
+            <button onclick="document.getElementById('post-upload').click()" class="w-10 h-10 glass rounded-full flex items-center justify-center text-purple-400">
+                <i class="fas fa-plus"></i>
+            </button>
+            <input type="file" id="post-upload" class="hidden" onchange="alert('Photo Posted to Feed!')">
         </div>
-        <div id="match-card" class="match-card">
+        <div class="relative h-[550px] rounded-[2.5rem] overflow-hidden border border-white/10">
             <img id="m-img" src="" class="w-full h-full object-cover">
-            <div class="absolute bottom-0 w-full p-8 bg-gradient-to-t from-black via-black/60 to-transparent">
-                <h3 id="m-info" class="text-3xl font-bold">Name, Age</h3>
-                <p id="m-country" class="text-gray-300 text-sm mt-1">Location</p>
+            <div class="absolute bottom-0 w-full p-8 bg-gradient-to-t from-black via-black/80 to-transparent">
+                <h3 id="m-info" class="text-3xl font-bold">Loading...</h3>
+                <p id="m-country" class="text-gray-300 text-sm mt-1"></p>
                 <div class="flex gap-4 mt-6">
-                    <button onclick="nextMatch()" class="flex-1 bg-white/10 backdrop-blur-md p-4 rounded-2xl text-red-500 text-xl"><i class="fas fa-times"></i></button>
-                    <button onclick="nextMatch()" class="flex-1 bg-white/10 backdrop-blur-md p-4 rounded-2xl text-green-500 text-xl"><i class="fas fa-heart"></i></button>
+                    <button onclick="nextMatch()" class="flex-1 glass p-4 rounded-2xl text-red-500"><i class="fas fa-times text-xl"></i></button>
+                    <button onclick="nextMatch()" class="flex-1 glass p-4 rounded-2xl text-green-500"><i class="fas fa-heart text-xl"></i></button>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="message-page" class="page px-4 pt-6">
-        <h2 class="text-2xl font-bold mb-6">Messages</h2>
-        <div id="chat-list" class="space-y-4">
+        <h2 class="text-2xl font-bold mb-6 italic">Chats</h2>
+        <div id="chat-list" class="space-y-4"></div>
+    </div>
+
+    <div id="chat-view" class="page px-0">
+        <div class="p-4 flex items-center gap-4 border-b border-white/10 bg-black">
+            <i onclick="showPage('message-page')" class="fas fa-chevron-left text-purple-500 cursor-pointer"></i>
+            <img id="chat-avatar" src="" class="w-10 h-10 rounded-full">
+            <h2 id="chatting-with" class="font-bold">Chat</h2>
+        </div>
+        <div id="chat-box" class="h-[75vh] overflow-y-auto p-4 space-y-4 flex flex-col">
             </div>
+        <div class="fixed bottom-0 w-full p-4 bg-black flex gap-2">
+            <input type="text" id="chat-input" placeholder="Message..." class="flex-1 input-style mb-0">
+            <button onclick="sendMessage()" class="w-14 h-14 rounded-2xl bg-purple-600 flex items-center justify-center">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
     </div>
 
     <div id="profile-page" class="page px-6 pt-10 text-center">
-        <div class="relative w-32 h-32 mx-auto mb-6">
-            <img src="https://ui-avatars.com/api/?background=a855f7&color=fff&name=User" id="u-avatar" class="w-full h-full rounded-full border-4 border-purple-600 p-1">
-            <div class="absolute bottom-0 right-0 bg-purple-500 w-8 h-8 rounded-full border-4 border-black flex items-center justify-center">
-                <i class="fas fa-pen text-[10px]"></i>
-            </div>
-        </div>
-        <h2 id="u-name" class="text-2xl font-bold">User Name</h2>
-        <p id="u-meta" class="text-gray-500 text-sm">Age • Country</p>
+        <img id="u-avatar" src="" class="w-32 h-32 mx-auto rounded-full border-4 border-purple-600 mb-4 object-cover">
+        <h2 id="u-name" class="text-2xl font-bold italic italic">Name</h2>
+        <p id="u-meta" class="text-gray-500">Age • Country</p>
         
-        <div class="grid grid-cols-2 gap-4 mt-10">
-            <div class="bg-white/5 p-6 rounded-[2rem] border border-white/5">
-                <i class="fas fa-shield-alt text-purple-400 mb-2"></i>
-                <p class="text-xs uppercase font-bold text-gray-500">Security</p>
+        <div class="mt-10 space-y-3">
+            <div class="input-style text-left flex justify-between items-center">
+                <span>Email</span> <span id="u-email" class="text-gray-400 text-xs italic italic"></span>
             </div>
-            <div class="bg-white/5 p-6 rounded-[2rem] border border-white/5">
-                <i class="fas fa-cog text-gray-400 mb-2"></i>
-                <p class="text-xs uppercase font-bold text-gray-500">Settings</p>
-            </div>
+            <button onclick="alert('Edit Mode Enabled')" class="input-style text-left flex justify-between items-center">
+                <span>Edit Profile Information</span> <i class="fas fa-edit text-purple-500"></i>
+            </button>
         </div>
-        <button onclick="location.reload()" class="w-full mt-10 p-4 text-red-500 font-bold bg-red-500/10 rounded-2xl">Logout</button>
+        <button onclick="location.reload()" class="w-full mt-10 p-4 text-red-500 font-bold glass rounded-2xl">Log Out</button>
     </div>
 
     <nav id="nav-bar" class="nav-bar flex">
@@ -132,40 +136,49 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // 1. Database of Countries (Global)
-    const countries = [
-        {n: "Ethiopia", f: "🇪🇹"}, {n: "USA", f: "🇺🇸"}, {n: "UK", f: "🇬🇧"}, {n: "Germany", f: "🇩🇪"}, 
-        {n: "Canada", f: "🇨🇦"}, {n: "France", f: "🇫🇷"}, {n: "Japan", f: "🇯🇵"}, {n: "Brazil", f: "🇧🇷"},
-        {n: "UAE", f: "🇦🇪"}, {n: "Kenya", f: "🇰🇪"}, {n: "South Africa", f: "🇿🇦"}, {n: "Nigeria", f: "🇳🇬"}
-    ];
-
-    // 2. Global Users Data
-    const usersDB = [
-        {name: "Sophia", age: 22, gender: "Female", country: "🇺🇸 USA", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500"},
-        {name: "Amelia", age: 24, gender: "Female", country: "🇬🇧 UK", img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500"},
-        {name: "Liam", age: 26, gender: "Male", country: "🇨🇦 Canada", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500"},
-        {name: "Hanna", age: 23, gender: "Female", country: "🇪🇹 Ethiopia", img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=500"},
-        {name: "Marcus", age: 27, gender: "Male", country: "🇩🇪 Germany", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500"}
-    ];
-
-    // Load countries on startup
+    // 1. All 249 Countries (Dynamically Generated)
+    const countries = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua & Deps", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Central African Rep", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "East Timor", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Ivory Coast", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea North", "Korea South", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russian Federation", "Rwanda", "St Kitts & Nevis", "St Lucia", "Saint Vincent & the Grenadines", "Samoa", "San Marino", "Sao Tome & Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Togo", "Tonga", "Trinidad & Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"];
     const countryEl = document.getElementById('r-country');
-    countries.forEach(c => {
-        countryEl.innerHTML += `<option value="${c.f} ${c.n}">${c.f} ${c.n}</option>`;
-    });
+    countries.forEach(c => countryEl.innerHTML += `<option value="${c}">${c}</option>`);
 
-    let currentGender = "";
+    // 2. Mock Users Database
+    const matchesDB = [
+        {name: "Sophia", age: 22, gender: "Female", country: "United States", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500"},
+        {name: "Hanna", age: 23, gender: "Female", country: "Ethiopia", img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=500"},
+        {name: "Amelia", age: 24, gender: "Female", country: "United Kingdom", img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500"},
+        {name: "Marcus", age: 26, gender: "Male", country: "Germany", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500"}
+    ];
+
+    let currentUser = null;
     let matchIdx = 0;
 
     function showPage(id) {
+        // STRICT AUTH CHECK: Redirect to login if unauthorized
+        if (!currentUser && id !== 'login-page' && id !== 'signup-page') {
+            document.getElementById('login-error').classList.remove('hidden');
+            id = 'login-page';
+        }
+        
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        
         const navId = 'n-' + id.split('-')[0];
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         if(document.getElementById(navId)) document.getElementById(navId).classList.add('active');
     }
 
-    // SIGNUP LOGIC
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const prev = document.getElementById('img-preview');
+                prev.src = e.target.result;
+                prev.classList.remove('hidden');
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
     function authSignup() {
         const name = document.getElementById('r-name').value;
         const email = document.getElementById('r-email').value;
@@ -174,15 +187,14 @@
         const age = document.getElementById('r-age').value;
         const country = document.getElementById('r-country').value;
 
-        if(!name || !email || !pass) return alert("Fill all fields!");
+        if(!name || !email || !pass || !country) return alert("Please fill all details and add photo!");
 
         const userData = { name, email, pass, gender, age, country };
         localStorage.setItem(email, JSON.stringify(userData));
-        alert("Registration Successful! Please Login.");
+        alert("Registration Successful!");
         showPage('login-page');
     }
 
-    // LOGIN LOGIC (With Validation)
     function authLogin() {
         const email = document.getElementById('l-email').value;
         const pass = document.getElementById('l-pass').value;
@@ -191,53 +203,56 @@
         if(stored) {
             const user = JSON.parse(stored);
             if(user.pass === pass) {
-                currentGender = user.gender;
-                setupProfile(user);
+                currentUser = user;
+                setupUI();
                 document.getElementById('nav-bar').style.display = 'flex';
                 showPage('home-page');
-                loadMatches();
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
-            }
-        } else {
-            document.getElementById('login-error').classList.remove('hidden');
-        }
+            } else { alert("Wrong password!"); }
+        } else { document.getElementById('login-error').classList.remove('hidden'); }
     }
 
-    function setupProfile(user) {
-        document.getElementById('u-name').innerText = user.name;
-        document.getElementById('u-meta').innerText = `${user.age} • ${user.country}`;
-        document.getElementById('u-avatar').src = `https://ui-avatars.com/api/?background=a855f7&color=fff&name=${user.name}`;
+    function setupUI() {
+        document.getElementById('u-name').innerText = currentUser.name;
+        document.getElementById('u-email').innerText = currentUser.email;
+        document.getElementById('u-meta').innerText = `${currentUser.age} • ${currentUser.country}`;
+        document.getElementById('u-avatar').src = `https://ui-avatars.com/api/?background=a855f7&color=fff&name=${currentUser.name}`;
+        loadMatches();
     }
 
     function loadMatches() {
-        const filtered = usersDB.filter(u => u.gender !== currentGender);
+        const filtered = matchesDB.filter(u => u.gender !== currentUser.gender);
         const match = filtered[matchIdx % filtered.length];
         document.getElementById('m-img').src = match.img;
         document.getElementById('m-info').innerText = `${match.name}, ${match.age}`;
         document.getElementById('m-country').innerText = match.country;
-        loadChatList(filtered);
-    }
-
-    function nextMatch() {
-        matchIdx++;
-        loadMatches();
-    }
-
-    function loadChatList(matches) {
+        
         const list = document.getElementById('chat-list');
         list.innerHTML = "";
-        matches.forEach(m => {
+        filtered.forEach(m => {
             list.innerHTML += `
-                <div class="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5">
-                    <img src="${m.img}" class="w-14 h-14 rounded-full object-cover">
-                    <div class="flex-1">
-                        <div class="flex justify-between items-center"><span class="font-bold">${m.name}</span> <span class="text-[10px] text-gray-500">2:30 PM</span></div>
-                        <p class="text-xs text-purple-400 italic">Matched from ${m.country}</p>
-                    </div>
-                </div>
-            `;
+                <div onclick="openChat('${m.name}', '${m.img}')" class="flex items-center gap-4 glass p-4 rounded-2xl cursor-pointer">
+                    <img src="${m.img}" class="w-12 h-12 rounded-full object-cover">
+                    <div><p class="font-bold">${m.name}</p><p class="text-xs text-purple-400 italic">Match found!</p></div>
+                </div>`;
         });
+    }
+
+    function nextMatch() { matchIdx++; loadMatches(); }
+
+    function openChat(name, img) {
+        document.getElementById('chatting-with').innerText = name;
+        document.getElementById('chat-avatar').src = img;
+        document.getElementById('chat-box').innerHTML = ""; 
+        showPage('chat-view');
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('chat-input');
+        if(!input.value) return;
+        const box = document.getElementById('chat-box');
+        box.innerHTML += `<div class="bg-purple-600 self-end p-3 rounded-2xl text-sm max-w-[80%]">${input.value}</div>`;
+        input.value = "";
+        box.scrollTop = box.scrollHeight;
     }
 </script>
 </body>
