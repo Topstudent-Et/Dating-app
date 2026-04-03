@@ -161,7 +161,7 @@
             transform: scale(1.05);
         }
 
-        /* Bottom Navigation - horizontal at bottom */
+        /* Bottom Navigation */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -321,9 +321,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 30px;
+            font-size: 28px;
             overflow: hidden;
             flex-shrink: 0;
+            color: white;
         }
         .user-avatar img {
             width: 100%;
@@ -392,6 +393,7 @@
 
         .hide { display: none !important; }
         .error { color: #ff4444; font-size: 12px; margin-top: -5px; margin-bottom: 10px; }
+        .success { color: #00c851; }
         
         .profile-photo-upload {
             text-align: center;
@@ -406,9 +408,10 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 15px;
-            font-size: 50px;
+            font-size: 40px;
             overflow: hidden;
             cursor: pointer;
+            color: white;
         }
         .profile-photo-preview img {
             width: 100%;
@@ -422,6 +425,16 @@
             width: auto;
             font-size: 13px;
         }
+        
+        .pending-approval {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .pending-approval i {
+            font-size: 64px;
+            color: #ff6b8b;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body class="light">
@@ -429,7 +442,7 @@
     <div class="sticky-header">
         <div class="logo">
             <h1><i class="fas fa-globe-americas"></i> World Dating</h1>
-            <p>✨ Find your perfect match ✨</p>
+            <p>Find your perfect match</p>
         </div>
         <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
     </div>
@@ -452,22 +465,25 @@
 <script>
     let currentUser = null;
     let allUsers = [];
+    let pendingUsers = [];
     let currentTab = "home";
     let isAdminMode = false;
     let searchQuery = "";
-    const STORAGE_KEY = "world_dating_final";
+    const STORAGE_KEY = "world_dating_final_v2";
+    const PENDING_KEY = "world_dating_pending";
 
     function loadStoredData() {
         const stored = localStorage.getItem(STORAGE_KEY);
         if(stored) {
             allUsers = JSON.parse(stored);
         } else {
-            allUsers = [
-                { id: "u1", phone: "0912345678", fullname: "Aisha Ahmed", gender: "female", age: 24, photo: "👩🏾", country: "Ethiopia", password: "1234", liked: [], receivedLikes: [], messages: [], lastLogin: Date.now() },
-                { id: "u2", phone: "0922334455", fullname: "Nathaniel Bekele", gender: "male", age: 27, photo: "🧔🏾", country: "Ethiopia", password: "abcd", liked: [], receivedLikes: [], messages: [], lastLogin: Date.now() },
-                { id: "u3", phone: "0933445566", fullname: "Selam Haile", gender: "female", age: 22, photo: "👩🏽", country: "Ethiopia", password: "selam", liked: [], receivedLikes: [], messages: [], lastLogin: Date.now() }
-            ];
-            saveToLocal();
+            allUsers = [];
+        }
+        const pending = localStorage.getItem(PENDING_KEY);
+        if(pending) {
+            pendingUsers = JSON.parse(pending);
+        } else {
+            pendingUsers = [];
         }
         const savedSession = sessionStorage.getItem("currentUserId");
         if(savedSession) {
@@ -480,56 +496,80 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify(allUsers)); 
     }
     
+    function savePending() {
+        localStorage.setItem(PENDING_KEY, JSON.stringify(pendingUsers));
+    }
+    
     function saveCurrentUserToSession() { 
         if(currentUser) sessionStorage.setItem("currentUserId", currentUser.id); 
         else sessionStorage.removeItem("currentUserId"); 
     }
 
-    function registerUser(phone, gender, age, photoFile, password) {
-        if(!phone || phone.length < 10) return "Valid phone number required";
+    // Register - saves telegram name, no emoji
+    function registerUser(telegram, gender, age, password) {
+        if(!telegram || telegram.trim().length < 3) return "Valid Telegram username required";
         if(!gender) return "Please select gender";
         if(!age || age < 18) return "Minimum age 18 required";
-        if(!password) return "Password required";
-        if(allUsers.find(u => u.phone === phone)) return "Phone number already registered!";
+        if(!password || password.length < 3) return "Password must be at least 3 characters";
         
-        let photoData = gender === "female" ? "👩" : "👨";
+        // Check if already registered and approved
+        if(allUsers.find(u => u.telegram === telegram)) return "Telegram username already registered!";
+        if(pendingUsers.find(u => u.telegram === telegram)) return "You have already registered. Please wait for approval.";
         
         const newUser = {
-            id: "u"+Date.now()+Math.random(),
-            phone: phone,
-            fullname: phone,
+            id: "pending_"+Date.now()+Math.random(),
+            telegram: telegram.trim(),
+            fullname: telegram.trim(),
             gender: gender,
             age: parseInt(age),
-            photo: photoData,
+            photo: null,
             country: "Ethiopia",
             password: password,
             liked: [],
             receivedLikes: [],
             messages: [],
-            lastLogin: Date.now()
+            lastLogin: Date.now(),
+            pending: true
         };
-        allUsers.push(newUser);
-        saveToLocal();
-        currentUser = newUser;
-        saveCurrentUserToSession();
-        
-        if(photoFile && photoFile instanceof File && photoFile.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = function(e) { 
-                currentUser.photo = e.target.result;
-                const userIndex = allUsers.findIndex(u => u.id === currentUser.id);
-                if(userIndex !== -1) allUsers[userIndex].photo = e.target.result;
-                saveToLocal();
-                render();
-            };
-            reader.readAsDataURL(photoFile);
-        }
-        return "SUCCESS";
+        pendingUsers.push(newUser);
+        savePending();
+        return "PENDING";
     }
 
-    function loginUser(phone, password) {
-        const user = allUsers.find(u => u.phone === phone);
-        if(!user) return "Phone number not found";
+    function approveUser(pendingId) {
+        const pendingIndex = pendingUsers.findIndex(u => u.id === pendingId);
+        if(pendingIndex !== -1) {
+            const pending = pendingUsers[pendingIndex];
+            const newUser = {
+                ...pending,
+                id: "u"+Date.now()+Math.random(),
+                pending: false
+            };
+            delete newUser.pending;
+            allUsers.push(newUser);
+            pendingUsers.splice(pendingIndex, 1);
+            saveToLocal();
+            savePending();
+            render();
+            return true;
+        }
+        return false;
+    }
+
+    function rejectUser(pendingId) {
+        const pendingIndex = pendingUsers.findIndex(u => u.id === pendingId);
+        if(pendingIndex !== -1) {
+            pendingUsers.splice(pendingIndex, 1);
+            savePending();
+            render();
+            return true;
+        }
+        return false;
+    }
+
+    function loginUser(telegram, password) {
+        const user = allUsers.find(u => u.telegram === telegram);
+        if(!user) return "Telegram username not found or not approved yet";
         if(user.password !== password) return "Incorrect password";
         currentUser = user;
         user.lastLogin = Date.now();
@@ -589,7 +629,7 @@
         const opposite = currentUser.gender === "male" ? "female" : "male";
         let users = allUsers.filter(u => u.id !== currentUser.id && u.gender === opposite);
         if(searchQuery) {
-            users = users.filter(u => u.fullname.toLowerCase().includes(searchQuery.toLowerCase()) || u.phone.includes(searchQuery));
+            users = users.filter(u => u.telegram.toLowerCase().includes(searchQuery.toLowerCase()));
         }
         return users;
     }
@@ -607,26 +647,61 @@
         return all.sort((a,b)=>b.time - a.time);
     }
 
+    // Admin Panel with pending users
     function renderAdminPanel() {
         const totalUsers = allUsers.length;
         const totalLikes = allUsers.reduce((sum, u) => sum + u.liked.length, 0);
-        const countries = [...new Set(allUsers.map(u => u.country))];
-        return `
+        const totalPending = pendingUsers.length;
+        
+        let html = `
             <div class="card">
                 <h2><i class="fas fa-shield-alt"></i> Admin Panel</h2>
                 <div class="flex-row" style="margin-top: 20px">
-                    <div class="stat-card"><i class="fas fa-users"></i><h3>${totalUsers}</h3><p>Total Members</p></div>
+                    <div class="stat-card"><i class="fas fa-users"></i><h3>${totalUsers}</h3><p>Approved Members</p></div>
+                    <div class="stat-card"><i class="fas fa-clock"></i><h3>${totalPending}</h3><p>Pending Approval</p></div>
                     <div class="stat-card"><i class="fas fa-heart"></i><h3>${totalLikes}</h3><p>Total Likes</p></div>
-                    <div class="stat-card"><i class="fas fa-globe"></i><h3>${countries.length}</h3><p>Countries</p></div>
-                </div>
-                <h3 style="margin-top: 20px">All Members (${totalUsers})</h3>
-                ${allUsers.map(u => `
+                </div>`;
+        
+        if(totalPending > 0) {
+            html += `<h3 style="margin-top: 20px">Pending Approvals (${totalPending})</h3>`;
+            pendingUsers.forEach(u => {
+                html += `
                     <div class="user-card">
-                        <div class="user-avatar">${u.photo && u.photo.includes('data:image') ? `<img src="${u.photo}">` : (u.photo || '👤')}</div>
-                        <div><strong>${u.fullname}</strong><br><i class="fas fa-phone"></i> ${u.phone}<br>${u.country} | ${u.age} | ${u.gender}</div>
+                        <div class="user-avatar">${u.photo ? (u.photo.includes('data:image') ? `<img src="${u.photo}">` : '📷') : '📷'}</div>
+                        <div><strong>${u.telegram}</strong><br>${u.gender} | ${u.age} years</div>
+                        <div class="action-buttons">
+                            <button class="icon-btn approve-btn" data-id="${u.id}" style="background:#00c85120; color:#00c851"><i class="fas fa-check"></i> Approve</button>
+                            <button class="icon-btn reject-btn" data-id="${u.id}" style="background:#ff444420; color:#ff4444"><i class="fas fa-times"></i> Reject</button>
+                        </div>
                     </div>
-                `).join('')}
-                <button id="adminLogoutBtn" class="btn-outline"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                `;
+            });
+        }
+        
+        html += `<h3 style="margin-top: 20px">Approved Members (${totalUsers})</h3>`;
+        allUsers.forEach(u => {
+            html += `
+                <div class="user-card">
+                    <div class="user-avatar">${u.photo && u.photo.includes('data:image') ? `<img src="${u.photo}">` : (u.photo || '📷')}</div>
+                    <div><strong>${u.telegram}</strong><br>${u.gender} | ${u.age} | ${u.country}</div>
+                </div>
+            `;
+        });
+        
+        html += `<button id="adminLogoutBtn" class="btn-outline" style="margin-top: 20px"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>`;
+        return html;
+    }
+
+    // Pending approval page
+    function renderPendingPage() {
+        return `
+            <div class="card pending-approval">
+                <i class="fas fa-clock"></i>
+                <h2>Registration Submitted</h2>
+                <p>Your registration has been received. Please wait for admin approval.</p>
+                <p style="margin-top: 15px; font-size: 14px;">You will be notified once your account is approved.</p>
+                <button id="backToLoginBtn" class="btn-outline" style="margin-top: 20px; width: auto; padding: 10px 30px;"><i class="fas fa-arrow-left"></i> Back to Login</button>
             </div>
         `;
     }
@@ -636,7 +711,7 @@
         if(!currentUser) {
             return `
                 <div class="hero">
-                    <h2>Find Your Love 🌍</h2>
+                    <h2>Find Your Love</h2>
                     <p>Connect with amazing people from around the world</p>
                 </div>
                 <div class="card" id="authCard">
@@ -646,19 +721,20 @@
                     </div>
                     <div id="authMsg" class="error"></div>
                     <div id="loginForm">
-                        <div class="input-group"><i class="fas fa-phone-alt"></i><input type="tel" id="loginPhone" placeholder="Phone Number"></div>
+                        <div class="input-group"><i class="fab fa-telegram"></i><input type="text" id="loginTelegram" placeholder="Telegram Username"></div>
                         <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="loginPassword" placeholder="Password"></div>
                         <button id="doLoginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
                         <button id="adminLoginBtn" class="btn-outline" style="margin-top:12px"><i class="fas fa-user-shield"></i> Admin Login</button>
                     </div>
                     <div id="signupForm" class="hide">
-                        <div class="input-group"><i class="fas fa-phone-alt"></i><input type="tel" id="signupPhone" placeholder="Phone Number"></div>
+                        <div class="input-group"><i class="fab fa-telegram"></i><input type="text" id="signupTelegram" placeholder="Telegram Username (e.g., @username)"></div>
                         <div class="flex-row">
                             <div class="input-group" style="flex:1"><i class="fas fa-venus-mars"></i><select id="signupGender"><option value="">Gender</option><option value="male">Male</option><option value="female">Female</option></select></div>
                             <div class="input-group" style="flex:1"><i class="fas fa-calendar"></i><input type="number" id="signupAge" placeholder="Age"></div>
                         </div>
                         <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="signupPassword" placeholder="Password"></div>
-                        <button id="doSignupBtn"><i class="fas fa-user-plus"></i> Create Account</button>
+                        <button id="doSignupBtn"><i class="fas fa-user-plus"></i> Register</button>
+                        <p style="font-size: 12px; text-align: center; margin-top: 15px; opacity: 0.7;">After registration, your account will be reviewed by admin.</p>
                     </div>
                 </div>
             `;
@@ -667,7 +743,7 @@
         const oppositeUsers = getOppositeGenderUsers();
         const matches = getMatches();
         
-        let html = `<div class="hero"><h2>Welcome, ${currentUser.fullname}! 👋</h2><p>Find your perfect match</p></div>`;
+        let html = `<div class="hero"><h2>Welcome, ${currentUser.telegram}!</h2><p>Find your perfect match</p></div>`;
         
         html += `<div class="flex-row" style="margin-bottom: 20px">
             <div class="stat-card"><i class="fas fa-heart"></i><h3>${currentUser.liked.length}</h3><p>Likes</p></div>
@@ -680,8 +756,8 @@
         else oppositeUsers.forEach(u => {
             const likedAlready = currentUser.liked.includes(u.id);
             html += `<div class="user-card">
-                <div class="user-avatar">${u.photo && u.photo.includes('data:image') ? `<img src="${u.photo}">` : (u.photo || '👤')}</div>
-                <div><strong>${u.fullname}</strong>, ${u.age}<br><small>${u.country}</small></div>
+                <div class="user-avatar">${u.photo && u.photo.includes('data:image') ? `<img src="${u.photo}">` : (u.photo || '📷')}</div>
+                <div><strong>${u.telegram}</strong>, ${u.age}<br><small>${u.country}</small></div>
                 <div class="action-buttons">
                     ${!likedAlready ? `<button class="icon-btn like-btn" data-id="${u.id}"><i class="fas fa-heart"></i> Like</button>` : `<button disabled style="background:gray; padding:6px 12px; border-radius:40px;">Liked</button>`}
                     <button class="icon-btn msg-btn" data-id="${u.id}"><i class="fas fa-comment"></i> Msg</button>
@@ -692,13 +768,12 @@
         return html;
     }
 
-    // Match page with search/filter
     function renderMatch() {
         if(!currentUser || isAdminMode) return "";
         const oppositeUsers = getOppositeGenderUsers();
         let html = `<div class="card">
             <h3><i class="fas fa-search"></i> Find People</h3>
-            <div class="search-box input-group"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search by name or phone..." value="${searchQuery}"></div>
+            <div class="search-box input-group"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search by Telegram username..." value="${searchQuery}"></div>
         </div>`;
         
         html += `<div class="card"><h3><i class="fas fa-users"></i> Search Results (${oppositeUsers.length})</h3>`;
@@ -706,8 +781,8 @@
         else oppositeUsers.forEach(u => {
             const likedAlready = currentUser.liked.includes(u.id);
             html += `<div class="user-card">
-                <div class="user-avatar">${u.photo && u.photo.includes('data:image') ? `<img src="${u.photo}">` : (u.photo || '👤')}</div>
-                <div><strong>${u.fullname}</strong>, ${u.age}<br><small><i class="fas fa-phone"></i> ${u.phone}</small></div>
+                <div class="user-avatar">${u.photo && u.photo.includes('data:image') ? `<img src="${u.photo}">` : (u.photo || '📷')}</div>
+                <div><strong>${u.telegram}</strong>, ${u.age}<br><small>${u.country}</small></div>
                 <div class="action-buttons">
                     ${!likedAlready ? `<button class="icon-btn like-btn" data-id="${u.id}"><i class="fas fa-heart"></i> Like</button>` : `<button disabled style="background:gray;">Liked</button>`}
                     <button class="icon-btn msg-btn" data-id="${u.id}"><i class="fas fa-comment"></i> Msg</button>
@@ -718,7 +793,6 @@
         return html;
     }
 
-    // Message page - receiving messages
     function renderMessage() {
         if(!currentUser || isAdminMode) return "";
         const messages = getUserMessages();
@@ -729,29 +803,27 @@
             const receiver = allUsers.find(u => u.id === msg.to);
             const otherPerson = sender?.id === currentUser.id ? receiver : sender;
             html += `<div class="message-item">
-                <strong>${otherPerson?.fullname || 'Unknown'}</strong> 
+                <strong>${otherPerson?.telegram || 'Unknown'}</strong> 
                 <small>${new Date(msg.time).toLocaleString()}</small>
-                <p style="margin-top:8px">💬 ${msg.text}</p>
+                <p style="margin-top:8px">${msg.text}</p>
             </div>`;
         });
         html += `</div>`;
         return html;
     }
 
-    // Profile page with photo upload at bottom
     function renderProfile() {
         if(!currentUser || isAdminMode) return "";
         return `<div class="card" style="text-align:center">
             <div class="profile-photo-upload">
                 <div class="profile-photo-preview" id="photoPreview">
-                    ${currentUser.photo && currentUser.photo.includes('data:image') ? `<img src="${currentUser.photo}" id="profileImg">` : (currentUser.photo || '👤')}
+                    ${currentUser.photo && currentUser.photo.includes('data:image') ? `<img src="${currentUser.photo}" id="profileImg">` : (currentUser.photo || '📷')}
                 </div>
                 <input type="file" id="photoUploadInput" accept="image/*" style="display:none">
-                <button class="photo-upload-btn" id="uploadPhotoBtn"><i class="fas fa-camera"></i> Change Photo</button>
+                <button class="photo-upload-btn" id="uploadPhotoBtn"><i class="fas fa-camera"></i> Upload Photo</button>
             </div>
-            <h2>${currentUser.fullname}</h2>
-            <p><i class="fas fa-phone"></i> ${currentUser.phone}</p>
-            <p><i class="fas fa-venus-mars"></i> ${currentUser.gender === 'male' ? 'Male' : 'Female'} | 🎂 ${currentUser.age}</p>
+            <h2>${currentUser.telegram}</h2>
+            <p><i class="fas fa-venus-mars"></i> ${currentUser.gender === 'male' ? 'Male' : 'Female'} | ${currentUser.age} years</p>
             <p><i class="fas fa-globe"></i> ${currentUser.country}</p>
             <button id="logoutBtn" class="btn-outline" style="margin-top: 20px; width: auto; padding: 12px 32px"><i class="fas fa-sign-out-alt"></i> Logout</button>
         </div>`;
@@ -759,6 +831,19 @@
 
     function render() {
         const mainDiv = document.getElementById("mainContent");
+        
+        // Check if user is in pending state (registered but not approved)
+        if(!currentUser && !isAdminMode) {
+            const pendingTelegram = sessionStorage.getItem("pendingTelegram");
+            if(pendingTelegram && pendingUsers.find(u => u.telegram === pendingTelegram)) {
+                mainDiv.innerHTML = renderPendingPage();
+                document.getElementById("backToLoginBtn")?.addEventListener("click", () => {
+                    sessionStorage.removeItem("pendingTelegram");
+                    render();
+                });
+                return;
+            }
+        }
         
         let content = "";
         if(isAdminMode) content = renderAdminPanel();
@@ -773,13 +858,15 @@
         // Bottom nav active state
         document.querySelectorAll(".bottom-nav-item").forEach(btn => {
             const tab = btn.getAttribute("data-tab");
-            if(tab === currentTab) btn.classList.add("active");
+            if(tab === currentTab && currentUser && !isAdminMode) btn.classList.add("active");
             else btn.classList.remove("active");
-            btn.addEventListener("click", () => {
-                currentTab = tab;
-                searchQuery = "";
-                render();
-            });
+            if(currentUser && !isAdminMode) {
+                btn.addEventListener("click", () => {
+                    currentTab = tab;
+                    searchQuery = "";
+                    render();
+                });
+            }
         });
         
         // Search functionality
@@ -808,6 +895,14 @@
             });
         }
         
+        // Admin approve/reject
+        document.querySelectorAll(".approve-btn").forEach(btn => {
+            btn.addEventListener("click", () => approveUser(btn.getAttribute("data-id")));
+        });
+        document.querySelectorAll(".reject-btn").forEach(btn => {
+            btn.addEventListener("click", () => rejectUser(btn.getAttribute("data-id")));
+        });
+        
         if(currentUser && !isAdminMode) {
             document.getElementById("logoutBtn")?.addEventListener("click", () => { 
                 currentUser = null; 
@@ -835,31 +930,35 @@
             document.getElementById("showLoginBtn")?.addEventListener("click", () => { 
                 document.getElementById("loginForm").classList.remove("hide"); 
                 document.getElementById("signupForm").classList.add("hide"); 
+                document.getElementById("authMsg").innerText = "";
             });
             document.getElementById("showSignupBtn")?.addEventListener("click", () => { 
                 document.getElementById("loginForm").classList.add("hide"); 
                 document.getElementById("signupForm").classList.remove("hide"); 
+                document.getElementById("authMsg").innerText = "";
             });
             document.getElementById("doLoginBtn")?.addEventListener("click", () => {
-                const res = loginUser(document.getElementById("loginPhone").value, document.getElementById("loginPassword").value);
+                const res = loginUser(document.getElementById("loginTelegram").value, document.getElementById("loginPassword").value);
                 if(res === "SUCCESS") render();
                 else document.getElementById("authMsg").innerText = res;
             });
             document.getElementById("doSignupBtn")?.addEventListener("click", () => {
-                const fileInput = document.getElementById("signupPhoto");
-                const file = fileInput?.files[0];
                 const res = registerUser(
-                    document.getElementById("signupPhone").value,
+                    document.getElementById("signupTelegram").value,
                     document.getElementById("signupGender").value,
                     document.getElementById("signupAge").value,
-                    file,
                     document.getElementById("signupPassword").value
                 );
-                if(res === "SUCCESS") render();
-                else document.getElementById("authMsg").innerText = res;
+                if(res === "PENDING") {
+                    const telegram = document.getElementById("signupTelegram").value;
+                    sessionStorage.setItem("pendingTelegram", telegram);
+                    render();
+                } else if(res !== "SUCCESS") {
+                    document.getElementById("authMsg").innerText = res;
+                }
             });
             document.getElementById("adminLoginBtn")?.addEventListener("click", () => {
-                const res = adminLogin(document.getElementById("loginPhone").value, document.getElementById("loginPassword").value);
+                const res = adminLogin(document.getElementById("loginTelegram").value, document.getElementById("loginPassword").value);
                 if(res === "SUCCESS") render();
                 else document.getElementById("authMsg").innerText = res;
             });
