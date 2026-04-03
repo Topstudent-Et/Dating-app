@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WorldDating | Pro Mini App</title>
+    <title>WorldDating Pro | Telegram Mini App</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
         body { font-family: 'Outfit', sans-serif; background: #000; color: white; overflow: hidden; }
-        .page { display: none; height: 100vh; padding-bottom: 90px; overflow-y: auto; }
-        .page.active { display: block; }
-        .nav-bar { display: none; position: fixed; bottom: 0; width: 100%; background: rgba(10,10,10,0.98); backdrop-filter: blur(20px); border-top: 1px solid #222; z-index: 100; }
-        .nav-item { flex: 1; text-align: center; padding: 18px; color: #444; cursor: pointer; }
-        .nav-item.active { color: #a855f7; }
-        .input-style { width: 100%; padding: 16px; border-radius: 18px; background: #111; border: 1px solid #222; outline: none; margin-bottom: 12px; color: white; }
-        .btn-grad { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); padding: 16px; border-radius: 18px; font-weight: bold; width: 100%; }
-        .glass { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.1); }
-        #chat-box::-webkit-scrollbar { width: 0px; }
+        .page { display: none; height: 100vh; padding-bottom: 90px; overflow-y: auto; transition: all 0.3s ease; }
+        .page.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .nav-bar { display: none; position: fixed; bottom: 0; width: 100%; background: rgba(10,10,10,0.95); backdrop-filter: blur(15px); border-top: 1px solid #222; z-index: 100; justify-content: space-around; padding: 15px 0; }
+        .nav-item { color: #444; font-size: 1.4rem; cursor: pointer; transition: 0.3s; }
+        .nav-item.active { color: #a855f7; transform: scale(1.1); }
+        .input-style { width: 100%; padding: 16px; border-radius: 18px; background: #111; border: 1px solid #333; outline: none; margin-bottom: 12px; color: white; }
+        .btn-grad { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); padding: 16px; border-radius: 18px; font-weight: bold; width: 100%; transition: 0.3s; }
+        .btn-grad:active { transform: scale(0.98); }
+        .glass { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; }
     </style>
 </head>
 <body>
@@ -27,107 +28,117 @@
 
     <div id="login-page" class="page active px-6 pt-20">
         <div class="text-center mb-12">
-            <div class="w-20 h-20 bg-purple-600 rounded-[2rem] flex items-center justify-center mx-auto mb-6">
-                <i class="fas fa-fire-alt text-4xl"></i>
+            <div class="w-20 h-20 bg-purple-600 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-500/30">
+                <i class="fas fa-heart text-4xl text-white"></i>
             </div>
-            <h1 class="text-3xl font-bold italic">WorldDating</h1>
-            <p class="text-gray-500 mt-2">Login to find your global match</p>
+            <h1 class="text-3xl font-bold">እንኳን ደህና መጡ</h1>
+            <p class="text-gray-500 mt-2 italic">ለመቀጠል መጀመሪያ ይግቡ</p>
         </div>
-        <div id="login-error" class="hidden text-red-500 text-center mb-4 text-sm italic italic">Unauthorized! Please sign in correctly.</div>
+        <div id="login-error" class="hidden text-red-500 text-center mb-4 text-sm italic">ያልተመዘገበ አካውንት ወይም የተሳሳተ መረጃ!</div>
         <input type="email" id="l-email" placeholder="Email Address" class="input-style">
         <input type="password" id="l-pass" placeholder="Password" class="input-style">
-        <button onclick="authLogin()" class="btn-grad">Sign In</button>
-        <p class="text-center mt-8 text-gray-500">New? <span onclick="showPage('signup-page')" class="text-purple-400 font-bold cursor-pointer">Create Account</span></p>
+        <button onclick="authLogin()" class="btn-grad shadow-xl shadow-purple-500/20">Sign In</button>
+        <p class="text-center mt-10 text-gray-500">አዲስ ተጠቃሚ ነዎት? <span onclick="showPage('signup-page')" class="text-purple-400 font-bold cursor-pointer">ይመዝገቡ</span></p>
     </div>
 
-    <div id="signup-page" class="page px-6 pt-8">
-        <h2 class="text-2xl font-bold mb-6">Register Profile</h2>
+    <div id="signup-page" class="page px-6 pt-10">
+        <h2 class="text-2xl font-bold mb-6">አዲስ ፕሮፋይል ይክፈቱ</h2>
         <div class="flex justify-center mb-6">
             <div onclick="document.getElementById('r-photo').click()" class="w-24 h-24 bg-gray-900 rounded-full border-2 border-dashed border-purple-500 flex flex-col items-center justify-center cursor-pointer overflow-hidden relative">
                 <img id="img-preview" class="absolute w-full h-full object-cover hidden">
-                <i class="fas fa-camera text-gray-500"></i>
-                <span class="text-[10px] text-gray-500">Add Photo</span>
+                <i class="fas fa-user-plus text-gray-500"></i>
+                <span class="text-[9px] text-gray-400 mt-1">ፎቶ ያስገቡ</span>
             </div>
             <input type="file" id="r-photo" class="hidden" accept="image/*" onchange="previewImage(this)">
         </div>
-        <input type="text" id="r-name" placeholder="Full Name" class="input-style">
+        <input type="text" id="r-name" placeholder="ሙሉ ስም" class="input-style">
         <div class="grid grid-cols-2 gap-3">
-            <input type="number" id="r-age" placeholder="Age" class="input-style">
+            <input type="number" id="r-age" placeholder="እድሜ" class="input-style">
             <select id="r-gender" class="input-style">
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
+                <option value="Male">ወንድ</option>
+                <option value="Female">ሴት</option>
             </select>
         </div>
         <select id="r-country" class="input-style h-14">
-            <option value="">Select Country (249)</option>
+            <option value="">ሀገር ይምረጡ (249)</option>
         </select>
         <input type="email" id="r-email" placeholder="Email" class="input-style">
         <input type="password" id="r-pass" placeholder="Password" class="input-style">
-        <button onclick="authSignup()" class="btn-grad mt-2">Register</button>
+        <button onclick="authSignup()" class="btn-grad mt-2">ተመዝገብ</button>
+        <p onclick="showPage('login-page')" class="text-center mt-6 text-gray-500 cursor-pointer italic">ተመልሰው ይግቡ</p>
     </div>
 
     <div id="home-page" class="page px-4 pt-4">
-        <div class="flex justify-between items-center mb-4 px-2">
-            <span class="text-xl font-bold italic">Discovery</span>
-            <button onclick="document.getElementById('post-upload').click()" class="w-10 h-10 glass rounded-full flex items-center justify-center text-purple-400">
-                <i class="fas fa-plus"></i>
-            </button>
-            <input type="file" id="post-upload" class="hidden" onchange="alert('Photo Posted to Feed!')">
+        <div class="flex justify-between items-center mb-6 px-2">
+            <h2 class="text-xl font-bold italic">Discovery</h2>
+            <div onclick="document.getElementById('post-file').click()" class="w-10 h-10 glass flex items-center justify-center text-purple-400 cursor-pointer">
+                <i class="fas fa-camera"></i>
+            </div>
+            <input type="file" id="post-file" class="hidden" onchange="alert('ፎቶው በተሳካ ሁኔታ ተለጥፏል!')">
         </div>
-        <div class="relative h-[550px] rounded-[2.5rem] overflow-hidden border border-white/10">
+        
+        <div id="match-card" class="relative h-[560px] rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl">
             <img id="m-img" src="" class="w-full h-full object-cover">
             <div class="absolute bottom-0 w-full p-8 bg-gradient-to-t from-black via-black/80 to-transparent">
                 <h3 id="m-info" class="text-3xl font-bold">Loading...</h3>
-                <p id="m-country" class="text-gray-300 text-sm mt-1"></p>
+                <p id="m-country" class="text-gray-400 text-sm mt-1"></p>
                 <div class="flex gap-4 mt-6">
-                    <button onclick="nextMatch()" class="flex-1 glass p-4 rounded-2xl text-red-500"><i class="fas fa-times text-xl"></i></button>
-                    <button onclick="nextMatch()" class="flex-1 glass p-4 rounded-2xl text-green-500"><i class="fas fa-heart text-xl"></i></button>
+                    <button onclick="nextMatch()" class="flex-1 glass p-4 rounded-2xl text-red-500 hover:bg-red-500/10 transition"><i class="fas fa-times text-xl"></i></button>
+                    <button onclick="nextMatch()" class="flex-1 glass p-4 rounded-2xl text-green-500 hover:bg-green-500/10 transition"><i class="fas fa-heart text-xl"></i></button>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="message-page" class="page px-4 pt-6">
-        <h2 class="text-2xl font-bold mb-6 italic">Chats</h2>
-        <div id="chat-list" class="space-y-4"></div>
+        <h2 class="text-2xl font-bold mb-6 italic italic">መልዕክቶች</h2>
+        <div id="chat-list" class="space-y-4">
+            </div>
     </div>
 
     <div id="chat-view" class="page px-0">
-        <div class="p-4 flex items-center gap-4 border-b border-white/10 bg-black">
-            <i onclick="showPage('message-page')" class="fas fa-chevron-left text-purple-500 cursor-pointer"></i>
-            <img id="chat-avatar" src="" class="w-10 h-10 rounded-full">
+        <div class="p-4 flex items-center gap-4 border-b border-white/10 bg-black/50 sticky top-0 backdrop-blur-md">
+            <i onclick="showPage('message-page')" class="fas fa-arrow-left text-purple-500"></i>
+            <img id="chat-avatar" src="" class="w-10 h-10 rounded-full object-cover border border-purple-500">
             <h2 id="chatting-with" class="font-bold">Chat</h2>
         </div>
         <div id="chat-box" class="h-[75vh] overflow-y-auto p-4 space-y-4 flex flex-col">
             </div>
-        <div class="fixed bottom-0 w-full p-4 bg-black flex gap-2">
-            <input type="text" id="chat-input" placeholder="Message..." class="flex-1 input-style mb-0">
-            <button onclick="sendMessage()" class="w-14 h-14 rounded-2xl bg-purple-600 flex items-center justify-center">
+        <div class="fixed bottom-0 w-full p-4 bg-black flex gap-2 border-t border-white/5">
+            <input type="text" id="chat-input" placeholder="መልዕክት ይጻፉ..." class="flex-1 input-style mb-0">
+            <button onclick="sendMessage()" class="w-14 h-14 rounded-2xl bg-purple-600 flex items-center justify-center shadow-lg shadow-purple-600/30">
                 <i class="fas fa-paper-plane"></i>
             </button>
         </div>
     </div>
 
     <div id="profile-page" class="page px-6 pt-10 text-center">
-        <img id="u-avatar" src="" class="w-32 h-32 mx-auto rounded-full border-4 border-purple-600 mb-4 object-cover">
+        <div class="relative w-32 h-32 mx-auto mb-6">
+            <img id="u-avatar" src="" class="w-full h-full rounded-full border-4 border-purple-600 object-cover shadow-2xl">
+            <div class="absolute bottom-1 right-1 bg-purple-500 w-8 h-8 rounded-full border-4 border-black flex items-center justify-center">
+                <i class="fas fa-check text-[10px]"></i>
+            </div>
+        </div>
         <h2 id="u-name" class="text-2xl font-bold italic italic">Name</h2>
-        <p id="u-meta" class="text-gray-500">Age • Country</p>
+        <p id="u-meta" class="text-gray-500 text-sm">Age • Country</p>
         
         <div class="mt-10 space-y-3">
-            <div class="input-style text-left flex justify-between items-center">
-                <span>Email</span> <span id="u-email" class="text-gray-400 text-xs italic italic"></span>
+            <div class="glass p-5 text-left flex justify-between items-center">
+                <div class="flex items-center gap-3"><i class="fas fa-envelope text-purple-500"></i> <span>Email</span></div>
+                <span id="u-email" class="text-gray-400 text-xs italic italic"></span>
             </div>
-            <button onclick="alert('Edit Mode Enabled')" class="input-style text-left flex justify-between items-center">
-                <span>Edit Profile Information</span> <i class="fas fa-edit text-purple-500"></i>
+            <button onclick="alert('ማስተካከያ ገጽ በቅርቡ ይከፈታል!')" class="glass p-5 text-left flex justify-between items-center w-full">
+                <div class="flex items-center gap-3"><i class="fas fa-edit text-purple-500"></i> <span>Edit Profile</span></div>
+                <i class="fas fa-chevron-right text-gray-600"></i>
             </button>
         </div>
-        <button onclick="location.reload()" class="w-full mt-10 p-4 text-red-500 font-bold glass rounded-2xl">Log Out</button>
+        <button onclick="location.reload()" class="w-full mt-10 p-5 text-red-500 font-bold glass">Logout</button>
     </div>
 
-    <nav id="nav-bar" class="nav-bar flex">
-        <div onclick="showPage('home-page')" id="n-home" class="nav-item active"><i class="fas fa-fire-alt text-xl"></i></div>
-        <div onclick="showPage('message-page')" id="n-message" class="nav-item"><i class="fas fa-comment-alt text-xl"></i></div>
-        <div onclick="showPage('profile-page')" id="n-profile" class="nav-item"><i class="fas fa-user-circle text-xl"></i></div>
+    <nav id="nav-bar" class="nav-bar">
+        <div onclick="showPage('home-page')" id="n-home" class="nav-item active"><i class="fas fa-fire-alt"></i></div>
+        <div onclick="showPage('message-page')" id="n-message" class="nav-item"><i class="fas fa-comment-alt"></i></div>
+        <div onclick="showPage('profile-page')" id="n-profile" class="nav-item"><i class="fas fa-user-circle"></i></div>
     </nav>
 
 </div>
@@ -136,24 +147,25 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // 1. All 249 Countries (Dynamically Generated)
+    // 1. 249 ሀገራት ዝርዝር (ዲናሚክ)
     const countries = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua & Deps", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Central African Rep", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "East Timor", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Ivory Coast", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea North", "Korea South", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russian Federation", "Rwanda", "St Kitts & Nevis", "St Lucia", "Saint Vincent & the Grenadines", "Samoa", "San Marino", "Sao Tome & Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Togo", "Tonga", "Trinidad & Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"];
     const countryEl = document.getElementById('r-country');
     countries.forEach(c => countryEl.innerHTML += `<option value="${c}">${c}</option>`);
 
-    // 2. Mock Users Database
+    // 2. Mock Database (ለሙከራ የተቀመጡ ሰዎች)
     const matchesDB = [
-        {name: "Sophia", age: 22, gender: "Female", country: "United States", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500"},
-        {name: "Hanna", age: 23, gender: "Female", country: "Ethiopia", img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=500"},
-        {name: "Amelia", age: 24, gender: "Female", country: "United Kingdom", img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500"},
+        {name: "Sophia", age: 22, gender: "Female", country: "USA", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500"},
+        {name: "Elena", age: 23, gender: "Female", country: "Ethiopia", img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=500"},
+        {name: "Amelia", age: 24, gender: "Female", country: "UK", img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500"},
         {name: "Marcus", age: 26, gender: "Male", country: "Germany", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500"}
     ];
 
     let currentUser = null;
     let matchIdx = 0;
 
+    // 3. Page Navigation Logic (ጥብቅ ማጣሪያ ያለው)
     function showPage(id) {
-        // STRICT AUTH CHECK: Redirect to login if unauthorized
+        // Strict Check: Login ካልተደረገ ወደ ሌላ ገጽ አያሳልፍም
         if (!currentUser && id !== 'login-page' && id !== 'signup-page') {
             document.getElementById('login-error').classList.remove('hidden');
             id = 'login-page';
@@ -162,11 +174,13 @@
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         
+        // Navigation Icon Update
         const navId = 'n-' + id.split('-')[0];
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         if(document.getElementById(navId)) document.getElementById(navId).classList.add('active');
     }
 
+    // 4. Image Preview
     function previewImage(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
@@ -179,6 +193,7 @@
         }
     }
 
+    // 5. Authentication Logic (Signup & Login)
     function authSignup() {
         const name = document.getElementById('r-name').value;
         const email = document.getElementById('r-email').value;
@@ -187,11 +202,11 @@
         const age = document.getElementById('r-age').value;
         const country = document.getElementById('r-country').value;
 
-        if(!name || !email || !pass || !country) return alert("Please fill all details and add photo!");
+        if(!name || !email || !pass || !country) return alert("እባክዎ ሁሉንም መረጃዎች በትክክል ይሙሉ!");
 
         const userData = { name, email, pass, gender, age, country };
         localStorage.setItem(email, JSON.stringify(userData));
-        alert("Registration Successful!");
+        alert("በተሳካ ሁኔታ ተመዝግበዋል! አሁን ይግቡ።");
         showPage('login-page');
     }
 
@@ -204,14 +219,14 @@
             const user = JSON.parse(stored);
             if(user.pass === pass) {
                 currentUser = user;
-                setupUI();
+                setupProfile();
                 document.getElementById('nav-bar').style.display = 'flex';
                 showPage('home-page');
-            } else { alert("Wrong password!"); }
+            } else { alert("የተሳሳተ የይለፍ ቃል!"); }
         } else { document.getElementById('login-error').classList.remove('hidden'); }
     }
 
-    function setupUI() {
+    function setupProfile() {
         document.getElementById('u-name').innerText = currentUser.name;
         document.getElementById('u-email').innerText = currentUser.email;
         document.getElementById('u-meta').innerText = `${currentUser.age} • ${currentUser.country}`;
@@ -219,30 +234,34 @@
         loadMatches();
     }
 
+    // 6. Match & Discovery Logic
     function loadMatches() {
         const filtered = matchesDB.filter(u => u.gender !== currentUser.gender);
         const match = filtered[matchIdx % filtered.length];
+        
         document.getElementById('m-img').src = match.img;
         document.getElementById('m-info').innerText = `${match.name}, ${match.age}`;
         document.getElementById('m-country').innerText = match.country;
         
+        // Update Message List
         const list = document.getElementById('chat-list');
         list.innerHTML = "";
         filtered.forEach(m => {
             list.innerHTML += `
-                <div onclick="openChat('${m.name}', '${m.img}')" class="flex items-center gap-4 glass p-4 rounded-2xl cursor-pointer">
-                    <img src="${m.img}" class="w-12 h-12 rounded-full object-cover">
-                    <div><p class="font-bold">${m.name}</p><p class="text-xs text-purple-400 italic">Match found!</p></div>
+                <div onclick="openChat('${m.name}', '${m.img}')" class="flex items-center gap-4 glass p-4 cursor-pointer hover:bg-white/10 transition">
+                    <img src="${m.img}" class="w-14 h-14 rounded-full object-cover">
+                    <div><p class="font-bold">${m.name}</p><p class="text-xs text-purple-400 italic italic">አዲስ ማች ተገኝቷል!</p></div>
                 </div>`;
         });
     }
 
     function nextMatch() { matchIdx++; loadMatches(); }
 
+    // 7. Chat Logic
     function openChat(name, img) {
         document.getElementById('chatting-with').innerText = name;
         document.getElementById('chat-avatar').src = img;
-        document.getElementById('chat-box').innerHTML = ""; 
+        document.getElementById('chat-box').innerHTML = `<div class="bg-purple-600/20 self-start p-3 rounded-2xl text-xs max-w-[80%] italic italic">ሰላም! እንዴት ነህ/ሽ?</div>`; 
         showPage('chat-view');
     }
 
@@ -250,7 +269,7 @@
         const input = document.getElementById('chat-input');
         if(!input.value) return;
         const box = document.getElementById('chat-box');
-        box.innerHTML += `<div class="bg-purple-600 self-end p-3 rounded-2xl text-sm max-w-[80%]">${input.value}</div>`;
+        box.innerHTML += `<div class="bg-purple-600 self-end p-4 rounded-2xl text-sm max-w-[80%] shadow-lg shadow-purple-500/20">${input.value}</div>`;
         input.value = "";
         box.scrollTop = box.scrollHeight;
     }
