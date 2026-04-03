@@ -3,146 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WorldDating | Global Connection</title>
+    <title>World Dating | Global</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
-        body { font-family: 'Outfit', sans-serif; background-color: #000; color: white; overflow-x: hidden; }
+        body { font-family: 'Outfit', sans-serif; background-color: #000; color: white; }
         .app-container { max-width: 450px; margin: 0 auto; min-height: 100vh; position: relative; background: #0a0a0a; }
-        .nav-active { color: #8b5cf6; transform: scale(1.1); }
-        .page { display: none; padding-bottom: 80px; animation: fadeIn 0.3s ease-in; }
+        .page { display: none; padding-bottom: 80px; animation: fadeIn 0.4s ease; }
         .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         .gradient-btn { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); }
-        .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        .nav-active { color: #a855f7; transform: translateY(-5px); }
+        #bottom-nav { display: none; } /* መጀመሪያ ተደብቆ ይቆያል */
     </style>
 </head>
 <body>
 
-    <div class="app-container shadow-2xl shadow-indigo-500/20">
+    <div class="app-container shadow-2xl">
 
-        <div id="register-page" class="page active px-6 pt-20 text-center">
-            <div class="w-20 h-20 gradient-btn rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-500/50">
+        <div id="register-page" class="page active px-6 pt-24 text-center">
+            <div class="w-20 h-20 gradient-btn rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-lg shadow-purple-500/40">
                 <i class="fas fa-globe text-3xl"></i>
             </div>
-            <h1 class="text-3xl font-bold mb-2">World Dating</h1>
-            <p class="text-gray-400 mb-10">Connect with your world.</p>
+            <h1 class="text-4xl font-bold mb-2 tracking-tight">World Dating</h1>
+            <p class="text-gray-500 mb-12 italic">Join the world of connections.</p>
             
             <div class="space-y-4">
-                <input type="text" placeholder="Full Name" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 focus:border-purple-500 outline-none">
-                <input type="email" placeholder="Email Address" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 focus:border-purple-500 outline-none">
-                <input type="password" placeholder="Password" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 focus:border-purple-500 outline-none">
-                <button onclick="showPage('home-page')" class="w-full p-4 rounded-2xl gradient-btn font-bold text-lg mt-4">Join Now</button>
+                <input type="text" id="username" placeholder="Full Name" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 focus:border-purple-500 outline-none transition">
+                <input type="password" placeholder="Password" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 focus:border-purple-500 outline-none transition">
+                
+                <button onclick="handleJoin()" class="w-full p-4 rounded-2xl gradient-btn font-bold text-lg mt-6 shadow-xl active:scale-95 transition">
+                    Join Now
+                </button>
             </div>
-            <p class="mt-6 text-sm text-gray-500">Already have an account? <span class="text-purple-400 cursor-pointer">Login</span></p>
         </div>
 
         <div id="home-page" class="page px-4 pt-6">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold italic tracking-tighter">Discovery</h2>
-                <i class="fas fa-sliders text-xl text-gray-400"></i>
+            <div class="flex justify-between items-center mb-6 px-2">
+                <h2 class="text-2xl font-bold">Discover</h2>
+                <div class="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center"><i class="fas fa-sliders-h"></i></div>
             </div>
-            <div class="relative rounded-[2.5rem] overflow-hidden h-[500px] shadow-2xl">
-                <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover">
-                <div class="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black via-black/40 to-transparent">
-                    <h3 class="text-2xl font-bold">Sophia, 23 <span class="text-green-400 text-sm ml-2">● Online</span></h3>
-                    <p class="text-gray-300 text-sm mt-1">Traveler & Coffee Lover. Based in London.</p>
-                    <div class="flex gap-4 mt-6">
-                        <button class="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center text-red-500 text-xl"><i class="fas fa-times"></i></button>
-                        <button class="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center text-green-500 text-xl"><i class="fas fa-heart"></i></button>
-                        <button class="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center text-blue-500 text-xl"><i class="fas fa-star"></i></button>
-                    </div>
+            <div class="relative rounded-[2.5rem] overflow-hidden h-[550px] border border-white/10">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover">
+                <div class="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black via-black/60 to-transparent">
+                    <h3 class="text-3xl font-bold">Amelia, 24</h3>
+                    <p class="text-gray-300 mt-2">Love arts and traveling. NYC based.</p>
                 </div>
             </div>
         </div>
 
         <div id="match-page" class="page px-4 pt-6 text-center">
-            <h2 class="text-2xl font-bold mb-8">Your Matches</h2>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="glass-card p-2 rounded-3xl">
-                    <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=300&q=80" class="w-full h-40 object-cover rounded-2xl mb-2">
-                    <p class="font-bold">Elena, 24</p>
-                    <span class="text-xs text-purple-400">98% Match</span>
-                </div>
-                <div class="glass-card p-2 rounded-3xl">
-                    <img src="https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&w=300&q=80" class="w-full h-40 object-cover rounded-2xl mb-2">
-                    <p class="font-bold">Mark, 27</p>
-                    <span class="text-xs text-purple-400">92% Match</span>
-                </div>
-            </div>
+            <h2 class="text-2xl font-bold mb-6">Your Matches</h2>
+            <p class="text-gray-500 mt-20">No matches yet. Keep swiping!</p>
         </div>
 
         <div id="message-page" class="page px-4 pt-6">
             <h2 class="text-2xl font-bold mb-6">Messages</h2>
-            <div class="space-y-6">
-                <div class="flex items-center gap-4 p-2">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" class="w-14 h-14 rounded-full object-cover border-2 border-purple-500">
-                    <div class="flex-1 border-b border-white/5 pb-4">
-                        <div class="flex justify-between"><span class="font-bold">Jessica</span> <span class="text-xs text-gray-500">2:45 PM</span></div>
-                        <p class="text-sm text-gray-400">Hey! How are you doing today?</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-4 p-2">
-                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=100&q=80" class="w-14 h-14 rounded-full object-cover">
-                    <div class="flex-1 border-b border-white/5 pb-4">
-                        <div class="flex justify-between"><span class="font-bold">Alex</span> <span class="text-xs text-gray-500">Yesterday</span></div>
-                        <p class="text-sm text-gray-400">That sounds amazing! Let's meet.</p>
-                    </div>
-                </div>
-            </div>
+            <p class="text-gray-500 text-center mt-20">Your inbox is empty.</p>
         </div>
 
         <div id="profile-page" class="page px-4 pt-10 text-center">
-            <div class="relative w-32 h-32 mx-auto mb-4">
-                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80" class="w-full h-full rounded-full object-cover border-4 border-purple-600">
-                <div class="absolute bottom-0 right-0 bg-purple-500 w-8 h-8 rounded-full flex items-center justify-center border-4 border-black">
-                    <i class="fas fa-camera text-xs"></i>
-                </div>
+            <div class="w-32 h-32 mx-auto rounded-full border-4 border-purple-500 p-1 mb-4">
+                <img src="https://via.placeholder.com/150" class="w-full h-full rounded-full object-cover bg-gray-800">
             </div>
-            <h3 class="text-2xl font-bold">John Doe, 25</h3>
-            <p class="text-gray-400 mb-8">Addis Ababa, Ethiopia</p>
-            
-            <div class="grid grid-cols-3 gap-2 mb-8">
-                <div class="glass-card p-4 rounded-2xl">
-                    <p class="font-bold text-purple-400">12</p>
-                    <p class="text-[10px] uppercase text-gray-500">Matches</p>
-                </div>
-                <div class="glass-card p-4 rounded-2xl border-purple-500/30">
-                    <p class="font-bold text-purple-400">PRO</p>
-                    <p class="text-[10px] uppercase text-gray-500">Plan</p>
-                </div>
-                <div class="glass-card p-4 rounded-2xl">
-                    <p class="font-bold text-purple-400">150</p>
-                    <p class="text-[10px] uppercase text-gray-500">Likes</p>
-                </div>
-            </div>
-            <button class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 font-semibold mb-4">Edit Profile Settings</button>
-            <button onclick="location.reload()" class="w-full p-4 rounded-2xl text-red-500 font-semibold italic italic">Logout</button>
+            <h3 id="display-name" class="text-2xl font-bold">User</h3>
+            <button onclick="logout()" class="mt-10 text-red-500 font-bold">Logout</button>
         </div>
 
-        <nav class="fixed bottom-0 w-full max-w-[450px] glass-card border-t-0 rounded-t-[2rem] flex justify-around py-5 px-4 z-50">
-            <button onclick="showPage('home-page')" class="nav-btn transition-all text-gray-500" id="btn-home"><i class="fas fa-fire text-xl"></i></button>
-            <button onclick="showPage('match-page')" class="nav-btn transition-all text-gray-500" id="btn-match"><i class="fas fa-heart text-xl"></i></button>
-            <button onclick="showPage('message-page')" class="nav-btn transition-all text-gray-500" id="btn-message"><i class="fas fa-comment-dots text-xl"></i></button>
-            <button onclick="showPage('profile-page')" class="nav-btn transition-all text-gray-500" id="btn-profile"><i class="fas fa-user text-xl"></i></button>
+        <nav id="bottom-nav" class="fixed bottom-0 w-full max-w-[450px] bg-black/80 backdrop-blur-xl border-t border-white/5 flex justify-around py-6 rounded-t-[2.5rem] z-50">
+            <button onclick="showPage('home-page')" id="nav-home" class="text-gray-500 transition-all"><i class="fas fa-fire text-2xl"></i></button>
+            <button onclick="showPage('match-page')" id="nav-match" class="text-gray-500 transition-all"><i class="fas fa-heart text-2xl"></i></button>
+            <button onclick="showPage('message-page')" id="nav-message" class="text-gray-500 transition-all"><i class="fas fa-comment-alt text-2xl"></i></button>
+            <button onclick="showPage('profile-page')" id="nav-profile" class="text-gray-500 transition-all"><i class="fas fa-user-circle text-2xl"></i></button>
         </nav>
 
     </div>
 
     <script>
-        function showPage(pageId) {
-            // Hide all pages
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            // Show target page
-            document.getElementById(pageId).classList.add('active');
-            
-            // Update Nav Icons
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('nav-active'));
-            if(pageId !== 'register-page') {
-                const activeBtnId = 'btn-' + pageId.split('-')[0];
-                document.getElementById(activeBtnId).classList.add('nav-active');
+        function handleJoin() {
+            const name = document.getElementById('username').value;
+            if (name.trim() === "") {
+                alert("Please enter your name!");
+                return;
             }
+            
+            // ስሙን በፕሮፋይል ገጽ ላይ አሳይ
+            document.getElementById('display-name').innerText = name;
+
+            // ምዝገባው ሲያልቅ Nav እንዲታይ አድርግ
+            document.getElementById('bottom-nav').style.display = 'flex';
+            showPage('home-page');
+        }
+
+        function showPage(pageId) {
+            // ሁሉንም ገጽ ደብቅ
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            // የተመረጠውን ገጽ አሳይ
+            document.getElementById(pageId).classList.add('active');
+
+            // Nav አዶዎችን አድስ (Highlight)
+            document.querySelectorAll('#bottom-nav button').forEach(b => b.classList.remove('nav-active'));
+            const btnKey = pageId.split('-')[0];
+            const activeBtn = document.getElementById('nav-' + btnKey);
+            if(activeBtn) activeBtn.classList.add('nav-active');
+        }
+
+        function logout() {
+            document.getElementById('bottom-nav').style.display = 'none';
+            showPage('register-page');
         }
     </script>
 </body>
