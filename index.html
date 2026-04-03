@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="description" content="World Dating - ዓለም አቀፍ የፍቅር ጓደኝነት መድረክ">
+    <meta name="theme-color" content="#ff6b8b">
     <title>World Dating | ፍቅር ድንበር የለውም</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
@@ -15,34 +17,40 @@
 
         body {
             font-family: 'Inter', 'Poppins', sans-serif;
-            transition: all 0.3s ease;
+            transition: background 0.3s ease, color 0.3s ease;
             min-height: 100vh;
         }
 
-        /* Light Theme (ነጭ) */
+        /* ========== LIGHT THEME ========== */
         body.light {
-            background: linear-gradient(135deg, #f5f7fa 0%, #fff5f7 100%);
-            color: #1a1a2e;
+            background: #f8f9fc;
+            color: #2d3436;
         }
         body.light .card {
-            background: rgba(255,255,255,0.95);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            border: 1px solid #ffe0e7;
+            background: #ffffff;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+            border: 1px solid #f0f0f0;
         }
         body.light .sticky-header {
-            background: rgba(255,255,255,0.95);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            background: rgba(255,255,255,0.98);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border-bottom: 1px solid #eee;
         }
         body.light .nav-btn {
-            color: #333;
+            color: #5a5a5a;
         }
         body.light .user-card {
-            background: #fff0f3;
+            background: #fafbfc;
+            border: 1px solid #f0f0f0;
         }
         body.light input, body.light select {
-            background: white;
-            color: #333;
-            border-color: #ffb6c7;
+            background: #ffffff;
+            color: #2d3436;
+            border: 1px solid #e1e8ed;
+        }
+        body.light input:focus, body.light select:focus {
+            border-color: #ff6b8b;
+            box-shadow: 0 0 0 3px rgba(255,107,139,0.1);
         }
         body.light .logo h1 {
             background: linear-gradient(135deg, #c2185b, #ff6b8b);
@@ -50,33 +58,45 @@
             background-clip: text;
             color: transparent;
         }
+        body.light .hero {
+            background: linear-gradient(135deg, #ffe0e7 0%, #fff0f3 100%);
+        }
+        body.light .stat-card {
+            background: linear-gradient(135deg, #f8f9fc, #ffffff);
+            border: 1px solid #f0f0f0;
+        }
 
-        /* Dark Theme (ጥቁር) */
+        /* ========== DARK THEME ========== */
         body.dark {
-            background: linear-gradient(135deg, #0f0c1f 0%, #1a1a2e 50%, #16213e 100%);
-            color: #eee;
+            background: #0a0a1a;
+            color: #e4e6eb;
         }
         body.dark .card {
-            background: rgba(25, 25, 45, 0.8);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,107,139,0.2);
-            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.4);
+            background: rgba(30, 30, 50, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,107,139,0.15);
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
         }
         body.dark .sticky-header {
-            background: rgba(15, 12, 31, 0.85);
+            background: rgba(10, 10, 26, 0.98);
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,107,139,0.2);
+            border-bottom: 1px solid rgba(255,107,139,0.1);
         }
         body.dark .nav-btn {
-            color: #ddd;
+            color: #b0b3b8;
         }
         body.dark .user-card {
-            background: rgba(0,0,0,0.3);
+            background: rgba(20, 20, 35, 0.8);
+            border: 1px solid rgba(255,107,139,0.1);
         }
         body.dark input, body.dark select {
-            background: rgba(0,0,0,0.4);
-            color: white;
-            border-color: #ff8da1;
+            background: rgba(20, 20, 35, 0.9);
+            color: #e4e6eb;
+            border: 1px solid rgba(255,107,139,0.2);
+        }
+        body.dark input:focus, body.dark select:focus {
+            border-color: #ff6b8b;
+            box-shadow: 0 0 0 3px rgba(255,107,139,0.2);
         }
         body.dark .logo h1 {
             background: linear-gradient(135deg, #ff6b8b, #ffd700);
@@ -84,38 +104,46 @@
             background-clip: text;
             color: transparent;
         }
+        body.dark .hero {
+            background: linear-gradient(135deg, rgba(255,107,139,0.1), rgba(0,0,0,0.3));
+        }
+        body.dark .stat-card {
+            background: rgba(30, 30, 50, 0.8);
+            border: 1px solid rgba(255,107,139,0.1);
+        }
 
+        /* ========== GLOBAL STYLES ========== */
         .app-container {
-            max-width: 1300px;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 20px 24px 30px;
+            padding: 0 24px 40px;
         }
 
         .sticky-header {
             position: sticky;
             top: 0;
-            z-index: 100;
-            border-radius: 60px;
-            padding: 10px 25px;
-            margin-bottom: 35px;
+            z-index: 1000;
+            padding: 12px 24px;
+            margin-bottom: 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
+            gap: 15px;
         }
 
         .logo h1 {
-            font-size: 28px;
+            font-size: 26px;
             letter-spacing: -0.5px;
         }
         .logo p {
             font-size: 11px;
-            color: #ffb6c7;
+            opacity: 0.7;
         }
 
         .nav-links {
             display: flex;
-            gap: 15px;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
@@ -124,10 +152,10 @@
             border: none;
             font-weight: 600;
             padding: 10px 22px;
-            border-radius: 40px;
+            border-radius: 50px;
             cursor: pointer;
-            transition: 0.3s;
-            font-size: 15px;
+            transition: all 0.3s ease;
+            font-size: 14px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -136,18 +164,18 @@
         .nav-btn.active, .nav-btn:hover {
             background: linear-gradient(135deg, #ff6b8b, #c2185b);
             color: white !important;
-            box-shadow: 0 5px 12px rgba(255,107,139,0.3);
             transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(194,24,91,0.3);
         }
 
         .user-widget {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
-        .theme-toggle {
-            background: rgba(255,107,139,0.2);
+        .theme-toggle, .lang-btn {
+            background: rgba(255,107,139,0.15);
             border: none;
             width: 40px;
             height: 40px;
@@ -155,6 +183,18 @@
             cursor: pointer;
             font-size: 18px;
             transition: 0.3s;
+            color: inherit;
+        }
+        .lang-btn {
+            width: auto;
+            border-radius: 40px;
+            padding: 0 16px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .theme-toggle:hover, .lang-btn:hover {
+            background: rgba(255,107,139,0.3);
+            transform: scale(1.05);
         }
 
         .avatar-icon {
@@ -168,24 +208,47 @@
             font-weight: bold;
             font-size: 22px;
             cursor: pointer;
+            transition: 0.2s;
+            overflow: hidden;
+        }
+        .avatar-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .card {
-            border-radius: 32px;
-            padding: 24px;
-            margin-bottom: 30px;
+            border-radius: 28px;
+            padding: 28px;
+            margin-bottom: 28px;
             transition: all 0.3s ease;
         }
-
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-3px);
+        }
+
+        .hero {
+            border-radius: 40px;
+            padding: 60px 40px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h2 {
+            font-size: 52px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+        .hero p {
+            font-size: 18px;
+            opacity: 0.85;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .input-group {
             position: relative;
             margin-bottom: 20px;
         }
-
         .input-group i {
             position: absolute;
             left: 18px;
@@ -193,68 +256,60 @@
             transform: translateY(-50%);
             color: #ff8da1;
             font-size: 18px;
+            z-index: 1;
         }
-
         input, select {
             width: 100%;
             padding: 14px 20px 14px 48px;
             border-radius: 50px;
-            font-size: 16px;
-            transition: 0.2s;
+            font-size: 15px;
+            transition: all 0.2s;
             font-family: inherit;
         }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: #ffd700;
-            box-shadow: 0 0 0 3px rgba(255,215,0,0.2);
-        }
-
         button {
             background: linear-gradient(135deg, #ff6b8b, #c2185b);
             color: white;
             border: none;
-            padding: 14px 20px;
+            padding: 14px 24px;
             border-radius: 50px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
             transition: 0.2s;
             width: 100%;
-            font-size: 16px;
+            font-size: 15px;
         }
-
         button:hover {
-            transform: scale(0.98);
-            box-shadow: 0 8px 20px rgba(194,24,91,0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(194,24,91,0.35);
         }
-
         .btn-outline {
             background: transparent;
             border: 2px solid #ff6b8b;
             color: #ff6b8b;
         }
+        .btn-outline:hover {
+            background: #ff6b8b;
+            color: white;
+        }
 
         .flex-row {
             display: flex;
-            gap: 12px;
+            gap: 15px;
             flex-wrap: wrap;
         }
 
         .user-card {
             border-radius: 24px;
-            padding: 16px;
+            padding: 18px;
             margin-bottom: 16px;
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 18px;
             transition: 0.2s;
-            border: 1px solid transparent;
         }
-
         .user-card:hover {
-            border-color: #ff6b8b;
+            transform: translateX(5px);
         }
-
         .user-avatar {
             width: 70px;
             height: 70px;
@@ -263,105 +318,84 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
+            font-size: 32px;
             overflow: hidden;
+            flex-shrink: 0;
         }
-
         .user-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
         .action-buttons {
             display: flex;
             gap: 10px;
             margin-left: auto;
         }
-
         .icon-btn {
-            background: rgba(255,107,139,0.2);
-            padding: 10px 14px;
+            background: rgba(255,107,139,0.15);
+            padding: 8px 16px;
             width: auto;
             border-radius: 40px;
-            font-size: 14px;
+            font-size: 13px;
         }
 
-        .hero {
-            background: linear-gradient(120deg, rgba(255,107,139,0.2), rgba(0,0,0,0.3));
-            border-radius: 48px;
-            padding: 60px 30px;
+        .stat-card {
+            border-radius: 24px;
+            padding: 24px;
             text-align: center;
-            margin-bottom: 40px;
+            flex: 1;
+            min-width: 150px;
         }
-
-        .hero h2 {
-            font-size: 48px;
+        .stat-card i {
+            font-size: 42px;
+            color: #ff6b8b;
+            margin-bottom: 12px;
+        }
+        .stat-card h3 {
+            font-size: 32px;
             font-weight: 800;
         }
 
-        .language-selector {
-            position: relative;
-        }
-
-        .lang-btn {
-            background: rgba(255,107,139,0.2);
-            width: auto;
-            padding: 8px 16px;
-            font-size: 14px;
-        }
-
-        .admin-panel {
-            background: rgba(0,0,0,0.5);
-            border-radius: 24px;
-            padding: 20px;
-        }
-
         footer {
-            margin-top: 50px;
+            margin-top: 60px;
             text-align: center;
-            padding: 25px;
-            border-top: 1px solid rgba(255,107,139,0.3);
+            padding: 30px 20px;
+            border-top: 1px solid rgba(255,107,139,0.15);
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 20px;
         }
-
         .social-icons a {
             color: #ffb6c7;
-            margin: 0 10px;
+            margin: 0 12px;
             font-size: 22px;
             transition: 0.2s;
         }
-
         .social-icons a:hover {
-            color: #ffd700;
+            color: #ff6b8b;
+            transform: translateY(-3px);
         }
 
-        @media (max-width: 700px) {
-            .sticky-header {
-                flex-direction: column;
-                gap: 12px;
-            }
-            .hero h2 {
-                font-size: 32px;
-            }
+        @media (max-width: 768px) {
+            .app-container { padding: 0 16px 30px; }
+            .hero h2 { font-size: 32px; }
+            .hero { padding: 40px 20px; }
+            .user-card { flex-wrap: wrap; }
+            .action-buttons { margin-left: 0; width: 100%; justify-content: flex-end; }
         }
 
-        .hide {
-            display: none;
-        }
-
-        .error {
-            color: #ff4444;
-            font-size: 13px;
-            margin-top: -10px;
-            margin-bottom: 12px;
-        }
-
-        .success {
-            color: #00c851;
+        .hide { display: none !important; }
+        .error { color: #ff4444; font-size: 13px; margin-top: -8px; margin-bottom: 12px; }
+        .success { color: #00c851; }
+        .badge {
+            background: #ff6b8b;
+            color: white;
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 11px;
+            margin-left: 8px;
         }
     </style>
 </head>
@@ -370,62 +404,68 @@
     <div class="sticky-header">
         <div class="logo">
             <h1><i class="fas fa-globe-americas"></i> World Dating</h1>
-            <p id="tagline">ፍቅር ድንበር የለውም ✨</p>
+            <p id="tagline">✨ Love knows no borders ✨</p>
         </div>
         <div class="nav-links" id="navLinks"></div>
         <div class="user-widget" id="userWidget">
             <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
-            <div class="language-selector">
-                <button class="lang-btn" id="langToggle"><i class="fas fa-language"></i> አማ</button>
-            </div>
+            <button class="lang-btn" id="langToggle"><i class="fas fa-language"></i> EN</button>
         </div>
     </div>
     <div id="mainContent"></div>
     <footer>
-        <div>© 2026 World Dating | <span id="footerText">ፍቅር ያሸንፋል 💖</span></div>
+        <div>© 2026 World Dating | <span id="footerText">Premium Dating Platform</span></div>
         <div class="social-icons">
-            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
             <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-telegram"></i></a>
+            <a href="#"><i class="fab fa-telegram-plane"></i></a>
             <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-tiktok"></i></a>
         </div>
     </footer>
 </div>
 
 <script>
-    // ቋንቋዎች
+    // ========== TRANSLATIONS ==========
     const translations = {
         am: {
-            home: "Home", profile: "Profile", match: "Match", message: "Message",
-            login: "Log in", signup: "Sign up", phone: "ስልክ ቁጥር", gender: "ፆታ",
-            age: "ዕድሜ", photo: "ፎቶ", password: "Password", male: "ወንድ", female: "ሴት",
-            register: "ይመዝገቡ", loginBtn: "ግባ", logout: "ውጣ",
-            totalUsers: "ጠቅላላ ተመዝጋቢዎች", country: "ሀገር", adminPanel: "የአድሚን ፓነል"
+            home: "ዋና ገጽ", profile: "መገለጫ", match: "ግጥሚያ", message: "መልእክት",
+            login: "ግባ", signup: "ተመዝገብ", phone: "ስልክ ቁጥር", gender: "ፆታ",
+            age: "ዕድሜ", photo: "ፎቶ", password: "የይለፍ ቃል", male: "ወንድ", female: "ሴት",
+            register: "አዲስ መመዝገቢያ", loginBtn: "ወደ መድረክ ግባ", logout: "ውጣ",
+            totalUsers: "ጠቅላላ አባላት", country: "ሀገር", adminPanel: "የአስተዳዳሪ ፓነል",
+            welcome: "እንኳን ደህና መጣህ", findLove: "ፍቅርህን አግኝ", subtext: "በዓለም ዙሪያ ካሉ ልዩ ሰዎች ጋር ተገናኙ",
+            likes: "ልቦች", matches: "ግጥሚያዎች", messages: "መልእክቶች",
+            adminPhone: "የአድሚን ስልክ", adminPassword: "የአድሚን ይለፍ ቃል"
         },
         en: {
-            home: "Home", profile: "Profile", match: "Match", message: "Message",
-            login: "Log in", signup: "Sign up", phone: "Phone Number", gender: "Gender",
+            home: "Home", profile: "Profile", match: "Match", message: "Messages",
+            login: "Login", signup: "Sign Up", phone: "Phone Number", gender: "Gender",
             age: "Age", photo: "Photo", password: "Password", male: "Male", female: "Female",
-            register: "Register", loginBtn: "Login", logout: "Logout",
-            totalUsers: "Total Users", country: "Country", adminPanel: "Admin Panel"
+            register: "Create Account", loginBtn: "Login", logout: "Logout",
+            totalUsers: "Total Members", country: "Country", adminPanel: "Admin Panel",
+            welcome: "Welcome Back", findLove: "Find Your Love", subtext: "Connect with amazing people worldwide",
+            likes: "Likes", matches: "Matches", messages: "Messages",
+            adminPhone: "Admin Phone", adminPassword: "Admin Password"
         }
     };
     
-    let currentLang = 'am';
+    let currentLang = 'en';
     let currentUser = null;
     let allUsers = [];
     let currentTab = "home";
     let isAdminMode = false;
-    const STORAGE_KEY = "world_dating_users_v2";
+    const STORAGE_KEY = "world_dating_professional";
 
+    // Load data
     function loadStoredData() {
         const stored = localStorage.getItem(STORAGE_KEY);
         if(stored) {
             allUsers = JSON.parse(stored);
         } else {
             allUsers = [
-                { id: "u1", phone: "0912345678", fullname: "አይሻ አህመድ", gender: "ሴት", age: 24, photo: "👩🏾", country: "ኢትዮጵያ", password: "1234", liked: [], receivedLikes: [], messages: [], lastLogin: Date.now() },
-                { id: "u2", phone: "0922334455", fullname: "ናትናኤል በቀለ", gender: "ወንድ", age: 27, photo: "🧔🏾", country: "ኢትዮጵያ", password: "abcd", liked: [], receivedLikes: [], messages: [], lastLogin: Date.now() }
+                { id: "u1", phone: "0912345678", fullname: "Aisha Ahmed", gender: "female", age: 24, photo: "👩🏾", country: "Ethiopia", password: "1234", liked: [], receivedLikes: [], messages: [], lastLogin: Date.now() },
+                { id: "u2", phone: "0922334455", fullname: "Nathaniel Bekele", gender: "male", age: 27, photo: "🧔🏾", country: "Ethiopia", password: "abcd", liked: [], receivedLikes: [], messages: [], lastLogin: Date.now() }
             ];
             saveToLocal();
         }
@@ -435,21 +475,19 @@
             if(found) currentUser = found;
         }
     }
-
     function saveToLocal() { localStorage.setItem(STORAGE_KEY, JSON.stringify(allUsers)); }
     function saveCurrentUserToSession() { if(currentUser) sessionStorage.setItem("currentUserId", currentUser.id); else sessionStorage.removeItem("currentUserId"); }
 
-    // ቴሌግራም በውስጥ መውሰድ (የስልክ ቁጥርን እንደ መለያ)
+    // Register with Telegram auto-detected (using phone as identifier)
     function registerUser(phone, gender, age, photoFile, password) {
-        if(!phone || phone.length < 10) return "ልክ የሆነ ስልክ ቁጥር ያስገቡ";
-        if(!gender) return "ፆታ ይምረጡ";
-        if(!age || age < 18) return "ዕድሜ ቢያንስ 18 መሆን አለበት";
-        if(!password) return "የይለፍ ቃል ያስፈልጋል";
+        if(!phone || phone.length < 10) return "Valid phone number required";
+        if(!gender) return "Please select gender";
+        if(!age || age < 18) return "Minimum age 18 required";
+        if(!password) return "Password required";
+        if(allUsers.find(u => u.phone === phone)) return "Phone number already registered!";
         
-        if(allUsers.find(u => u.phone === phone)) return "ይህ ስልክ ቁጥር አስቀድሞ ተመዝግቧል!";
-        
-        let photoData = gender === "ሴት" ? "👩" : "👨";
-        if(photoFile && photoFile instanceof File) {
+        let photoData = gender === "female" ? "👩" : "👨";
+        if(photoFile && photoFile instanceof File && photoFile.type.startsWith('image/')) {
             const reader = new FileReader();
             reader.onload = function(e) { photoData = e.target.result; };
             reader.readAsDataURL(photoFile);
@@ -462,7 +500,7 @@
             gender: gender,
             age: parseInt(age),
             photo: photoData,
-            country: "ኢትዮጵያ",
+            country: "Ethiopia",
             password: password,
             liked: [],
             receivedLikes: [],
@@ -478,8 +516,8 @@
 
     function loginUser(phone, password) {
         const user = allUsers.find(u => u.phone === phone);
-        if(!user) return "ስልክ ቁጥር አልተገኘም";
-        if(user.password !== password) return "የይለፍ ቃል ተሳስቷል";
+        if(!user) return "Phone number not found";
+        if(user.password !== password) return "Incorrect password";
         currentUser = user;
         user.lastLogin = Date.now();
         saveToLocal();
@@ -487,20 +525,19 @@
         return "SUCCESS";
     }
 
-    // አድሚን ሎጂን
     function adminLogin(phone, password) {
         if(phone === "0910016861" && password === "215221") {
             isAdminMode = true;
             currentUser = null;
             return "SUCCESS";
         }
-        return "የአድሚን ማረጋገጫ ተሳስቷል";
+        return "Invalid admin credentials";
     }
 
     function sendLike(targetId) {
         if(!currentUser) return;
         const target = allUsers.find(u=>u.id===targetId);
-        if(!target || currentUser.liked.includes(targetId)) { alert("ቀድሞ ልብ ልከዋል"); return; }
+        if(!target || currentUser.liked.includes(targetId)) { alert("Already liked"); return; }
         currentUser.liked.push(targetId);
         target.receivedLikes.push(currentUser.id);
         saveToLocal();
@@ -508,7 +545,7 @@
     }
 
     function sendMessage(targetId, msg) {
-        if(!currentUser || !msg) return;
+        if(!currentUser || !msg?.trim()) return;
         const target = allUsers.find(u=>u.id===targetId);
         if(target) {
             const messageObj = { from: currentUser.id, to: targetId, text: msg, time: Date.now() };
@@ -523,7 +560,7 @@
 
     function getOppositeGenderUsers() {
         if(!currentUser) return [];
-        const opposite = currentUser.gender === "ወንድ" ? "ሴት" : "ወንድ";
+        const opposite = currentUser.gender === "male" ? "female" : "male";
         return allUsers.filter(u => u.id !== currentUser.id && u.gender === opposite);
     }
 
@@ -532,83 +569,96 @@
         return allUsers.filter(u => currentUser.liked.includes(u.id) && u.receivedLikes.includes(currentUser.id));
     }
 
-    function getMessages() {
+    function getUserMessages() {
         if(!currentUser) return [];
         return (currentUser.messages || []).sort((a,b)=>b.time - a.time);
     }
 
-    // አድሚን ፓነል
+    // Admin Panel
     function renderAdminPanel() {
         const totalUsers = allUsers.length;
+        const totalLikes = allUsers.reduce((sum, u) => sum + u.liked.length, 0);
         const countries = [...new Set(allUsers.map(u => u.country))];
         return `
-            <div class="card admin-panel">
+            <div class="card">
                 <h2><i class="fas fa-shield-alt"></i> ${translations[currentLang].adminPanel}</h2>
-                <div class="flex-row" style="margin-top:20px">
-                    <div class="card" style="flex:1; text-align:center">
-                        <i class="fas fa-users" style="font-size:48px"></i>
-                        <h3>${translations[currentLang].totalUsers}</h3>
-                        <p style="font-size:36px; font-weight:bold">${totalUsers}</p>
-                    </div>
-                    <div class="card" style="flex:1; text-align:center">
-                        <i class="fas fa-globe" style="font-size:48px"></i>
-                        <h3>${translations[currentLang].country}</h3>
-                        <p>${countries.join(', ')}</p>
-                    </div>
+                <div class="flex-row" style="margin-top: 25px">
+                    <div class="stat-card"><i class="fas fa-users"></i><h3>${totalUsers}</h3><p>${translations[currentLang].totalUsers}</p></div>
+                    <div class="stat-card"><i class="fas fa-heart"></i><h3>${totalLikes}</h3><p>${translations[currentLang].likes}</p></div>
+                    <div class="stat-card"><i class="fas fa-globe"></i><h3>${countries.length}</h3><p>${translations[currentLang].country}</p></div>
                 </div>
-                <h3 style="margin-top:20px">📋 ሁሉም ተመዝጋቢዎች</h3>
+                <h3 style="margin-top: 25px; margin-bottom: 15px"><i class="fas fa-list"></i> All Members (${totalUsers})</h3>
                 ${allUsers.map(u => `
                     <div class="user-card">
-                        <div class="user-avatar">${u.photo.includes('data:image') ? `<img src="${u.photo}" alt="photo">` : u.photo}</div>
-                        <div><strong>${u.fullname}</strong><br>📞 ${u.phone}<br>🎂 ${u.age} | ${u.gender} | ${u.country}</div>
+                        <div class="user-avatar">${u.photo && u.photo.includes('data:image') ? `<img src="${u.photo}">` : (u.photo || '👤')}</div>
+                        <div><strong>${u.fullname}</strong><br><i class="fas fa-phone"></i> ${u.phone}<br><i class="fas fa-map-marker-alt"></i> ${u.country} | 🎂 ${u.age} | ${u.gender === 'male' ? '👨' : '👩'}</div>
                     </div>
                 `).join('')}
-                <button id="adminLogoutBtn" class="btn-outline" style="margin-top:20px"><i class="fas fa-sign-out-alt"></i> ውጣ</button>
+                <button id="adminLogoutBtn" class="btn-outline" style="margin-top: 20px"><i class="fas fa-sign-out-alt"></i> ${translations[currentLang].logout}</button>
             </div>
         `;
     }
 
+    // Home Page
     function renderHome() {
         if(isAdminMode) return renderAdminPanel();
         if(!currentUser) {
             return `
                 <div class="hero">
-                    <h2>${currentLang === 'am' ? 'ፍቅርህን አግኝ 🌍' : 'Find Your Love 🌍'}</h2>
-                    <p>${currentLang === 'am' ? 'በዓለም ዙሪያ ከሚገኙ ልዩ ሰዎች ጋር ተገናኙ' : 'Connect with special people around the world'}</p>
+                    <h2>${translations[currentLang].findLove} 🌍</h2>
+                    <p>${translations[currentLang].subtext}</p>
                 </div>
                 <div class="card" id="authCard">
-                    <div id="authTabs" style="display:flex; gap:10px; margin-bottom:20px">
-                        <button id="showLoginBtn" style="background:#ff6b8b">${translations[currentLang].login}</button>
-                        <button id="showSignupBtn" class="btn-outline">${translations[currentLang].signup}</button>
+                    <div style="display:flex; gap:12px; margin-bottom:25px; border-bottom:2px solid #ff6b8b20; padding-bottom:10px">
+                        <button id="showLoginBtn" style="background:#ff6b8b; width:auto; padding:10px 28px">${translations[currentLang].login}</button>
+                        <button id="showSignupBtn" class="btn-outline" style="width:auto; padding:10px 28px">${translations[currentLang].signup}</button>
                     </div>
                     <div id="authMsg" class="error"></div>
                     <div id="loginForm">
-                        <div class="input-group"><i class="fas fa-phone"></i><input type="tel" id="loginPhone" placeholder="${translations[currentLang].phone}"></div>
-                        <div class="input-group"><i class="fas fa-key"></i><input type="password" id="loginPassword" placeholder="${translations[currentLang].password}"></div>
-                        <button id="doLoginBtn">${translations[currentLang].loginBtn}</button>
-                        <button id="adminLoginBtn" class="btn-outline" style="margin-top:10px"><i class="fas fa-user-shield"></i> አድሚን ግባ</button>
+                        <div class="input-group"><i class="fas fa-phone-alt"></i><input type="tel" id="loginPhone" placeholder="${translations[currentLang].phone}"></div>
+                        <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="loginPassword" placeholder="${translations[currentLang].password}"></div>
+                        <button id="doLoginBtn"><i class="fas fa-sign-in-alt"></i> ${translations[currentLang].loginBtn}</button>
+                        <button id="adminLoginBtn" class="btn-outline" style="margin-top:12px"><i class="fas fa-user-shield"></i> ${translations[currentLang].adminPanel}</button>
                     </div>
                     <div id="signupForm" class="hide">
-                        <div class="input-group"><i class="fas fa-phone"></i><input type="tel" id="signupPhone" placeholder="${translations[currentLang].phone}"></div>
-                        <div class="flex-row"><div class="input-group" style="flex:1"><i class="fas fa-venus-mars"></i><select id="signupGender"><option value="">${translations[currentLang].gender}</option><option>${translations[currentLang].male}</option><option>${translations[currentLang].female}</option></select></div>
-                        <div class="input-group" style="flex:1"><i class="fas fa-calendar"></i><input type="number" id="signupAge" placeholder="${translations[currentLang].age}"></div></div>
-                        <div class="input-group"><i class="fas fa-image"></i><input type="file" id="signupPhoto" accept="image/*"></div>
-                        <div class="input-group"><i class="fas fa-key"></i><input type="password" id="signupPassword" placeholder="${translations[currentLang].password}"></div>
-                        <button id="doSignupBtn">${translations[currentLang].register}</button>
+                        <div class="input-group"><i class="fas fa-phone-alt"></i><input type="tel" id="signupPhone" placeholder="${translations[currentLang].phone}"></div>
+                        <div class="flex-row">
+                            <div class="input-group" style="flex:1"><i class="fas fa-venus-mars"></i><select id="signupGender"><option value="">${translations[currentLang].gender}</option><option value="male">${translations[currentLang].male}</option><option value="female">${translations[currentLang].female}</option></select></div>
+                            <div class="input-group" style="flex:1"><i class="fas fa-calendar"></i><input type="number" id="signupAge" placeholder="${translations[currentLang].age}"></div>
+                        </div>
+                        <div class="input-group"><i class="fas fa-camera"></i><input type="file" id="signupPhoto" accept="image/*"></div>
+                        <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="signupPassword" placeholder="${translations[currentLang].password}"></div>
+                        <button id="doSignupBtn"><i class="fas fa-user-plus"></i> ${translations[currentLang].register}</button>
                     </div>
                 </div>
             `;
         }
         
-        let oppositeUsers = getOppositeGenderUsers();
-        let html = `<div class="hero"><h2>${currentLang === 'am' ? 'ሰላም እንኳን ደህና መጣህ, ' + currentUser.fullname : 'Welcome back, ' + currentUser.fullname}!</h2></div>`;
-        html += `<div class="card"><h3><i class="fas fa-users"></i> ${currentLang === 'am' ? 'ሊያገኟቸው የሚችሏቸው' : 'People you may like'}</h3>`;
-        oppositeUsers.forEach(u => {
+        const oppositeUsers = getOppositeGenderUsers();
+        const matches = getMatches();
+        const t = translations[currentLang];
+        
+        let html = `<div class="hero"><h2>${t.welcome}, ${currentUser.fullname}! 👋</h2><p>${t.subtext}</p></div>`;
+        
+        // Stats
+        html += `<div class="flex-row" style="margin-bottom: 25px">
+            <div class="stat-card"><i class="fas fa-heart"></i><h3>${currentUser.liked.length}</h3><p>${t.likes}</p></div>
+            <div class="stat-card"><i class="fas fa-handshake"></i><h3>${matches.length}</h3><p>${t.matches}</p></div>
+            <div class="stat-card"><i class="fas fa-envelope"></i><h3>${(currentUser.messages || []).length}</h3><p>${t.messages}</p></div>
+        </div>`;
+        
+        html += `<div class="card"><h3><i class="fas fa-users"></i> ${currentUser.gender === 'male' ? '👩 Suggested Matches' : '👨 Suggested Matches'}</h3>`;
+        if(oppositeUsers.length === 0) html += `<p>No users found yet. Check back later!</p>`;
+        else oppositeUsers.forEach(u => {
             const likedAlready = currentUser.liked.includes(u.id);
-            html += `<div class="user-card"><div class="user-avatar">${u.photo.includes('data:image') ? `<img src="${u.photo}">` : u.photo}</div>
-            <div><strong>${u.fullname}</strong> (${u.age})<br><small><i class="fas fa-map-marker-alt"></i> ${u.country}</small></div>
-            <div class="action-buttons">${!likedAlready ? `<button class="icon-btn like-btn" data-id="${u.id}"><i class="fas fa-heart"></i> ${currentLang === 'am' ? 'ልብ' : 'Like'}</button>` : `<button disabled style="background:gray;"><i class="fas fa-check"></i> ${currentLang === 'am' ? 'ተልኳል' : 'Sent'}</button>`}
-            <button class="icon-btn msg-btn" data-id="${u.id}"><i class="fas fa-comment"></i> ${currentLang === 'am' ? 'ጻፍ' : 'Message'}</button></div></div>`;
+            html += `<div class="user-card">
+                <div class="user-avatar">${u.photo && u.photo.includes('data:image') ? `<img src="${u.photo}">` : (u.photo || '👤')}</div>
+                <div><strong>${u.fullname}</strong>, ${u.age}<br><small><i class="fas fa-map-marker-alt"></i> ${u.country}</small></div>
+                <div class="action-buttons">
+                    ${!likedAlready ? `<button class="icon-btn like-btn" data-id="${u.id}"><i class="fas fa-heart"></i> Like</button>` : `<button disabled style="background:gray; padding:8px 16px; border-radius:40px;">❤️ Liked</button>`}
+                    <button class="icon-btn msg-btn" data-id="${u.id}"><i class="fas fa-comment"></i> Message</button>
+                </div>
+            </div>`;
         });
         html += `</div>`;
         return html;
@@ -616,33 +666,48 @@
 
     function renderProfile() {
         if(!currentUser || isAdminMode) return "";
-        return `<div class="card" style="text-align:center"><div class="user-avatar" style="margin:0 auto 15px; width:100px;height:100px;font-size:52px;">${currentUser.photo.includes('data:image') ? `<img src="${currentUser.photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : currentUser.photo}</div>
-        <h2>${currentUser.fullname}</h2><p><i class="fas fa-phone"></i> ${currentUser.phone}</p><p><i class="fas fa-venus-mars"></i> ${currentUser.gender} | 🎂 ${currentUser.age} | <i class="fas fa-globe"></i> ${currentUser.country}</p>
-        <button id="logoutBtn" class="btn-outline"><i class="fas fa-sign-out-alt"></i> ${translations[currentLang].logout}</button></div>`;
+        const t = translations[currentLang];
+        return `<div class="card" style="text-align:center">
+            <div class="user-avatar" style="margin:0 auto 20px; width:120px; height:120px; font-size:60px;">${currentUser.photo && currentUser.photo.includes('data:image') ? `<img src="${currentUser.photo}" style="width:100%;height:100%;object-fit:cover">` : (currentUser.photo || '👤')}</div>
+            <h2>${currentUser.fullname}</h2>
+            <p><i class="fas fa-phone"></i> ${currentUser.phone}</p>
+            <p><i class="fas fa-venus-mars"></i> ${currentUser.gender === 'male' ? 'Male' : 'Female'} | 🎂 ${currentUser.age} | <i class="fas fa-globe"></i> ${currentUser.country}</p>
+            <button id="logoutBtn" class="btn-outline" style="margin-top: 20px; width: auto; padding: 12px 32px"><i class="fas fa-sign-out-alt"></i> ${t.logout}</button>
+        </div>`;
     }
 
     function renderMatch() {
         if(!currentUser || isAdminMode) return "";
         const matches = getMatches();
-        let html = `<div class="card"><h3><i class="fas fa-handshake"></i> ${currentLang === 'am' ? 'የሚዛመዱ' : 'Your Matches'}</h3>`;
-        if(matches.length === 0) html += `<p>${currentLang === 'am' ? 'እስካሁን ምንም ግጥሚያ የለም' : 'No matches yet'}</p>`;
-        else matches.forEach(m => { html += `<div class="user-card"><div class="user-avatar">${m.photo.includes('data:image') ? `<img src="${m.photo}">` : m.photo}</div><div><strong>${m.fullname}</strong><br>📞 ${m.phone}</div><div><button class="icon-btn msg-btn" data-id="${m.id}"><i class="fas fa-envelope"></i> ${currentLang === 'am' ? 'መልእክት' : 'Message'}</button></div></div>`; });
+        const t = translations[currentLang];
+        let html = `<div class="card"><h3><i class="fas fa-gem"></i> ${t.matches}</h3>`;
+        if(matches.length === 0) html += `<p>No mutual matches yet. Start liking profiles!</p>`;
+        else matches.forEach(m => {
+            html += `<div class="user-card">
+                <div class="user-avatar">${m.photo && m.photo.includes('data:image') ? `<img src="${m.photo}">` : (m.photo || '👤')}</div>
+                <div><strong>${m.fullname}</strong>, ${m.age}<br><i class="fas fa-phone"></i> ${m.phone}</div>
+                <div class="action-buttons"><button class="icon-btn msg-btn" data-id="${m.id}"><i class="fas fa-comment-dots"></i> Message</button></div>
+            </div>`;
+        });
         html += `</div>`;
         return html;
     }
 
     function renderMessage() {
         if(!currentUser || isAdminMode) return "";
-        const messages = getMessages();
-        let html = `<div class="card"><h3><i class="fas fa-comments"></i> ${currentLang === 'am' ? 'መልእክቶች' : 'Messages'}</h3>`;
-        if(messages.length === 0) html += `<p>${currentLang === 'am' ? 'ምንም መልእክት የለም' : 'No messages'}</p>`;
+        const messages = getUserMessages();
+        const t = translations[currentLang];
+        let html = `<div class="card"><h3><i class="fas fa-comments"></i> ${t.message}</h3>`;
+        if(messages.length === 0) html += `<p>No messages yet. Start a conversation!</p>`;
         else messages.forEach(msg => {
             const sender = allUsers.find(u => u.id === msg.from);
-            html += `<div class="user-card"><div><strong>${sender ? sender.fullname : 'Unknown'}</strong><br><small>${new Date(msg.time).toLocaleString()}</small><p>${msg.text}</p></div></div>`;
+            html += `<div class="user-card"><div><strong>${sender ? sender.fullname : 'Unknown'}</strong><br><small>${new Date(msg.time).toLocaleString()}</small><p style="margin-top:8px">💬 ${msg.text}</p></div></div>`;
         });
-        html += `<div class="input-group"><i class="fas fa-paper-plane"></i><input type="text" id="newMessageTo" placeholder="${currentLang === 'am' ? 'የሚልኩለት ስልክ ቁጥር' : 'Recipient phone number'}"></div>
-        <div class="input-group"><i class="fas fa-comment"></i><input type="text" id="newMessageText" placeholder="${currentLang === 'am' ? 'መልእክትዎ' : 'Your message'}"></div>
-        <button id="sendMessageBtn"><i class="fas fa-paper-plane"></i> ${currentLang === 'am' ? 'ላክ' : 'Send'}</button></div>`;
+        html += `<hr style="margin: 20px 0; border-color:#ff6b8b20">
+            <div class="input-group"><i class="fas fa-search"></i><input type="text" id="newMessageTo" placeholder="Recipient phone number"></div>
+            <div class="input-group"><i class="fas fa-pen"></i><input type="text" id="newMessageText" placeholder="Type your message..."></div>
+            <button id="sendMessageBtn"><i class="fas fa-paper-plane"></i> Send Message</button>
+        </div>`;
         return html;
     }
 
@@ -650,18 +715,20 @@
         const navDiv = document.getElementById("navLinks");
         const widgetDiv = document.getElementById("userWidget");
         const mainDiv = document.getElementById("mainContent");
+        const t = translations[currentLang];
         
         if(isAdminMode || currentUser) {
-            const tabs = isAdminMode ? [] : ['home', 'profile', 'match', 'message'];
             if(!isAdminMode) {
-                navDiv.innerHTML = tabs.map(tab => `<button class="nav-btn ${currentTab===tab?'active':''}" data-tab="${tab}"><i class="fas fa-${tab==='home'?'home':tab==='profile'?'user-circle':tab==='match'?'gem':'envelope'}"></i> ${translations[currentLang][tab]}</button>`).join('');
-                widgetDiv.innerHTML = `<div class="avatar-icon" id="profileQuick">${currentUser?.photo?.includes('data:image') ? '👤' : (currentUser?.photo || '👤')}</div>`;
+                navDiv.innerHTML = ['home', 'profile', 'match', 'message'].map(tab => 
+                    `<button class="nav-btn ${currentTab===tab?'active':''}" data-tab="${tab}"><i class="fas fa-${tab==='home'?'home':tab==='profile'?'user':tab==='match'?'handshake':'envelope'}"></i> ${t[tab]}</button>`
+                ).join('');
+                widgetDiv.innerHTML = `<div class="avatar-icon" id="profileQuick">${currentUser?.photo?.includes('data:image') ? '<img src="'+currentUser.photo+'">' : (currentUser?.photo || '👤')}</div>`;
             } else {
-                navDiv.innerHTML = `<button class="nav-btn active" data-tab="admin"><i class="fas fa-shield-alt"></i> ${translations[currentLang].adminPanel}</button>`;
+                navDiv.innerHTML = `<button class="nav-btn active"><i class="fas fa-shield-alt"></i> ${t.adminPanel}</button>`;
                 widgetDiv.innerHTML = `<div class="avatar-icon"><i class="fas fa-user-shield"></i></div>`;
             }
         } else {
-            navDiv.innerHTML = `<button class="nav-btn active" data-tab="home"><i class="fas fa-home"></i> ${translations[currentLang].home}</button>`;
+            navDiv.innerHTML = `<button class="nav-btn active"><i class="fas fa-home"></i> ${t.home}</button>`;
             widgetDiv.innerHTML = `<div></div>`;
         }
 
@@ -676,7 +743,7 @@
         mainDiv.innerHTML = content;
         
         document.querySelectorAll(".nav-btn").forEach(btn => {
-            btn.addEventListener("click", (e) => { if(!isAdminMode) currentTab = btn.getAttribute("data-tab"); render(); });
+            btn.addEventListener("click", (e) => { if(!isAdminMode && btn.getAttribute("data-tab")) currentTab = btn.getAttribute("data-tab"); render(); });
         });
         
         if(currentUser && !isAdminMode) {
@@ -689,9 +756,8 @@
         
         document.querySelectorAll(".like-btn").forEach(btn => btn.addEventListener("click", () => sendLike(btn.getAttribute("data-id"))));
         document.querySelectorAll(".msg-btn").forEach(btn => btn.addEventListener("click", () => {
-            const targetId = btn.getAttribute("data-id");
-            const msg = prompt(currentLang === 'am' ? 'መልእክትዎን ይጻፉ:' : 'Type your message:');
-            if(msg) sendMessage(targetId, msg);
+            const msg = prompt("Type your message:");
+            if(msg) sendMessage(btn.getAttribute("data-id"), msg);
         }));
         
         document.getElementById("sendMessageBtn")?.addEventListener("click", () => {
@@ -699,7 +765,7 @@
             const msgText = document.getElementById("newMessageText")?.value;
             const target = allUsers.find(u => u.phone === toPhone);
             if(target && msgText) sendMessage(target.id, msgText);
-            else alert(currentLang === 'am' ? 'ልክ የሆነ ተጠቃሚ አላገኘሁም' : 'User not found');
+            else alert("User not found");
         });
         
         if(!currentUser && !isAdminMode) {
@@ -726,20 +792,19 @@
     }
 
     // Theme Toggle
-    document.getElementById("themeToggle")?.addEventListener("click", () => {
+    document.getElementById("themeToggle").addEventListener("click", () => {
         document.body.classList.toggle("dark");
         document.body.classList.toggle("light");
         const icon = document.querySelector("#themeToggle i");
-        if(document.body.classList.contains("dark")) icon.className = "fas fa-sun";
-        else icon.className = "fas fa-moon";
+        icon.className = document.body.classList.contains("dark") ? "fas fa-sun" : "fas fa-moon";
     });
     
     // Language Toggle
-    document.getElementById("langToggle")?.addEventListener("click", () => {
-        currentLang = currentLang === 'am' ? 'en' : 'am';
-        document.getElementById("langToggle").innerHTML = `<i class="fas fa-language"></i> ${currentLang === 'am' ? 'አማ' : 'EN'}`;
-        document.getElementById("tagline").innerText = currentLang === 'am' ? 'ፍቅር ድንበር የለውም ✨' : 'Love has no borders ✨';
-        document.getElementById("footerText").innerText = currentLang === 'am' ? 'ፍቅር ያሸንፋል 💖' : 'Love wins 💖';
+    document.getElementById("langToggle").addEventListener("click", () => {
+        currentLang = currentLang === 'en' ? 'am' : 'en';
+        document.getElementById("langToggle").innerHTML = `<i class="fas fa-language"></i> ${currentLang === 'en' ? 'EN' : 'አማ'}`;
+        document.getElementById("tagline").innerHTML = currentLang === 'en' ? '✨ Love knows no borders ✨' : '✨ ፍቅር ድንበር የለውም ✨';
+        document.getElementById("footerText").innerHTML = currentLang === 'en' ? 'Premium Dating Platform' : 'ፕሪሚየም የፍቅር መድረክ';
         render();
     });
     
