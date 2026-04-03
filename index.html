@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>WORLD GAMES - Aviator</title>
+    <title>WORLD GAMES - Red Aviator</title>
     <style>
         * {
             margin: 0;
@@ -32,7 +32,7 @@
         .app-header {
             background: linear-gradient(135deg, #0a0e1a 0%, #0b0f1a 100%);
             padding: 15px 16px;
-            border-bottom: 1px solid rgba(255, 51, 51, 0.3);
+            border-bottom: 2px solid #ff0000;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -44,7 +44,7 @@
         .back-btn {
             background: none;
             border: none;
-            color: #FFD700;
+            color: #ff0000;
             font-size: 24px;
             cursor: pointer;
             padding: 5px;
@@ -54,7 +54,8 @@
             flex: 1;
             font-size: 18px;
             font-weight: bold;
-            color: #FFD700;
+            color: #ff0000;
+            text-shadow: 0 0 5px rgba(255,0,0,0.5);
         }
 
         /* Bottom Navigation */
@@ -68,7 +69,7 @@
             background: rgba(10, 14, 26, 0.95);
             backdrop-filter: blur(10px);
             display: flex;
-            border-top: 1px solid rgba(255, 51, 51, 0.3);
+            border-top: 2px solid #ff0000;
             padding: 8px 0;
             z-index: 99;
         }
@@ -89,7 +90,7 @@
         }
 
         .nav-item.active {
-            color: #FFD700;
+            color: #ff0000;
         }
 
         .nav-icon {
@@ -117,13 +118,13 @@
             border-radius: 20px;
             padding: 16px;
             margin: 12px;
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(255, 0, 0, 0.3);
         }
 
         .card-title {
             font-size: 18px;
             font-weight: bold;
-            color: #FFD700;
+            color: #ff0000;
             margin-bottom: 12px;
         }
 
@@ -134,11 +135,12 @@
             padding: 20px;
             margin: 12px;
             text-align: center;
-            border: 1px solid #FFD700;
+            border: 2px solid #ff0000;
+            box-shadow: 0 0 20px rgba(255,0,0,0.3);
         }
 
         .practice-warning h2 {
-            color: #FFD700;
+            color: #ff0000;
             font-size: 18px;
             margin-bottom: 10px;
         }
@@ -150,13 +152,14 @@
         }
 
         .warning-btn {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
+            background: linear-gradient(135deg, #ff0000, #cc0000);
             border: none;
             padding: 12px 24px;
             border-radius: 40px;
             font-weight: bold;
-            color: #0a0e1a;
+            color: white;
             cursor: pointer;
+            box-shadow: 0 0 10px rgba(255,0,0,0.5);
         }
 
         /* Aviator Game */
@@ -165,6 +168,8 @@
             border-radius: 20px;
             margin: 12px;
             overflow: hidden;
+            border: 2px solid #ff0000;
+            box-shadow: 0 0 15px rgba(255,0,0,0.3);
         }
 
         .balance-top {
@@ -174,10 +179,11 @@
             justify-content: space-between;
             font-size: 18px;
             font-weight: bold;
+            border-bottom: 1px solid #ff0000;
         }
 
         .balance-top span:first-child { color: #aaa; }
-        .balance-top span:last-child { color: #FFD700; }
+        .balance-top span:last-child { color: #ff0000; }
 
         .recent-crashes {
             display: flex;
@@ -188,33 +194,35 @@
         }
 
         .crash-bubble {
-            background: rgba(255, 51, 51, 0.2);
-            border: 1px solid rgba(255, 51, 51, 0.5);
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff0000;
             border-radius: 20px;
             padding: 4px 12px;
             font-size: 13px;
-            color: #ff8888;
+            color: #ff6666;
         }
 
         .fun-mode-badge {
-            background: linear-gradient(135deg, #ffaa00, #ff6600);
+            background: linear-gradient(135deg, #ff0000, #cc0000);
             display: inline-block;
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 11px;
             font-weight: bold;
             margin: 10px 16px;
-            color: #000;
+            color: white;
+            box-shadow: 0 0 8px rgba(255,0,0,0.5);
         }
 
         .graph-container {
             position: relative;
             background: #000;
             border-radius: 16px;
-            border: 3px solid #ff3333;
+            border: 3px solid #ff0000;
             margin: 0 16px;
             height: 280px;
             overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(255,0,0,0.2), 0 0 10px rgba(255,0,0,0.3);
         }
 
         canvas {
@@ -233,8 +241,8 @@
         .multiplier-value {
             font-size: 48px;
             font-weight: bold;
-            color: #FFD700;
-            text-shadow: 0 0 20px rgba(255,215,0,0.8);
+            color: #ff0000;
+            text-shadow: 0 0 20px rgba(255,0,0,0.8);
         }
 
         .plane-icon {
@@ -242,7 +250,13 @@
             font-size: 32px;
             pointer-events: none;
             z-index: 10;
-            filter: drop-shadow(0 0 5px #FFD700);
+            filter: drop-shadow(0 0 5px #ff0000);
+            transition: none;
+        }
+
+        .red-plane {
+            color: #ff0000;
+            text-shadow: 0 0 5px #ff0000;
         }
 
         .bet-controls {
@@ -257,12 +271,13 @@
             border-radius: 60px;
             padding: 8px 16px;
             margin-bottom: 16px;
+            border: 1px solid rgba(255,0,0,0.3);
         }
 
         .bet-amount {
             font-size: 24px;
             font-weight: bold;
-            color: #FFD700;
+            color: #ff0000;
         }
 
         .bet-buttons {
@@ -271,13 +286,13 @@
         }
 
         .bet-btn {
-            background: rgba(255,255,255,0.1);
-            border: none;
+            background: rgba(255,0,0,0.2);
+            border: 1px solid #ff0000;
             width: 40px;
             height: 40px;
             border-radius: 30px;
             font-size: 20px;
-            color: white;
+            color: #ff0000;
             cursor: pointer;
         }
 
@@ -288,24 +303,56 @@
 
         .btn-start {
             flex: 1;
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            border: none;
-            padding: 14px;
-            border-radius: 40px;
-            font-weight: bold;
-            color: #0a0e1a;
-            cursor: pointer;
-        }
-
-        .btn-cashout {
-            flex: 1;
-            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            background: linear-gradient(135deg, #ff0000, #cc0000);
             border: none;
             padding: 14px;
             border-radius: 40px;
             font-weight: bold;
             color: white;
             cursor: pointer;
+            box-shadow: 0 0 10px rgba(255,0,0,0.5);
+        }
+
+        .btn-cashout {
+            flex: 1;
+            background: linear-gradient(135deg, #ff4757, #ff0000);
+            border: none;
+            padding: 14px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+        }
+
+        .result-message {
+            text-align: center;
+            padding: 10px;
+            margin: 10px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+        }
+
+        /* Trail point */
+        .trail-point {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #ff0000;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 8;
+            box-shadow: 0 0 8px #ff0000;
+            animation: trailFade 0.4s ease-out forwards;
+        }
+
+        @keyframes trailFade {
+            0% { opacity: 0.9; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.3); }
+        }
+
+        @keyframes explodeAnim {
+            0% { transform: scale(0.3); opacity: 1; }
+            100% { transform: scale(2.5); opacity: 0; }
         }
 
         /* Invite Page */
@@ -316,7 +363,7 @@
         .bonus-amount {
             font-size: 48px;
             font-weight: bold;
-            color: #FFD700;
+            color: #ff0000;
             margin: 10px 0;
         }
 
@@ -327,28 +374,19 @@
             font-size: 18px;
             letter-spacing: 2px;
             margin: 15px 0;
+            border: 1px solid #ff0000;
+            color: #ff0000;
         }
 
         .claim-btn {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
+            background: linear-gradient(135deg, #ff0000, #cc0000);
             border: none;
             padding: 14px;
             border-radius: 40px;
             font-weight: bold;
             width: 100%;
             cursor: pointer;
-        }
-
-        .friends-list {
-            margin-top: 20px;
-            text-align: left;
-        }
-
-        .friend-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: white;
         }
 
         /* Profile Page */
@@ -360,13 +398,14 @@
         .profile-avatar {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #FFD700, #FFA500);
+            background: linear-gradient(135deg, #ff0000, #cc0000);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 40px;
             margin: 0 auto 15px;
+            box-shadow: 0 0 15px rgba(255,0,0,0.5);
         }
 
         .menu-item {
@@ -374,12 +413,12 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,0,0,0.2);
             cursor: pointer;
         }
 
         .menu-item:hover {
-            background: rgba(255,215,0,0.1);
+            background: rgba(255,0,0,0.1);
         }
 
         .language-selector, .theme-selector {
@@ -388,6 +427,7 @@
             padding: 10px;
             background: rgba(0,0,0,0.5);
             border-radius: 12px;
+            border: 1px solid #ff0000;
         }
 
         .language-selector.show, .theme-selector.show {
@@ -401,16 +441,7 @@
         }
 
         .lang-option:hover, .theme-option:hover {
-            background: rgba(255,215,0,0.2);
-        }
-
-        /* Result Message */
-        .result-message {
-            text-align: center;
-            padding: 10px;
-            margin: 10px 16px;
-            border-radius: 12px;
-            font-size: 13px;
+            background: rgba(255,0,0,0.2);
         }
     </style>
 </head>
@@ -419,13 +450,13 @@
     <!-- Dynamic Header -->
     <div class="app-header" id="appHeader">
         <button class="back-btn" id="backBtn" style="display: none;">←</button>
-        <div class="header-title" id="headerTitle">WORLD GAMES</div>
+        <div class="header-title" id="headerTitle">RED AVIATOR</div>
     </div>
 
     <!-- Practice Mode Warning Page -->
     <div id="warningPage" class="page active">
         <div class="practice-warning">
-            <h2>🛡️ YOUR MONEY IS SAFE</h2>
+            <h2>🔴 YOUR MONEY IS SAFE</h2>
             <h2>WELCOME TO PRACTICE MODE!</h2>
             <p style="margin-top: 15px;"><strong>Important Information</strong></p>
             <p>No real money is involved. All currency is virtual and for practice only.</p>
@@ -454,14 +485,14 @@
                 <span class="crash-bubble">1.42x</span>
             </div>
             
-            <div class="fun-mode-badge">🎮 FUN MODE</div>
+            <div class="fun-mode-badge">🎮 FUN MODE | RED FLIGHT</div>
             
             <div class="graph-container" id="graphContainer">
                 <canvas id="aviatorCanvas" width="500" height="280"></canvas>
                 <div class="multiplier-center">
                     <div class="multiplier-value" id="multiplierDisplay">1.00x</div>
                 </div>
-                <div id="planeIcon" class="plane-icon">✈️</div>
+                <div id="planeIcon" class="plane-icon red-plane">🛩️</div>
             </div>
             
             <div class="bet-controls">
@@ -495,7 +526,7 @@
             
             <div style="margin-top: 20px;">
                 <p><strong>BALANCE</strong></p>
-                <p style="font-size: 24px; color: #FFD700;" id="inviteBalance">0 Birr</p>
+                <p style="font-size: 24px; color: #ff0000;" id="inviteBalance">0 Birr</p>
                 <button class="claim-btn" id="claimRewardBtn" style="margin-top: 10px; background: #00cc88;">🎁 Claim reward</button>
             </div>
             
@@ -513,20 +544,20 @@
         <div class="card">
             <div class="profile-header">
                 <div class="profile-avatar" id="profileAvatar">👤</div>
-                <h3 id="profileName">Dawit_Fikadu21</h3>
+                <h3 id="profileName" style="color: #ff0000;">Dawit_Fikadu21</h3>
             </div>
             
             <div class="menu-item" id="couponsBtn">
                 <span>🎫 Coupons</span>
-                <span>›</span>
+                <span style="color: #ff0000;">›</span>
             </div>
             <div class="menu-item" id="ticketsBtn">
                 <span>🎟️ Tickets</span>
-                <span>›</span>
+                <span style="color: #ff0000;">›</span>
             </div>
             <div class="menu-item" id="languageBtn">
                 <span>🌐 Language</span>
-                <span id="currentLang">English ›</span>
+                <span id="currentLang" style="color: #ff0000;">English ›</span>
             </div>
             <div id="languageSelector" class="language-selector">
                 <div class="lang-option" data-lang="English">English</div>
@@ -536,20 +567,20 @@
             
             <div class="menu-item" id="themeBtn">
                 <span>🎨 Change Theme</span>
-                <span id="currentTheme">Dark ›</span>
+                <span id="currentTheme" style="color: #ff0000;">Red ›</span>
             </div>
             <div id="themeSelector" class="theme-selector">
+                <div class="theme-option" data-theme="red">🔴 Red</div>
                 <div class="theme-option" data-theme="dark">🌙 Dark</div>
-                <div class="theme-option" data-theme="light">☀️ Light</div>
             </div>
             
             <div class="menu-item" id="contactBtn">
                 <span>📞 GET HELP</span>
-                <span>›</span>
+                <span style="color: #ff0000;">›</span>
             </div>
-            <div style="padding: 12px; background: rgba(0,0,0,0.3); border-radius: 12px; margin-top: 10px;">
+            <div style="padding: 12px; background: rgba(255,0,0,0.1); border-radius: 12px; margin-top: 10px; border: 1px solid #ff0000;">
                 <p style="font-size: 12px; color: #aaa;">Contact us</p>
-                <p style="font-size: 11px;">@SafriGamesSupportBot</p>
+                <p style="font-size: 11px; color: #ff6666;">@SafriGamesSupportBot</p>
             </div>
         </div>
     </div>
@@ -573,14 +604,6 @@
 
 <script>
     // ============ USER DATA ============
-    let currentUser = {
-        name: "Dawit_Fikadu21",
-        balance: 50000,
-        inviteCode: "DAWIT" + Math.floor(Math.random() * 10000),
-        invitedFriends: [],
-        claimedRewards: 0
-    };
-    
     let balance = 50000;
     let multiplier = 1;
     let playing = false;
@@ -588,6 +611,12 @@
     let intervalId = null;
     let crashPoint = null;
     let recentCrashes = [1.31, 1.98, 2.29, 1.50, 16.69, 1.21, 1.42];
+    
+    let currentUser = {
+        name: "Dawit_Fikadu21",
+        inviteCode: "RED" + Math.floor(Math.random() * 10000),
+        invitedFriends: []
+    };
     
     // ============ DOM Elements ============
     const warningPage = document.getElementById('warningPage');
@@ -602,7 +631,7 @@
     function showPage(pageId, title) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(pageId + 'Page').classList.add('active');
-        headerTitle.innerText = title || 'WORLD GAMES';
+        headerTitle.innerText = title || 'RED AVIATOR';
         
         navItems.forEach(item => {
             if(item.dataset.page === pageId) item.classList.add('active');
@@ -642,7 +671,8 @@
         if(!ctx) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        ctx.strokeStyle = '#ff6666';
+        // Red curve line
+        ctx.strokeStyle = '#ff0000';
         ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.moveTo(0, canvas.height);
@@ -655,6 +685,7 @@
         }
         ctx.stroke();
         
+        // Red grid lines
         ctx.strokeStyle = '#ff3333';
         ctx.lineWidth = 0.5;
         for(let i=0; i<=5; i++) {
@@ -664,12 +695,25 @@
             ctx.lineTo(canvas.width, y);
             ctx.stroke();
         }
+        
+        // Draw current multiplier line if playing
+        if(playing && multiplier > 1) {
+            let t = Math.min(0.95, (multiplier-1)/10);
+            let x = t * canvas.width;
+            ctx.strokeStyle = '#ff0000';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, canvas.height);
+            ctx.stroke();
+        }
     }
     
     function addTrail(x, y) {
         const trail = document.createElement('div');
         trail.className = 'trail-point';
-        trail.style.cssText = `position:absolute; width:6px; height:6px; background:#ff6666; border-radius:50%; left:${x-3}px; top:${y-3}px; pointer-events:none; z-index:8; box-shadow:0 0 6px red;`;
+        trail.style.left = (x - 4) + 'px';
+        trail.style.top = (y - 4) + 'px';
         document.getElementById('graphContainer').appendChild(trail);
         setTimeout(() => trail.remove(), 400);
     }
@@ -689,7 +733,7 @@
     function createExplosion(x, y) {
         const explosion = document.createElement('div');
         explosion.style.cssText = `position:absolute; font-size:48px; pointer-events:none; left:${x-30}px; top:${y-30}px; z-index:20; animation: explodeAnim 0.5s ease-out forwards;`;
-        explosion.innerHTML = '💥💥';
+        explosion.innerHTML = '💥💥💥';
         document.getElementById('graphContainer').appendChild(explosion);
         setTimeout(() => explosion.remove(), 500);
     }
@@ -723,7 +767,7 @@
                 playing = false;
                 createExplosion(planeX, planeY);
                 document.getElementById('planeIcon').style.display = 'none';
-                showGameMessage(`💥 CRASHED at ${crashPoint.toFixed(2)}x! Lost ${currentBet} ETB`, "error");
+                showGameMessage(`💥 CRASHED at ${crashPoint.toFixed(2)}x! Lost ${currentBet.toFixed(2)} ETB`, "error");
                 
                 recentCrashes.unshift(crashPoint);
                 if(recentCrashes.length > 8) recentCrashes.pop();
@@ -746,7 +790,8 @@
     function showGameMessage(msg, type) {
         const div = document.getElementById('gameResult');
         div.innerHTML = msg;
-        div.style.background = type === 'error' ? 'rgba(255,71,87,0.3)' : 'rgba(0,255,100,0.3)';
+        div.style.background = type === 'error' ? 'rgba(255,0,0,0.2)' : 'rgba(0,255,100,0.2)';
+        div.style.border = type === 'error' ? '1px solid #ff0000' : '1px solid #00ff66';
         setTimeout(() => { if(div.innerHTML === msg) div.innerHTML = ''; }, 3000);
     }
     
@@ -755,33 +800,10 @@
         container.innerHTML = recentCrashes.slice(0, 8).map(c => `<span class="crash-bubble">${c.toFixed(2)}x</span>`).join('');
     }
     
-    // Add animation style
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes explodeAnim {
-            0% { transform: scale(0.3); opacity: 1; }
-            100% { transform: scale(2); opacity: 0; }
-        }
-        .trail-point {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: #ff6666;
-            border-radius: 50%;
-            pointer-events: none;
-            animation: trailFade 0.4s ease-out forwards;
-        }
-        @keyframes trailFade {
-            0% { opacity: 0.8; transform: scale(1); }
-            100% { opacity: 0; transform: scale(0.3); }
-        }
-    `;
-    document.head.appendChild(style);
-    
     // ============ Event Listeners ============
     document.getElementById('acceptWarningBtn').addEventListener('click', () => {
         warningPage.classList.remove('active');
-        showPage('games', 'WORLD GAMES');
+        showPage('games', 'RED AVIATOR');
     });
     
     document.getElementById('decBet').addEventListener('click', () => {
@@ -830,7 +852,7 @@
     
     document.querySelectorAll('.theme-option').forEach(opt => {
         opt.addEventListener('click', () => {
-            document.getElementById('currentTheme').innerText = opt.dataset.theme === 'dark' ? '🌙 Dark ›' : '☀️ Light ›';
+            document.getElementById('currentTheme').innerText = opt.dataset.theme === 'red' ? '🔴 Red ›' : '🌙 Dark ›';
             document.getElementById('themeSelector').classList.remove('show');
             alert('Theme changed to ' + opt.dataset.theme);
         });
@@ -843,13 +865,13 @@
     // Navigation
     navItems.forEach(item => {
         item.addEventListener('click', () => {
-            showPage(item.dataset.page, item.dataset.page === 'games' ? 'WORLD GAMES' : 
+            showPage(item.dataset.page, item.dataset.page === 'games' ? 'RED AVIATOR' : 
                      (item.dataset.page === 'invite' ? 'Invite Friends' : 'Profile'));
         });
     });
     
     backBtn.addEventListener('click', () => {
-        showPage('games', 'WORLD GAMES');
+        showPage('games', 'RED AVIATOR');
     });
     
     // Initial setup
