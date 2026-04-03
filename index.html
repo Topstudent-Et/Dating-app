@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>WORLD GAMES - Red Aviator</title>
+    <title>WORLD GAMES - Aviator</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
             background: linear-gradient(135deg, #0a0e1a 0%, #0f1422 100%);
             color: #fff;
             min-height: 100vh;
@@ -31,31 +32,255 @@
         /* Header */
         .app-header {
             background: linear-gradient(135deg, #0a0e1a 0%, #0b0f1a 100%);
-            padding: 15px 16px;
+            padding: 12px 16px;
             border-bottom: 2px solid #ff0000;
             position: sticky;
             top: 0;
             z-index: 100;
+        }
+
+        .balance-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .balance-display {
+            background: rgba(0,0,0,0.5);
+            padding: 6px 12px;
+            border-radius: 30px;
+            border: 1px solid #ff0000;
+        }
+
+        .balance-display span {
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+        /* Aviator Card */
+        .aviator-card {
+            background: rgba(17, 25, 40, 0.95);
+            border-radius: 20px;
+            margin: 12px;
+            overflow: hidden;
+            border: 2px solid #ff0000;
+            box-shadow: 0 0 20px rgba(255,0,0,0.3);
+        }
+
+        /* Recent Crashes */
+        .recent-crashes {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 12px 16px;
+            background: rgba(0,0,0,0.4);
+            border-bottom: 1px solid rgba(255,0,0,0.3);
+        }
+
+        .crash-bubble {
+            background: rgba(255, 0, 0, 0.15);
+            border: 1px solid #ff0000;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #ff6666;
+        }
+
+        /* Fun Mode Badge */
+        .fun-mode {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .fun-badge {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            padding: 4px 16px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .best-multiplier {
+            font-size: 12px;
+            color: #ff6666;
+        }
+
+        /* Graph Container - Red Border */
+        .graph-container {
+            position: relative;
+            background: #000000;
+            margin: 16px;
+            border: 4px solid #ff0000;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(255,0,0,0.4), inset 0 0 10px rgba(255,0,0,0.2);
+        }
+
+        canvas {
+            width: 100%;
+            height: 280px;
+            display: block;
+            background: #000;
+        }
+
+        .multiplier-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .multiplier-value {
+            font-size: 56px;
+            font-weight: 800;
+            color: #ff0000;
+            text-shadow: 0 0 20px rgba(255,0,0,0.8);
+            font-family: monospace;
+            letter-spacing: 2px;
+        }
+
+        .plane-icon {
+            position: absolute;
+            font-size: 34px;
+            pointer-events: none;
+            z-index: 15;
+            filter: drop-shadow(0 0 5px #ff0000);
+            transition: none;
+            color: #ff0000;
+        }
+
+        /* Bet Controls */
+        .bet-section {
+            padding: 16px;
+        }
+
+        .bet-row {
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            background: rgba(0,0,0,0.5);
+            border-radius: 60px;
+            padding: 8px 20px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255,0,0,0.3);
+        }
+
+        .bet-label {
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        .bet-amount {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff0000;
+        }
+
+        .bet-controls-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .bet-btn {
+            background: rgba(255,0,0,0.2);
+            border: 1px solid #ff0000;
+            width: 44px;
+            height: 44px;
+            border-radius: 30px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #ff0000;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .bet-btn:active {
+            transform: scale(0.95);
+            background: rgba(255,0,0,0.4);
+        }
+
+        .action-buttons {
+            display: flex;
             gap: 12px;
         }
 
-        .back-btn {
-            background: none;
-            border: none;
-            color: #ff0000;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        .header-title {
+        .btn-start {
             flex: 1;
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            border: none;
+            padding: 14px;
+            border-radius: 60px;
             font-size: 18px;
             font-weight: bold;
-            color: #ff0000;
-            text-shadow: 0 0 5px rgba(255,0,0,0.5);
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255,0,0,0.5);
+        }
+
+        .btn-cashout {
+            flex: 1;
+            background: linear-gradient(135deg, #ff4757, #ff0000);
+            border: none;
+            padding: 14px;
+            border-radius: 60px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+        }
+
+        .btn-start:active, .btn-cashout:active {
+            transform: scale(0.97);
+        }
+
+        /* Result Message */
+        .result-area {
+            text-align: center;
+            padding: 12px;
+            margin: 0 16px 16px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* Trail Effect */
+        .trail-point {
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            background: #ff0000;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 8;
+            box-shadow: 0 0 8px #ff0000;
+            animation: trailFade 0.4s ease-out forwards;
+        }
+
+        @keyframes trailFade {
+            0% { opacity: 0.9; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.3); }
+        }
+
+        @keyframes explodeAnim {
+            0% { transform: scale(0.3); opacity: 1; }
+            100% { transform: scale(2.5); opacity: 0; }
         }
 
         /* Bottom Navigation */
@@ -86,7 +311,6 @@
             font-size: 11px;
             cursor: pointer;
             padding: 8px;
-            transition: all 0.2s;
         }
 
         .nav-item.active {
@@ -96,385 +320,24 @@
         .nav-icon {
             font-size: 22px;
         }
-
-        /* Pages */
-        .page {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Cards */
-        .card {
-            background: rgba(17, 25, 40, 0.95);
-            border-radius: 20px;
-            padding: 16px;
-            margin: 12px;
-            border: 1px solid rgba(255, 0, 0, 0.3);
-        }
-
-        .card-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #ff0000;
-            margin-bottom: 12px;
-        }
-
-        /* Practice Mode Warning */
-        .practice-warning {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            border-radius: 20px;
-            padding: 20px;
-            margin: 12px;
-            text-align: center;
-            border: 2px solid #ff0000;
-            box-shadow: 0 0 20px rgba(255,0,0,0.3);
-        }
-
-        .practice-warning h2 {
-            color: #ff0000;
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-
-        .practice-warning p {
-            font-size: 13px;
-            color: #aaa;
-            margin-bottom: 15px;
-        }
-
-        .warning-btn {
-            background: linear-gradient(135deg, #ff0000, #cc0000);
-            border: none;
-            padding: 12px 24px;
-            border-radius: 40px;
-            font-weight: bold;
-            color: white;
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(255,0,0,0.5);
-        }
-
-        /* Aviator Game */
-        .aviator-card {
-            background: rgba(17, 25, 40, 0.95);
-            border-radius: 20px;
-            margin: 12px;
-            overflow: hidden;
-            border: 2px solid #ff0000;
-            box-shadow: 0 0 15px rgba(255,0,0,0.3);
-        }
-
-        .balance-top {
-            background: linear-gradient(135deg, #1a1a2e, #0f0f1a);
-            padding: 12px 16px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 18px;
-            font-weight: bold;
-            border-bottom: 1px solid #ff0000;
-        }
-
-        .balance-top span:first-child { color: #aaa; }
-        .balance-top span:last-child { color: #ff0000; }
-
-        .recent-crashes {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            padding: 12px 16px;
-            background: rgba(0,0,0,0.3);
-        }
-
-        .crash-bubble {
-            background: rgba(255, 0, 0, 0.2);
-            border: 1px solid #ff0000;
-            border-radius: 20px;
-            padding: 4px 12px;
-            font-size: 13px;
-            color: #ff6666;
-        }
-
-        .fun-mode-badge {
-            background: linear-gradient(135deg, #ff0000, #cc0000);
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: bold;
-            margin: 10px 16px;
-            color: white;
-            box-shadow: 0 0 8px rgba(255,0,0,0.5);
-        }
-
-        .graph-container {
-            position: relative;
-            background: #000;
-            border-radius: 16px;
-            border: 3px solid #ff0000;
-            margin: 0 16px;
-            height: 280px;
-            overflow: hidden;
-            box-shadow: inset 0 0 20px rgba(255,0,0,0.2), 0 0 10px rgba(255,0,0,0.3);
-        }
-
-        canvas {
-            width: 100%;
-            height: 100%;
-        }
-
-        .multiplier-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-        }
-
-        .multiplier-value {
-            font-size: 48px;
-            font-weight: bold;
-            color: #ff0000;
-            text-shadow: 0 0 20px rgba(255,0,0,0.8);
-        }
-
-        .plane-icon {
-            position: absolute;
-            font-size: 32px;
-            pointer-events: none;
-            z-index: 10;
-            filter: drop-shadow(0 0 5px #ff0000);
-            transition: none;
-        }
-
-        .red-plane {
-            color: #ff0000;
-            text-shadow: 0 0 5px #ff0000;
-        }
-
-        .bet-controls {
-            padding: 16px;
-        }
-
-        .bet-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(0,0,0,0.5);
-            border-radius: 60px;
-            padding: 8px 16px;
-            margin-bottom: 16px;
-            border: 1px solid rgba(255,0,0,0.3);
-        }
-
-        .bet-amount {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ff0000;
-        }
-
-        .bet-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .bet-btn {
-            background: rgba(255,0,0,0.2);
-            border: 1px solid #ff0000;
-            width: 40px;
-            height: 40px;
-            border-radius: 30px;
-            font-size: 20px;
-            color: #ff0000;
-            cursor: pointer;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .btn-start {
-            flex: 1;
-            background: linear-gradient(135deg, #ff0000, #cc0000);
-            border: none;
-            padding: 14px;
-            border-radius: 40px;
-            font-weight: bold;
-            color: white;
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(255,0,0,0.5);
-        }
-
-        .btn-cashout {
-            flex: 1;
-            background: linear-gradient(135deg, #ff4757, #ff0000);
-            border: none;
-            padding: 14px;
-            border-radius: 40px;
-            font-weight: bold;
-            color: white;
-            cursor: pointer;
-        }
-
-        .result-message {
-            text-align: center;
-            padding: 10px;
-            margin: 10px 16px;
-            border-radius: 12px;
-            font-size: 13px;
-        }
-
-        /* Trail point */
-        .trail-point {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: #ff0000;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 8;
-            box-shadow: 0 0 8px #ff0000;
-            animation: trailFade 0.4s ease-out forwards;
-        }
-
-        @keyframes trailFade {
-            0% { opacity: 0.9; transform: scale(1); }
-            100% { opacity: 0; transform: scale(0.3); }
-        }
-
-        @keyframes explodeAnim {
-            0% { transform: scale(0.3); opacity: 1; }
-            100% { transform: scale(2.5); opacity: 0; }
-        }
-
-        /* Invite Page */
-        .invite-card {
-            text-align: center;
-        }
-
-        .bonus-amount {
-            font-size: 48px;
-            font-weight: bold;
-            color: #ff0000;
-            margin: 10px 0;
-        }
-
-        .invite-code {
-            background: rgba(0,0,0,0.5);
-            padding: 12px;
-            border-radius: 40px;
-            font-size: 18px;
-            letter-spacing: 2px;
-            margin: 15px 0;
-            border: 1px solid #ff0000;
-            color: #ff0000;
-        }
-
-        .claim-btn {
-            background: linear-gradient(135deg, #ff0000, #cc0000);
-            border: none;
-            padding: 14px;
-            border-radius: 40px;
-            font-weight: bold;
-            width: 100%;
-            cursor: pointer;
-            color: white;
-        }
-
-        /* Profile Page */
-        .profile-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .profile-avatar {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #ff0000, #cc0000);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            margin: 0 auto 15px;
-            box-shadow: 0 0 15px rgba(255,0,0,0.5);
-        }
-
-        .menu-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid rgba(255,0,0,0.2);
-            cursor: pointer;
-        }
-
-        .menu-item:hover {
-            background: rgba(255,0,0,0.1);
-        }
-
-        .language-selector, .theme-selector {
-            display: none;
-            margin-top: 10px;
-            padding: 10px;
-            background: rgba(0,0,0,0.5);
-            border-radius: 12px;
-            border: 1px solid #ff0000;
-        }
-
-        .language-selector.show, .theme-selector.show {
-            display: block;
-        }
-
-        .lang-option, .theme-option {
-            padding: 10px;
-            cursor: pointer;
-            border-radius: 8px;
-        }
-
-        .lang-option:hover, .theme-option:hover {
-            background: rgba(255,0,0,0.2);
-        }
     </style>
 </head>
 <body>
 <div class="app-container">
-    <!-- Dynamic Header -->
-    <div class="app-header" id="appHeader">
-        <button class="back-btn" id="backBtn" style="display: none;">←</button>
-        <div class="header-title" id="headerTitle">RED AVIATOR</div>
-    </div>
-
-    <!-- Practice Mode Warning Page -->
-    <div id="warningPage" class="page active">
-        <div class="practice-warning">
-            <h2>🔴 YOUR MONEY IS SAFE</h2>
-            <h2>WELCOME TO PRACTICE MODE!</h2>
-            <p style="margin-top: 15px;"><strong>Important Information</strong></p>
-            <p>No real money is involved. All currency is virtual and for practice only.</p>
-            <p style="margin-top: 10px;"><strong>Have Fun & Learn</strong></p>
-            <p>Enjoy learning game strategies and having fun without any financial risk!</p>
-            <p style="margin-top: 10px; font-size: 11px;">By continuing, you acknowledge that this app is for entertainment and practice purposes only.</p>
-            <button class="warning-btn" id="acceptWarningBtn">🎮 Got It? Let's Play!</button>
+    <!-- Header -->
+    <div class="app-header">
+        <div class="balance-top">
+            <div class="logo">✈️ WORLD GAMES</div>
+            <div class="balance-display">
+                💰 <span id="balance">50,000.00</span> ETB
+            </div>
         </div>
     </div>
 
-    <!-- Games Page (Aviator) -->
-    <div id="gamesPage" class="page">
+    <!-- Aviator Game -->
+    <div id="gamesPage">
         <div class="aviator-card">
-            <div class="balance-top">
-                <span>💰 BALANCE</span>
-                <span id="gameBalance">50,000.00 ETB</span>
-            </div>
-            
+            <!-- Recent Crashes -->
             <div class="recent-crashes" id="recentCrashes">
                 <span class="crash-bubble">1.31x</span>
                 <span class="crash-bubble">1.98x</span>
@@ -484,22 +347,28 @@
                 <span class="crash-bubble">1.21x</span>
                 <span class="crash-bubble">1.42x</span>
             </div>
-            
-            <div class="fun-mode-badge">🎮 FUN MODE | RED FLIGHT</div>
-            
+
+            <!-- Fun Mode -->
+            <div class="fun-mode">
+                <div class="fun-badge">🎮 FUN MODE</div>
+                <div class="best-multiplier">🏆 BEST: <span id="bestMultiplier">37.60</span>x</div>
+            </div>
+
+            <!-- Graph with Red Border -->
             <div class="graph-container" id="graphContainer">
                 <canvas id="aviatorCanvas" width="500" height="280"></canvas>
                 <div class="multiplier-center">
                     <div class="multiplier-value" id="multiplierDisplay">1.00x</div>
                 </div>
-                <div id="planeIcon" class="plane-icon red-plane">🛩️</div>
+                <div id="planeIcon" class="plane-icon">🛩️</div>
             </div>
-            
-            <div class="bet-controls">
+
+            <!-- Bet Controls -->
+            <div class="bet-section">
                 <div class="bet-row">
-                    <span>BET AMOUNT</span>
-                    <div class="bet-buttons">
-                        <button class="bet-btn" id="decBet">-</button>
+                    <span class="bet-label">BET AMOUNT</span>
+                    <div class="bet-controls-group">
+                        <button class="bet-btn" id="decBet">−</button>
                         <span class="bet-amount" id="betAmount">4.00</span>
                         <button class="bet-btn" id="incBet">+</button>
                     </div>
@@ -509,85 +378,17 @@
                     <button class="btn-cashout" id="cashOutBtn">💰 CASH OUT</button>
                 </div>
             </div>
-            <div id="gameResult" class="result-message"></div>
+            <div id="resultMessage" class="result-area"></div>
         </div>
     </div>
 
-    <!-- Invite Page -->
-    <div id="invitePage" class="page">
-        <div class="card invite-card">
-            <div class="card-title">👥 Invite Friends</div>
-            <div class="bonus-amount">+100 Birr</div>
-            <p>Per Friend</p>
-            <p style="font-size: 13px; color: #aaa;">You'll receive 100 Birr per friend.</p>
-            
-            <div class="invite-code" id="inviteCode">Loading...</div>
-            <button class="claim-btn" id="copyInviteBtn">📋 Invite a friend</button>
-            
-            <div style="margin-top: 20px;">
-                <p><strong>BALANCE</strong></p>
-                <p style="font-size: 24px; color: #ff0000;" id="inviteBalance">0 Birr</p>
-                <button class="claim-btn" id="claimRewardBtn" style="margin-top: 10px; background: #00cc88;">🎁 Claim reward</button>
-            </div>
-            
-            <div style="margin-top: 20px;">
-                <p><strong>FRIENDS (0 INVITED)</strong></p>
-                <div id="friendsList">
-                    <p style="color: #aaa; text-align: center; padding: 20px;">You haven't invited any friends yet</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Profile Page -->
-    <div id="profilePage" class="page">
-        <div class="card">
-            <div class="profile-header">
-                <div class="profile-avatar" id="profileAvatar">👤</div>
-                <h3 id="profileName" style="color: #ff0000;">Dawit_Fikadu21</h3>
-            </div>
-            
-            <div class="menu-item" id="couponsBtn">
-                <span>🎫 Coupons</span>
-                <span style="color: #ff0000;">›</span>
-            </div>
-            <div class="menu-item" id="ticketsBtn">
-                <span>🎟️ Tickets</span>
-                <span style="color: #ff0000;">›</span>
-            </div>
-            <div class="menu-item" id="languageBtn">
-                <span>🌐 Language</span>
-                <span id="currentLang" style="color: #ff0000;">English ›</span>
-            </div>
-            <div id="languageSelector" class="language-selector">
-                <div class="lang-option" data-lang="English">English</div>
-                <div class="lang-option" data-lang="አማርኛ">አማርኛ</div>
-                <div class="lang-option" data-lang="Oromiffa">Oromiffa</div>
-            </div>
-            
-            <div class="menu-item" id="themeBtn">
-                <span>🎨 Change Theme</span>
-                <span id="currentTheme" style="color: #ff0000;">Red ›</span>
-            </div>
-            <div id="themeSelector" class="theme-selector">
-                <div class="theme-option" data-theme="red">🔴 Red</div>
-                <div class="theme-option" data-theme="dark">🌙 Dark</div>
-            </div>
-            
-            <div class="menu-item" id="contactBtn">
-                <span>📞 GET HELP</span>
-                <span style="color: #ff0000;">›</span>
-            </div>
-            <div style="padding: 12px; background: rgba(255,0,0,0.1); border-radius: 12px; margin-top: 10px; border: 1px solid #ff0000;">
-                <p style="font-size: 12px; color: #aaa;">Contact us</p>
-                <p style="font-size: 11px; color: #ff6666;">@SafriGamesSupportBot</p>
-            </div>
-        </div>
-    </div>
+    <!-- Other Pages (Placeholder) -->
+    <div id="invitePage" style="display: none;">Invite Page</div>
+    <div id="profilePage" style="display: none;">Profile Page</div>
 
     <!-- Bottom Navigation -->
     <div class="bottom-nav">
-        <button class="nav-item" data-page="games">
+        <button class="nav-item active" data-page="games">
             <span class="nav-icon">🎮</span>
             <span>Games</span>
         </button>
@@ -603,61 +404,42 @@
 </div>
 
 <script>
-    // ============ USER DATA ============
-    let balance = 50000;
-    let multiplier = 1;
+    // ============ GAME STATE ============
+    let balance = 50000.00;
+    let multiplier = 1.00;
     let playing = false;
-    let currentBet = 4;
+    let currentBet = 4.00;
     let intervalId = null;
     let crashPoint = null;
-    let recentCrashes = [1.31, 1.98, 2.29, 1.50, 16.69, 1.21, 1.42];
+    let bestMultiplier = 37.60;
     
-    let currentUser = {
-        name: "Dawit_Fikadu21",
-        inviteCode: "RED" + Math.floor(Math.random() * 10000),
-        invitedFriends: []
-    };
+    let recentCrashes = [1.31, 1.98, 2.29, 1.50, 16.69, 1.21, 1.42];
+    let trailPoints = [];
     
     // ============ DOM Elements ============
-    const warningPage = document.getElementById('warningPage');
-    const gamesPage = document.getElementById('gamesPage');
-    const invitePage = document.getElementById('invitePage');
-    const profilePage = document.getElementById('profilePage');
-    const navItems = document.querySelectorAll('.nav-item');
-    const backBtn = document.getElementById('backBtn');
-    const headerTitle = document.getElementById('headerTitle');
-    
-    // ============ Show Page Function ============
-    function showPage(pageId, title) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(pageId + 'Page').classList.add('active');
-        headerTitle.innerText = title || 'RED AVIATOR';
-        
-        navItems.forEach(item => {
-            if(item.dataset.page === pageId) item.classList.add('active');
-            else item.classList.remove('active');
-        });
-        
-        if(pageId === 'games') {
-            backBtn.style.display = 'none';
-            setTimeout(() => resizeCanvas(), 100);
-            updateGameBalance();
-        } else {
-            backBtn.style.display = 'block';
-        }
-    }
-    
-    // ============ Update Balance ============
-    function updateGameBalance() {
-        document.getElementById('gameBalance').innerText = balance.toLocaleString() + ' ETB';
-        document.getElementById('inviteBalance').innerText = balance + ' Birr';
-    }
-    
-    // ============ AVIATOR CANVAS ============
     const canvas = document.getElementById('aviatorCanvas');
     let ctx = canvas.getContext('2d');
     let planeX = 0, planeY = 0;
     
+    // ============ Helper Functions ============
+    function updateBalanceUI() {
+        document.getElementById('balance').innerText = balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    
+    function updateRecentCrashes() {
+        const container = document.getElementById('recentCrashes');
+        container.innerHTML = recentCrashes.slice(0, 10).map(c => `<span class="crash-bubble">${c.toFixed(2)}x</span>`).join('');
+    }
+    
+    function showMessage(msg, isError = true) {
+        const div = document.getElementById('resultMessage');
+        div.innerHTML = msg;
+        div.style.background = isError ? 'rgba(255,0,0,0.2)' : 'rgba(0,255,100,0.2)';
+        div.style.border = isError ? '1px solid #ff0000' : '1px solid #00ff66';
+        setTimeout(() => { if(div.innerHTML === msg) div.innerHTML = ''; }, 3000);
+    }
+    
+    // ============ CANVAS GRAPH ============
     function resizeCanvas() {
         const container = document.getElementById('graphContainer');
         const rect = container.getBoundingClientRect();
@@ -671,34 +453,34 @@
         if(!ctx) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        // Red curve line
+        // Draw red curve line
         ctx.strokeStyle = '#ff0000';
         ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.moveTo(0, canvas.height);
-        for(let i=0; i<=100; i++) {
-            let t = i/100;
+        for(let i = 0; i <= 100; i++) {
+            let t = i / 100;
             let x = t * canvas.width;
             let y = canvas.height - (Math.pow(t, 0.55) * canvas.height * 0.85);
-            if(i===0) ctx.moveTo(x, y);
+            if(i === 0) ctx.moveTo(x, y);
             else ctx.lineTo(x, y);
         }
         ctx.stroke();
         
-        // Red grid lines
+        // Draw red grid lines
         ctx.strokeStyle = '#ff3333';
         ctx.lineWidth = 0.5;
-        for(let i=0; i<=5; i++) {
-            let y = canvas.height - (i/5 * canvas.height);
+        for(let i = 1; i <= 5; i++) {
+            let y = canvas.height - (i / 5 * canvas.height);
             ctx.beginPath();
             ctx.moveTo(0, y);
             ctx.lineTo(canvas.width, y);
             ctx.stroke();
         }
         
-        // Draw current multiplier line if playing
+        // Draw current multiplier vertical line
         if(playing && multiplier > 1) {
-            let t = Math.min(0.95, (multiplier-1)/10);
+            let t = Math.min(0.95, (multiplier - 1) / 12);
             let x = t * canvas.width;
             ctx.strokeStyle = '#ff0000';
             ctx.lineWidth = 2;
@@ -709,6 +491,7 @@
         }
     }
     
+    // ============ TRAIL EFFECT ============
     function addTrail(x, y) {
         const trail = document.createElement('div');
         trail.className = 'trail-point';
@@ -718,167 +501,168 @@
         setTimeout(() => trail.remove(), 400);
     }
     
+    // ============ PLANE POSITION ============
     function updatePlanePosition(mult) {
-        let t = Math.min(0.95, (mult-1)/12);
+        let t = Math.min(0.95, (mult - 1) / 12);
         let x = t * canvas.width;
         let y = canvas.height - (Math.pow(t, 0.55) * canvas.height * 0.85);
-        planeX = x; planeY = y;
+        planeX = x;
+        planeY = y;
+        
         const plane = document.getElementById('planeIcon');
         plane.style.left = (x - 18) + 'px';
-        plane.style.top = (y - 22) + 'px';
+        plane.style.top = (y - 24) + 'px';
         plane.style.display = 'block';
-        if(mult > 1.1) addTrail(x - 5, y - 3);
+        
+        if(mult > 1.1) {
+            addTrail(x - 5, y - 4);
+        }
     }
     
+    // ============ EXPLOSION EFFECT ============
     function createExplosion(x, y) {
         const explosion = document.createElement('div');
-        explosion.style.cssText = `position:absolute; font-size:48px; pointer-events:none; left:${x-30}px; top:${y-30}px; z-index:20; animation: explodeAnim 0.5s ease-out forwards;`;
-        explosion.innerHTML = '💥💥💥';
+        explosion.style.cssText = `position: absolute; font-size: 50px; pointer-events: none; left: ${x - 35}px; top: ${y - 35}px; z-index: 20; animation: explodeAnim 0.5s ease-out forwards;`;
+        explosion.innerHTML = '💥💥';
         document.getElementById('graphContainer').appendChild(explosion);
         setTimeout(() => explosion.remove(), 500);
     }
     
+    // ============ GAME LOGIC ============
     function startGame() {
-        if(playing) { showGameMessage("Game in progress!", "error"); return; }
-        if(currentBet > balance) { showGameMessage("Insufficient balance!", "error"); return; }
+        if(playing) {
+            showMessage("Game already in progress!", true);
+            return;
+        }
         
+        if(currentBet > balance) {
+            showMessage("Insufficient balance!", true);
+            return;
+        }
+        
+        if(currentBet <= 0) {
+            showMessage("Enter valid bet amount!", true);
+            return;
+        }
+        
+        // Deduct bet
         balance -= currentBet;
-        updateGameBalance();
+        updateBalanceUI();
         
-        multiplier = 1;
+        // Reset game state
+        multiplier = 1.00;
         playing = true;
         document.getElementById('multiplierDisplay').innerText = '1.00x';
+        
+        // Random crash point between 1.1x and 6x
         crashPoint = Math.random() * 5 + 1.1;
         
+        // Reset plane position
         const plane = document.getElementById('planeIcon');
         plane.style.display = 'block';
         plane.style.left = '0px';
-        plane.style.top = (canvas.height - 20) + 'px';
+        plane.style.top = (canvas.height - 25) + 'px';
         
+        // Clear any existing interval
+        if(intervalId) clearInterval(intervalId);
+        
+        // Start multiplier interval
         intervalId = setInterval(() => {
             if(!playing) return;
-            multiplier += 0.04;
+            
+            multiplier += 0.035;
             document.getElementById('multiplierDisplay').innerText = multiplier.toFixed(2) + 'x';
             updatePlanePosition(multiplier);
             drawGraph();
             
+            // Check for crash
             if(multiplier >= crashPoint) {
                 clearInterval(intervalId);
                 playing = false;
+                
+                // Explosion effect
                 createExplosion(planeX, planeY);
                 document.getElementById('planeIcon').style.display = 'none';
-                showGameMessage(`💥 CRASHED at ${crashPoint.toFixed(2)}x! Lost ${currentBet.toFixed(2)} ETB`, "error");
                 
+                // Show crash message
+                showMessage(`💥 CRASHED at ${crashPoint.toFixed(2)}x! Lost ${currentBet.toFixed(2)} ETB`, true);
+                
+                // Update recent crashes
                 recentCrashes.unshift(crashPoint);
-                if(recentCrashes.length > 8) recentCrashes.pop();
+                if(recentCrashes.length > 10) recentCrashes.pop();
                 updateRecentCrashes();
             }
         }, 45);
     }
     
     function cashOut() {
-        if(!playing) { showGameMessage("No active flight!", "error"); return; }
+        if(!playing) {
+            showMessage("No active flight!", true);
+            return;
+        }
+        
         clearInterval(intervalId);
         playing = false;
-        const win = currentBet * multiplier;
-        balance += win;
-        updateGameBalance();
-        showGameMessage(`✅ CASHED OUT! Won ${win.toFixed(2)} ETB at ${multiplier.toFixed(2)}x`, "success");
+        
+        const winAmount = currentBet * multiplier;
+        balance += winAmount;
+        updateBalanceUI();
+        
+        // Update best multiplier
+        if(multiplier > bestMultiplier) {
+            bestMultiplier = multiplier;
+            document.getElementById('bestMultiplier').innerText = bestMultiplier.toFixed(2);
+        }
+        
+        showMessage(`✅ CASHED OUT! Won ${winAmount.toFixed(2)} ETB at ${multiplier.toFixed(2)}x`, false);
+        
         document.getElementById('planeIcon').style.display = 'none';
+        
+        // Update recent crashes with win
+        recentCrashes.unshift(multiplier);
+        if(recentCrashes.length > 10) recentCrashes.pop();
+        updateRecentCrashes();
     }
     
-    function showGameMessage(msg, type) {
-        const div = document.getElementById('gameResult');
-        div.innerHTML = msg;
-        div.style.background = type === 'error' ? 'rgba(255,0,0,0.2)' : 'rgba(0,255,100,0.2)';
-        div.style.border = type === 'error' ? '1px solid #ff0000' : '1px solid #00ff66';
-        setTimeout(() => { if(div.innerHTML === msg) div.innerHTML = ''; }, 3000);
+    // ============ BET CONTROLS ============
+    function changeBet(delta) {
+        let newBet = currentBet + delta;
+        if(newBet >= 1 && newBet <= 1000) {
+            currentBet = newBet;
+            document.getElementById('betAmount').innerText = currentBet.toFixed(2);
+        }
     }
     
-    function updateRecentCrashes() {
-        const container = document.getElementById('recentCrashes');
-        container.innerHTML = recentCrashes.slice(0, 8).map(c => `<span class="crash-bubble">${c.toFixed(2)}x</span>`).join('');
-    }
-    
-    // ============ Event Listeners ============
-    document.getElementById('acceptWarningBtn').addEventListener('click', () => {
-        warningPage.classList.remove('active');
-        showPage('games', 'RED AVIATOR');
-    });
-    
-    document.getElementById('decBet').addEventListener('click', () => {
-        if(currentBet > 1) currentBet = Math.max(1, currentBet - 1);
-        document.getElementById('betAmount').innerText = currentBet.toFixed(2);
-    });
-    
-    document.getElementById('incBet').addEventListener('click', () => {
-        currentBet = Math.min(500, currentBet + 1);
-        document.getElementById('betAmount').innerText = currentBet.toFixed(2);
-    });
-    
+    // ============ EVENT LISTENERS ============
     document.getElementById('startBtn').addEventListener('click', startGame);
     document.getElementById('cashOutBtn').addEventListener('click', cashOut);
+    document.getElementById('decBet').addEventListener('click', () => changeBet(-1));
+    document.getElementById('incBet').addEventListener('click', () => changeBet(1));
     
-    // Invite Page
-    document.getElementById('inviteCode').innerText = currentUser.inviteCode;
-    document.getElementById('copyInviteBtn').addEventListener('click', () => {
-        navigator.clipboard.writeText(currentUser.inviteCode);
-        alert('Invite code copied: ' + currentUser.inviteCode);
-    });
-    
-    document.getElementById('claimRewardBtn').addEventListener('click', () => {
-        alert('Claim reward feature - Add bonus after friend joins');
-    });
-    
-    // Profile Page - Language
-    document.getElementById('languageBtn').addEventListener('click', () => {
-        const selector = document.getElementById('languageSelector');
-        selector.classList.toggle('show');
-    });
-    
-    document.querySelectorAll('.lang-option').forEach(opt => {
-        opt.addEventListener('click', () => {
-            document.getElementById('currentLang').innerText = opt.dataset.lang + ' ›';
-            document.getElementById('languageSelector').classList.remove('show');
-            alert('Language changed to ' + opt.dataset.lang);
-        });
-    });
-    
-    // Theme
-    document.getElementById('themeBtn').addEventListener('click', () => {
-        const selector = document.getElementById('themeSelector');
-        selector.classList.toggle('show');
-    });
-    
-    document.querySelectorAll('.theme-option').forEach(opt => {
-        opt.addEventListener('click', () => {
-            document.getElementById('currentTheme').innerText = opt.dataset.theme === 'red' ? '🔴 Red ›' : '🌙 Dark ›';
-            document.getElementById('themeSelector').classList.remove('show');
-            alert('Theme changed to ' + opt.dataset.theme);
-        });
-    });
-    
-    document.getElementById('couponsBtn').addEventListener('click', () => alert('No coupons available'));
-    document.getElementById('ticketsBtn').addEventListener('click', () => alert('No tickets available'));
-    document.getElementById('contactBtn').addEventListener('click', () => alert('Contact @SafriGamesSupportBot'));
-    
-    // Navigation
+    // ============ NAVIGATION ============
+    const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(item => {
         item.addEventListener('click', () => {
-            showPage(item.dataset.page, item.dataset.page === 'games' ? 'RED AVIATOR' : 
-                     (item.dataset.page === 'invite' ? 'Invite Friends' : 'Profile'));
+            navItems.forEach(nav => nav.classList.remove('active'));
+            item.classList.add('active');
+            // For demo, only games page is implemented
+            if(item.dataset.page !== 'games') {
+                showMessage(`${item.dataset.page} page coming soon!`, false);
+            }
         });
     });
     
-    backBtn.addEventListener('click', () => {
-        showPage('games', 'RED AVIATOR');
-    });
+    // ============ INITIALIZATION ============
+    function init() {
+        resizeCanvas();
+        updateBalanceUI();
+        updateRecentCrashes();
+        setInterval(() => {
+            if(!playing) drawGraph();
+        }, 100);
+    }
     
-    // Initial setup
-    resizeCanvas();
-    setInterval(() => { if(!playing) drawGraph(); }, 100);
-    updateGameBalance();
-    updateRecentCrashes();
+    init();
 </script>
 </body>
 </html>
