@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="am">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <meta name="description" content="World Dating - ዓለም አቀፍ የፍቅር ጓደኝነት መድረክ">
+    <meta name="description" content="World Dating - Professional Dating Platform">
     <meta name="theme-color" content="#ff6b8b">
-    <title>World Dating | ፍቅር ድንበር የለውም</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>World Dating | Find Your Love</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
@@ -16,41 +16,37 @@
         }
 
         body {
-            font-family: 'Inter', 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
             transition: background 0.3s ease, color 0.3s ease;
             min-height: 100vh;
         }
 
-        /* ========== LIGHT THEME ========== */
+        /* LIGHT THEME */
         body.light {
-            background: #f8f9fc;
-            color: #2d3436;
+            background: #f5f7fb;
+            color: #1a1a2e;
         }
         body.light .card {
             background: #ffffff;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
-            border: 1px solid #f0f0f0;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+            border: 1px solid #eef2f6;
         }
         body.light .sticky-header {
             background: rgba(255,255,255,0.98);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-            border-bottom: 1px solid #eee;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.03);
+            border-bottom: 1px solid #eef2f6;
         }
         body.light .nav-btn {
-            color: #5a5a5a;
+            color: #555;
         }
         body.light .user-card {
             background: #fafbfc;
-            border: 1px solid #f0f0f0;
+            border: 1px solid #eef2f6;
         }
         body.light input, body.light select {
             background: #ffffff;
-            color: #2d3436;
+            color: #1a1a2e;
             border: 1px solid #e1e8ed;
-        }
-        body.light input:focus, body.light select:focus {
-            border-color: #ff6b8b;
-            box-shadow: 0 0 0 3px rgba(255,107,139,0.1);
         }
         body.light .logo h1 {
             background: linear-gradient(135deg, #c2185b, #ff6b8b);
@@ -61,12 +57,8 @@
         body.light .hero {
             background: linear-gradient(135deg, #ffe0e7 0%, #fff0f3 100%);
         }
-        body.light .stat-card {
-            background: linear-gradient(135deg, #f8f9fc, #ffffff);
-            border: 1px solid #f0f0f0;
-        }
 
-        /* ========== DARK THEME ========== */
+        /* DARK THEME */
         body.dark {
             background: #0a0a1a;
             color: #e4e6eb;
@@ -94,10 +86,6 @@
             color: #e4e6eb;
             border: 1px solid rgba(255,107,139,0.2);
         }
-        body.dark input:focus, body.dark select:focus {
-            border-color: #ff6b8b;
-            box-shadow: 0 0 0 3px rgba(255,107,139,0.2);
-        }
         body.dark .logo h1 {
             background: linear-gradient(135deg, #ff6b8b, #ffd700);
             -webkit-background-clip: text;
@@ -107,12 +95,8 @@
         body.dark .hero {
             background: linear-gradient(135deg, rgba(255,107,139,0.1), rgba(0,0,0,0.3));
         }
-        body.dark .stat-card {
-            background: rgba(30, 30, 50, 0.8);
-            border: 1px solid rgba(255,107,139,0.1);
-        }
 
-        /* ========== GLOBAL STYLES ========== */
+        /* GLOBAL STYLES */
         .app-container {
             max-width: 1280px;
             margin: 0 auto;
@@ -130,6 +114,8 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 15px;
+            border-radius: 60px;
+            margin-top: 15px;
         }
 
         .logo h1 {
@@ -174,7 +160,7 @@
             gap: 12px;
         }
 
-        .theme-toggle, .lang-btn {
+        .theme-toggle {
             background: rgba(255,107,139,0.15);
             border: none;
             width: 40px;
@@ -185,14 +171,7 @@
             transition: 0.3s;
             color: inherit;
         }
-        .lang-btn {
-            width: auto;
-            border-radius: 40px;
-            padding: 0 16px;
-            font-size: 13px;
-            font-weight: 500;
-        }
-        .theme-toggle:hover, .lang-btn:hover {
+        .theme-toggle:hover {
             background: rgba(255,107,139,0.3);
             transform: scale(1.05);
         }
@@ -265,6 +244,11 @@
             font-size: 15px;
             transition: all 0.2s;
             font-family: inherit;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #ff6b8b;
+            box-shadow: 0 0 0 3px rgba(255,107,139,0.15);
         }
         button {
             background: linear-gradient(135deg, #ff6b8b, #c2185b);
@@ -388,7 +372,6 @@
 
         .hide { display: none !important; }
         .error { color: #ff4444; font-size: 13px; margin-top: -8px; margin-bottom: 12px; }
-        .success { color: #00c851; }
         .badge {
             background: #ff6b8b;
             color: white;
@@ -404,17 +387,16 @@
     <div class="sticky-header">
         <div class="logo">
             <h1><i class="fas fa-globe-americas"></i> World Dating</h1>
-            <p id="tagline">✨ Love knows no borders ✨</p>
+            <p>✨ Find your perfect match ✨</p>
         </div>
         <div class="nav-links" id="navLinks"></div>
         <div class="user-widget" id="userWidget">
             <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
-            <button class="lang-btn" id="langToggle"><i class="fas fa-language"></i> EN</button>
         </div>
     </div>
     <div id="mainContent"></div>
     <footer>
-        <div>© 2026 World Dating | <span id="footerText">Premium Dating Platform</span></div>
+        <div>© 2026 World Dating | Premium Dating Platform</div>
         <div class="social-icons">
             <a href="#"><i class="fab fa-facebook-f"></i></a>
             <a href="#"><i class="fab fa-instagram"></i></a>
@@ -426,38 +408,13 @@
 </div>
 
 <script>
-    // ========== TRANSLATIONS ==========
-    const translations = {
-        am: {
-            home: "ዋና ገጽ", profile: "መገለጫ", match: "ግጥሚያ", message: "መልእክት",
-            login: "ግባ", signup: "ተመዝገብ", phone: "ስልክ ቁጥር", gender: "ፆታ",
-            age: "ዕድሜ", photo: "ፎቶ", password: "የይለፍ ቃል", male: "ወንድ", female: "ሴት",
-            register: "አዲስ መመዝገቢያ", loginBtn: "ወደ መድረክ ግባ", logout: "ውጣ",
-            totalUsers: "ጠቅላላ አባላት", country: "ሀገር", adminPanel: "የአስተዳዳሪ ፓነል",
-            welcome: "እንኳን ደህና መጣህ", findLove: "ፍቅርህን አግኝ", subtext: "በዓለም ዙሪያ ካሉ ልዩ ሰዎች ጋር ተገናኙ",
-            likes: "ልቦች", matches: "ግጥሚያዎች", messages: "መልእክቶች",
-            adminPhone: "የአድሚን ስልክ", adminPassword: "የአድሚን ይለፍ ቃል"
-        },
-        en: {
-            home: "Home", profile: "Profile", match: "Match", message: "Messages",
-            login: "Login", signup: "Sign Up", phone: "Phone Number", gender: "Gender",
-            age: "Age", photo: "Photo", password: "Password", male: "Male", female: "Female",
-            register: "Create Account", loginBtn: "Login", logout: "Logout",
-            totalUsers: "Total Members", country: "Country", adminPanel: "Admin Panel",
-            welcome: "Welcome Back", findLove: "Find Your Love", subtext: "Connect with amazing people worldwide",
-            likes: "Likes", matches: "Matches", messages: "Messages",
-            adminPhone: "Admin Phone", adminPassword: "Admin Password"
-        }
-    };
-    
-    let currentLang = 'en';
     let currentUser = null;
     let allUsers = [];
     let currentTab = "home";
     let isAdminMode = false;
-    const STORAGE_KEY = "world_dating_professional";
+    const STORAGE_KEY = "world_dating_pro";
 
-    // Load data
+    // Load data from localStorage
     function loadStoredData() {
         const stored = localStorage.getItem(STORAGE_KEY);
         if(stored) {
@@ -465,7 +422,8 @@
         } else {
             allUsers = [
                 { id: "u1", phone: "0912345678", fullname: "Aisha Ahmed", gender: "female", age: 24, photo: "👩🏾", country: "Ethiopia", password: "1234", liked: [], receivedLikes: [], messages: [], lastLogin: Date.now() },
-                { id: "u2", phone: "0922334455", fullname: "Nathaniel Bekele", gender: "male", age: 27, photo: "🧔🏾", country: "Ethiopia", password: "abcd", liked: [], receivedLikes: [], messages: [], lastLogin: Date.now() }
+                { id: "u2", phone: "0922334455", fullname: "Nathaniel Bekele", gender: "male", age: 27, photo: "🧔🏾", country: "Ethiopia", password: "abcd", liked: [], receivedLikes: [], messages: [], lastLogin: Date.now() },
+                { id: "u3", phone: "0933445566", fullname: "Selam Haile", gender: "female", age: 22, photo: "👩🏽", country: "Ethiopia", password: "selam", liked: [], receivedLikes: [], messages: [], lastLogin: Date.now() }
             ];
             saveToLocal();
         }
@@ -475,10 +433,17 @@
             if(found) currentUser = found;
         }
     }
-    function saveToLocal() { localStorage.setItem(STORAGE_KEY, JSON.stringify(allUsers)); }
-    function saveCurrentUserToSession() { if(currentUser) sessionStorage.setItem("currentUserId", currentUser.id); else sessionStorage.removeItem("currentUserId"); }
+    
+    function saveToLocal() { 
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(allUsers)); 
+    }
+    
+    function saveCurrentUserToSession() { 
+        if(currentUser) sessionStorage.setItem("currentUserId", currentUser.id); 
+        else sessionStorage.removeItem("currentUserId"); 
+    }
 
-    // Register with Telegram auto-detected (using phone as identifier)
+    // Register new user (Telegram not asked - uses phone as identifier)
     function registerUser(phone, gender, age, photoFile, password) {
         if(!phone || phone.length < 10) return "Valid phone number required";
         if(!gender) return "Please select gender";
@@ -489,7 +454,17 @@
         let photoData = gender === "female" ? "👩" : "👨";
         if(photoFile && photoFile instanceof File && photoFile.type.startsWith('image/')) {
             const reader = new FileReader();
-            reader.onload = function(e) { photoData = e.target.result; };
+            reader.onload = function(e) { 
+                photoData = e.target.result;
+                // Update after async load
+                const userIndex = allUsers.findIndex(u => u.phone === phone);
+                if(userIndex !== -1) {
+                    allUsers[userIndex].photo = photoData;
+                    if(currentUser && currentUser.phone === phone) currentUser.photo = photoData;
+                    saveToLocal();
+                    render();
+                }
+            };
             reader.readAsDataURL(photoFile);
         }
         
@@ -536,8 +511,11 @@
 
     function sendLike(targetId) {
         if(!currentUser) return;
-        const target = allUsers.find(u=>u.id===targetId);
-        if(!target || currentUser.liked.includes(targetId)) { alert("Already liked"); return; }
+        const target = allUsers.find(u => u.id === targetId);
+        if(!target || currentUser.liked.includes(targetId)) { 
+            alert("You already liked this person"); 
+            return; 
+        }
         currentUser.liked.push(targetId);
         target.receivedLikes.push(currentUser.id);
         saveToLocal();
@@ -546,7 +524,7 @@
 
     function sendMessage(targetId, msg) {
         if(!currentUser || !msg?.trim()) return;
-        const target = allUsers.find(u=>u.id===targetId);
+        const target = allUsers.find(u => u.id === targetId);
         if(target) {
             const messageObj = { from: currentUser.id, to: targetId, text: msg, time: Date.now() };
             currentUser.messages = currentUser.messages || [];
@@ -581,20 +559,24 @@
         const countries = [...new Set(allUsers.map(u => u.country))];
         return `
             <div class="card">
-                <h2><i class="fas fa-shield-alt"></i> ${translations[currentLang].adminPanel}</h2>
+                <h2><i class="fas fa-shield-alt"></i> Admin Panel</h2>
                 <div class="flex-row" style="margin-top: 25px">
-                    <div class="stat-card"><i class="fas fa-users"></i><h3>${totalUsers}</h3><p>${translations[currentLang].totalUsers}</p></div>
-                    <div class="stat-card"><i class="fas fa-heart"></i><h3>${totalLikes}</h3><p>${translations[currentLang].likes}</p></div>
-                    <div class="stat-card"><i class="fas fa-globe"></i><h3>${countries.length}</h3><p>${translations[currentLang].country}</p></div>
+                    <div class="stat-card"><i class="fas fa-users"></i><h3>${totalUsers}</h3><p>Total Members</p></div>
+                    <div class="stat-card"><i class="fas fa-heart"></i><h3>${totalLikes}</h3><p>Total Likes</p></div>
+                    <div class="stat-card"><i class="fas fa-globe"></i><h3>${countries.length}</h3><p>Countries</p></div>
                 </div>
                 <h3 style="margin-top: 25px; margin-bottom: 15px"><i class="fas fa-list"></i> All Members (${totalUsers})</h3>
                 ${allUsers.map(u => `
                     <div class="user-card">
                         <div class="user-avatar">${u.photo && u.photo.includes('data:image') ? `<img src="${u.photo}">` : (u.photo || '👤')}</div>
-                        <div><strong>${u.fullname}</strong><br><i class="fas fa-phone"></i> ${u.phone}<br><i class="fas fa-map-marker-alt"></i> ${u.country} | 🎂 ${u.age} | ${u.gender === 'male' ? '👨' : '👩'}</div>
+                        <div>
+                            <strong>${u.fullname}</strong><br>
+                            <i class="fas fa-phone"></i> ${u.phone}<br>
+                            <i class="fas fa-map-marker-alt"></i> ${u.country} | 🎂 ${u.age} | ${u.gender === 'male' ? '👨 Male' : '👩 Female'}
+                        </div>
                     </div>
                 `).join('')}
-                <button id="adminLogoutBtn" class="btn-outline" style="margin-top: 20px"><i class="fas fa-sign-out-alt"></i> ${translations[currentLang].logout}</button>
+                <button id="adminLogoutBtn" class="btn-outline" style="margin-top: 20px"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
         `;
     }
@@ -605,30 +587,30 @@
         if(!currentUser) {
             return `
                 <div class="hero">
-                    <h2>${translations[currentLang].findLove} 🌍</h2>
-                    <p>${translations[currentLang].subtext}</p>
+                    <h2>Find Your Love 🌍</h2>
+                    <p>Connect with amazing people from around the world</p>
                 </div>
                 <div class="card" id="authCard">
                     <div style="display:flex; gap:12px; margin-bottom:25px; border-bottom:2px solid #ff6b8b20; padding-bottom:10px">
-                        <button id="showLoginBtn" style="background:#ff6b8b; width:auto; padding:10px 28px">${translations[currentLang].login}</button>
-                        <button id="showSignupBtn" class="btn-outline" style="width:auto; padding:10px 28px">${translations[currentLang].signup}</button>
+                        <button id="showLoginBtn" style="background:#ff6b8b; width:auto; padding:10px 28px">Login</button>
+                        <button id="showSignupBtn" class="btn-outline" style="width:auto; padding:10px 28px">Sign Up</button>
                     </div>
                     <div id="authMsg" class="error"></div>
                     <div id="loginForm">
-                        <div class="input-group"><i class="fas fa-phone-alt"></i><input type="tel" id="loginPhone" placeholder="${translations[currentLang].phone}"></div>
-                        <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="loginPassword" placeholder="${translations[currentLang].password}"></div>
-                        <button id="doLoginBtn"><i class="fas fa-sign-in-alt"></i> ${translations[currentLang].loginBtn}</button>
-                        <button id="adminLoginBtn" class="btn-outline" style="margin-top:12px"><i class="fas fa-user-shield"></i> ${translations[currentLang].adminPanel}</button>
+                        <div class="input-group"><i class="fas fa-phone-alt"></i><input type="tel" id="loginPhone" placeholder="Phone Number"></div>
+                        <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="loginPassword" placeholder="Password"></div>
+                        <button id="doLoginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
+                        <button id="adminLoginBtn" class="btn-outline" style="margin-top:12px"><i class="fas fa-user-shield"></i> Admin Login</button>
                     </div>
                     <div id="signupForm" class="hide">
-                        <div class="input-group"><i class="fas fa-phone-alt"></i><input type="tel" id="signupPhone" placeholder="${translations[currentLang].phone}"></div>
+                        <div class="input-group"><i class="fas fa-phone-alt"></i><input type="tel" id="signupPhone" placeholder="Phone Number"></div>
                         <div class="flex-row">
-                            <div class="input-group" style="flex:1"><i class="fas fa-venus-mars"></i><select id="signupGender"><option value="">${translations[currentLang].gender}</option><option value="male">${translations[currentLang].male}</option><option value="female">${translations[currentLang].female}</option></select></div>
-                            <div class="input-group" style="flex:1"><i class="fas fa-calendar"></i><input type="number" id="signupAge" placeholder="${translations[currentLang].age}"></div>
+                            <div class="input-group" style="flex:1"><i class="fas fa-venus-mars"></i><select id="signupGender"><option value="">Gender</option><option value="male">Male</option><option value="female">Female</option></select></div>
+                            <div class="input-group" style="flex:1"><i class="fas fa-calendar"></i><input type="number" id="signupAge" placeholder="Age"></div>
                         </div>
                         <div class="input-group"><i class="fas fa-camera"></i><input type="file" id="signupPhoto" accept="image/*"></div>
-                        <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="signupPassword" placeholder="${translations[currentLang].password}"></div>
-                        <button id="doSignupBtn"><i class="fas fa-user-plus"></i> ${translations[currentLang].register}</button>
+                        <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="signupPassword" placeholder="Password"></div>
+                        <button id="doSignupBtn"><i class="fas fa-user-plus"></i> Create Account</button>
                     </div>
                 </div>
             `;
@@ -636,15 +618,14 @@
         
         const oppositeUsers = getOppositeGenderUsers();
         const matches = getMatches();
-        const t = translations[currentLang];
         
-        let html = `<div class="hero"><h2>${t.welcome}, ${currentUser.fullname}! 👋</h2><p>${t.subtext}</p></div>`;
+        let html = `<div class="hero"><h2>Welcome back, ${currentUser.fullname}! 👋</h2><p>Find your perfect match today</p></div>`;
         
         // Stats
         html += `<div class="flex-row" style="margin-bottom: 25px">
-            <div class="stat-card"><i class="fas fa-heart"></i><h3>${currentUser.liked.length}</h3><p>${t.likes}</p></div>
-            <div class="stat-card"><i class="fas fa-handshake"></i><h3>${matches.length}</h3><p>${t.matches}</p></div>
-            <div class="stat-card"><i class="fas fa-envelope"></i><h3>${(currentUser.messages || []).length}</h3><p>${t.messages}</p></div>
+            <div class="stat-card"><i class="fas fa-heart"></i><h3>${currentUser.liked.length}</h3><p>Likes Sent</p></div>
+            <div class="stat-card"><i class="fas fa-handshake"></i><h3>${matches.length}</h3><p>Matches</p></div>
+            <div class="stat-card"><i class="fas fa-envelope"></i><h3>${(currentUser.messages || []).length}</h3><p>Messages</p></div>
         </div>`;
         
         html += `<div class="card"><h3><i class="fas fa-users"></i> ${currentUser.gender === 'male' ? '👩 Suggested Matches' : '👨 Suggested Matches'}</h3>`;
@@ -653,7 +634,10 @@
             const likedAlready = currentUser.liked.includes(u.id);
             html += `<div class="user-card">
                 <div class="user-avatar">${u.photo && u.photo.includes('data:image') ? `<img src="${u.photo}">` : (u.photo || '👤')}</div>
-                <div><strong>${u.fullname}</strong>, ${u.age}<br><small><i class="fas fa-map-marker-alt"></i> ${u.country}</small></div>
+                <div>
+                    <strong>${u.fullname}</strong>, ${u.age}<br>
+                    <small><i class="fas fa-map-marker-alt"></i> ${u.country}</small>
+                </div>
                 <div class="action-buttons">
                     ${!likedAlready ? `<button class="icon-btn like-btn" data-id="${u.id}"><i class="fas fa-heart"></i> Like</button>` : `<button disabled style="background:gray; padding:8px 16px; border-radius:40px;">❤️ Liked</button>`}
                     <button class="icon-btn msg-btn" data-id="${u.id}"><i class="fas fa-comment"></i> Message</button>
@@ -666,27 +650,30 @@
 
     function renderProfile() {
         if(!currentUser || isAdminMode) return "";
-        const t = translations[currentLang];
         return `<div class="card" style="text-align:center">
             <div class="user-avatar" style="margin:0 auto 20px; width:120px; height:120px; font-size:60px;">${currentUser.photo && currentUser.photo.includes('data:image') ? `<img src="${currentUser.photo}" style="width:100%;height:100%;object-fit:cover">` : (currentUser.photo || '👤')}</div>
             <h2>${currentUser.fullname}</h2>
             <p><i class="fas fa-phone"></i> ${currentUser.phone}</p>
             <p><i class="fas fa-venus-mars"></i> ${currentUser.gender === 'male' ? 'Male' : 'Female'} | 🎂 ${currentUser.age} | <i class="fas fa-globe"></i> ${currentUser.country}</p>
-            <button id="logoutBtn" class="btn-outline" style="margin-top: 20px; width: auto; padding: 12px 32px"><i class="fas fa-sign-out-alt"></i> ${t.logout}</button>
+            <button id="logoutBtn" class="btn-outline" style="margin-top: 20px; width: auto; padding: 12px 32px"><i class="fas fa-sign-out-alt"></i> Logout</button>
         </div>`;
     }
 
     function renderMatch() {
         if(!currentUser || isAdminMode) return "";
         const matches = getMatches();
-        const t = translations[currentLang];
-        let html = `<div class="card"><h3><i class="fas fa-gem"></i> ${t.matches}</h3>`;
+        let html = `<div class="card"><h3><i class="fas fa-gem"></i> Your Matches</h3>`;
         if(matches.length === 0) html += `<p>No mutual matches yet. Start liking profiles!</p>`;
         else matches.forEach(m => {
             html += `<div class="user-card">
                 <div class="user-avatar">${m.photo && m.photo.includes('data:image') ? `<img src="${m.photo}">` : (m.photo || '👤')}</div>
-                <div><strong>${m.fullname}</strong>, ${m.age}<br><i class="fas fa-phone"></i> ${m.phone}</div>
-                <div class="action-buttons"><button class="icon-btn msg-btn" data-id="${m.id}"><i class="fas fa-comment-dots"></i> Message</button></div>
+                <div>
+                    <strong>${m.fullname}</strong>, ${m.age}<br>
+                    <i class="fas fa-phone"></i> ${m.phone}
+                </div>
+                <div class="action-buttons">
+                    <button class="icon-btn msg-btn" data-id="${m.id}"><i class="fas fa-comment-dots"></i> Message</button>
+                </div>
             </div>`;
         });
         html += `</div>`;
@@ -696,12 +683,17 @@
     function renderMessage() {
         if(!currentUser || isAdminMode) return "";
         const messages = getUserMessages();
-        const t = translations[currentLang];
-        let html = `<div class="card"><h3><i class="fas fa-comments"></i> ${t.message}</h3>`;
+        let html = `<div class="card"><h3><i class="fas fa-comments"></i> Messages</h3>`;
         if(messages.length === 0) html += `<p>No messages yet. Start a conversation!</p>`;
         else messages.forEach(msg => {
             const sender = allUsers.find(u => u.id === msg.from);
-            html += `<div class="user-card"><div><strong>${sender ? sender.fullname : 'Unknown'}</strong><br><small>${new Date(msg.time).toLocaleString()}</small><p style="margin-top:8px">💬 ${msg.text}</p></div></div>`;
+            html += `<div class="user-card">
+                <div>
+                    <strong>${sender ? sender.fullname : 'Unknown'}</strong><br>
+                    <small>${new Date(msg.time).toLocaleString()}</small>
+                    <p style="margin-top:8px">💬 ${msg.text}</p>
+                </div>
+            </div>`;
         });
         html += `<hr style="margin: 20px 0; border-color:#ff6b8b20">
             <div class="input-group"><i class="fas fa-search"></i><input type="text" id="newMessageTo" placeholder="Recipient phone number"></div>
@@ -715,20 +707,22 @@
         const navDiv = document.getElementById("navLinks");
         const widgetDiv = document.getElementById("userWidget");
         const mainDiv = document.getElementById("mainContent");
-        const t = translations[currentLang];
         
         if(isAdminMode || currentUser) {
             if(!isAdminMode) {
-                navDiv.innerHTML = ['home', 'profile', 'match', 'message'].map(tab => 
-                    `<button class="nav-btn ${currentTab===tab?'active':''}" data-tab="${tab}"><i class="fas fa-${tab==='home'?'home':tab==='profile'?'user':tab==='match'?'handshake':'envelope'}"></i> ${t[tab]}</button>`
-                ).join('');
+                navDiv.innerHTML = `
+                    <button class="nav-btn ${currentTab==='home'?'active':''}" data-tab="home"><i class="fas fa-home"></i> Home</button>
+                    <button class="nav-btn ${currentTab==='profile'?'active':''}" data-tab="profile"><i class="fas fa-user"></i> Profile</button>
+                    <button class="nav-btn ${currentTab==='match'?'active':''}" data-tab="match"><i class="fas fa-handshake"></i> Match</button>
+                    <button class="nav-btn ${currentTab==='message'?'active':''}" data-tab="message"><i class="fas fa-envelope"></i> Message</button>
+                `;
                 widgetDiv.innerHTML = `<div class="avatar-icon" id="profileQuick">${currentUser?.photo?.includes('data:image') ? '<img src="'+currentUser.photo+'">' : (currentUser?.photo || '👤')}</div>`;
             } else {
-                navDiv.innerHTML = `<button class="nav-btn active"><i class="fas fa-shield-alt"></i> ${t.adminPanel}</button>`;
+                navDiv.innerHTML = `<button class="nav-btn active"><i class="fas fa-shield-alt"></i> Admin Panel</button>`;
                 widgetDiv.innerHTML = `<div class="avatar-icon"><i class="fas fa-user-shield"></i></div>`;
             }
         } else {
-            navDiv.innerHTML = `<button class="nav-btn active"><i class="fas fa-home"></i> ${t.home}</button>`;
+            navDiv.innerHTML = `<button class="nav-btn active"><i class="fas fa-home"></i> Home</button>`;
             widgetDiv.innerHTML = `<div></div>`;
         }
 
@@ -742,16 +736,33 @@
         
         mainDiv.innerHTML = content;
         
+        // Attach event listeners
         document.querySelectorAll(".nav-btn").forEach(btn => {
-            btn.addEventListener("click", (e) => { if(!isAdminMode && btn.getAttribute("data-tab")) currentTab = btn.getAttribute("data-tab"); render(); });
+            btn.addEventListener("click", (e) => { 
+                if(!isAdminMode && btn.getAttribute("data-tab")) currentTab = btn.getAttribute("data-tab"); 
+                render(); 
+            });
         });
         
         if(currentUser && !isAdminMode) {
-            document.getElementById("logoutBtn")?.addEventListener("click", () => { currentUser = null; isAdminMode = false; saveCurrentUserToSession(); currentTab = "home"; render(); });
-            document.getElementById("profileQuick")?.addEventListener("click", () => { currentTab = "profile"; render(); });
+            document.getElementById("logoutBtn")?.addEventListener("click", () => { 
+                currentUser = null; 
+                isAdminMode = false; 
+                saveCurrentUserToSession(); 
+                currentTab = "home"; 
+                render(); 
+            });
+            document.getElementById("profileQuick")?.addEventListener("click", () => { 
+                currentTab = "profile"; 
+                render(); 
+            });
         }
         if(isAdminMode) {
-            document.getElementById("adminLogoutBtn")?.addEventListener("click", () => { isAdminMode = false; currentUser = null; render(); });
+            document.getElementById("adminLogoutBtn")?.addEventListener("click", () => { 
+                isAdminMode = false; 
+                currentUser = null; 
+                render(); 
+            });
         }
         
         document.querySelectorAll(".like-btn").forEach(btn => btn.addEventListener("click", () => sendLike(btn.getAttribute("data-id"))));
@@ -769,8 +780,14 @@
         });
         
         if(!currentUser && !isAdminMode) {
-            document.getElementById("showLoginBtn")?.addEventListener("click", () => { document.getElementById("loginForm").classList.remove("hide"); document.getElementById("signupForm").classList.add("hide"); });
-            document.getElementById("showSignupBtn")?.addEventListener("click", () => { document.getElementById("loginForm").classList.add("hide"); document.getElementById("signupForm").classList.remove("hide"); });
+            document.getElementById("showLoginBtn")?.addEventListener("click", () => { 
+                document.getElementById("loginForm").classList.remove("hide"); 
+                document.getElementById("signupForm").classList.add("hide"); 
+            });
+            document.getElementById("showSignupBtn")?.addEventListener("click", () => { 
+                document.getElementById("loginForm").classList.add("hide"); 
+                document.getElementById("signupForm").classList.remove("hide"); 
+            });
             document.getElementById("doLoginBtn")?.addEventListener("click", () => {
                 const res = loginUser(document.getElementById("loginPhone").value, document.getElementById("loginPassword").value);
                 if(res === "SUCCESS") render();
@@ -779,7 +796,13 @@
             document.getElementById("doSignupBtn")?.addEventListener("click", () => {
                 const fileInput = document.getElementById("signupPhoto");
                 const file = fileInput.files[0];
-                const res = registerUser(document.getElementById("signupPhone").value, document.getElementById("signupGender").value, document.getElementById("signupAge").value, file, document.getElementById("signupPassword").value);
+                const res = registerUser(
+                    document.getElementById("signupPhone").value,
+                    document.getElementById("signupGender").value,
+                    document.getElementById("signupAge").value,
+                    file,
+                    document.getElementById("signupPassword").value
+                );
                 if(res === "SUCCESS") render();
                 else document.getElementById("authMsg").innerText = res;
             });
@@ -797,15 +820,6 @@
         document.body.classList.toggle("light");
         const icon = document.querySelector("#themeToggle i");
         icon.className = document.body.classList.contains("dark") ? "fas fa-sun" : "fas fa-moon";
-    });
-    
-    // Language Toggle
-    document.getElementById("langToggle").addEventListener("click", () => {
-        currentLang = currentLang === 'en' ? 'am' : 'en';
-        document.getElementById("langToggle").innerHTML = `<i class="fas fa-language"></i> ${currentLang === 'en' ? 'EN' : 'አማ'}`;
-        document.getElementById("tagline").innerHTML = currentLang === 'en' ? '✨ Love knows no borders ✨' : '✨ ፍቅር ድንበር የለውም ✨';
-        document.getElementById("footerText").innerHTML = currentLang === 'en' ? 'Premium Dating Platform' : 'ፕሪሚየም የፍቅር መድረክ';
-        render();
     });
     
     loadStoredData();
