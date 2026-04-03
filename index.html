@@ -3,276 +3,422 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>World Dating - የፍቅር ጓደኝነት መድረክ</title>
+    <title>World Dating | ፍቅር ድንበር የለውም</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 (ምልክቶች) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: system-ui, 'Segoe UI', 'Tahoma', 'Roboto', sans-serif;
         }
 
         body {
-            background: linear-gradient(145deg, #ffe6f0 0%, #ffd9e8 100%);
+            font-family: 'Inter', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f0c1f 0%, #1a1a2e 50%, #16213e 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 0;
+            color: #eee;
+        }
+
+        /* ለስላሳ ጭነት አኒሜሽን */
+        .loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0f0c1f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #ff6b8b;
+            border-top: 4px solid #ffd700;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* ዋና ኮንቴነር */
-        .container {
-            max-width: 550px;
+        .app-container {
+            max-width: 1300px;
             margin: 0 auto;
-            background: white;
-            border-radius: 40px;
-            box-shadow: 0 25px 45px rgba(0,0,0,0.2);
-            overflow: hidden;
-            padding: 20px 18px 30px;
-            transition: all 0.3s ease;
+            padding: 20px 24px 30px;
         }
 
-        /* ሄደር */
-        header {
+        /* ቋሚ ናቪጌሽን ባር */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15, 12, 31, 0.85);
+            backdrop-filter: blur(15px);
+            border-radius: 60px;
+            padding: 10px 25px;
+            margin-bottom: 35px;
             display: flex;
             justify-content: space-between;
-            align-items: baseline;
-            border-bottom: 2px solid #ff8da1;
-            padding-bottom: 12px;
-            margin-bottom: 20px;
+            align-items: center;
             flex-wrap: wrap;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,107,139,0.2);
         }
-        h1 {
+        .logo h1 {
             font-size: 28px;
-            background: linear-gradient(135deg, #c2185b, #ff6f91);
+            background: linear-gradient(135deg, #ff6b8b, #ffd700);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             letter-spacing: -0.5px;
         }
-        .tag {
-            font-size: 14px;
-            color: #c2185b;
+        .logo p {
+            font-size: 11px;
+            color: #ffb6c7;
+        }
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: #ddd;
+            font-weight: 600;
+            padding: 10px 22px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-btn i {
+            font-size: 18px;
+        }
+        .nav-btn.active, .nav-btn:hover {
+            background: linear-gradient(135deg, #ff6b8b, #c2185b);
+            color: white;
+            box-shadow: 0 5px 12px rgba(255,107,139,0.3);
+            transform: translateY(-2px);
+        }
+        .user-widget {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            font-size: 22px;
+            color: #ffb6c7;
+        }
+        .avatar-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(145deg, #ff6b8b, #b34167);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: bold;
+            font-size: 22px;
+            cursor: pointer;
+            transition: 0.2s;
         }
 
-        /* ትናንሽ ካርዶች */
+        /* ካርዶች እና አኒሜሽን */
         .card {
-            background: #fff0f3;
-            border-radius: 28px;
-            padding: 18px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            background: rgba(25, 25, 45, 0.7);
+            backdrop-filter: blur(5px);
+            border-radius: 32px;
+            padding: 24px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,107,139,0.2);
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #ff6b8b;
+            box-shadow: 0 25px 40px -12px rgba(255,107,139,0.2);
         }
 
-        /* ቅጾች */
+        /* ፎርም ማሻሻያ */
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .input-group i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff8da1;
+            font-size: 18px;
+        }
         input, select, textarea {
             width: 100%;
-            padding: 14px 16px;
-            margin: 8px 0 15px;
-            border: 1px solid #ffb6c7;
+            padding: 14px 20px 14px 48px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid #ff8da1;
             border-radius: 50px;
             font-size: 16px;
-            background: white;
+            color: white;
             transition: 0.2s;
+            font-family: inherit;
         }
         input:focus, select:focus {
             outline: none;
-            border-color: #c2185b;
-            box-shadow: 0 0 0 3px rgba(194,24,91,0.2);
+            border-color: #ffd700;
+            box-shadow: 0 0 0 3px rgba(255,215,0,0.2);
         }
         button {
-            background: #c2185b;
+            background: linear-gradient(135deg, #ff6b8b, #c2185b);
             color: white;
             border: none;
-            padding: 12px 20px;
+            padding: 14px 20px;
             border-radius: 50px;
-            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             transition: 0.2s;
             width: 100%;
-            margin: 6px 0;
+            font-size: 16px;
         }
         button:hover {
-            background: #a01545;
             transform: scale(0.98);
+            box-shadow: 0 8px 20px rgba(194,24,91,0.4);
         }
         .btn-outline {
             background: transparent;
-            border: 2px solid #c2185b;
-            color: #c2185b;
-        }
-        .btn-outline:hover {
-            background: #c2185b;
-            color: white;
-        }
-        .nav-buttons {
-            display: flex;
-            gap: 12px;
-            margin: 15px 0 10px;
-        }
-        .nav-buttons button {
-            background: #ffb6c7;
-            color: #4a0e2b;
-        }
-        .active-tab {
-            background: #c2185b;
-            color: white;
-        }
-        .profile-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-        .profile-img {
-            width: 100px;
-            height: 100px;
-            background: #ffcdd9;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            margin-bottom: 12px;
-            object-fit: cover;
-        }
-        .match-user {
-            background: white;
-            border-radius: 28px;
-            padding: 12px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-        }
-        .match-avatar {
-            width: 55px;
-            height: 55px;
-            background: #ff8da1;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: white;
-            font-size: 24px;
-        }
-        .like-btn, .msg-btn {
-            padding: 6px 12px;
-            width: auto;
-            font-size: 13px;
-            margin: 0 4px;
-        }
-        footer {
-            text-align: center;
-            margin-top: 25px;
-            color: #9e6b7c;
-            font-size: 13px;
-        }
-        .error {
-            color: #d32f2f;
-            font-size: 13px;
-            margin-top: -10px;
-            margin-bottom: 12px;
-        }
-        .success {
-            color: #2e7d32;
-        }
-        .hide {
-            display: none;
-        }
-        hr {
-            margin: 10px 0;
-            border-color: #ffd0da;
+            border: 2px solid #ff6b8b;
+            color: #ffb6c7;
         }
         .flex-row {
             display: flex;
-            gap: 8px;
-            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
         }
+        /* የተጠቃሚ ካርድ */
+        .user-card {
+            background: rgba(0,0,0,0.3);
+            border-radius: 24px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: 0.2s;
+            border: 1px solid transparent;
+        }
+        .user-card:hover {
+            border-color: #ff6b8b;
+            background: rgba(255,107,139,0.1);
+        }
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(145deg, #ffb347, #ff6b8b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            box-shadow: 0 8px 14px rgba(0,0,0,0.3);
+        }
+        .online-dot {
+            width: 14px;
+            height: 14px;
+            background: #2ecc71;
+            border-radius: 50%;
+            border: 2px solid #1a1a2e;
+            position: relative;
+            top: -20px;
+            left: 50px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-left: auto;
+        }
+        .icon-btn {
+            background: rgba(255,107,139,0.2);
+            padding: 10px 14px;
+            width: auto;
+            border-radius: 40px;
+            font-size: 14px;
+        }
+        /* ልብ አኒሜሽን */
+        .heart-animation {
+            animation: heartBeat 0.4s ease;
+        }
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); color: #ff3366; }
+            100% { transform: scale(1); }
+        }
+
+        /* ሄሮ ሴክሽን */
+        .hero {
+            background: linear-gradient(120deg, rgba(255,107,139,0.2), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=1000') center/cover;
+            border-radius: 48px;
+            padding: 60px 30px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h2 {
+            font-size: 48px;
+            font-weight: 800;
+        }
+        .hero p {
+            font-size: 18px;
+            margin: 15px 0;
+        }
+
+        /* እንዴት እንደሚሰራ */
+        .steps {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+        .step {
+            text-align: center;
+            flex: 1;
+            min-width: 180px;
+        }
+        .step-icon {
+            background: #ff6b8b;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 32px;
+        }
+
+        /* የስኬት ታሪኮች */
+        .testimonial {
+            background: rgba(255,255,255,0.05);
+            border-radius: 24px;
+            padding: 20px;
+            font-style: italic;
+        }
+
+        /* ፉተር */
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            padding: 25px;
+            border-top: 1px solid rgba(255,107,139,0.3);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .social-icons a {
+            color: #ffb6c7;
+            margin: 0 10px;
+            font-size: 22px;
+            transition: 0.2s;
+        }
+        .social-icons a:hover { color: #ffd700; }
+
+        @media (max-width: 700px) {
+            .sticky-header { flex-direction: column; gap: 12px; }
+            .nav-links { flex-wrap: wrap; justify-content: center; }
+            .hero h2 { font-size: 32px; }
+        }
+        .hide { display: none; }
+        .error { color: #ff9999; font-size: 13px; margin-top: -10px; margin-bottom: 12px; }
     </style>
 </head>
 <body>
-<div class="container" id="app">
-    <header>
-        <h1>🌍 World Dating</h1>
-        <div class="tag">ፍቅር ድንበር የለውም</div>
-    </header>
+<div class="loader-wrapper" id="loader">
+    <div class="loader"></div>
+</div>
 
-    <!-- ሁሉም ገፆች እዚህ ይታያሉ -->
-    <div id="page-content"></div>
+<div class="app-container" id="app">
+    <div class="sticky-header">
+        <div class="logo">
+            <h1><i class="fas fa-globe-americas"></i> World Dating</h1>
+            <p>ፍቅር ድንበር የለውም ✨</p>
+        </div>
+        <div class="nav-links" id="navLinks">
+            <!-- በJS ይሞላል -->
+        </div>
+        <div class="user-widget" id="userWidget"></div>
+    </div>
+
+    <div id="mainContent"></div>
 
     <footer>
-        © 2026 World Dating | ፍቅር ያሸንፋል 💖
+        <div>© 2026 World Dating | ፍቅር ያሸንፋል 💖</div>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-telegram"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+        </div>
     </footer>
 </div>
 
 <script>
-    // ---------- የውሂብ አያያዝ ----------
-    let currentUser = null;          // የገባው ተጠቃሚ ነገር
-    let allUsers = [];               // ሁሉም ተመዝጋቢዎች
-    let currentTab = "home";        // home, profile, match
+    // ---------- ውሂብ አያያዝ ----------
+    let currentUser = null;
+    let allUsers = [];
+    let currentTab = "home";
+    const STORAGE_KEY = "world_dating_pro_users";
 
-    // ማህደር ቁልፍ (localStorage)
-    const STORAGE_KEY = "world_dating_users";
-
-    // መጀመሪያ የተቀመጡ ሙከራ ተጠቃሚዎች (ለሙከራ)
     function loadStoredData() {
         const stored = localStorage.getItem(STORAGE_KEY);
         if(stored) {
             allUsers = JSON.parse(stored);
         } else {
-            // አንዳንድ ምሳሌ ተጠቃሚዎች
             allUsers = [
-                { id: "u1", fullname: "አይሻ አህመድ", telegram: "@AishaLove", gender: "ሴት", age: 24, photo: "👩🏾", phone: "0912345678", password: "1234", liked: [], receivedLikes: [], lastLogin: Date.now() },
-                { id: "u2", fullname: "ናትናኤል በቀለ", telegram: "@NattyD", gender: "ወንድ", age: 27, photo: "🧔🏾", phone: "0922334455", password: "abcd", liked: [], receivedLikes: [], lastLogin: Date.now() - 86400000*2 },
-                { id: "u3", fullname: "ሰላም ኃይሉ", telegram: "@SelamH", gender: "ሴት", age: 22, photo: "👩🏽", phone: "0933112233", password: "selam", liked: [], receivedLikes: [], lastLogin: Date.now() }
+                { id: "u1", fullname: "አይሻ አህመድ", telegram: "@AishaLove", gender: "ሴት", age: 24, photo: "👩🏾", phone: "0912345678", password: "1234", liked: [], receivedLikes: [], lastLogin: Date.now(), isOnline: true },
+                { id: "u2", fullname: "ናትናኤል በቀለ", telegram: "@NattyD", gender: "ወንድ", age: 27, photo: "🧔🏾", phone: "0922334455", password: "abcd", liked: [], receivedLikes: [], lastLogin: Date.now() - 3600000, isOnline: false },
+                { id: "u3", fullname: "ሰላም ኃይሉ", telegram: "@SelamH", gender: "ሴት", age: 22, photo: "👩🏽", phone: "0933112233", password: "selam", liked: [], receivedLikes: [], lastLogin: Date.now(), isOnline: true }
             ];
             saveToLocal();
         }
-        // እንዲሁም የአሁን ተጠቃሚ session ማንም የለም
         const savedSession = sessionStorage.getItem("currentUserId");
         if(savedSession) {
             const found = allUsers.find(u => u.id === savedSession);
             if(found) currentUser = found;
         }
     }
+    function saveToLocal() { localStorage.setItem(STORAGE_KEY, JSON.stringify(allUsers)); }
+    function saveCurrentUserToSession() { if(currentUser) sessionStorage.setItem("currentUserId", currentUser.id); else sessionStorage.removeItem("currentUserId"); }
 
-    function saveToLocal() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(allUsers));
-    }
-
-    function saveCurrentUserToSession() {
-        if(currentUser) sessionStorage.setItem("currentUserId", currentUser.id);
-        else sessionStorage.removeItem("currentUserId");
-    }
-
-    // መግቢያ / ምዝገባ ሎጂክ
-    function handleLoginOrRegister(telegramInput, genderVal, ageVal, photoVal, phoneVal, passwordVal, isRegisterMode) {
-        if(!telegramInput.trim()) return "እባክዎ የቴሌግራም ስም ያስገቡ! (ለምሳሌ @username)";
-        if(isRegisterMode) {
-            if(!genderVal) return "ፆታ ይምረጡ";
-            if(!ageVal || ageVal<18) return "ዕድሜ ቢያንስ 18 መሆን አለበት";
-            if(!phoneVal.trim()) return "ስልክ ቁጥር ያስፈልጋል";
-            if(!passwordVal.trim()) return "የይለፍ ቃል ያስገቡ";
-            // ተመሳሳይ ቴሌግራም አለ?
-            const exists = allUsers.find(u => u.telegram.toLowerCase() === telegramInput.toLowerCase());
-            if(exists) return "ይህ የቴሌግራም ስም አስቀድሞ ተመዝግቧል!";
-            // አዲስ ተጠቃሚ ፍጠር
-            const newId = "u"+Date.now()+Math.random();
+    // ምዝገባ/ግባ
+    function handleLoginOrRegister(telegram, gender, age, photo, phone, password, isRegister) {
+        if(!telegram.trim()) return "የቴሌግራም ስም ያስፈልጋል";
+        if(isRegister) {
+            if(!gender) return "ፆታ ይምረጡ";
+            if(!age || age<18) return "ዕድሜ ቢያንስ 18";
+            if(!phone) return "ስልክ ቁጥር ያስፈልጋል";
+            if(!password) return "የይለፍ ቃል ያስገቡ";
+            if(allUsers.find(u=>u.telegram.toLowerCase()===telegram.toLowerCase())) return "የቴሌግራም ስም አለ";
             const newUser = {
-                id: newId,
-                fullname: telegramInput,   // ሙሉ ስም ሳይሆን ቴሌግራም ስማቸውን እንደ ማንነት
-                telegram: telegramInput,
-                gender: genderVal,
-                age: parseInt(ageVal),
-                photo: photoVal || (genderVal === "ሴት" ? "👩" : "👨"),
-                phone: phoneVal,
-                password: passwordVal,
-                liked: [],
-                receivedLikes: [],
-                lastLogin: Date.now()
+                id: "u"+Date.now()+Math.random(),
+                fullname: telegram,
+                telegram, gender, age: parseInt(age), photo: photo || (gender==="ሴት"?"👩":"👨"), phone, password,
+                liked: [], receivedLikes: [], lastLogin: Date.now(), isOnline: true
             };
             allUsers.push(newUser);
             saveToLocal();
@@ -280,13 +426,11 @@
             saveCurrentUserToSession();
             return "SUCCESS";
         } else {
-            // ሎጂን ሞድ: ቴሌግራም እና ፓስዎርድ ብቻ
-            const user = allUsers.find(u => u.telegram.toLowerCase() === telegramInput.toLowerCase());
-            if(!user) return "የቴሌግራም ስም አልተገኘም! በመጀመሪያ ይመዝገቡ";
-            if(user.password !== passwordVal) return "የይለፍ ቃል ተሳስቷል!";
-            // ከ 1 ቀን በላይ ቆይቶ ሲገባ አዲስ ፓስዎርድ አይጠይቅም (ነገር ግን መስፈርቱን ለማሟላት የለውጥ አማራጭ? በውስጡ ቀድሞ ያስገቡት ፓስዎርድ ብቻ ነው የሚፈቀደው)
-            // እንዲሁም lastLogin አዘምን
+            const user = allUsers.find(u=>u.telegram.toLowerCase()===telegram.toLowerCase());
+            if(!user) return "ተጠቃሚ አልተገኘም";
+            if(user.password !== password) return "የይለፍ ቃል ተሳስቷል";
             user.lastLogin = Date.now();
+            user.isOnline = true;
             saveToLocal();
             currentUser = user;
             saveCurrentUserToSession();
@@ -294,205 +438,154 @@
         }
     }
 
-    // ልብ መላክ (like)
-    function sendLike(targetUserId) {
+    function sendLike(targetId) {
         if(!currentUser) return;
-        const target = allUsers.find(u => u.id === targetUserId);
-        if(!target) return;
-        if(currentUser.liked.includes(targetUserId)) {
-            alert("ቀድሞውንም ልብ ልከዋል 💖");
-            return;
-        }
-        currentUser.liked.push(targetUserId);
+        const target = allUsers.find(u=>u.id===targetId);
+        if(!target || currentUser.liked.includes(targetId)) { alert("ቀድሞ ልብ ልከዋል"); return; }
+        currentUser.liked.push(targetId);
         target.receivedLikes.push(currentUser.id);
         saveToLocal();
-        render(); // እንደገና ማሳየት
+        // ልብ አኒሜሽን ለማሳየት
+        const btn = document.querySelector(`.like-btn[data-id='${targetId}']`);
+        if(btn) btn.classList.add("heart-animation");
+        setTimeout(()=> btn?.classList.remove("heart-animation"), 400);
+        render();
     }
-
-    // መልእክት መፃፍ (በአላርት ማሳወቅ ቀላል)
-    function sendMessageTo(targetName, targetTelegram) {
-        let msg = prompt(`ለ ${targetName} መልእክት ይጻፉ (በቴሌግራም በኩል ይድረሳል):`);
-        if(msg && msg.trim()) {
-            alert(`📨 መልእክትዎ ለ ${targetName} (${targetTelegram}) ተልኳል። ምላሽ በቅርቡ ያገኛሉ።`);
-        }
+    function sendMessageTo(telegramName) {
+        let msg = prompt(`ለ ${telegramName} መልእክት ይጻፉ (በቴሌግራም ይደርሳል):`);
+        if(msg) alert(`📨 መልእክትዎ ተልኳል።`);
     }
-
-    // ተቃራኒ ፆታ ሰዎችን ማምጣት (currentUser ካለ)
     function getOppositeGenderUsers() {
         if(!currentUser) return [];
         const opposite = currentUser.gender === "ወንድ" ? "ሴት" : "ወንድ";
-        return allUsers.filter(u => u.id !== currentUser.id && u.gender === opposite);
+        return allUsers.filter(u=> u.id !== currentUser.id && u.gender === opposite);
+    }
+    function getMyLikers() { return currentUser ? currentUser.receivedLikes.map(id=>allUsers.find(u=>u.id===id)).filter(Boolean) : []; }
+
+    // ሄሮ ክፍል + ስኬት ታሪኮች
+    function renderHero() {
+        return `<div class="hero">
+            <h2>ፍቅርህን አግኝ 🌍</h2>
+            <p>በዓለም ዙሪያ ከሚገኙ ልዩ ሰዎች ጋር ተገናኙ</p>
+            ${!currentUser ? `<button id="scrollToFormBtn" style="width:auto; padding:12px 32px;">✨ አሁን ይመዝገቡ</button>` : ''}
+        </div>`;
+    }
+    function renderHowItWorks() {
+        return `<div class="card"><h3><i class="fas fa-compass"></i> እንዴት እንደሚሰራ</h3><div class="steps">
+            <div class="step"><div class="step-icon"><i class="fas fa-user-plus"></i></div><h4>1. ይመዝገቡ</h4><p>መገለጫዎን ይፍጠሩ</p></div>
+            <div class="step"><div class="step-icon"><i class="fas fa-heart"></i></div><h4>2. ይውደዱ</h4><p>ልብ ይላኩ ለሚስቡዎት</p></div>
+            <div class="step"><div class="step-icon"><i class="fas fa-comments"></i></div><h4>3. ይወያዩ</h4><p>መልእክት ይለዋወጡ</p></div>
+        </div></div>`;
+    }
+    function renderSuccessStories() {
+        return `<div class="card"><h3><i class="fas fa-star"></i> የስኬት ታሪኮች</h3><div class="flex-row">
+            <div class="testimonial">⭐ "በዚህ መድረክ የህይወት ጓደኛዬን አገኘሁ!" - ሄለን</div>
+            <div class="testimonial">💖 "ከውጭ አገር ካለ ፍቅረኛዬ ጋር አገናኘኝ" - ዳዊት</div>
+        </div></div>`;
     }
 
-    // የተወደዱ ሰዎች (ልብ የላኩልኝ)
-    function getMyLikers() {
-        if(!currentUser) return [];
-        return currentUser.receivedLikes.map(likerId => allUsers.find(u => u.id === likerId)).filter(Boolean);
-    }
-
-    // ገፅ ማሳያ
     function renderHome() {
         if(!currentUser) {
-            // የመግቢያ / ምዝገባ ቅጽ
-            return `
-                <div class="card">
-                    <h3>🔐 ወደ መድረክ ይግቡ ወይም ይመዝገቡ</h3>
-                    <div id="auth-message" class="error"></div>
-                    <input type="text" id="telegramReg" placeholder="የቴሌግራም ስም (ለምሳሌ @john)" autocomplete="off">
-                    <div class="flex-row">
-                        <select id="genderReg">
-                            <option value="">ፆታ ይምረጡ</option>
-                            <option>ወንድ</option>
-                            <option>ሴት</option>
-                        </select>
-                        <input type="number" id="ageReg" placeholder="ዕድሜ">
-                    </div>
-                    <input type="text" id="photoReg" placeholder="ፎቶ (ኢሞጂ ወይም አይኮን)" value="🧑">
-                    <input type="tel" id="phoneReg" placeholder="ስልክ ቁጥር">
-                    <input type="password" id="passwordReg" placeholder="የይለፍ ቃል">
-                    <button id="registerBtn">✨ አዲስ መመዝገቢያ</button>
-                    <hr>
-                    <h4>ቀድሞ መዝግበው ከሆነ 👇</h4>
-                    <input type="text" id="telegramLogin" placeholder="የቴሌግራም ስም">
-                    <input type="password" id="passwordLogin" placeholder="የይለፍ ቃል">
-                    <button id="loginBtn">🔑 ግባ</button>
-                </div>
-            `;
+            return `<div id="authCard" class="card">
+                <h3><i class="fas fa-lock"></i> መግቢያ / ምዝገባ</h3>
+                <div id="authMsg" class="error"></div>
+                <div class="input-group"><i class="fas fa-paper-plane"></i><input type="text" id="telegramReg" placeholder="የቴሌግራም ስም (ለምሳሌ @john)"></div>
+                <div class="flex-row"><div class="input-group" style="flex:1"><i class="fas fa-venus-mars"></i><select id="genderReg"><option value="">ፆታ</option><option>ወንድ</option><option>ሴት</option></select></div>
+                <div class="input-group" style="flex:1"><i class="fas fa-calendar-alt"></i><input type="number" id="ageReg" placeholder="ዕድሜ"></div></div>
+                <div class="input-group"><i class="fas fa-image"></i><input type="text" id="photoReg" placeholder="ፎቶ (ኢሞጂ)" value="🧑"></div>
+                <div class="input-group"><i class="fas fa-phone"></i><input type="tel" id="phoneReg" placeholder="ስልክ ቁጥር"></div>
+                <div class="input-group"><i class="fas fa-key"></i><input type="password" id="passwordReg" placeholder="የይለፍ ቃል"></div>
+                <button id="registerBtn"><i class="fas fa-user-plus"></i> አዲስ መመዝገቢያ</button>
+                <hr style="margin:15px 0; border-color:#ff8da1;">
+                <h4>ቀድሞ መዝግበው?</h4>
+                <div class="input-group"><i class="fas fa-paper-plane"></i><input type="text" id="telegramLogin" placeholder="የቴሌግራም ስም"></div>
+                <div class="input-group"><i class="fas fa-key"></i><input type="password" id="passwordLogin" placeholder="የይለፍ ቃል"></div>
+                <button id="loginBtn"><i class="fas fa-sign-in-alt"></i> ግባ</button>
+            </div>`;
         } else {
-            // ሆም ገፅ: ተቃራኒ ፆታ ሰዎች ይታያሉ + ልብ እና መፃፊያ
-            const oppositeUsers = getOppositeGenderUsers();
-            let usersHtml = `<div class="card"><h3>💘 ሊያገኟቸው የሚችሏቸው (${currentUser.gender === "ወንድ" ? "ሴቶች" : "ወንዶች"})</h3>`;
-            if(oppositeUsers.length === 0) {
-                usersHtml += `<p>እስካሁን ተመዝጋቢ የለም ተቃራኒ ፆታ። ቆይተው ይመልሱ</p>`;
-            } else {
-                oppositeUsers.forEach(u => {
-                    const alreadyLiked = currentUser.liked.includes(u.id);
-                    usersHtml += `
-                        <div class="match-user">
-                            <div class="match-avatar">${u.photo || (u.gender === 'ሴት' ? '👩' : '👨')}</div>
-                            <div style="flex:1">
-                                <strong>${u.telegram}</strong> (${u.age}) ${u.gender}<br>
-                                <small>📞 ${u.phone}</small>
-                            </div>
-                            <div>
-                                ${!alreadyLiked ? `<button class="like-btn" data-id="${u.id}" data-action="like">❤️ ልብ ላክ</button>` : `<button disabled style="background:gray;">❤️ ተልኳል</button>`}
-                                <button class="msg-btn" data-id="${u.id}" data-name="${u.telegram}" data-tg="${u.telegram}" data-action="msg">💬 ጻፍ</button>
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-            // ልብ የላኩልኝ ሰዎች ክፍል
-            const myLikers = getMyLikers();
-            let likesHtml = `<div class="card"><h3>💌 ልብ የላኩልዎት</h3>`;
-            if(myLikers.length === 0) likesHtml += `<p>እስካሁን ማንም አልወደደዎትም</p>`;
-            else {
-                myLikers.forEach(liker => {
-                    likesHtml += `<div class="match-user"><div class="match-avatar">${liker.photo}</div><div><strong>${liker.telegram}</strong> (${liker.age}) ${liker.gender}<br>❤️ ወዶታል!</div><div><button class="msg-btn" data-id="${liker.id}" data-name="${liker.telegram}" data-tg="${liker.telegram}" data-action="msg">💬 መልስ ጻፍ</button></div></div>`;
-                });
-            }
-            likesHtml += `</div>`;
-            return usersHtml + likesHtml;
-        }
-    }
-
-    function renderProfile() {
-        if(!currentUser) return `<div class="card">እባክዎ መጀመሪያ ይግቡ <button onclick="location.reload()">መግቢያ</button></div>`;
-        return `
-            <div class="card profile-card">
-                <div class="profile-img">${currentUser.photo || '👤'}</div>
-                <h3>${currentUser.telegram}</h3>
-                <p>📞 ${currentUser.phone}</p>
-                <p>⚥ ${currentUser.gender}  |  🎂 ${currentUser.age} ዓመት</p>
-                <p>🔑 የይለፍ ቃልዎ: ${'•'.repeat(currentUser.password.length)}</p>
-                <button id="logoutBtn" class="btn-outline">🚪 ውጣ</button>
-            </div>
-        `;
-    }
-
-    function renderMatch() {
-        if(!currentUser) return `<div class="card">መጀመሪያ ይግቡ</div>`;
-        const likedByMeIds = currentUser.liked;
-        const matchedUsers = allUsers.filter(u => likedByMeIds.includes(u.id) && u.receivedLikes.includes(currentUser.id));
-        let html = `<div class="card"><h3>💞 የሚዛመዱ (Mutual Likes)</h3>`;
-        if(matchedUsers.length === 0) html += `<p>እስካሁን አንዳች የጋራ ልብ ልውውጥ የለም። ሰዎችን ይውደዱ!</p>`;
-        else {
-            matchedUsers.forEach(m => {
-                html += `<div class="match-user"><div class="match-avatar">${m.photo}</div><div><strong>${m.telegram}</strong> (${m.age})<br>📞 ${m.phone}</div><div><button class="msg-btn" data-id="${m.id}" data-name="${m.telegram}" data-tg="${m.telegram}" data-action="msg">💌 መልእክት ጻፍ</button></div></div>`;
+            let oppositeUsers = getOppositeGenderUsers();
+            let html = renderHero() + renderHowItWorks();
+            html += `<div class="card"><h3><i class="fas fa-users"></i> ሊያገኟቸው የሚችሏቸው (${currentUser.gender === "ወንድ" ? "ሴቶች" : "ወንዶች"})</h3>`;
+            if(oppositeUsers.length===0) html+=`<p>እስካሁን ተመዝጋቢ የለም</p>`;
+            else oppositeUsers.forEach(u=>{
+                const likedAlready = currentUser.liked.includes(u.id);
+                html+=`<div class="user-card"><div class="user-avatar">${u.photo || '👤'}</div><div><strong>${u.telegram}</strong> (${u.age})<br><small><i class="fas fa-phone"></i> ${u.phone}</small></div>
+                <div class="action-buttons">${!likedAlready ? `<button class="icon-btn like-btn" data-id="${u.id}"><i class="fas fa-heart"></i> ልብ</button>` : `<button disabled style="background:gray;"><i class="fas fa-check"></i> ተልኳል</button>`}
+                <button class="icon-btn msg-btn" data-tg="${u.telegram}"><i class="fas fa-comment"></i> ጻፍ</button></div></div>`;
             });
+            html+=`</div>`;
+            let likers = getMyLikers();
+            if(likers.length>0){
+                html+=`<div class="card"><h3><i class="fas fa-heartbeat"></i> ልብ የላኩልዎት</h3>`;
+                likers.forEach(l=>{ html+=`<div class="user-card"><div class="user-avatar">${l.photo}</div><div><strong>${l.telegram}</strong><br>❤️ ወዶታል</div><div><button class="icon-btn msg-btn" data-tg="${l.telegram}"><i class="fas fa-reply"></i> መልስ ጻፍ</button></div></div>`; });
+                html+=`</div>`;
+            }
+            html+= renderSuccessStories();
+            return html;
         }
-        html += `</div>`;
+    }
+    function renderProfile() {
+        if(!currentUser) return `<div class="card">እባክዎ ይግቡ</div>`;
+        return `<div class="card" style="text-align:center"><div class="user-avatar" style="margin:0 auto 15px; width:100px;height:100px;font-size:52px;">${currentUser.photo}</div>
+        <h2>${currentUser.telegram}</h2><p><i class="fas fa-phone"></i> ${currentUser.phone}</p><p><i class="fas fa-venus-mars"></i> ${currentUser.gender} | 🎂 ${currentUser.age} ዓመት</p>
+        <button id="logoutBtn" class="btn-outline"><i class="fas fa-sign-out-alt"></i> ውጣ</button></div>`;
+    }
+    function renderMatch() {
+        if(!currentUser) return `<div class="card">መግቢያ ያስፈልጋል</div>`;
+        const matched = allUsers.filter(u=> currentUser.liked.includes(u.id) && u.receivedLikes.includes(currentUser.id));
+        let html = `<div class="card"><h3><i class="fas fa-handshake"></i> የሚዛመዱ (Mutual Matches)</h3>`;
+        if(matched.length===0) html+=`<p>እስካሁን የጋራ ልብ የለም። ሰዎችን ይውደዱ!</p>`;
+        else matched.forEach(m=>{ html+=`<div class="user-card"><div class="user-avatar">${m.photo}</div><div><strong>${m.telegram}</strong><br>📞 ${m.phone}</div><div><button class="icon-btn msg-btn" data-tg="${m.telegram}"><i class="fas fa-envelope"></i> መልእክት</button></div></div>`;});
+        html+=`</div>`;
         return html;
     }
 
-    // ዋና ማሳያ + ናቭ ቁልፎች
     function render() {
-        const pageDiv = document.getElementById("page-content");
-        let mainContent = "";
-        if(currentUser) {
-            mainContent += `
-                <div class="nav-buttons">
-                    <button id="navHome" class="${currentTab === 'home' ? 'active-tab' : ''}">🏠 Home</button>
-                    <button id="navProfile" class="${currentTab === 'profile' ? 'active-tab' : ''}">👤 Profile</button>
-                    <button id="navMatch" class="${currentTab === 'match' ? 'active-tab' : ''}">💖 Match</button>
-                </div>
-            `;
+        const navDiv = document.getElementById("navLinks");
+        const widgetDiv = document.getElementById("userWidget");
+        const mainDiv = document.getElementById("mainContent");
+        if(currentUser){
+            navDiv.innerHTML = `<button class="nav-btn ${currentTab==='home'?'active':''}" data-tab="home"><i class="fas fa-home"></i> Home</button>
+                                <button class="nav-btn ${currentTab==='profile'?'active':''}" data-tab="profile"><i class="fas fa-user-circle"></i> Profile</button>
+                                <button class="nav-btn ${currentTab==='match'?'active':''}" data-tab="match"><i class="fas fa-gem"></i> Match</button>`;
+            widgetDiv.innerHTML = `<div class="notification-bell"><i class="fas fa-bell"></i></div><div class="avatar-icon" id="profileQuick">${currentUser.photo}</div>`;
+        } else {
+            navDiv.innerHTML = `<button class="nav-btn" data-tab="home"><i class="fas fa-home"></i> Home</button>`;
+            widgetDiv.innerHTML = `<div></div>`;
         }
-        if(currentTab === 'home') mainContent += renderHome();
-        else if(currentTab === 'profile') mainContent += renderProfile();
-        else if(currentTab === 'match') mainContent += renderMatch();
-        
-        pageDiv.innerHTML = mainContent;
-        
-        // ክስተቶች ማያያዝ
-        if(currentUser) {
-            document.getElementById("navHome")?.addEventListener("click", () => { currentTab = "home"; render(); });
-            document.getElementById("navProfile")?.addEventListener("click", () => { currentTab = "profile"; render(); });
-            document.getElementById("navMatch")?.addEventListener("click", () => { currentTab = "match"; render(); });
-            document.getElementById("logoutBtn")?.addEventListener("click", () => { currentUser = null; saveCurrentUserToSession(); currentTab = "home"; render(); });
+        let content = "";
+        if(currentTab === 'home') content = renderHome();
+        else if(currentTab === 'profile') content = renderProfile();
+        else if(currentTab === 'match') content = renderMatch();
+        mainDiv.innerHTML = content;
+
+        document.querySelectorAll(".nav-btn").forEach(btn=>{
+            btn.addEventListener("click",(e)=>{ currentTab = btn.getAttribute("data-tab"); render(); });
+        });
+        if(currentUser){
+            document.getElementById("logoutBtn")?.addEventListener("click",()=>{ currentUser=null; saveCurrentUserToSession(); currentTab="home"; render(); });
+            document.getElementById("profileQuick")?.addEventListener("click",()=>{ currentTab="profile"; render(); });
         }
-        
-        // ለተጠቃሚ እርምጃዎች ተመሳሳይ ክስተት (like, msg)
-        document.querySelectorAll(".like-btn").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                const userId = btn.getAttribute("data-id");
-                if(userId) sendLike(userId);
+        document.querySelectorAll(".like-btn").forEach(btn=>{ btn.addEventListener("click",()=> sendLike(btn.getAttribute("data-id"))); });
+        document.querySelectorAll(".msg-btn").forEach(btn=>{ btn.addEventListener("click",()=> sendMessageTo(btn.getAttribute("data-tg"))); });
+        if(!currentUser){
+            document.getElementById("registerBtn")?.addEventListener("click",()=>{
+                let res = handleLoginOrRegister(document.getElementById("telegramReg").value, document.getElementById("genderReg").value, document.getElementById("ageReg").value, document.getElementById("photoReg").value, document.getElementById("phoneReg").value, document.getElementById("passwordReg").value, true);
+                if(res==="SUCCESS") render(); else document.getElementById("authMsg").innerText = res;
             });
-        });
-        document.querySelectorAll(".msg-btn").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                const name = btn.getAttribute("data-name") || "";
-                const tg = btn.getAttribute("data-tg") || "";
-                sendMessageTo(name, tg);
+            document.getElementById("loginBtn")?.addEventListener("click",()=>{
+                let res = handleLoginOrRegister(document.getElementById("telegramLogin").value, null,null,null,null, document.getElementById("passwordLogin").value, false);
+                if(res==="SUCCESS") render(); else document.getElementById("authMsg").innerText = res;
             });
-        });
-        
-        // ምዝገባ / መግቢያ አያያዝ ከሆነ እና currentUser ባዶ ከሆነ
-        if(!currentUser) {
-            document.getElementById("registerBtn")?.addEventListener("click", () => {
-                const tel = document.getElementById("telegramReg").value;
-                const gen = document.getElementById("genderReg").value;
-                const age = document.getElementById("ageReg").value;
-                const photo = document.getElementById("photoReg").value;
-                const phone = document.getElementById("phoneReg").value;
-                const pwd = document.getElementById("passwordReg").value;
-                const res = handleLoginOrRegister(tel, gen, age, photo, phone, pwd, true);
-                if(res === "SUCCESS") render();
-                else document.getElementById("auth-message").innerText = res;
-            });
-            document.getElementById("loginBtn")?.addEventListener("click", () => {
-                const tel = document.getElementById("telegramLogin").value;
-                const pwd = document.getElementById("passwordLogin").value;
-                const res = handleLoginOrRegister(tel, null, null, null, null, pwd, false);
-                if(res === "SUCCESS") render();
-                else document.getElementById("auth-message").innerText = res;
-            });
+            document.getElementById("scrollToFormBtn")?.addEventListener("click",()=>{ document.getElementById("authCard")?.scrollIntoView({behavior:"smooth"}); });
         }
     }
 
-    // መጀመሪያ ውሂብ ጫን
-    loadStoredData();
-    render();
+    window.onload = ()=>{
+        loadStoredData();
+        setTimeout(()=>{ document.getElementById("loader").style.opacity="0"; setTimeout(()=>document.getElementById("loader").style.display="none",500); }, 800);
+        render();
+    };
 </script>
 </body>
 </html>
