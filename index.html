@@ -1,229 +1,260 @@
 <!DOCTYPE html>
-<html lang="am">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DAI AVIATOR - FIXED</title>
+    <title>DAI AVIATOR PREMIUM</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;700&display=swap');
-        
-        body { background-color: #0b0e11; color: white; font-family: 'Poppins', sans-serif; margin: 0; user-select: none; overflow: hidden; }
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;900&family=Orbitron:wght@700&display=swap');
+        body { background-color: #0b0e11; color: white; font-family: 'Roboto', sans-serif; margin: 0; user-select: none; overflow-x: hidden; }
         .font-game { font-family: 'Orbitron', sans-serif; }
 
         /* Game Board */
         .aviator-screen { 
-            background: radial-gradient(circle at bottom left, #1a0b12 0%, #000 100%);
-            height: 320px; position: relative; border-radius: 15px; overflow: hidden; border: 2px solid #2d1a24;
-            margin-top: 10px;
+            background: radial-gradient(circle at bottom left, #1c0a12 0%, #000 100%);
+            height: 350px; position: relative; border-radius: 15px; overflow: hidden; border: 2px solid #2d1a24;
         }
         
-        /* Red Plane SVG Animation */
+        /* Realistic Large Plane */
         .plane-wrapper {
-            position: absolute; bottom: 20px; left: 20px; width: 70px; z-index: 50;
+            position: absolute; bottom: 20px; left: 20px; width: 100px; z-index: 50;
+            filter: drop-shadow(0 0 20px #e11d48);
             transition: transform 0.1s linear;
         }
 
-        /* Multiplier Text */
-        .multi-display { font-size: 4rem; font-weight: 900; z-index: 100; position: relative; }
+        .multi-display { font-size: 5rem; font-weight: 900; z-index: 100; position: relative; color: white; }
 
-        /* Betting Buttons */
-        .btn-bet { background-color: #28a745; border-radius: 12px; font-weight: 800; transition: 0.2s; color: white; }
-        .btn-cashout { background-color: #ff9800; animation: pulse 1s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        /* Buttons */
+        .btn-bet { background-color: #28a745; border-radius: 12px; font-weight: 800; transition: 0.2s; }
+        .btn-cashout { background-color: #ff9800; animation: pulse 1s infinite; box-shadow: 0 0 20px #ff980088; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
 
-        .control-panel { background-color: #1c2127; border-radius: 15px; border: 1px solid #2d3748; }
-        input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+        /* Sections */
+        .page { display: none; padding-bottom: 80px; }
+        .active-page { display: block; }
+        .nav-bar { background: #1c2127; border-top: 1px solid #333; position: fixed; bottom: 0; width: 100%; height: 70px; z-index: 1000; display: flex; justify-content: space-around; align-items: center; }
+        
+        .list-item { background: #14191f; border-bottom: 1px solid #222; font-size: 11px; }
+        .win-row { color: #2ecc71; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="p-3 flex justify-between items-center bg-[#1c2127] border-b border-gray-800">
-        <span class="text-red-600 font-black italic text-2xl tracking-tighter">Aviator</span>
-        <div class="bg-black px-4 py-1.5 rounded-full border border-green-900 flex items-center gap-2">
-            <span id="main-balance" class="text-green-500 font-bold">50,000.00</span>
-            <span class="text-[10px] text-gray-500">ETB</span>
+    <div class="p-3 flex justify-between items-center bg-[#1c2127] border-b border-gray-800 sticky top-0 z-[500]">
+        <div class="flex items-center gap-2">
+            <span class="text-red-600 font-black italic text-2xl tracking-tighter">Aviator</span>
+        </div>
+        <div class="flex items-center gap-3">
+            <div onclick="showPage('wallet')" class="bg-black px-4 py-1.5 rounded-full border border-green-900 cursor-pointer">
+                <span id="main-balance" class="text-green-500 font-bold">50,000.00</span> <span class="text-[10px] text-gray-400">ETB</span>
+            </div>
+            <i class="fa-solid fa-user text-gray-400 text-xl" onclick="showPage('profile')"></i>
         </div>
     </div>
 
-    <div class="p-4 max-w-md mx-auto">
-        <div class="aviator-screen flex items-center justify-center">
-            <div id="game-status" class="absolute top-4 text-gray-500 font-bold text-[10px] uppercase tracking-widest">በመጠባበቅ ላይ...</div>
-            <div id="multiplier-val" class="multi-display font-game text-white">1.00x</div>
+    <section id="game" class="page active-page">
+        <div class="p-4 flex flex-col md:flex-row gap-4">
             
-            <div id="plane-box" class="plane-wrapper">
-                <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10,30 L40,30 L55,10 L70,10 L60,30 L85,30 C92,30 95,35 85,40 L60,40 L70,55 L55,55 L40,40 L10,40 Z" fill="#e11d48" stroke="white" stroke-width="2"/>
-                    <circle cx="15" cy="35" r="3" fill="white" />
-                </svg>
-            </div>
-        </div>
-
-        <div class="mt-4 space-y-3">
-            <div class="control-panel p-3">
-                <div class="flex items-center gap-3">
-                    <div class="bg-black flex flex-col items-center rounded-lg p-1 w-24">
-                        <div class="flex items-center gap-2">
-                            <button onclick="changeVal('amt1', -1)" class="text-gray-400 font-bold">−</button>
-                            <input id="amt1" type="number" value="10" class="bg-transparent text-white text-center w-10 font-bold outline-none">
-                            <button onclick="changeVal('amt1', 1)" class="text-gray-400 font-bold">+</button>
-                        </div>
-                        <div class="flex gap-1 mt-1">
-                            <button onclick="setVal('amt1', 50)" class="bg-gray-800 text-[8px] px-1 rounded">50</button>
-                            <button onclick="setVal('amt1', 100)" class="bg-gray-800 text-[8px] px-1 rounded">100</button>
-                        </div>
+            <div class="flex-1">
+                <div class="aviator-screen flex items-center justify-center">
+                    <div id="game-status" class="absolute top-4 text-gray-500 font-bold text-xs uppercase tracking-widest">Waiting for next round...</div>
+                    <div id="multiplier-val" class="multi-display font-game">1.00x</div>
+                    
+                    <div id="plane-box" class="plane-wrapper">
+                        <svg viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5,25 L35,25 L45,5 L65,5 L55,25 L85,25 C95,25 98,30 85,35 L55,35 L65,45 L45,45 L35,35 L5,35 Z" fill="#e11d48" stroke="white" stroke-width="1"/>
+                            <rect x="20" y="22" width="15" height="4" fill="white" opacity="0.5"/>
+                            <circle cx="75" cy="30" r="2" fill="yellow"/>
+                        </svg>
                     </div>
-                    <button id="btn1" onclick="handleAction(1)" class="btn-bet flex-1 py-4 text-lg">ተወራረድ<br><span id="label1" class="text-[10px] font-normal">10.00 ETB</span></button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-[#1c2127] p-4 rounded-2xl border border-gray-800 flex items-center gap-4">
+                        <div class="flex flex-col items-center bg-black p-2 rounded-xl">
+                            <div class="flex items-center gap-3 mb-2">
+                                <button onclick="adj('amt1', -1)" class="text-gray-400 text-xl">−</button>
+                                <input id="amt1" type="number" value="10" class="bg-transparent text-white text-center w-12 font-bold outline-none">
+                                <button onclick="adj('amt1', 1)" class="text-gray-400 text-xl">+</button>
+                            </div>
+                            <div class="flex gap-1">
+                                <button onclick="setV('amt1', 100)" class="bg-gray-800 text-[10px] px-2 py-1 rounded">100</button>
+                                <button onclick="setV('amt1', 500)" class="bg-gray-800 text-[10px] px-2 py-1 rounded">500</button>
+                            </div>
+                        </div>
+                        <button id="btn1" onclick="bet(1)" class="btn-bet flex-1 py-5 text-xl">BET<br><span id="l1" class="text-xs font-normal">10.00 ETB</span></button>
+                    </div>
                 </div>
             </div>
 
-            <div class="control-panel p-3">
-                <div class="flex items-center gap-3">
-                    <div class="bg-black flex flex-col items-center rounded-lg p-1 w-24">
-                        <div class="flex items-center gap-2">
-                            <button onclick="changeVal('amt2', -1)" class="text-gray-400 font-bold">−</button>
-                            <input id="amt2" type="number" value="10" class="bg-transparent text-white text-center w-10 font-bold outline-none">
-                            <button onclick="changeVal('amt2', 1)" class="text-gray-400 font-bold">+</button>
-                        </div>
-                        <div class="flex gap-1 mt-1">
-                            <button onclick="setVal('amt2', 50)" class="bg-gray-800 text-[8px] px-1 rounded">50</button>
-                            <button onclick="setVal('amt2', 100)" class="bg-gray-800 text-[8px] px-1 rounded">100</button>
-                        </div>
-                    </div>
-                    <button id="btn2" onclick="handleAction(2)" class="btn-bet flex-1 py-4 text-lg">ተወራረድ<br><span id="label2" class="text-[10px] font-normal">10.00 ETB</span></button>
+            <div class="w-full md:w-64 bg-[#14191f] rounded-2xl border border-gray-800 overflow-hidden h-[400px]">
+                <div class="p-3 bg-black border-b border-gray-800 flex justify-between text-xs font-bold uppercase">
+                    <span>Live Bets</span>
+                    <span id="player-count">131 Players</span>
                 </div>
+                <div id="bet-list" class="overflow-y-auto h-full">
+                    </div>
             </div>
         </div>
+    </section>
+
+    <section id="wallet" class="page p-6">
+        <h2 class="text-2xl font-black mb-8">WALLET & PAYMENTS</h2>
+        <div class="grid gap-4">
+            <div class="bg-gray-900 p-5 rounded-2xl border border-blue-900 flex justify-between items-center cursor-pointer">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center font-bold">TB</div>
+                    <div><p class="font-bold">Telebirr Deposit</p><p class="text-xs text-gray-500">Instant Processing</p></div>
+                </div>
+                <i class="fa-solid fa-chevron-right"></i>
+            </div>
+            <div class="bg-gray-900 p-5 rounded-2xl border border-yellow-700 flex justify-between items-center cursor-pointer">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-yellow-600 rounded-full flex items-center justify-center font-bold">CBE</div>
+                    <div><p class="font-bold">CBE Birr</p><p class="text-xs text-gray-500">Bank Transfer</p></div>
+                </div>
+                <i class="fa-solid fa-chevron-right"></i>
+            </div>
+            <button class="bg-red-600 w-full py-4 rounded-xl font-bold mt-10">WITHDRAW FUNDS</button>
+        </div>
+    </section>
+
+    <div class="nav-bar">
+        <div onclick="showPage('game')" class="nav-item text-red-500"><i class="fa-solid fa-plane-up text-2xl"></i><p class="text-[10px]">Play</p></div>
+        <div onclick="showPage('wallet')" class="nav-item text-gray-500"><i class="fa-solid fa-wallet text-2xl"></i><p class="text-[10px]">Wallet</p></div>
+        <div onclick="showPage('game')" class="nav-item text-gray-500"><i class="fa-solid fa-clock-rotate-left text-2xl"></i><p class="text-[10px]">History</p></div>
     </div>
 
-    <audio id="engine-sound" loop src="https://www.soundjay.com/transportation/sounds/propeller-plane-flying-1.mp3"></audio>
+    <audio id="engine-snd" loop src="https://www.soundjay.com/transportation/sounds/propeller-plane-flying-1.mp3"></audio>
 
     <script>
         let balance = 50000.00;
         let isFlying = false;
         let multiplier = 1.00;
-        let gameInterval;
-        let bets = { 1: { active: false, amt: 0 }, 2: { active: false, amt: 0 } };
+        let activeBet = { active: false, amt: 0 };
+        let gameLoop;
 
-        function changeVal(id, v) {
-            let el = document.getElementById(id);
-            let val = parseInt(el.value);
-            if(val + v > 0) el.value = val + v;
-            updateLabels();
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+            document.getElementById(id).classList.add('active-page');
         }
 
-        function setVal(id, v) {
-            document.getElementById(id).value = v;
-            updateLabels();
+        function adj(id, v) { 
+            let el = document.getElementById(id); 
+            el.value = Math.max(1, parseInt(el.value) + v); 
+            updateLabels(); 
+        }
+        function setV(id, v) { 
+            document.getElementById(id).value = v; 
+            updateLabels(); 
+        }
+        function updateLabels() { 
+            if(!activeBet.active) document.getElementById('l1').innerText = document.getElementById('amt1').value + ".00 ETB"; 
         }
 
-        function updateLabels() {
-            if(!bets[1].active) document.getElementById('label1').innerText = document.getElementById('amt1').value + ".00 ETB";
-            if(!bets[2].active) document.getElementById('label2').innerText = document.getElementById('amt2').value + ".00 ETB";
-        }
+        function bet(n) {
+            let btn = document.getElementById('btn1');
+            let amt = parseInt(document.getElementById('amt1').value);
 
-        function handleAction(n) {
-            let btn = document.getElementById('btn' + n);
-            let amt = parseInt(document.getElementById('amt' + n).value);
-
-            if(!isFlying && !bets[n].active) {
-                if(amt > balance) return alert("በቂ ገንዘብ የለም!");
+            if(!isFlying && !activeBet.active) {
+                if(amt > balance) return alert("Low Balance!");
                 balance -= amt;
-                bets[n].active = true;
-                bets[n].amt = amt;
+                activeBet = { active: true, amt: amt };
+                btn.innerHTML = "WAITING...<br><span class='text-xs'>CANCEL</span>";
                 btn.classList.replace('bg-green-600', 'bg-red-800');
-                btn.innerHTML = "ይሰረዝ<br><span class='text-[10px]'>በመጠባበቅ ላይ</span>";
-                document.getElementById('main-balance').innerText = balance.toLocaleString();
-            } else if (isFlying && bets[n].active) {
-                let win = bets[n].amt * multiplier;
+                updateBal();
+            } else if (isFlying && activeBet.active) {
+                let win = activeBet.amt * multiplier;
                 balance += win;
-                bets[n].active = false;
-                alert(`እንኳን ደስ አለዎት! ${win.toFixed(2)} ETB አሸንፈዋል!`);
-                resetBtn(n);
-                document.getElementById('main-balance').innerText = balance.toLocaleString();
+                activeBet.active = false;
+                alert(`WIN! You got ${win.toFixed(2)} ETB`);
+                resetBtn();
+                updateBal();
             }
         }
 
-        function resetBtn(n) {
-            let btn = document.getElementById('btn' + n);
-            btn.className = "btn-bet flex-1 py-4 text-lg bg-green-600";
-            btn.innerHTML = `ተወራረድ<br><span class="text-[10px] font-normal">${document.getElementById('amt'+n).value}.00 ETB</span>`;
+        function resetBtn() {
+            let btn = document.getElementById('btn1');
+            btn.className = "btn-bet flex-1 py-5 text-xl bg-green-600";
+            btn.innerHTML = `BET<br><span class="text-xs font-normal">${document.getElementById('amt1').value}.00 ETB</span>`;
         }
 
-        function startLoop() {
+        function updateBal() { document.getElementById('main-balance').innerText = balance.toLocaleString(); }
+
+        // Start Cycle
+        function cycle() {
             if(isFlying) return;
             let status = document.getElementById('game-status');
-            let count = 5;
-            let timer = setInterval(() => {
-                status.innerText = `ቀጣይ በረራ በ ${count} ሰከንድ...`;
-                count--;
-                if(count < 0) {
-                    clearInterval(timer);
-                    launch();
-                }
+            let c = 5;
+            let t = setInterval(() => {
+                status.innerText = `NEXT ROUND IN ${c}S...`;
+                if(c-- <= 0) { clearInterval(t); launch(); }
+                generateFakeBets();
             }, 1000);
         }
 
         function launch() {
-            isFlying = true;
-            multiplier = 1.00;
-            document.getElementById('multiplier-val').style.color = "white";
-            document.getElementById('game-status').innerText = "አውሮፕላኑ እየበረረ ነው!";
-            document.getElementById('engine-sound').play();
-
-            // Update buttons to Cash Out
-            for(let i=1; i<=2; i++) {
-                if(bets[i].active) {
-                    let btn = document.getElementById('btn'+i);
-                    btn.classList.replace('bg-red-800', 'btn-cashout');
-                    btn.innerHTML = `ውጣ (CASH OUT)<br><span class='text-[10px]'>${(bets[i].amt * multiplier).toFixed(2)}</span>`;
-                }
+            isFlying = true; multiplier = 1.00;
+            document.getElementById('engine-snd').play();
+            document.getElementById('game-status').innerText = "PLANE IS FLYING";
+            
+            if(activeBet.active) {
+                document.getElementById('btn1').classList.replace('bg-red-800', 'btn-cashout');
+                document.getElementById('btn1').innerHTML = `CASHOUT<br><span>${(activeBet.amt * multiplier).toFixed(2)}</span>`;
             }
 
-            let crashAt = Math.random() < 0.3 ? (1 + Math.random() * 0.5) : (1 + Math.random() * 10);
+            // 40% Admin Profit Logic (Forces early crash)
+            let crashAt = Math.random() < 0.4 ? (1.01 + Math.random() * 0.19) : (1.2 + Math.random() * 10);
 
-            gameInterval = setInterval(() => {
-                multiplier += 0.03;
+            gameLoop = setInterval(() => {
+                multiplier += 0.02;
                 document.getElementById('multiplier-val').innerText = multiplier.toFixed(2) + "x";
-                
-                // አውሮፕላኑን ማንቀሳቀስ
-                let plane = document.getElementById('plane-box');
-                plane.style.transform = `translate(${multiplier * 20}px, -${multiplier * 15}px)`;
+                let pb = document.getElementById('plane-box');
+                pb.style.transform = `translate(${multiplier * 25}px, -${multiplier * 18}px) scale(${1 + multiplier/10})`;
 
-                for(let i=1; i<=2; i++) {
-                    if(bets[i].active) {
-                        document.getElementById('btn'+i).querySelector('span').innerText = (bets[i].amt * multiplier).toFixed(2);
-                    }
+                if(activeBet.active) {
+                    document.getElementById('btn1').querySelector('span').innerText = (activeBet.amt * multiplier).toFixed(2);
                 }
 
                 if(multiplier >= crashAt) crash();
-            }, 100);
+            }, 80);
         }
 
         function crash() {
-            clearInterval(gameInterval);
+            clearInterval(gameLoop);
             isFlying = false;
-            document.getElementById('engine-sound').pause();
-            document.getElementById('engine-sound').currentTime = 0;
-            
+            document.getElementById('engine-snd').pause();
+            document.getElementById('engine-snd').currentTime = 0;
             document.getElementById('multiplier-val').innerText = "FLEW AWAY!";
-            document.getElementById('multiplier-val').style.color = "#ff0000";
+            document.getElementById('multiplier-val').style.color = "#ff1e4d";
 
-            for(let i=1; i<=2; i++) {
-                if(bets[i].active) {
-                    bets[i].active = false;
-                    resetBtn(i);
-                }
-            }
+            if(activeBet.active) { activeBet.active = false; resetBtn(); }
 
             setTimeout(() => {
                 document.getElementById('plane-box').style.transform = "translate(0,0)";
-                document.getElementById('multiplier-val').innerText = "1.00x";
-                startLoop();
+                document.getElementById('multiplier-val').style.color = "white";
+                cycle();
             }, 3000);
         }
 
-        startLoop();
+        function generateFakeBets() {
+            const users = ["Muna_7", "Abel_Eth", "Dagi_VIP", "Sami_King", "Sara_G", "Rediet"];
+            let list = document.getElementById('bet-list');
+            list.innerHTML = "";
+            for(let i=0; i<10; i++) {
+                let user = users[Math.floor(Math.random()*users.length)];
+                let bet = (Math.random()*200).toFixed(0);
+                let html = `<div class="p-2 list-item flex justify-between">
+                    <span>${user}</span>
+                    <span class="text-gray-400">${bet} ETB</span>
+                </div>`;
+                list.innerHTML += html;
+            }
+        }
+
+        cycle();
     </script>
 </body>
 </html>
