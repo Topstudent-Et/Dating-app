@@ -3,40 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DAI AVIATOR PRO</title>
+    <title>DAI AVIATOR - FIXED</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;700&display=swap');
         
-        body { background-color: #0b0e11; color: white; font-family: 'Poppins', sans-serif; margin: 0; user-select: none; }
+        body { background-color: #0b0e11; color: white; font-family: 'Poppins', sans-serif; margin: 0; user-select: none; overflow: hidden; }
         .font-game { font-family: 'Orbitron', sans-serif; }
 
         /* Game Board */
         .aviator-screen { 
             background: radial-gradient(circle at bottom left, #1a0b12 0%, #000 100%);
-            height: 300px; position: relative; border-radius: 12px; overflow: hidden; border: 1px solid #2d1a24;
+            height: 320px; position: relative; border-radius: 15px; overflow: hidden; border: 2px solid #2d1a24;
+            margin-top: 10px;
         }
         
-        /* Red Plane Animation */
+        /* Red Plane SVG Animation */
         .plane-wrapper {
-            position: absolute; bottom: 30px; left: 30px; width: 80px; z-index: 10;
+            position: absolute; bottom: 20px; left: 20px; width: 70px; z-index: 50;
             transition: transform 0.1s linear;
         }
-        .plane-img { width: 100%; filter: drop-shadow(0 0 15px #ff0000); }
 
         /* Multiplier Text */
-        .multi-display { font-size: 4.5rem; font-weight: 900; z-index: 20; position: relative; text-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
+        .multi-display { font-size: 4rem; font-weight: 900; z-index: 100; position: relative; }
 
         /* Betting Buttons */
-        .btn-bet { background-color: #28a745; border-radius: 10px; font-weight: 800; transition: 0.2s; }
+        .btn-bet { background-color: #28a745; border-radius: 12px; font-weight: 800; transition: 0.2s; color: white; }
         .btn-cashout { background-color: #ff9800; animation: pulse 1s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-        .bet-input { background: #000; border: none; color: white; text-align: center; width: 60px; font-weight: bold; }
         .control-panel { background-color: #1c2127; border-radius: 15px; border: 1px solid #2d3748; }
-        
-        .history-dot { background: #1c2127; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
-        .dot-high { color: #a951d4; } .dot-low { color: #3498db; }
+        input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
     </style>
 </head>
 <body>
@@ -50,208 +47,183 @@
     </div>
 
     <div class="p-4 max-w-md mx-auto">
-        <div id="history" class="flex gap-2 mb-4 overflow-x-auto pb-1 no-scrollbar">
-            <span class="history-dot dot-low">1.20x</span>
-            <span class="history-dot dot-high">25.41x</span>
-            <span class="history-dot dot-low">1.05x</span>
-            <span class="history-dot dot-high">3.12x</span>
-        </div>
-
         <div class="aviator-screen flex items-center justify-center">
-            <div id="game-status" class="absolute top-4 text-gray-500 font-bold text-xs uppercase tracking-widest">በመጠባበቅ ላይ...</div>
-            <div id="multiplier-val" class="multi-display font-game">1.00x</div>
+            <div id="game-status" class="absolute top-4 text-gray-500 font-bold text-[10px] uppercase tracking-widest">በመጠባበቅ ላይ...</div>
+            <div id="multiplier-val" class="multi-display font-game text-white">1.00x</div>
             
             <div id="plane-box" class="plane-wrapper">
-                <img class="plane-img" src="https://www.svgrepo.com/show/491500/airplane-top-view.svg" style="filter: invert(15%) sepia(95%) saturate(6932%) hue-rotate(348deg) brightness(92%) contrast(100%);">
+                <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10,30 L40,30 L55,10 L70,10 L60,30 L85,30 C92,30 95,35 85,40 L60,40 L70,55 L55,55 L40,40 L10,40 Z" fill="#e11d48" stroke="white" stroke-width="2"/>
+                    <circle cx="15" cy="35" r="3" fill="white" />
+                </svg>
             </div>
         </div>
 
-        <div class="mt-4 space-y-4">
-            
-            <div class="control-panel p-4">
-                <div class="flex items-center justify-between gap-4">
-                    <div class="flex flex-col items-center bg-black p-2 rounded-lg">
-                        <div class="flex items-center gap-2 mb-1">
-                            <button onclick="changeVal('amt1', -1)" class="text-gray-500 font-bold px-2">−</button>
-                            <input id="amt1" type="number" value="10.00" class="bet-input outline-none">
-                            <button onclick="changeVal('amt1', 1)" class="text-gray-500 font-bold px-2">+</button>
+        <div class="mt-4 space-y-3">
+            <div class="control-panel p-3">
+                <div class="flex items-center gap-3">
+                    <div class="bg-black flex flex-col items-center rounded-lg p-1 w-24">
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeVal('amt1', -1)" class="text-gray-400 font-bold">−</button>
+                            <input id="amt1" type="number" value="10" class="bg-transparent text-white text-center w-10 font-bold outline-none">
+                            <button onclick="changeVal('amt1', 1)" class="text-gray-400 font-bold">+</button>
                         </div>
-                        <div class="grid grid-cols-2 gap-1 w-full">
-                            <button onclick="setVal('amt1', 50)" class="bg-gray-800 text-[10px] rounded px-1">50</button>
-                            <button onclick="setVal('amt1', 100)" class="bg-gray-800 text-[10px] rounded px-1">100</button>
+                        <div class="flex gap-1 mt-1">
+                            <button onclick="setVal('amt1', 50)" class="bg-gray-800 text-[8px] px-1 rounded">50</button>
+                            <button onclick="setVal('amt1', 100)" class="bg-gray-800 text-[8px] px-1 rounded">100</button>
                         </div>
                     </div>
-                    <button id="btn1" onclick="handleBetAction(1)" class="btn-bet flex-1 py-4 text-lg leading-tight">ተወራረድ<br><span id="label1" class="text-xs font-normal">10.00 ETB</span></button>
+                    <button id="btn1" onclick="handleAction(1)" class="btn-bet flex-1 py-4 text-lg">ተወራረድ<br><span id="label1" class="text-[10px] font-normal">10.00 ETB</span></button>
                 </div>
             </div>
 
-            <div class="control-panel p-4">
-                <div class="flex items-center justify-between gap-4">
-                    <div class="flex flex-col items-center bg-black p-2 rounded-lg">
-                        <div class="flex items-center gap-2 mb-1">
-                            <button onclick="changeVal('amt2', -1)" class="text-gray-500 font-bold px-2">−</button>
-                            <input id="amt2" type="number" value="10.00" class="bet-input outline-none">
-                            <button onclick="changeVal('amt2', 1)" class="text-gray-500 font-bold px-2">+</button>
+            <div class="control-panel p-3">
+                <div class="flex items-center gap-3">
+                    <div class="bg-black flex flex-col items-center rounded-lg p-1 w-24">
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeVal('amt2', -1)" class="text-gray-400 font-bold">−</button>
+                            <input id="amt2" type="number" value="10" class="bg-transparent text-white text-center w-10 font-bold outline-none">
+                            <button onclick="changeVal('amt2', 1)" class="text-gray-400 font-bold">+</button>
                         </div>
-                        <div class="grid grid-cols-2 gap-1 w-full">
-                            <button onclick="setVal('amt2', 50)" class="bg-gray-800 text-[10px] rounded px-1">50</button>
-                            <button onclick="setVal('amt2', 100)" class="bg-gray-800 text-[10px] rounded px-1">100</button>
+                        <div class="flex gap-1 mt-1">
+                            <button onclick="setVal('amt2', 50)" class="bg-gray-800 text-[8px] px-1 rounded">50</button>
+                            <button onclick="setVal('amt2', 100)" class="bg-gray-800 text-[8px] px-1 rounded">100</button>
                         </div>
                     </div>
-                    <button id="btn2" onclick="handleBetAction(2)" class="btn-bet flex-1 py-4 text-lg leading-tight">ተወራረድ<br><span id="label2" class="text-xs font-normal">10.00 ETB</span></button>
+                    <button id="btn2" onclick="handleAction(2)" class="btn-bet flex-1 py-4 text-lg">ተወራረድ<br><span id="label2" class="text-[10px] font-normal">10.00 ETB</span></button>
                 </div>
             </div>
-
         </div>
     </div>
 
     <audio id="engine-sound" loop src="https://www.soundjay.com/transportation/sounds/propeller-plane-flying-1.mp3"></audio>
-    <audio id="crash-sound" src="https://assets.mixkit.co/active_storage/sfx/2511/2511-preview.mp3"></audio>
 
     <script>
         let balance = 50000.00;
         let isFlying = false;
         let multiplier = 1.00;
-        let gameLoop;
+        let gameInterval;
         let bets = { 1: { active: false, amt: 0 }, 2: { active: false, amt: 0 } };
-
-        function updateBalance() {
-            document.getElementById('main-balance').innerText = balance.toLocaleString(undefined, {minimumFractionDigits: 2});
-        }
 
         function changeVal(id, v) {
             let el = document.getElementById(id);
-            let val = parseFloat(el.value);
-            if(val + v > 0) el.value = (val + v).toFixed(2);
+            let val = parseInt(el.value);
+            if(val + v > 0) el.value = val + v;
             updateLabels();
         }
 
         function setVal(id, v) {
-            document.getElementById(id).value = v.toFixed(2);
+            document.getElementById(id).value = v;
             updateLabels();
         }
 
         function updateLabels() {
-            if(!bets[1].active) document.getElementById('label1').innerText = parseFloat(document.getElementById('amt1').value).toFixed(2) + " ETB";
-            if(!bets[2].active) document.getElementById('label2').innerText = parseFloat(document.getElementById('amt2').value).toFixed(2) + " ETB";
+            if(!bets[1].active) document.getElementById('label1').innerText = document.getElementById('amt1').value + ".00 ETB";
+            if(!bets[2].active) document.getElementById('label2').innerText = document.getElementById('amt2').value + ".00 ETB";
         }
 
-        function handleBetAction(num) {
-            let btn = document.getElementById('btn' + num);
-            let amt = parseFloat(document.getElementById('amt' + num).value);
+        function handleAction(n) {
+            let btn = document.getElementById('btn' + n);
+            let amt = parseInt(document.getElementById('amt' + n).value);
 
-            if(!isFlying && !bets[num].active) {
-                // Place Bet
-                if(amt > balance) return alert("በቂ የገንዘብ መጠን የለም!");
+            if(!isFlying && !bets[n].active) {
+                if(amt > balance) return alert("በቂ ገንዘብ የለም!");
                 balance -= amt;
-                bets[num].active = true;
-                bets[num].amt = amt;
+                bets[n].active = true;
+                bets[n].amt = amt;
                 btn.classList.replace('bg-green-600', 'bg-red-800');
-                btn.innerHTML = "ይሰረዝ...<br><span class='text-xs font-normal'>በመጠባበቅ ላይ</span>";
-                updateBalance();
-            } else if (isFlying && bets[num].active) {
-                // Cash Out
-                let win = bets[num].amt * multiplier;
+                btn.innerHTML = "ይሰረዝ<br><span class='text-[10px]'>በመጠባበቅ ላይ</span>";
+                document.getElementById('main-balance').innerText = balance.toLocaleString();
+            } else if (isFlying && bets[n].active) {
+                let win = bets[n].amt * multiplier;
                 balance += win;
-                bets[num].active = false;
-                alert(`እንኳን ደስ አለዎት! ${win.toFixed(2)} አሸንፈዋል!`);
-                resetButton(num);
-                updateBalance();
+                bets[n].active = false;
+                alert(`እንኳን ደስ አለዎት! ${win.toFixed(2)} ETB አሸንፈዋል!`);
+                resetBtn(n);
+                document.getElementById('main-balance').innerText = balance.toLocaleString();
             }
         }
 
-        function resetButton(num) {
-            let btn = document.getElementById('btn' + num);
-            btn.className = "btn-bet flex-1 py-4 text-lg leading-tight bg-green-600";
-            btn.innerHTML = `ተወራረድ<br><span class="text-xs font-normal">${document.getElementById('amt'+num).value} ETB</span>`;
+        function resetBtn(n) {
+            let btn = document.getElementById('btn' + n);
+            btn.className = "btn-bet flex-1 py-4 text-lg bg-green-600";
+            btn.innerHTML = `ተወራረድ<br><span class="text-[10px] font-normal">${document.getElementById('amt'+n).value}.00 ETB</span>`;
         }
 
-        // GAME ENGINE
-        function startWaiting() {
+        function startLoop() {
             if(isFlying) return;
             let status = document.getElementById('game-status');
-            let counter = 5;
-            
-            let waitTimer = setInterval(() => {
-                status.innerText = `ቀጣይ በረራ በ ${counter} ሰከንድ...`;
-                counter--;
-                if(counter < 0) {
-                    clearInterval(waitTimer);
-                    launchPlane();
+            let count = 5;
+            let timer = setInterval(() => {
+                status.innerText = `ቀጣይ በረራ በ ${count} ሰከንድ...`;
+                count--;
+                if(count < 0) {
+                    clearInterval(timer);
+                    launch();
                 }
             }, 1000);
         }
 
-        function launchPlane() {
+        function launch() {
             isFlying = true;
             multiplier = 1.00;
             document.getElementById('multiplier-val').style.color = "white";
             document.getElementById('game-status').innerText = "አውሮፕላኑ እየበረረ ነው!";
-            
-            // ድምፅ ይጀምራል
             document.getElementById('engine-sound').play();
 
-            // Setup Buttons for flight
+            // Update buttons to Cash Out
             for(let i=1; i<=2; i++) {
                 if(bets[i].active) {
                     let btn = document.getElementById('btn'+i);
                     btn.classList.replace('bg-red-800', 'btn-cashout');
-                    btn.classList.add('bg-orange-500');
-                    btn.innerHTML = `ውጣ (CASH OUT)<br><span class='text-xs font-bold'>${(bets[i].amt * multiplier).toFixed(2)} ETB</span>`;
+                    btn.innerHTML = `ውጣ (CASH OUT)<br><span class='text-[10px]'>${(bets[i].amt * multiplier).toFixed(2)}</span>`;
                 }
             }
 
-            // Logic: 40% Admin Profit (Early Crash)
-            let crashAt = Math.random() < 0.4 ? (1 + Math.random() * 0.5) : (1 + Math.random() * 10);
+            let crashAt = Math.random() < 0.3 ? (1 + Math.random() * 0.5) : (1 + Math.random() * 10);
 
-            gameLoop = setInterval(() => {
-                multiplier += 0.02;
+            gameInterval = setInterval(() => {
+                multiplier += 0.03;
                 document.getElementById('multiplier-val').innerText = multiplier.toFixed(2) + "x";
                 
-                // Animate Plane
+                // አውሮፕላኑን ማንቀሳቀስ
                 let plane = document.getElementById('plane-box');
-                plane.style.transform = `translate(${multiplier * 18}px, -${multiplier * 12}px)`;
+                plane.style.transform = `translate(${multiplier * 20}px, -${multiplier * 15}px)`;
 
-                // Update Cashout labels
                 for(let i=1; i<=2; i++) {
                     if(bets[i].active) {
-                        document.getElementById('btn'+i).querySelector('span').innerText = (bets[i].amt * multiplier).toFixed(2) + " ETB";
+                        document.getElementById('btn'+i).querySelector('span').innerText = (bets[i].amt * multiplier).toFixed(2);
                     }
                 }
 
                 if(multiplier >= crashAt) crash();
-            }, 80);
+            }, 100);
         }
 
         function crash() {
-            clearInterval(gameLoop);
+            clearInterval(gameInterval);
             isFlying = false;
-            
-            // ድምፅ ይቆማል
             document.getElementById('engine-sound').pause();
             document.getElementById('engine-sound').currentTime = 0;
-            document.getElementById('crash-sound').play();
-
-            document.getElementById('multiplier-val').innerText = "ፈነዳ (FLEW AWAY!)";
+            
+            document.getElementById('multiplier-val').innerText = "FLEW AWAY!";
             document.getElementById('multiplier-val').style.color = "#ff0000";
 
-            // Reset bets that didn't cash out
             for(let i=1; i<=2; i++) {
                 if(bets[i].active) {
                     bets[i].active = false;
-                    resetButton(i);
+                    resetBtn(i);
                 }
             }
 
             setTimeout(() => {
                 document.getElementById('plane-box').style.transform = "translate(0,0)";
                 document.getElementById('multiplier-val').innerText = "1.00x";
-                startWaiting();
+                startLoop();
             }, 3000);
         }
 
-        // Start
-        startWaiting();
+        startLoop();
     </script>
 </body>
 </html>
