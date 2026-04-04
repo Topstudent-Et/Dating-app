@@ -3,265 +3,278 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DAI LUXURY BETTING</title>
+    <title>DAI ULTIMATE CASINO</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;500;800&display=swap');
-        body { background-color: #080a0c; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;900&family=Poppins:wght@300;600;800&display=swap');
+        
+        :root { --primary: #e91e63; --bg: #060709; --card: #12151a; }
+        body { background-color: var(--bg); color: white; font-family: 'Poppins', sans-serif; transition: 0.3s; margin: 0; }
         .font-game { font-family: 'Orbitron', sans-serif; }
+
+        /* Game Screens */
+        .page { display: none; padding-bottom: 80px; animation: fadeIn 0.4s ease-out; }
+        .active-page { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Aviator Animation */
+        .aviator-canvas { height: 300px; background: radial-gradient(circle at bottom left, #1a0b12 0%, #000 100%); position: relative; border-radius: 20px; overflow: hidden; border: 1px solid #2d1a24; }
+        .plane-img { position: absolute; width: 70px; bottom: 20px; left: 20px; z-index: 10; filter: drop-shadow(0 0 12px var(--primary)); }
         
         /* Navigation */
-        .bottom-nav { background: rgba(18, 22, 28, 0.95); backdrop-filter: blur(10px); border-top: 1px solid #2d3748; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; color: #718096; transition: 0.3s; }
-        .nav-item.active { color: #e91e63; }
+        .bottom-nav { background: rgba(18, 21, 26, 0.98); backdrop-filter: blur(15px); border-top: 1px solid #242933; position: fixed; bottom: 0; width: 100%; height: 70px; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
+        .nav-btn { color: #64748b; font-size: 0.75rem; text-align: center; cursor: pointer; }
+        .nav-btn.active { color: var(--primary); }
 
-        /* Aviator Special Animation */
-        .aviator-container { background: linear-gradient(to bottom, #0f1218, #000); height: 280px; position: relative; border-radius: 15px; overflow: hidden; border: 1px solid #1f2937; }
-        .plane-sprite { 
-            position: absolute; bottom: 20px; left: 20px; width: 65px; z-index: 50; 
-            filter: drop-shadow(0 0 10px #ff0055);
-            transition: transform 0.1s linear;
-        }
-        .multiplier-display { font-size: 4rem; font-weight: 900; z-index: 100; text-shadow: 0 0 20px rgba(233, 30, 99, 0.8); }
-        
-        /* History Dots */
-        .dot { height: 22px; padding: 0 8px; border-radius: 11px; font-size: 0.65rem; display: inline-flex; align-items: center; margin-right: 5px; font-weight: bold; }
-        .dot-low { background: #34495e; color: #85c1e9; }
-        .dot-high { background: #6c3483; color: #d7bde2; }
-
-        /* Hide sections initially */
-        .page-section { display: none; padding-bottom: 80px; }
-        #home-section { display: block; }
+        /* Slots Animation */
+        .slot-reel { height: 100px; background: #1a1f26; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 3rem; border: 2px solid #2d3748; }
     </style>
 </head>
 <body>
 
-    <div class="p-4 flex justify-between items-center bg-gray-900 border-b border-gray-800 sticky top-0 z-[1000]">
-        <h1 class="text-xl font-black text-red-500 italic tracking-tighter">DAI PREMIUM</h1>
-        <div class="flex items-center space-x-3">
-            <div class="bg-black px-3 py-1 rounded-full border border-gray-700">
-                <span id="global-balance" class="text-green-400 font-bold">1000.00</span> <span class="text-xs text-gray-500">ETB</span>
-            </div>
-            <img src="https://i.pravatar.cc/150?u=dai" class="w-8 h-8 rounded-full border-2 border-red-500" alt="Profile">
+    <div class="p-4 flex justify-between items-center sticky top-0 bg-[#060709]/90 z-[999] backdrop-blur-md">
+        <div class="flex items-center gap-2">
+            <div class="w-10 h-10 bg-gradient-to-tr from-pink-600 to-red-500 rounded-xl flex items-center justify-center font-black">D</div>
+            <h1 class="text-xl font-black italic tracking-tight">DAI <span class="text-pink-600">CASINO</span></h1>
+        </div>
+        <div class="bg-gray-900 border border-gray-800 px-4 py-1.5 rounded-full flex items-center gap-2">
+            <i class="fa-solid fa-coins text-yellow-500"></i>
+            <span id="balance" class="font-bold text-green-400">1000.00</span>
         </div>
     </div>
 
-    <section id="home-section" class="page-section animate-fade">
-        <div class="p-4">
-            <h2 class="text-gray-500 text-xs font-bold uppercase tracking-widest mb-4">Top Games</h2>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="relative rounded-2xl overflow-hidden border border-gray-800" onclick="showPage('game-section')">
-                    <img src="https://images.unsplash.com/photo-1559156200-66a00ee7efed?w=400" class="w-full h-40 object-cover opacity-70">
-                    <div class="absolute bottom-0 p-3 bg-gradient-to-t from-black w-full"><p class="font-bold">AVIATOR</p></div>
+    <section id="home" class="page active-page p-4">
+        <h2 class="text-gray-400 font-bold text-xs uppercase tracking-widest mb-4">Popular Games</h2>
+        <div class="grid grid-cols-2 gap-4">
+            <div onclick="openGame('aviator')" class="relative group rounded-2xl overflow-hidden border border-gray-800 cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1559156200-66a00ee7efed?w=400" class="w-full h-44 object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent p-4 flex flex-col justify-end">
+                    <p class="font-black text-lg">AVIATOR</p>
+                    <span class="text-[10px] text-pink-500">LIVE NOW</span>
                 </div>
-                <div class="relative rounded-2xl overflow-hidden border border-gray-800">
-                    <img src="https://images.unsplash.com/photo-1518133835878-5a93cc3f89e5?w=400" class="w-full h-40 object-cover opacity-70">
-                    <div class="absolute bottom-0 p-3 bg-gradient-to-t from-black w-full"><p class="font-bold">KENO</p></div>
+            </div>
+            <div onclick="openGame('keno')" class="relative rounded-2xl overflow-hidden border border-gray-800">
+                <img src="https://images.unsplash.com/photo-1518133835878-5a93cc3f89e5?w=400" class="w-full h-44 object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent p-4 flex flex-col justify-end">
+                    <p class="font-black text-lg">KENO</p>
                 </div>
-                <div class="relative rounded-2xl overflow-hidden border border-gray-800">
-                    <img src="https://images.unsplash.com/photo-1596838132731-dd96a2c5adfe?w=400" class="w-full h-40 object-cover opacity-70">
-                    <div class="absolute bottom-0 p-3 bg-gradient-to-t from-black w-full"><p class="font-bold">ROULETTE</p></div>
+            </div>
+            <div onclick="openGame('slots')" class="relative rounded-2xl overflow-hidden border border-gray-800">
+                <img src="https://images.unsplash.com/photo-1596838132731-dd96a2c5adfe?w=400" class="w-full h-44 object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent p-4 flex flex-col justify-end">
+                    <p class="font-black text-lg">SLOTS</p>
                 </div>
-                <div class="relative rounded-2xl overflow-hidden border border-gray-800">
-                    <img src="https://images.unsplash.com/photo-1614028674026-a65e31bfd27c?w=400" class="w-full h-40 object-cover opacity-70">
-                    <div class="absolute bottom-0 p-3 bg-gradient-to-t from-black w-full"><p class="font-bold">CRASH</p></div>
+            </div>
+            <div onclick="openGame('crash')" class="relative rounded-2xl overflow-hidden border border-gray-800">
+                <img src="https://images.unsplash.com/photo-1614028674026-a65e31bfd27c?w=400" class="w-full h-44 object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent p-4 flex flex-col justify-end">
+                    <p class="font-black text-lg">CRASH</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="game-section" class="page-section">
-        <div id="history-bar" class="flex overflow-x-auto p-2 bg-black whitespace-nowrap border-b border-gray-900">
-            </div>
+    <section id="aviator" class="page p-4">
+        <div class="flex items-center gap-2 mb-4 text-gray-500" onclick="showPage('home')">
+            <i class="fa-solid fa-arrow-left"></i> <span>Back</span>
+        </div>
+        
+        <div class="aviator-canvas flex items-center justify-center">
+            <div id="aviator-msg" class="absolute top-4 text-gray-500 font-bold text-xs uppercase">Connecting...</div>
+            <div id="aviator-multi" class="font-game text-5xl font-black text-white z-20">1.00x</div>
+            <img id="aviator-plane" src="https://www.svgrepo.com/show/491500/airplane-top-view.svg" class="plane-img" style="filter: invert(15%) sepia(95%) saturate(6932%) hue-rotate(348deg) brightness(92%) contrast(100%);">
+        </div>
 
-        <div class="p-4">
-            <div class="aviator-container flex items-center justify-center">
-                <div id="game-status" class="absolute top-4 text-gray-500 font-bold uppercase text-xs">Waiting for next round...</div>
-                <div id="multi-val" class="multiplier-display font-game text-white">1.00x</div>
-                <img id="airplane" src="https://www.svgrepo.com/show/491500/airplane-top-view.svg" class="plane-sprite" style="filter: invert(15%) sepia(95%) saturate(6932%) hue-rotate(348deg) brightness(92%) contrast(100%);">
-            </div>
-
-            <div class="mt-6 bg-gray-900 p-4 rounded-3xl border border-gray-800">
-                <div class="flex justify-between items-center mb-4">
-                    <div class="flex space-x-2">
-                        <button onclick="adjustBet(-10)" class="bg-gray-800 w-8 h-8 rounded-full">-</button>
-                        <input id="bet-amount" type="number" value="10" class="bg-transparent text-center w-16 font-bold text-xl outline-none">
-                        <button onclick="adjustBet(10)" class="bg-gray-800 w-8 h-8 rounded-full">+</button>
-                    </div>
-                    <div class="text-xs text-gray-500">Auto Cashout: <span class="text-white">2.0x</span></div>
-                </div>
-                <button id="bet-btn" onclick="userAction()" class="w-full bg-green-600 hover:bg-green-500 py-4 rounded-2xl font-black text-2xl transition-all shadow-lg shadow-green-900/20">BET</button>
-            </div>
+        <div class="mt-4 bg-gray-900 p-4 rounded-3xl border border-gray-800">
+            <input id="aviator-bet" type="number" value="10" class="w-full bg-black text-center p-3 rounded-xl mb-3 font-bold border border-gray-700 outline-none">
+            <button id="aviator-btn" onclick="aviatorBet()" class="w-full bg-green-600 py-4 rounded-2xl font-black text-xl">BET</button>
         </div>
     </section>
 
-    <section id="wallet-section" class="page-section p-6 text-center">
-        <i class="fa-solid fa-wallet text-5xl text-blue-500 mb-4"></i>
-        <h2 class="text-2xl font-bold mb-6">Deposit & Withdraw</h2>
-        <div class="grid grid-cols-1 gap-4">
-            <button class="bg-blue-600 p-4 rounded-xl font-bold flex justify-between items-center">
-                <span>Deposit via Telebirr</span> <i class="fa-solid fa-chevron-right"></i>
-            </button>
-            <button class="bg-gray-800 p-4 rounded-xl font-bold flex justify-between items-center">
-                <span>CBE Bank Transfer</span> <i class="fa-solid fa-chevron-right"></i>
-            </button>
-            <button class="bg-red-600 p-4 rounded-xl font-bold mt-4">Withdraw Profit</button>
+    <section id="slots" class="page p-6 text-center">
+        <div class="flex items-center gap-2 mb-6 text-gray-500" onclick="showPage('home')">
+            <i class="fa-solid fa-arrow-left"></i> <span>Back</span>
         </div>
+        <h2 class="text-2xl font-black mb-8 italic">LUCKY SLOTS</h2>
+        <div class="grid grid-cols-3 gap-2 mb-8">
+            <div id="reel1" class="slot-reel">🍒</div>
+            <div id="reel2" class="slot-reel">💎</div>
+            <div id="reel3" class="slot-reel">🍋</div>
+        </div>
+        <button onclick="spinSlots()" class="w-full bg-pink-600 py-5 rounded-2xl font-black text-xl shadow-lg shadow-pink-900/40">SPIN (10 ETB)</button>
     </section>
 
-    <section id="ref-section" class="page-section p-6">
-        <div class="bg-gradient-to-br from-purple-900 to-indigo-900 p-6 rounded-3xl text-center">
-            <h2 class="text-xl font-bold mb-2">Invite Friends</h2>
-            <p class="text-sm opacity-70 mb-4">Get 10% commission on every bet they place!</p>
-            <div class="bg-black/50 p-3 rounded-lg flex justify-between items-center">
-                <code class="text-xs text-blue-300">dai-bet.io/ref/dai777</code>
-                <button class="text-xs bg-white text-black px-3 py-1 rounded-full font-bold">COPY</button>
+    <section id="keno" class="page p-4">
+        <div class="flex items-center gap-2 mb-4 text-gray-500" onclick="showPage('home')">
+            <i class="fa-solid fa-arrow-left"></i> <span>Back</span>
+        </div>
+        <h2 class="text-xl font-bold mb-4">Select 5 Numbers</h2>
+        <div id="keno-grid" class="grid grid-cols-5 gap-2 mb-6">
             </div>
-        </div>
+        <button onclick="playKeno()" class="w-full bg-blue-600 py-4 rounded-2xl font-black">PLAY KENO</button>
     </section>
 
-    <div class="bottom-nav fixed bottom-0 w-full h-16 flex justify-around items-center z-[1000]">
-        <div class="nav-item active" onclick="showPage('home-section', this)"><i class="fa-solid fa-house mb-1 text-lg"></i>Home</div>
-        <div class="nav-item" onclick="showPage('game-section', this)"><i class="fa-solid fa-plane-up mb-1 text-lg"></i>Game</div>
-        <div class="nav-item" onclick="showPage('wallet-section', this)"><i class="fa-solid fa-wallet mb-1 text-lg"></i>Wallet</div>
-        <div class="nav-item" onclick="showPage('ref-section', this)"><i class="fa-solid fa-users mb-1 text-lg"></i>Invite</div>
+    <div class="bottom-nav">
+        <div onclick="showPage('home')" class="nav-btn active"><i class="fa-solid fa-house text-xl mb-1"></i><p>Home</p></div>
+        <div onclick="openGame('aviator')" class="nav-btn"><i class="fa-solid fa-plane-up text-xl mb-1"></i><p>Aviator</p></div>
+        <div onclick="showPage('slots')" class="nav-btn"><i class="fa-solid fa-bolt text-xl mb-1"></i><p>Slots</p></div>
+        <div class="nav-btn"><i class="fa-solid fa-wallet text-xl mb-1"></i><p>Wallet</p></div>
     </div>
 
-    <audio id="snd-fly" loop src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
-    <audio id="snd-crash" src="https://assets.mixkit.co/active_storage/sfx/2511/2511-preview.mp3"></audio>
+    <audio id="audio-fly" loop src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+    <audio id="audio-crash" src="https://assets.mixkit.co/active_storage/sfx/2511/2511-preview.mp3"></audio>
 
     <script>
         let balance = 1000.00;
+        let currentBet = 0;
         let isFlying = false;
+        let hasBet = false;
+        let aviatorLoop;
         let multiplier = 1.00;
-        let userBet = 0;
-        let hasPlacedBet = false;
-        let loop;
 
-        function showPage(id, el) {
-            document.querySelectorAll('.page-section').forEach(s => s.style.display = 'none');
-            document.getElementById(id).style.display = 'block';
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            if(el) el.classList.add('active');
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+            document.getElementById(id).classList.add('active-page');
             
-            if(id === 'game-section') startAutoEngine();
+            // Stop sound when leaving game
+            if(id !== 'aviator') {
+                document.getElementById('audio-fly').pause();
+                clearInterval(aviatorLoop);
+            }
         }
 
-        function adjustBet(val) {
-            let input = document.getElementById('bet-amount');
-            let current = parseInt(input.value);
-            if(current + val > 0) input.value = current + val;
+        function openGame(id) {
+            showPage(id);
+            if(id === 'aviator') startAviatorLoop();
         }
 
-        // --- ENGINE LOGIC ---
-        function startAutoEngine() {
+        // --- AVIATOR ENGINE (STABLE) ---
+        function startAviatorLoop() {
             if(isFlying) return;
-            
+            let status = document.getElementById('aviator-msg');
             let countdown = 5;
-            let status = document.getElementById('game-status');
             
             let timer = setInterval(() => {
-                status.innerText = `Starts in ${countdown}s...`;
+                status.innerText = `NEXT ROUND IN ${countdown}S...`;
                 countdown--;
                 if(countdown < 0) {
                     clearInterval(timer);
-                    launchPlane();
+                    runAviator();
                 }
             }, 1000);
         }
 
-        function launchPlane() {
+        function runAviator() {
             isFlying = true;
             multiplier = 1.00;
-            document.getElementById('game-status').innerText = "Plane is airborne!";
-            document.getElementById('multi-val').style.color = "white";
-            document.getElementById('snd-fly').play();
+            document.getElementById('aviator-msg').innerText = "PLANE IS FLYING";
+            document.getElementById('aviator-multi').style.color = "white";
+            document.getElementById('audio-fly').play();
 
-            // 40% Admin Profit - forced early crash logic
-            let crashTarget = Math.random() < 0.40 ? (1 + Math.random() * 0.4).toFixed(2) : (1 + Math.random() * 8).toFixed(2);
+            // 40% Admin Profit Logic
+            let crashPoint = Math.random() < 0.4 ? (1 + Math.random() * 0.5) : (1 + Math.random() * 10);
 
-            loop = setInterval(() => {
-                multiplier += 0.02;
-                document.getElementById('multi-val').innerText = multiplier.toFixed(2) + "x";
+            aviatorLoop = setInterval(() => {
+                multiplier += 0.03;
+                document.getElementById('aviator-multi').innerText = multiplier.toFixed(2) + "x";
                 
-                // Animation
-                let plane = document.getElementById('airplane');
-                plane.style.transform = `translate(${multiplier * 20}px, -${multiplier * 15}px) rotate(-15deg)`;
+                // Plane Movement
+                let plane = document.getElementById('aviator-plane');
+                plane.style.transform = `translate(${multiplier * 25}px, -${multiplier * 15}px)`;
 
-                if(multiplier >= crashTarget) {
-                    crash();
+                if(multiplier >= crashPoint) {
+                    endAviator();
                 }
-            }, 70);
+            }, 80);
         }
 
-        function crash() {
-            clearInterval(loop);
+        function endAviator() {
+            clearInterval(aviatorLoop);
             isFlying = false;
-            document.getElementById('snd-fly').pause();
-            document.getElementById('snd-fly').currentTime = 0;
-            document.getElementById('snd-crash').play();
+            document.getElementById('audio-fly').pause();
+            document.getElementById('audio-fly').currentTime = 0;
+            document.getElementById('audio-crash').play();
 
-            document.getElementById('multi-val').innerText = "FLEW AWAY!";
-            document.getElementById('multi-val').style.color = "#ff0055";
+            document.getElementById('aviator-multi').innerText = "FLEW AWAY!";
+            document.getElementById('aviator-multi').style.color = "#ff0055";
             
-            addHistory(multiplier.toFixed(2));
-            
-            // If user didn't cash out
-            if(hasPlacedBet) {
-                hasPlacedBet = false;
-                document.getElementById('bet-btn').innerText = "BET";
-                document.getElementById('bet-btn').className = "w-full bg-green-600 py-4 rounded-2xl font-black text-2xl";
+            if(hasBet) {
+                hasBet = false;
+                document.getElementById('aviator-btn').innerText = "BET";
+                document.getElementById('aviator-btn').className = "w-full bg-green-600 py-4 rounded-2xl font-black text-xl";
             }
 
             setTimeout(() => {
-                document.getElementById('airplane').style.transform = "translate(0,0)";
-                document.getElementById('multi-val').innerText = "1.00x";
-                startAutoEngine();
+                document.getElementById('aviator-plane').style.transform = "translate(0,0)";
+                startAviatorLoop();
             }, 3000);
         }
 
-        function userAction() {
-            let btn = document.getElementById('bet-btn');
-            let amt = parseFloat(document.getElementById('bet-amount').value);
+        function aviatorBet() {
+            let btn = document.getElementById('aviator-btn');
+            let amt = parseFloat(document.getElementById('aviator-bet').value);
 
-            if(!isFlying && !hasPlacedBet) {
-                // Place Bet
-                if(amt > balance) return alert("Not enough balance!");
+            if(!isFlying && !hasBet) {
+                if(amt > balance) return alert("Low Balance!");
                 balance -= amt;
-                userBet = amt;
-                hasPlacedBet = true;
+                currentBet = amt;
+                hasBet = true;
                 btn.innerText = "WAITING...";
-                btn.className = "w-full bg-gray-700 py-4 rounded-2xl font-black text-2xl";
-                updateBalanceUI();
-            } else if (isFlying && hasPlacedBet) {
-                // Cash Out
-                let win = userBet * multiplier;
+                btn.className = "w-full bg-gray-700 py-4 rounded-2xl font-black text-xl";
+                updateBalance();
+            } else if (isFlying && hasBet) {
+                let win = currentBet * multiplier;
                 balance += win;
-                hasPlacedBet = false;
-                alert(`CONGRATS! You won ${win.toFixed(2)} ETB`);
+                hasBet = false;
+                alert(`WIN: ${win.toFixed(2)} ETB`);
                 btn.innerText = "BET";
-                btn.className = "w-full bg-green-600 py-4 rounded-2xl font-black text-2xl";
-                updateBalanceUI();
+                btn.className = "w-full bg-green-600 py-4 rounded-2xl font-black text-xl";
+                updateBalance();
             }
         }
 
-        function updateBalanceUI() {
-            document.getElementById('global-balance').innerText = balance.toFixed(2);
-            document.getElementById('main-balance').innerText = balance.toFixed(2) + " ETB";
+        // --- SLOTS LOGIC ---
+        function spinSlots() {
+            if(balance < 10) return alert("Low balance");
+            balance -= 10;
+            updateBalance();
+
+            const icons = ['🍒', '💎', '🍋', '🔔', '7️⃣'];
+            let r1 = icons[Math.floor(Math.random() * icons.length)];
+            let r2 = icons[Math.floor(Math.random() * icons.length)];
+            let r3 = icons[Math.floor(Math.random() * icons.length)];
+
+            document.getElementById('reel1').innerText = r1;
+            document.getElementById('reel2').innerText = r2;
+            document.getElementById('reel3').innerText = r3;
+
+            if(r1 === r2 && r2 === r3) {
+                balance += 500;
+                alert("JACKPOT! 500 ETB Won!");
+                updateBalance();
+            }
         }
 
-        function addHistory(val) {
-            let bar = document.getElementById('history-bar');
-            let dot = document.createElement('span');
-            dot.className = val > 2 ? "dot dot-high" : "dot dot-low";
-            dot.innerText = val + "x";
-            bar.prepend(dot);
+        // --- KENO GRID ---
+        const kenoGrid = document.getElementById('keno-grid');
+        for(let i=1; i<=25; i++) {
+            let div = document.createElement('div');
+            div.className = "bg-gray-800 p-3 rounded-lg text-center cursor-pointer font-bold border border-gray-700";
+            div.innerText = i;
+            div.onclick = () => div.classList.toggle('bg-blue-600');
+            kenoGrid.appendChild(div);
         }
 
-        // Initialize with some fake history
-        [1.20, 5.40, 1.05, 2.33, 1.80].forEach(v => addHistory(v));
+        function playKeno() {
+            alert("Keno numbers drawn! You matched 2 numbers. Prize: 20 ETB");
+            balance += 20;
+            updateBalance();
+        }
 
+        function updateBalance() {
+            document.getElementById('balance').innerText = balance.toFixed(2);
+        }
     </script>
 </body>
 </html>
