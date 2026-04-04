@@ -1,81 +1,112 @@
 <!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BetPro</title>
-  <style>
-    body { margin:0; font-family: Arial; background:#0f172a; color:white; }
-    header { background:#020617; padding:15px; display:flex; justify-content:space-between; }
-    header h1 { color:#22c55e; }
-    nav a { margin:0 10px; color:white; text-decoration:none; }
-    .container { padding:20px; }
-    .card { background:#1e293b; padding:20px; border-radius:10px; margin:10px; display:inline-block; width:200px; }
-    button { background:#22c55e; border:none; padding:10px; color:white; border-radius:5px; cursor:pointer; }
-    .balance { background:#020617; padding:10px; border-radius:5px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pro Betting Demo</title>
+<style>
+body{font-family:Arial;background:#0f172a;color:#fff;text-align:center}
+.container{max-width:400px;margin:auto;padding:20px}
+button{padding:10px 20px;margin:5px;border:none;border-radius:8px;background:#22c55e;color:#000;font-weight:bold}
+input{padding:10px;border-radius:8px;border:none;width:80%;margin:10px}
+.card{background:#1e293b;padding:15px;margin:10px;border-radius:12px}
+</style>
 </head>
-<body><header>
-  <h1>BetPro</h1>
-  <div class="balance">Balance: 0 ETB</div>
-</header><div class="container">
-  <h2>Games</h2>  <div class="card">
-    <h3>Aviator</h3>
-    <p>Play crash game</p>
-    <button onclick="playGame('Aviator')">Play</button>
-  </div>  <div class="card">
-    <h3>Slots</h3>
-    <p>Spin & Win</p>
-    <button onclick="playGame('Slots')">Play</button>
-  </div>  <div class="card">
-    <h3>Football</h3>
-    <p>Bet on matches</p>
-    <button onclick="playGame('Football')">Play</button>
-  </div>  <div class="card">
-    <h3>Virtual</h3>
-    <p>24/7 games</p>
-    <button onclick="playGame('Virtual')">Play</button>
-  </div>  <h2>Deposit / Withdraw</h2>
-  <button onclick="deposit()">Deposit</button>
-  <button onclick="withdraw()">Withdraw</button>
-</div><script>
-let balance = 0;
+<body>
+<div class="container">
+<h1>🔥 Pro Betting Demo</h1><div class="card">
+<h3>Balance: $<span id="balance">100</span></h3>
+<input type="number" id="amount" placeholder="Enter amount">
+<br>
+<button onclick="deposit()">Deposit</button>
+<button onclick="withdraw()">Withdraw</button>
+</div><div class="card">
+<h3>✈️ Aviator Style</h3>
+<input type="number" id="aviatorBet" placeholder="Bet">
+<button onclick="startAviator()">Start</button>
+<p id="aviatorResult"></p>
+</div><div class="card">
+<h3>🎰 Slots</h3>
+<input type="number" id="slotBet" placeholder="Bet">
+<button onclick="playSlots()">Spin</button>
+<p id="slotResult"></p>
+</div><div class="card">
+<h3>⚽ Football Bet</h3>
+<input type="number" id="footballBet" placeholder="Bet">
+<button onclick="playFootball()">Play</button>
+<p id="footballResult"></p>
+</div></div><script>
+let balance = 100;
 
-function updateBalance() {
-  document.querySelector('.balance').innerText = 'Balance: ' + balance + ' ETB';
+function updateBalance(){
+ document.getElementById("balance").innerText = balance.toFixed(2);
 }
 
-function deposit() {
-  let amount = prompt('Enter deposit amount');
-  balance += Number(amount);
-  updateBalance();
+function deposit(){
+ let amt = parseFloat(document.getElementById("amount").value);
+ if(amt>0){balance += amt; updateBalance();}
 }
 
-function withdraw() {
-  let amount = prompt('Enter withdraw amount');
-  if(balance >= amount) {
-    balance -= Number(amount);
-    updateBalance();
-  } else {
-    alert('Not enough balance');
-  }
+function withdraw(){
+ let amt = parseFloat(document.getElementById("amount").value);
+ if(amt>0 && amt<=balance){balance -= amt; updateBalance();}
 }
 
-function playGame(game) {
-  let bet = prompt('Enter bet amount');
-  if(balance >= bet) {
-    balance -= Number(bet);
-    let win = Math.random() > 0.5;
-    if(win) {
-      let profit = bet * 2;
-      balance += profit;
-      alert('You won ' + profit);
-    } else {
-      alert('You lost');
-    }
-    updateBalance();
-  } else {
-    alert('Deposit first');
-  }
+// AVIATOR SIMULATION
+function startAviator(){
+ let bet = parseFloat(document.getElementById("aviatorBet").value);
+ if(bet>balance){alert("No balance");return;}
+ let multiplier = (Math.random()*5+1).toFixed(2);
+ let crash = Math.random() < 0.4; // 40% lose
+
+ if(crash){
+  balance -= bet;
+  document.getElementById("aviatorResult").innerText = "💥 Crashed! You lost";
+ } else {
+  let win = bet * multiplier;
+  balance += win - bet;
+  document.getElementById("aviatorResult").innerText = "🚀 x"+multiplier+" You win $"+win.toFixed(2);
+ }
+ updateBalance();
 }
+
+// SLOTS
+function playSlots(){
+ let bet = parseFloat(document.getElementById("slotBet").value);
+ if(bet>balance){alert("No balance");return;}
+
+ let symbols = ["🍒","🍋","⭐","💎"];
+ let s1 = symbols[Math.floor(Math.random()*4)];
+ let s2 = symbols[Math.floor(Math.random()*4)];
+ let s3 = symbols[Math.floor(Math.random()*4)];
+
+ if(s1===s2 && s2===s3){
+  let win = bet*5;
+  balance += win - bet;
+  document.getElementById("slotResult").innerText = s1+" "+s2+" "+s3+" JACKPOT $"+win;
+ } else {
+  balance -= bet;
+  document.getElementById("slotResult").innerText = s1+" "+s2+" "+s3+" Lost";
+ }
+ updateBalance();
+}
+
+// FOOTBALL
+function playFootball(){
+ let bet = parseFloat(document.getElementById("footballBet").value);
+ if(bet>balance){alert("No balance");return;}
+
+ let win = Math.random() < 0.5;
+ if(win){
+  let prize = bet*2;
+  balance += prize - bet;
+  document.getElementById("footballResult").innerText = "⚽ You Win $"+prize;
+ } else {
+  balance -= bet;
+  document.getElementById("footballResult").innerText = "❌ You Lose";
+ }
+ updateBalance();
+}
+
+updateBalance();
 </script></body>
 </html>
