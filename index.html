@@ -1,112 +1,257 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="am">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pro Betting Demo</title>
-<style>
-body{font-family:Arial;background:#0f172a;color:#fff;text-align:center}
-.container{max-width:400px;margin:auto;padding:20px}
-button{padding:10px 20px;margin:5px;border:none;border-radius:8px;background:#22c55e;color:#000;font-weight:bold}
-input{padding:10px;border-radius:8px;border:none;width:80%;margin:10px}
-.card{background:#1e293b;padding:15px;margin:10px;border-radius:12px}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DAI AVIATOR PRO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;700&display=swap');
+        
+        body { background-color: #0b0e11; color: white; font-family: 'Poppins', sans-serif; margin: 0; user-select: none; }
+        .font-game { font-family: 'Orbitron', sans-serif; }
+
+        /* Game Board */
+        .aviator-screen { 
+            background: radial-gradient(circle at bottom left, #1a0b12 0%, #000 100%);
+            height: 300px; position: relative; border-radius: 12px; overflow: hidden; border: 1px solid #2d1a24;
+        }
+        
+        /* Red Plane Animation */
+        .plane-wrapper {
+            position: absolute; bottom: 30px; left: 30px; width: 80px; z-index: 10;
+            transition: transform 0.1s linear;
+        }
+        .plane-img { width: 100%; filter: drop-shadow(0 0 15px #ff0000); }
+
+        /* Multiplier Text */
+        .multi-display { font-size: 4.5rem; font-weight: 900; z-index: 20; position: relative; text-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
+
+        /* Betting Buttons */
+        .btn-bet { background-color: #28a745; border-radius: 10px; font-weight: 800; transition: 0.2s; }
+        .btn-cashout { background-color: #ff9800; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
+
+        .bet-input { background: #000; border: none; color: white; text-align: center; width: 60px; font-weight: bold; }
+        .control-panel { background-color: #1c2127; border-radius: 15px; border: 1px solid #2d3748; }
+        
+        .history-dot { background: #1c2127; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+        .dot-high { color: #a951d4; } .dot-low { color: #3498db; }
+    </style>
 </head>
 <body>
-<div class="container">
-<h1>🔥 Pro Betting Demo</h1><div class="card">
-<h3>Balance: $<span id="balance">100</span></h3>
-<input type="number" id="amount" placeholder="Enter amount">
-<br>
-<button onclick="deposit()">Deposit</button>
-<button onclick="withdraw()">Withdraw</button>
-</div><div class="card">
-<h3>✈️ Aviator Style</h3>
-<input type="number" id="aviatorBet" placeholder="Bet">
-<button onclick="startAviator()">Start</button>
-<p id="aviatorResult"></p>
-</div><div class="card">
-<h3>🎰 Slots</h3>
-<input type="number" id="slotBet" placeholder="Bet">
-<button onclick="playSlots()">Spin</button>
-<p id="slotResult"></p>
-</div><div class="card">
-<h3>⚽ Football Bet</h3>
-<input type="number" id="footballBet" placeholder="Bet">
-<button onclick="playFootball()">Play</button>
-<p id="footballResult"></p>
-</div></div><script>
-let balance = 100;
 
-function updateBalance(){
- document.getElementById("balance").innerText = balance.toFixed(2);
-}
+    <div class="p-3 flex justify-between items-center bg-[#1c2127] border-b border-gray-800">
+        <span class="text-red-600 font-black italic text-2xl tracking-tighter">Aviator</span>
+        <div class="bg-black px-4 py-1.5 rounded-full border border-green-900 flex items-center gap-2">
+            <span id="main-balance" class="text-green-500 font-bold">50,000.00</span>
+            <span class="text-[10px] text-gray-500">ETB</span>
+        </div>
+    </div>
 
-function deposit(){
- let amt = parseFloat(document.getElementById("amount").value);
- if(amt>0){balance += amt; updateBalance();}
-}
+    <div class="p-4 max-w-md mx-auto">
+        <div id="history" class="flex gap-2 mb-4 overflow-x-auto pb-1 no-scrollbar">
+            <span class="history-dot dot-low">1.20x</span>
+            <span class="history-dot dot-high">25.41x</span>
+            <span class="history-dot dot-low">1.05x</span>
+            <span class="history-dot dot-high">3.12x</span>
+        </div>
 
-function withdraw(){
- let amt = parseFloat(document.getElementById("amount").value);
- if(amt>0 && amt<=balance){balance -= amt; updateBalance();}
-}
+        <div class="aviator-screen flex items-center justify-center">
+            <div id="game-status" class="absolute top-4 text-gray-500 font-bold text-xs uppercase tracking-widest">በመጠባበቅ ላይ...</div>
+            <div id="multiplier-val" class="multi-display font-game">1.00x</div>
+            
+            <div id="plane-box" class="plane-wrapper">
+                <img class="plane-img" src="https://www.svgrepo.com/show/491500/airplane-top-view.svg" style="filter: invert(15%) sepia(95%) saturate(6932%) hue-rotate(348deg) brightness(92%) contrast(100%);">
+            </div>
+        </div>
 
-// AVIATOR SIMULATION
-function startAviator(){
- let bet = parseFloat(document.getElementById("aviatorBet").value);
- if(bet>balance){alert("No balance");return;}
- let multiplier = (Math.random()*5+1).toFixed(2);
- let crash = Math.random() < 0.4; // 40% lose
+        <div class="mt-4 space-y-4">
+            
+            <div class="control-panel p-4">
+                <div class="flex items-center justify-between gap-4">
+                    <div class="flex flex-col items-center bg-black p-2 rounded-lg">
+                        <div class="flex items-center gap-2 mb-1">
+                            <button onclick="changeVal('amt1', -1)" class="text-gray-500 font-bold px-2">−</button>
+                            <input id="amt1" type="number" value="10.00" class="bet-input outline-none">
+                            <button onclick="changeVal('amt1', 1)" class="text-gray-500 font-bold px-2">+</button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-1 w-full">
+                            <button onclick="setVal('amt1', 50)" class="bg-gray-800 text-[10px] rounded px-1">50</button>
+                            <button onclick="setVal('amt1', 100)" class="bg-gray-800 text-[10px] rounded px-1">100</button>
+                        </div>
+                    </div>
+                    <button id="btn1" onclick="handleBetAction(1)" class="btn-bet flex-1 py-4 text-lg leading-tight">ተወራረድ<br><span id="label1" class="text-xs font-normal">10.00 ETB</span></button>
+                </div>
+            </div>
 
- if(crash){
-  balance -= bet;
-  document.getElementById("aviatorResult").innerText = "💥 Crashed! You lost";
- } else {
-  let win = bet * multiplier;
-  balance += win - bet;
-  document.getElementById("aviatorResult").innerText = "🚀 x"+multiplier+" You win $"+win.toFixed(2);
- }
- updateBalance();
-}
+            <div class="control-panel p-4">
+                <div class="flex items-center justify-between gap-4">
+                    <div class="flex flex-col items-center bg-black p-2 rounded-lg">
+                        <div class="flex items-center gap-2 mb-1">
+                            <button onclick="changeVal('amt2', -1)" class="text-gray-500 font-bold px-2">−</button>
+                            <input id="amt2" type="number" value="10.00" class="bet-input outline-none">
+                            <button onclick="changeVal('amt2', 1)" class="text-gray-500 font-bold px-2">+</button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-1 w-full">
+                            <button onclick="setVal('amt2', 50)" class="bg-gray-800 text-[10px] rounded px-1">50</button>
+                            <button onclick="setVal('amt2', 100)" class="bg-gray-800 text-[10px] rounded px-1">100</button>
+                        </div>
+                    </div>
+                    <button id="btn2" onclick="handleBetAction(2)" class="btn-bet flex-1 py-4 text-lg leading-tight">ተወራረድ<br><span id="label2" class="text-xs font-normal">10.00 ETB</span></button>
+                </div>
+            </div>
 
-// SLOTS
-function playSlots(){
- let bet = parseFloat(document.getElementById("slotBet").value);
- if(bet>balance){alert("No balance");return;}
+        </div>
+    </div>
 
- let symbols = ["🍒","🍋","⭐","💎"];
- let s1 = symbols[Math.floor(Math.random()*4)];
- let s2 = symbols[Math.floor(Math.random()*4)];
- let s3 = symbols[Math.floor(Math.random()*4)];
+    <audio id="engine-sound" loop src="https://www.soundjay.com/transportation/sounds/propeller-plane-flying-1.mp3"></audio>
+    <audio id="crash-sound" src="https://assets.mixkit.co/active_storage/sfx/2511/2511-preview.mp3"></audio>
 
- if(s1===s2 && s2===s3){
-  let win = bet*5;
-  balance += win - bet;
-  document.getElementById("slotResult").innerText = s1+" "+s2+" "+s3+" JACKPOT $"+win;
- } else {
-  balance -= bet;
-  document.getElementById("slotResult").innerText = s1+" "+s2+" "+s3+" Lost";
- }
- updateBalance();
-}
+    <script>
+        let balance = 50000.00;
+        let isFlying = false;
+        let multiplier = 1.00;
+        let gameLoop;
+        let bets = { 1: { active: false, amt: 0 }, 2: { active: false, amt: 0 } };
 
-// FOOTBALL
-function playFootball(){
- let bet = parseFloat(document.getElementById("footballBet").value);
- if(bet>balance){alert("No balance");return;}
+        function updateBalance() {
+            document.getElementById('main-balance').innerText = balance.toLocaleString(undefined, {minimumFractionDigits: 2});
+        }
 
- let win = Math.random() < 0.5;
- if(win){
-  let prize = bet*2;
-  balance += prize - bet;
-  document.getElementById("footballResult").innerText = "⚽ You Win $"+prize;
- } else {
-  balance -= bet;
-  document.getElementById("footballResult").innerText = "❌ You Lose";
- }
- updateBalance();
-}
+        function changeVal(id, v) {
+            let el = document.getElementById(id);
+            let val = parseFloat(el.value);
+            if(val + v > 0) el.value = (val + v).toFixed(2);
+            updateLabels();
+        }
 
-updateBalance();
-</script></body>
+        function setVal(id, v) {
+            document.getElementById(id).value = v.toFixed(2);
+            updateLabels();
+        }
+
+        function updateLabels() {
+            if(!bets[1].active) document.getElementById('label1').innerText = parseFloat(document.getElementById('amt1').value).toFixed(2) + " ETB";
+            if(!bets[2].active) document.getElementById('label2').innerText = parseFloat(document.getElementById('amt2').value).toFixed(2) + " ETB";
+        }
+
+        function handleBetAction(num) {
+            let btn = document.getElementById('btn' + num);
+            let amt = parseFloat(document.getElementById('amt' + num).value);
+
+            if(!isFlying && !bets[num].active) {
+                // Place Bet
+                if(amt > balance) return alert("በቂ የገንዘብ መጠን የለም!");
+                balance -= amt;
+                bets[num].active = true;
+                bets[num].amt = amt;
+                btn.classList.replace('bg-green-600', 'bg-red-800');
+                btn.innerHTML = "ይሰረዝ...<br><span class='text-xs font-normal'>በመጠባበቅ ላይ</span>";
+                updateBalance();
+            } else if (isFlying && bets[num].active) {
+                // Cash Out
+                let win = bets[num].amt * multiplier;
+                balance += win;
+                bets[num].active = false;
+                alert(`እንኳን ደስ አለዎት! ${win.toFixed(2)} አሸንፈዋል!`);
+                resetButton(num);
+                updateBalance();
+            }
+        }
+
+        function resetButton(num) {
+            let btn = document.getElementById('btn' + num);
+            btn.className = "btn-bet flex-1 py-4 text-lg leading-tight bg-green-600";
+            btn.innerHTML = `ተወራረድ<br><span class="text-xs font-normal">${document.getElementById('amt'+num).value} ETB</span>`;
+        }
+
+        // GAME ENGINE
+        function startWaiting() {
+            if(isFlying) return;
+            let status = document.getElementById('game-status');
+            let counter = 5;
+            
+            let waitTimer = setInterval(() => {
+                status.innerText = `ቀጣይ በረራ በ ${counter} ሰከንድ...`;
+                counter--;
+                if(counter < 0) {
+                    clearInterval(waitTimer);
+                    launchPlane();
+                }
+            }, 1000);
+        }
+
+        function launchPlane() {
+            isFlying = true;
+            multiplier = 1.00;
+            document.getElementById('multiplier-val').style.color = "white";
+            document.getElementById('game-status').innerText = "አውሮፕላኑ እየበረረ ነው!";
+            
+            // ድምፅ ይጀምራል
+            document.getElementById('engine-sound').play();
+
+            // Setup Buttons for flight
+            for(let i=1; i<=2; i++) {
+                if(bets[i].active) {
+                    let btn = document.getElementById('btn'+i);
+                    btn.classList.replace('bg-red-800', 'btn-cashout');
+                    btn.classList.add('bg-orange-500');
+                    btn.innerHTML = `ውጣ (CASH OUT)<br><span class='text-xs font-bold'>${(bets[i].amt * multiplier).toFixed(2)} ETB</span>`;
+                }
+            }
+
+            // Logic: 40% Admin Profit (Early Crash)
+            let crashAt = Math.random() < 0.4 ? (1 + Math.random() * 0.5) : (1 + Math.random() * 10);
+
+            gameLoop = setInterval(() => {
+                multiplier += 0.02;
+                document.getElementById('multiplier-val').innerText = multiplier.toFixed(2) + "x";
+                
+                // Animate Plane
+                let plane = document.getElementById('plane-box');
+                plane.style.transform = `translate(${multiplier * 18}px, -${multiplier * 12}px)`;
+
+                // Update Cashout labels
+                for(let i=1; i<=2; i++) {
+                    if(bets[i].active) {
+                        document.getElementById('btn'+i).querySelector('span').innerText = (bets[i].amt * multiplier).toFixed(2) + " ETB";
+                    }
+                }
+
+                if(multiplier >= crashAt) crash();
+            }, 80);
+        }
+
+        function crash() {
+            clearInterval(gameLoop);
+            isFlying = false;
+            
+            // ድምፅ ይቆማል
+            document.getElementById('engine-sound').pause();
+            document.getElementById('engine-sound').currentTime = 0;
+            document.getElementById('crash-sound').play();
+
+            document.getElementById('multiplier-val').innerText = "ፈነዳ (FLEW AWAY!)";
+            document.getElementById('multiplier-val').style.color = "#ff0000";
+
+            // Reset bets that didn't cash out
+            for(let i=1; i<=2; i++) {
+                if(bets[i].active) {
+                    bets[i].active = false;
+                    resetButton(i);
+                }
+            }
+
+            setTimeout(() => {
+                document.getElementById('plane-box').style.transform = "translate(0,0)";
+                document.getElementById('multiplier-val').innerText = "1.00x";
+                startWaiting();
+            }, 3000);
+        }
+
+        // Start
+        startWaiting();
+    </script>
+</body>
 </html>
