@@ -1,206 +1,642 @@
 <!DOCTYPE html>
-<html lang="am">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DAI ETHIO-AVIATOR</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Aviator - ከፍ ያለ ጨዋታ</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap');
-        
-        body { background-color: #0b0e11; color: white; font-family: 'Noto Sans Ethiopic', sans-serif; margin: 0; overflow-x: hidden; }
-        .page { display: none; padding-bottom: 80px; }
-        .active-page { display: block; }
-        
-        /* Aviator Engine Visuals */
-        .game-area { background: black; height: 280px; position: relative; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
-        .plane { position: absolute; bottom: 20px; left: 20px; width: 60px; z-index: 10; filter: drop-shadow(0 0 10px red); }
-        .multiplier { font-family: 'Orbitron', sans-serif; font-size: 3.5rem; font-weight: bold; z-index: 20; position: relative; }
-        
-        /* Navigation */
-        .nav-bar { background: #1c2127; position: fixed; bottom: 0; width: 100%; height: 65px; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #333; z-index: 1000; }
-        .nav-item { text-align: center; color: #848484; font-size: 0.7rem; cursor: pointer; }
-        .nav-item.active { color: #d32f2f; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
 
-        /* Buttons */
-        .bet-btn { background-color: #28a745; border-radius: 8px; font-weight: bold; transition: 0.2s; }
-        .bet-btn:active { transform: scale(0.95); }
-        .cashout-btn { background-color: #ff9800; }
+        body {
+            background: linear-gradient(145deg, #0a0f1e 0%, #0c1222 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Poppins', 'Inter', system-ui, -apple-system, 'Montserrat', sans-serif;
+            padding: 20px;
+        }
+
+        /* ዋና ካርድ */
+        .game-container {
+            max-width: 560px;
+            width: 100%;
+            background: rgba(10, 14, 23, 0.8);
+            backdrop-filter: blur(2px);
+            border-radius: 56px;
+            padding: 24px 20px 32px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,215,0,0.2);
+            transition: all 0.2s;
+        }
+
+        /* ራስጌ */
+        .game-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .game-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFD966, #FFB347);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+        }
+
+        .balance-box {
+            background: #070b14;
+            border-radius: 100px;
+            padding: 8px 20px;
+            display: inline-flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-top: 12px;
+            border: 1px solid #FFD96655;
+        }
+
+        .balance-label {
+            color: #9aa4bf;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .balance-amount {
+            color: #FFE484;
+            font-weight: 800;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+        }
+
+        .balance-currency {
+            font-size: 1rem;
+            color: #cdd9ff;
+        }
+
+        /* ማባዣ ሰሌዳ (multipliers history) */
+        .multiplier-strip {
+            background: #03060ecc;
+            border-radius: 60px;
+            padding: 12px 16px;
+            margin: 16px 0 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            backdrop-filter: blur(4px);
+            border: 1px solid #2a2f3f;
+        }
+
+        .multiplier-chip {
+            background: #11161f;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: #f2c94c;
+            box-shadow: inset 0 1px 0 #ffffff1a, 0 2px 6px black;
+            font-family: monospace;
+        }
+
+        /* ማዕከላዊ ግራፊክ / አውሮፕላን ክልል */
+        .flight-area {
+            background: #01010180;
+            border-radius: 48px;
+            margin: 16px 0;
+            padding: 20px 10px;
+            text-align: center;
+            border: 1px solid #ffd96655;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .current-multiplier {
+            font-size: 5rem;
+            font-weight: 900;
+            font-family: 'Courier New', monospace;
+            color: #FFE55C;
+            text-shadow: 0 0 12px #ffb347;
+            line-height: 1;
+        }
+
+        .plane-icon {
+            font-size: 3rem;
+            display: inline-block;
+            margin-top: 8px;
+            filter: drop-shadow(0 4px 6px black);
+            animation: floatPlane 1.8s infinite ease;
+        }
+
+        @keyframes floatPlane {
+            0% { transform: translateY(0px);}
+            50% { transform: translateY(-6px);}
+            100% { transform: translateY(0px);}
+        }
+
+        .status-badge {
+            background: #1e2a3a;
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #b9e6ff;
+        }
+
+        /* ውርርድ አካባቢ */
+        .bet-section {
+            background: #0b101ccc;
+            border-radius: 42px;
+            padding: 20px 16px;
+            margin: 16px 0;
+            border: 1px solid #2e3444;
+        }
+
+        .bet-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .bet-label {
+            color: white;
+            font-weight: 600;
+            background: #00000055;
+            padding: 6px 14px;
+            border-radius: 32px;
+            font-size: 0.9rem;
+        }
+
+        .bet-amount-input {
+            background: #010101aa;
+            border: 1px solid #ffd966aa;
+            border-radius: 60px;
+            padding: 8px 16px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #FFE6A3;
+            width: 130px;
+            text-align: center;
+            font-family: monospace;
+        }
+
+        .quick-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .quick-btn {
+            background: #1f2538;
+            border: none;
+            color: #FFE5A3;
+            font-weight: bold;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.1s linear;
+            box-shadow: 0 2px 4px black;
+        }
+
+        .quick-btn:active {
+            transform: scale(0.96);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 18px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-cashout {
+            background: linear-gradient(120deg, #f0b429, #ff8c42);
+            border: none;
+            padding: 14px 28px;
+            font-weight: 800;
+            font-size: 1.3rem;
+            border-radius: 60px;
+            color: #0a0f1e;
+            width: 48%;
+            cursor: pointer;
+            transition: 0.08s linear;
+            box-shadow: 0 6px 0 #7a3e0a;
+        }
+
+        .btn-place {
+            background: linear-gradient(120deg, #2c6e9e, #1f4e72);
+            border: none;
+            padding: 14px 28px;
+            font-weight: 800;
+            font-size: 1.3rem;
+            border-radius: 60px;
+            color: white;
+            width: 48%;
+            cursor: pointer;
+            transition: 0.08s linear;
+            box-shadow: 0 6px 0 #0c2b3b;
+        }
+
+        .btn-cashout:active, .btn-place:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #3a2a0a;
+        }
+
+        .info-stats {
+            display: flex;
+            justify-content: space-between;
+            background: #02050ccc;
+            border-radius: 28px;
+            padding: 12px 20px;
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #b7c3e6;
+        }
+
+        .fun-mode-tag {
+            background: #ffcf4a;
+            color: #1a1e2c;
+            font-weight: bold;
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+        }
+
+        .round-history {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            font-family: monospace;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        footer {
+            font-size: 0.7rem;
+            text-align: center;
+            color: #6a7290;
+            margin-top: 16px;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            transform: none;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
-
-    <div class="p-3 flex justify-between items-center bg-[#1c2127] border-b border-gray-800 sticky top-0 z-[500]">
-        <div class="flex items-center gap-2">
-            <span class="text-red-600 font-black italic text-xl">Aviator</span>
-        </div>
-        <div class="flex items-center gap-3">
-            <div class="bg-black px-3 py-1 rounded-full border border-green-900">
-                <span id="balance" class="text-green-500 font-bold text-sm">50,000.00</span> <span class="text-[10px]">ETB</span>
-            </div>
-            <i class="fa-solid fa-bars text-gray-400" onclick="showPage('profile')"></i>
+<div class="game-container">
+    <div class="game-header">
+        <div class="game-title">✈️ AVIATOR</div>
+        <div class="balance-box">
+            <span class="balance-label">ቀሪ ሒሳብ</span>
+            <span class="balance-amount" id="balanceDisplay">50,000.00</span>
+            <span class="balance-currency">ETB</span>
         </div>
     </div>
 
-    <section id="game" class="page active-page p-3">
-        <div class="flex gap-2 mb-3 overflow-x-auto no-scrollbar py-1">
-            <span class="bg-gray-800 text-blue-400 px-2 py-0.5 rounded-full text-[10px] font-bold">1.22x</span>
-            <span class="bg-gray-800 text-purple-400 px-2 py-0.5 rounded-full text-[10px] font-bold">14.50x</span>
-            <span class="bg-gray-800 text-blue-300 px-2 py-0.5 rounded-full text-[10px] font-bold">2.10x</span>
-        </div>
-
-        <div class="game-area flex flex-col items-center justify-center">
-            <div id="status" class="absolute top-4 text-gray-500 text-[10px] font-bold uppercase">በመጠባበቅ ላይ...</div>
-            <div id="multi" class="multiplier text-white">1.00x</div>
-            <img id="plane-img" src="https://www.svgrepo.com/show/491500/airplane-top-view.svg" class="plane" style="filter: invert(15%) sepia(95%) saturate(6932%) hue-rotate(348deg) brightness(92%) contrast(100%);">
-            
-            <div class="absolute bottom-3 right-3 bg-black/40 px-2 py-1 rounded-full text-[10px] flex items-center gap-1">
-                <div class="flex -space-x-1">
-                    <div class="w-3 h-3 rounded-full bg-green-500 border border-black"></div>
-                    <div class="w-3 h-3 rounded-full bg-yellow-500 border border-black"></div>
-                </div>
-                131 ተጫዋቾች
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 gap-3 mt-4">
-            <div class="bg-[#1c2127] p-3 rounded-xl border border-gray-800">
-                <div class="flex justify-between items-center mb-2">
-                    <div class="flex bg-black rounded-lg items-center px-2 py-1 w-2/3">
-                        <button onclick="changeBet(-1, 'amt1')" class="text-gray-400 px-2">−</button>
-                        <input id="amt1" type="number" value="10.00" class="bg-transparent w-full text-center font-bold text-sm outline-none">
-                        <button onclick="changeBet(1, 'amt1')" class="text-gray-400 px-2">+</button>
-                    </div>
-                    <button id="btn1" onclick="handleBet(1)" class="bet-btn w-1/3 py-3 ml-2 text-xs leading-tight">ተወራረድ<br><span class="text-[10px] font-normal">10.00 ETB</span></button>
-                </div>
-                <div class="grid grid-cols-4 gap-1">
-                    <button onclick="setBet(10, 'amt1')" class="bg-gray-800 rounded text-[10px] py-1">10</button>
-                    <button onclick="setBet(50, 'amt1')" class="bg-gray-800 rounded text-[10px] py-1">50</button>
-                    <button onclick="setBet(100, 'amt1')" class="bg-gray-800 rounded text-[10px] py-1">100</button>
-                    <button onclick="setBet(500, 'amt1')" class="bg-gray-800 rounded text-[10px] py-1">500</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="wallet" class="page p-5">
-        <h2 class="text-xl font-bold mb-6">ገንዘብ አስገባ (Deposit)</h2>
-        <div class="space-y-4">
-            <div class="bg-gray-900 p-4 rounded-2xl flex items-center justify-between border border-blue-900">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">T</div>
-                    <div><p class="font-bold">Telebirr</p><p class="text-xs text-gray-500">ፈጣን ክፍያ</p></div>
-                </div>
-                <i class="fa-solid fa-chevron-right text-gray-600"></i>
-            </div>
-            <div class="bg-gray-900 p-4 rounded-2xl flex items-center justify-between border border-yellow-700">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-yellow-600 rounded-full flex items-center justify-center">C</div>
-                    <div><p class="font-bold">CBE Birr</p><p class="text-xs text-gray-500">ባንክ ማስተላለፊያ</p></div>
-                </div>
-                <i class="fa-solid fa-chevron-right text-gray-600"></i>
-            </div>
-        </div>
-    </section>
-
-    <section id="profile" class="page p-5">
-        <div class="text-center mb-8">
-            <img src="https://i.pravatar.cc/100?u=dai" class="w-20 h-20 rounded-full mx-auto border-4 border-red-600 mb-2">
-            <h3 class="text-xl font-bold">ዳይ (Dai)</h3>
-            <p class="text-gray-500 text-sm">ID: 8829102</p>
-        </div>
-        <div class="bg-gray-900 rounded-2xl overflow-hidden">
-            <div class="p-4 border-b border-gray-800 flex justify-between"><span>የውርርድ ታሪክ</span> <i class="fa-solid fa-clock-rotate-left"></i></div>
-            <div class="p-4 border-b border-gray-800 flex justify-between"><span>ቅንብሮች</span> <i class="fa-solid fa-gear"></i></div>
-            <div onclick="showPage('wallet')" class="p-4 border-b border-gray-800 flex justify-between text-green-500 font-bold"><span>ገንዘብ አውጣ (Withdraw)</span> <i class="fa-solid fa-money-bill-transfer"></i></div>
-        </div>
-    </section>
-
-    <div class="nav-bar">
-        <div onclick="showPage('game', this)" class="nav-item active"><i class="fa-solid fa-plane-up text-xl mb-1"></i><p>ጨዋታ</p></div>
-        <div onclick="showPage('wallet', this)" class="nav-item"><i class="fa-solid fa-wallet text-xl mb-1"></i><p>ኪስ</p></div>
-        <div onclick="showPage('profile', this)" class="nav-item"><i class="fa-solid fa-user text-xl mb-1"></i><p>ፕሮፋይል</p></div>
+    <!-- FUN MODE እና ያለፉ ማባዣዎች -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin: 8px 0 4px;">
+        <div class="fun-mode-tag">🎮 FUN MODE</div>
+        <div style="font-size: 0.7rem; background: #00000066; padding: 4px 12px; border-radius: 20px;">ዝንባሌ ሙከራ</div>
+    </div>
+    <div class="multiplier-strip" id="multiplierHistory">
+        <span class="multiplier-chip">1.31x</span>
+        <span class="multiplier-chip">1.98x</span>
+        <span class="multiplier-chip">2.29x</span>
+        <span class="multiplier-chip">1.50x</span>
+        <span class="multiplier-chip">16.69x</span>
+        <span class="multiplier-chip">1.21x</span>
+        <span class="multiplier-chip">1.42x</span>
     </div>
 
-    <audio id="fly-sound" loop src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+    <!-- ዋና የበረራ ክፍል -->
+    <div class="flight-area">
+        <div class="current-multiplier" id="liveMultiplier">1.00x</div>
+        <div class="plane-icon">🛩️</div>
+        <div class="status-badge" id="gameStatusText">⚡ ውርርድ አልተደረገም</div>
+    </div>
 
-    <script>
-        let balance = 50000.00;
-        let isFlying = false;
-        let hasBet1 = false;
-        let multiplier = 1.00;
-        let loop;
+    <!-- ውርርድ ቅንብሮች -->
+    <div class="bet-section">
+        <div class="bet-row">
+            <span class="bet-label">💰 ውርርድ (ETB)</span>
+            <input type="number" id="betAmount" class="bet-amount-input" value="4.00" step="1" min="1">
+        </div>
+        <div class="quick-buttons">
+            <button class="quick-btn" data-bet="4">4 ETB</button>
+            <button class="quick-btn" data-bet="16">16 ETB</button>
+            <button class="quick-btn" data-bet="40">40 ETB</button>
+            <button class="quick-btn" data-bet="80">80 ETB</button>
+            <button class="quick-btn" data-bet="400">400 ETB</button>
+        </div>
+        <div class="action-buttons">
+            <button class="btn-place" id="placeBetBtn">🚀 ውርርድ አስገባ</button>
+            <button class="btn-cashout" id="cashoutBtn">💸 ገንዘብ አውጣ</button>
+        </div>
+    </div>
 
-        function showPage(id, el) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-            document.getElementById(id).classList.add('active-page');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            if(el) el.classList.add('active');
+    <!-- የጨዋታ ስታቲስቲክስ -->
+    <div class="info-stats">
+        <span>🏆 ከፍተኛ ሽልማት: <span id="maxWinSpan">0.00</span> ETB</span>
+        <span>🔄 ዙር: <span id="roundNumber">217</span>/<span id="totalRounds">218</span></span>
+        <span>📈 የአሁን ማባዣ: <span id="currentMultiText">1.00x</span></span>
+    </div>
+    <div class="round-history" id="lastRounds">
+        <!-- ተጨማሪ የማባዣ ታሪክ -->
+    </div>
+    <footer>⚡ አውሮፕላኑ ከመብረሩ በፊት ውርርድ ያስገቡ! በሚበርበት ጊዜ ማባዣ ይጨምራል።</footer>
+</div>
+
+<script>
+    // ------------------- የጨዋታ ሁኔታ ------------------
+    let balance = 50000.00;      // ETB
+    let currentBet = 0.00;
+    let isGameActive = false;     // ውርርድ ከተደረገ በኋላ አውሮፕላን እየበረረ ነው
+    let currentMultiplier = 1.00;
+    let animationFrame = null;
+    let roundInterval = null;
+    let roundActive = false;      // የአውሮፕላን ጨዋታ እየሄደ ነው (multiplier እየጨመረ)
+    let lastMultipliers = [1.31, 1.98, 2.29, 1.50, 16.69, 1.21, 1.42];  // ያለፉ ውጤቶች
+    let roundCounter = 217;
+    let maxWin = 0.00;
+    let gameLoopTimeout = null;
+
+    // DOM elements
+    const balanceSpan = document.getElementById('balanceDisplay');
+    const liveMultiplierSpan = document.getElementById('liveMultiplier');
+    const gameStatusSpan = document.getElementById('gameStatusText');
+    const betInput = document.getElementById('betAmount');
+    const placeBtn = document.getElementById('placeBetBtn');
+    const cashoutBtn = document.getElementById('cashoutBtn');
+    const maxWinSpan = document.getElementById('maxWinSpan');
+    const roundNumberSpan = document.getElementById('roundNumber');
+    const totalRoundsSpan = document.getElementById('totalRounds');
+    const currentMultiText = document.getElementById('currentMultiText');
+    const multiplierHistoryDiv = document.getElementById('multiplierHistory');
+    const lastRoundsDiv = document.getElementById('lastRounds');
+
+    // ተጨማሪ የማሳያ ተግባር
+    function updateUI() {
+        balanceSpan.innerText = balance.toFixed(2);
+        if (maxWin < balance) {
+            // ከፍተኛ ሽልማት መዝግብ (ከ cashout ጋር)
         }
+        maxWinSpan.innerText = maxWin.toFixed(2);
+        roundNumberSpan.innerText = roundCounter;
+        totalRoundsSpan.innerText = roundCounter + 1;
+        currentMultiText.innerText = currentMultiplier.toFixed(2) + 'x';
+        liveMultiplierSpan.innerText = currentMultiplier.toFixed(2) + 'x';
+    }
 
-        // Betting Logic
-        function changeBet(val, id) {
-            let el = document.getElementById(id);
-            let current = parseFloat(el.value);
-            if(current + val > 0) el.value = (current + val).toFixed(2);
+    // የማባዣ ታሪክ ማሳደግ
+    function updateMultiplierHistory(newMult) {
+        lastMultipliers.unshift(newMult);
+        if(lastMultipliers.length > 8) lastMultipliers.pop();
+        // ማሳያ ማደራጀት
+        multiplierHistoryDiv.innerHTML = '';
+        lastMultipliers.slice(0,7).forEach(m => {
+            const chip = document.createElement('span');
+            chip.className = 'multiplier-chip';
+            chip.innerText = m.toFixed(2) + 'x';
+            multiplierHistoryDiv.appendChild(chip);
+        });
+        // በታችኛው ረድፍ ላይ የቅርብ ጊዜ ውጤቶች
+        lastRoundsDiv.innerHTML = lastMultipliers.slice(0,5).map(m => `<span style="background:#00000066; padding:4px 12px; border-radius:20px;">${m.toFixed(2)}x</span>`).join('');
+    }
+
+    // አዲስ ዙር ሲጀምር crash point ማመንጨት (1.00 - 100.00)
+    function generateCrashPoint() {
+        // እውነተኛ አቪዬተር መሰል RTP አሰራር: 1.00 እስከ 100 መካከል በራንደም ግን አንዳንድ ጊዜ በትንሹ ይወድቃል
+        let r = Math.random();
+        // አብዛኛውን ጊዜ ከ1.2 እስከ 10, አልፎ አልፎ ትልቅ
+        if(r < 0.55) return 1 + Math.random() * 1.8;       // 1.00 - 2.80
+        else if(r < 0.85) return 2.8 + Math.random() * 4;   // 2.8 - 6.8
+        else return 7 + Math.random() * 25;                 // 7 - 32
+    }
+
+    let crashPoint = 0.00;
+    let multiplierInterval = null;
+
+    // ጨዋታ ማቆም (crash)
+    function crashGame() {
+        if(!roundActive) return;
+        if(multiplierInterval) clearInterval(multiplierInterval);
+        multiplierInterval = null;
+        roundActive = false;
+        // የአሁን ውርርድ ካለ እና ካልወጣ ማጣት
+        if(isGameActive && currentBet > 0) {
+            // ተጫዋቹ አልወጣም => ውርርድ ይቀንሳል
+            balance -= currentBet;
+            if(balance < 0) balance = 0;
+            gameStatusSpan.innerText = `💥 አውሮፕላኑ ፈረሰ! ከሽሯል ${currentBet.toFixed(2)} ETB`;
+            updateUI();
+            currentBet = 0;
+            isGameActive = false;
         }
-
-        function setBet(val, id) {
-            document.getElementById(id).value = val.toFixed(2);
-        }
-
-        function handleBet(num) {
-            let btn = document.getElementById('btn'+num);
-            let amt = parseFloat(document.getElementById('amt'+num).value);
-
-            if(!isFlying && !hasBet1) {
-                if(amt > balance) return alert("በቂ ገንዘብ የለም!");
-                balance -= amt;
-                hasBet1 = true;
-                btn.innerHTML = "በመጠባበቅ ላይ...<br><span class='text-[10px]'>ሰርዝ</span>";
-                btn.classList.replace('bg-green-600', 'bg-gray-600');
-                updateUI();
-            } else if (isFlying && hasBet1) {
-                // Cash Out
-                let win = amt * multiplier;
-                balance += win;
-                hasBet1 = false;
-                alert(`እንኳን ደስ አለዎት! ${win.toFixed(2)} ETB አሸንፈዋል!`);
-                btn.innerHTML = `ተወራረድ<br><span class='text-[10px]'>${amt.toFixed(2)} ETB</span>`;
-                btn.classList.remove('cashout-btn');
-                btn.classList.add('bg-green-600');
-                updateUI();
+        // የተዘጋጀ crash point ወደ ታሪክ መዝግብ
+        let crashedMult = currentMultiplier;
+        updateMultiplierHistory(crashedMult);
+        // ዙሩ ተጠናቋል
+        gameStatusSpan.style.background = "#4a1a2a";
+        setTimeout(() => {
+            if(!roundActive && !isGameActive) {
+                gameStatusSpan.innerText = "🛬 አውሮፕላን ተደምስሷል. አዲስ ውርርድ ያስገቡ";
+                gameStatusSpan.style.background = "#1e2a3a";
             }
-        }
+        }, 1800);
+        stopGameLoop();
+        enableButtons(true);
+    }
 
-        // Game Loop
-        function startEngine() {
-            if(isFlying) return;
-            let status = document.getElementById('status');
-            let countdown = 5;
-            
-            let timer = setInterval(() => {
-                status.innerText = `ቀጣዩ በረራ በ ${countdown} ሰከንድ...`;
-                countdown--;
-                if(countdown < 0) {
-                    clearInterval(timer);
-                    launch();
-                }
-            }, 1000);
-        }
-
-        function launch() {
-            isFlying = true;
-            multiplier = 1.00;
-            document.getElementById('fly-sound').play();
-            document.getElementById('status').innerText = "አውሮፕላኑ እየበረረ ነው!";
-            
-            if(hasBet1) {
-                let btn = document.getElementById('btn1');
-                btn.innerHTML = `ውጣ (Cash Out)<br><span class='text-[10px]'>${(parseFloat(document.getElementById('amt1').value)*multiplier).toFixed(2)}</span>`;
-                btn.classList.replace('bg-gray-600', 'cashout-btn');
+    // ማባዣ መጨመር (loop)
+    function startMultiplierIncrease() {
+        if(multiplierInterval) clearInterval(multiplierInterval);
+        let step = 0;
+        currentMultiplier = 1.00;
+        updateUI();
+        multiplierInterval = setInterval(() => {
+            if(!roundActive) return;
+            // ማባዣ መጨመር (ያለማቋረጥ)
+            let increment = 0.02 + (Math.random() * 0.03);
+            currentMultiplier = +(currentMultiplier + increment).toFixed(2);
+            if(currentMultiplier >= crashPoint && roundActive) {
+                // crash ይሆናል
+                currentMultiplier = crashPoint;
+                updateUI();
+                crashGame();
+                return;
             }
+            updateUI();
+            // ከፍተኛ ምንጭ ከሆነ እንዲያሳይ
+            if(currentMultiplier > 50) {
+                liveMultiplierSpan.style.color = "#ff4444";
+            } else {
+                liveMultiplierSpan.style.color = "#FFE55C";
+            }
+        }, 160);
+    }
 
-            // 40% Admin Logic
-            let crashPoint = Math.random() < 0.4 ? (1
+    function stopGameLoop() {
+        if(multiplierInterval) {
+            clearInterval(multiplierInterval);
+            multiplierInterval = null;
+        }
+        if(gameLoopTimeout) clearTimeout(gameLoopTimeout);
+        roundActive = false;
+        // ጨዋታ ከጨረሰ በኋላ የ cashout/place እንዲሰራ
+    }
+
+    // ውርርድ ማስገባት (አዲስ ዙር መጀመር)
+    function placeBet() {
+        if(roundActive) {
+            gameStatusSpan.innerText = "⚠️ አውሮፕላኑ በበረራ ላይ ነው! ቀጣዩን ዙር ይጠብቁ";
+            return;
+        }
+        if(isGameActive) {
+            gameStatusSpan.innerText = "ቀድሞ ውርርድ አለ. ይጠብቁ ወይም ገንዘብ ያውጡ";
+            return;
+        }
+        let betVal = parseFloat(betInput.value);
+        if(isNaN(betVal) || betVal <= 0) betVal = 4;
+        if(betVal > balance) {
+            gameStatusSpan.innerText = "❌ በቂ ገንዘብ የለም!";
+            return;
+        }
+        if(betVal < 1) betVal = 1;
+        currentBet = betVal;
+        balance -= currentBet;
+        updateUI();
+        // አዲስ ዙር መክፈት
+        roundActive = true;
+        isGameActive = true;
+        crashPoint = generateCrashPoint();
+        currentMultiplier = 1.00;
+        updateUI();
+        // የጨዋታ ሁኔታ መለወጥ
+        gameStatusSpan.innerText = `✈️ እየበረረ ነው... ማባዣ እየጨመረ ${currentMultiplier.toFixed(2)}x`;
+        startMultiplierIncrease();
+        enableButtons(false);
+        // ከተወሰነ ጊዜ በኋላ crash ሊሆን ይችላል (ተጨማሪ ዋስትና)
+    }
+
+    // Cashout: ገንዘብ ማውጣት
+    function cashout() {
+        if(!roundActive || !isGameActive) {
+            gameStatusSpan.innerText = "ንቁ ውርርድ የለም ወይም አውሮፕላኑ አልበረረም!";
+            return;
+        }
+        if(currentBet <= 0) {
+            gameStatusSpan.innerText = "ምንም ውርርድ የለም!";
+            return;
+        }
+        // አሁን ባለው ማባዣ ይሰላል
+        let winAmount = currentBet * currentMultiplier;
+        balance += winAmount;
+        if(winAmount > maxWin) maxWin = winAmount;
+        updateUI();
+        gameStatusSpan.innerText = `🎉 ገንዘብ ወጥቷል! አሸንፈዋል ${winAmount.toFixed(2)} ETB በ ${currentMultiplier.toFixed(2)}x`;
+        // ውጤቱን ወደ ታሪክ ጨምር
+        updateMultiplierHistory(currentMultiplier);
+        // ጨዋታውን አቁም
+        stopGameLoop();
+        roundActive = false;
+        isGameActive = false;
+        currentBet = 0;
+        enableButtons(true);
+        // ማባዣ ዳራ መልሶ ማስጀመር
+        currentMultiplier = 1.00;
+        updateUI();
+        liveMultiplierSpan.innerText = "1.00x";
+        gameStatusSpan.style.background = "#1e5530";
+        setTimeout(() => {
+            if(!roundActive) gameStatusSpan.style.background = "#1e2a3a";
+        },1500);
+    }
+
+    function enableButtons(enable) {
+        if(enable) {
+            placeBtn.disabled = false;
+            cashoutBtn.disabled = false;
+            betInput.disabled = false;
+        } else {
+            placeBtn.disabled = true;
+            cashoutBtn.disabled = false;   // cashout ሁልጊዜ መጫን ይቻላል ጨዋታ በሚኖርበት ጊዜ
+            betInput.disabled = true;
+        }
+        // ንቁ ውርርድ ሲኖር ውርርድ ማስገባት አይቻልም
+        if(roundActive) {
+            placeBtn.disabled = true;
+        } else {
+            placeBtn.disabled = false;
+        }
+    }
+
+    // ፈጣን የውርርድ አዝራሮች
+    document.querySelectorAll('.quick-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            if(roundActive) {
+                gameStatusSpan.innerText = "እባክዎ የአውሮፕላኑን ዙር ይጠብቁ";
+                return;
+            }
+            let val = parseFloat(btn.getAttribute('data-bet'));
+            if(!isNaN(val)) {
+                betInput.value = val.toFixed(2);
+            }
+        });
+    });
+
+    // ክስተቶች
+    placeBtn.addEventListener('click', placeBet);
+    cashoutBtn.addEventListener('click', cashout);
+
+    // መጀመሪያ ላይ ማሳያ ማዘጋጀት
+    function initGame() {
+        updateUI();
+        updateMultiplierHistory(1.08);
+        lastMultipliers = [1.31, 1.98, 2.29, 1.50, 16.69, 1.21, 1.42];
+        updateMultiplierHistory(1.08);
+        currentMultiplier = 1.00;
+        liveMultiplierSpan.innerText = "1.00x";
+        gameStatusSpan.innerText = "✨ ውርርድ ያስገቡ እና አውሮፕላኑ እንዲበር ያድርጉ!";
+        enableButtons(true);
+        roundActive = false;
+        isGameActive = false;
+        currentBet = 0;
+        roundCounter = 217;
+        totalRoundsSpan.innerText = "218";
+        roundNumberSpan.innerText = "217";
+    }
+
+    initGame();
+    // ለማስመሰል ተጨማሪ ዙር መቁጠሪያ አውቶማቲክ ማደስ crash ሲደረግ
+    function incrementRoundAfterCrash() {
+        if(!roundActive && !isGameActive) {
+            roundCounter++;
+            roundNumberSpan.innerText = roundCounter;
+            totalRoundsSpan.innerText = roundCounter+1;
+        }
+    }
+    setInterval(() => {
+        if(!roundActive && !isGameActive) {
+            incrementRoundAfterCrash();
+        }
+    }, 800);
+</script>
+</body>
+</html>
