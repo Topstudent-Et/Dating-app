@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Aviator - ከፍ ያለ ጨዋታ</title>
+    <title>Aviator | Professional Crash Game</title>
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
     <style>
         * {
             margin: 0;
@@ -13,330 +15,323 @@
         }
 
         body {
-            background: linear-gradient(145deg, #0a0f1e 0%, #0c1222 100%);
+            background: radial-gradient(circle at 20% 30%, #0a0f1e, #03060c);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Segoe UI', 'Poppins', 'Inter', system-ui, -apple-system, 'Montserrat', sans-serif;
-            padding: 20px;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, 'Poppins', sans-serif;
+            padding: 24px 16px;
         }
 
-        /* ዋና ካርድ */
+        /* main game panel */
         .game-container {
-            max-width: 560px;
+            max-width: 620px;
             width: 100%;
-            background: rgba(10, 14, 23, 0.8);
-            backdrop-filter: blur(2px);
+            background: rgba(8, 12, 20, 0.85);
+            backdrop-filter: blur(8px);
             border-radius: 56px;
-            padding: 24px 20px 32px;
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,215,0,0.2);
+            padding: 24px 22px 34px;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 200, 80, 0.25);
             transition: all 0.2s;
         }
 
-        /* ራስጌ */
+        /* header */
         .game-header {
-            text-align: center;
-            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
         }
-
-        .game-title {
-            font-size: 2.5rem;
+        .title {
+            font-size: 2.2rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #FFD966, #FFB347);
+            background: linear-gradient(145deg, #FFDF85, #FFB347);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            letter-spacing: 1px;
+            letter-spacing: -0.5px;
         }
-
-        .balance-box {
-            background: #070b14;
-            border-radius: 100px;
-            padding: 8px 20px;
-            display: inline-flex;
-            align-items: baseline;
-            gap: 10px;
-            margin-top: 12px;
-            border: 1px solid #FFD96655;
+        .balance-card {
+            background: #03060ecc;
+            border-radius: 60px;
+            padding: 6px 20px;
+            text-align: center;
+            border: 1px solid #ffd96666;
         }
-
         .balance-label {
-            color: #9aa4bf;
-            font-weight: 500;
+            font-size: 0.75rem;
+            color: #9aa9c7;
+        }
+        .balance-amount {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: #FFE484;
+            line-height: 1;
+        }
+        .currency {
             font-size: 0.9rem;
         }
 
-        .balance-amount {
-            color: #FFE484;
-            font-weight: 800;
-            font-size: 1.8rem;
-            letter-spacing: 1px;
-        }
-
-        .balance-currency {
-            font-size: 1rem;
-            color: #cdd9ff;
-        }
-
-        /* ማባዣ ሰሌዳ (multipliers history) */
-        .multiplier-strip {
-            background: #03060ecc;
-            border-radius: 60px;
-            padding: 12px 16px;
-            margin: 16px 0 20px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 12px;
-            backdrop-filter: blur(4px);
-            border: 1px solid #2a2f3f;
-        }
-
-        .multiplier-chip {
-            background: #11161f;
-            padding: 6px 14px;
-            border-radius: 40px;
-            font-weight: 800;
-            font-size: 1.1rem;
-            color: #f2c94c;
-            box-shadow: inset 0 1px 0 #ffffff1a, 0 2px 6px black;
-            font-family: monospace;
-        }
-
-        /* ማዕከላዊ ግራፊክ / አውሮፕላን ክልል */
-        .flight-area {
-            background: #01010180;
-            border-radius: 48px;
-            margin: 16px 0;
-            padding: 20px 10px;
-            text-align: center;
-            border: 1px solid #ffd96655;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .current-multiplier {
-            font-size: 5rem;
-            font-weight: 900;
-            font-family: 'Courier New', monospace;
-            color: #FFE55C;
-            text-shadow: 0 0 12px #ffb347;
-            line-height: 1;
-        }
-
-        .plane-icon {
-            font-size: 3rem;
-            display: inline-block;
-            margin-top: 8px;
-            filter: drop-shadow(0 4px 6px black);
-            animation: floatPlane 1.8s infinite ease;
-        }
-
-        @keyframes floatPlane {
-            0% { transform: translateY(0px);}
-            50% { transform: translateY(-6px);}
-            100% { transform: translateY(0px);}
-        }
-
-        .status-badge {
-            background: #1e2a3a;
-            display: inline-block;
-            padding: 6px 18px;
-            border-radius: 30px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            margin-top: 12px;
-            color: #b9e6ff;
-        }
-
-        /* ውርርድ አካባቢ */
-        .bet-section {
-            background: #0b101ccc;
-            border-radius: 42px;
-            padding: 20px 16px;
-            margin: 16px 0;
-            border: 1px solid #2e3444;
-        }
-
-        .bet-row {
+        /* top bar: sound & auto cashout */
+        .top-actions {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
+            margin: 12px 0 16px;
             gap: 12px;
-            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
-
-        .bet-label {
+        .sound-toggle {
+            background: #1e243b;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 60px;
             color: white;
-            font-weight: 600;
-            background: #00000055;
-            padding: 6px 14px;
-            border-radius: 32px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.1s;
             font-size: 0.9rem;
         }
-
-        .bet-amount-input {
+        .auto-cashout-box {
+            background: #0b101ccc;
+            border-radius: 60px;
+            padding: 5px 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .auto-label {
+            color: #FFD966;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        .auto-input {
             background: #010101aa;
             border: 1px solid #ffd966aa;
+            border-radius: 40px;
+            padding: 6px 12px;
+            width: 70px;
+            text-align: center;
+            color: #FFE5A3;
+            font-weight: bold;
+            font-family: monospace;
+        }
+        .set-auto-btn {
+            background: #2c2f42;
+            border: none;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+
+        /* multiplier history strip */
+        .multiplier-strip {
+            background: #00000066;
             border-radius: 60px;
-            padding: 8px 16px;
+            padding: 10px 16px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 16px 0;
+        }
+        .multiplier-chip {
+            background: #121a28;
+            padding: 5px 14px;
+            border-radius: 40px;
+            font-weight: 800;
+            color: #f3cd68;
+            font-family: monospace;
+            font-size: 1rem;
+            box-shadow: inset 0 1px 0 #ffffff1a;
+        }
+
+        /* flight zone + canvas graph */
+        .flight-zone {
+            background: #01010170;
+            border-radius: 44px;
+            padding: 16px 12px;
+            margin: 10px 0;
+            border: 1px solid #ffd96655;
+        }
+        .canvas-container {
+            background: #03070f;
+            border-radius: 32px;
+            padding: 8px;
+        }
+        canvas {
+            width: 100%;
+            height: auto;
+            background: #02040a;
+            border-radius: 24px;
+            display: block;
+        }
+        .current-multiplier {
+            font-size: 3.2rem;
+            font-weight: 900;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            color: #FFE484;
+            text-shadow: 0 0 10px #ffa600;
+            margin-top: 12px;
+        }
+        .status-badge {
+            background: #1a2538;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            padding: 8px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-top: 12px;
+        }
+
+        /* bet section */
+        .bet-section {
+            background: #0a101ccc;
+            border-radius: 42px;
+            padding: 20px 16px;
+            margin: 18px 0;
+        }
+        .bet-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .bet-input {
+            background: #010101dd;
+            border: 1px solid #f3b33d;
+            border-radius: 60px;
+            padding: 10px 18px;
             font-size: 1.4rem;
             font-weight: bold;
             color: #FFE6A3;
-            width: 130px;
+            width: 140px;
             text-align: center;
-            font-family: monospace;
         }
-
         .quick-buttons {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
         }
-
         .quick-btn {
-            background: #1f2538;
+            background: #262e44;
             border: none;
-            color: #FFE5A3;
-            font-weight: bold;
-            padding: 6px 16px;
+            padding: 8px 20px;
             border-radius: 40px;
-            font-size: 1rem;
+            font-weight: bold;
             cursor: pointer;
-            transition: 0.1s linear;
-            box-shadow: 0 2px 4px black;
+            color: #FFE5A3;
         }
-
-        .quick-btn:active {
-            transform: scale(0.96);
-        }
-
-        .action-buttons {
+        .action-group {
             display: flex;
-            gap: 18px;
-            justify-content: center;
+            gap: 16px;
             margin-top: 20px;
         }
-
         .btn-cashout {
             background: linear-gradient(120deg, #f0b429, #ff8c42);
             border: none;
-            padding: 14px 28px;
+            padding: 14px;
             font-weight: 800;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             border-radius: 60px;
-            color: #0a0f1e;
-            width: 48%;
+            flex: 1;
             cursor: pointer;
-            transition: 0.08s linear;
-            box-shadow: 0 6px 0 #7a3e0a;
+            box-shadow: 0 5px 0 #874d12;
         }
-
         .btn-place {
             background: linear-gradient(120deg, #2c6e9e, #1f4e72);
             border: none;
-            padding: 14px 28px;
+            padding: 14px;
             font-weight: 800;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             border-radius: 60px;
-            color: white;
-            width: 48%;
+            flex: 1;
             cursor: pointer;
-            transition: 0.08s linear;
-            box-shadow: 0 6px 0 #0c2b3b;
+            color: white;
+            box-shadow: 0 5px 0 #0c2b3b;
         }
-
-        .btn-cashout:active, .btn-place:active {
+        button:active {
             transform: translateY(2px);
             box-shadow: 0 2px 0 #3a2a0a;
         }
-
-        .info-stats {
-            display: flex;
-            justify-content: space-between;
-            background: #02050ccc;
-            border-radius: 28px;
-            padding: 12px 20px;
-            margin-top: 20px;
-            font-size: 0.8rem;
-            color: #b7c3e6;
-        }
-
-        .fun-mode-tag {
-            background: #ffcf4a;
-            color: #1a1e2c;
-            font-weight: bold;
-            padding: 4px 14px;
-            border-radius: 50px;
-            font-size: 0.7rem;
-            letter-spacing: 1px;
-        }
-
-        .round-history {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            font-family: monospace;
-            font-weight: bold;
-            margin-top: 8px;
-        }
-
-        footer {
-            font-size: 0.7rem;
-            text-align: center;
-            color: #6a7290;
-            margin-top: 16px;
-        }
-
         button:disabled {
             opacity: 0.5;
             transform: none;
             cursor: not-allowed;
+        }
+        .stats-footer {
+            display: flex;
+            justify-content: space-between;
+            background: #03060c99;
+            border-radius: 36px;
+            padding: 10px 20px;
+            font-size: 0.75rem;
+            margin-top: 16px;
+            color: #b9c3e0;
+        }
+        .round-history {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 12px 0 0;
+            flex-wrap: wrap;
+        }
+        footer {
+            font-size: 0.65rem;
+            text-align: center;
+            color: #5f6a8a;
+            margin-top: 16px;
         }
     </style>
 </head>
 <body>
 <div class="game-container">
     <div class="game-header">
-        <div class="game-title">✈️ AVIATOR</div>
-        <div class="balance-box">
-            <span class="balance-label">ቀሪ ሒሳብ</span>
-            <span class="balance-amount" id="balanceDisplay">50,000.00</span>
-            <span class="balance-currency">ETB</span>
+        <div class="title">✈️ AVIATOR</div>
+        <div class="balance-card">
+            <div class="balance-label">BALANCE</div>
+            <div class="balance-amount"><span id="balanceDisplay">50000.00</span> <span class="currency">ETB</span></div>
         </div>
     </div>
 
-    <!-- FUN MODE እና ያለፉ ማባዣዎች -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin: 8px 0 4px;">
-        <div class="fun-mode-tag">🎮 FUN MODE</div>
-        <div style="font-size: 0.7rem; background: #00000066; padding: 4px 12px; border-radius: 20px;">ዝንባሌ ሙከራ</div>
-    </div>
-    <div class="multiplier-strip" id="multiplierHistory">
-        <span class="multiplier-chip">1.31x</span>
-        <span class="multiplier-chip">1.98x</span>
-        <span class="multiplier-chip">2.29x</span>
-        <span class="multiplier-chip">1.50x</span>
-        <span class="multiplier-chip">16.69x</span>
-        <span class="multiplier-chip">1.21x</span>
-        <span class="multiplier-chip">1.42x</span>
+    <!-- Sound + Auto Cashout Panel -->
+    <div class="top-actions">
+        <button id="soundToggleBtn" class="sound-toggle">🔊 SOUND ON</button>
+        <div class="auto-cashout-box">
+            <span class="auto-label">🤖 AUTO CASHOUT</span>
+            <input type="number" id="autoMultiplierInput" class="auto-input" step="0.5" min="1.2" value="2.5" placeholder="x">
+            <button id="setAutoBtn" class="set-auto-btn">SET</button>
+            <span id="autoActiveLabel" style="font-size:0.7rem; color:#90ff90;">⚡ OFF</span>
+        </div>
     </div>
 
-    <!-- ዋና የበረራ ክፍል -->
-    <div class="flight-area">
+    <!-- Multiplier history -->
+    <div class="multiplier-strip" id="multiplierHistory"></div>
+
+    <!-- Flight Area with canvas graph -->
+    <div class="flight-zone">
+        <div class="canvas-container">
+            <canvas id="flightCanvas" width="560" height="160" style="width:100%; height:auto; max-width:560px; aspect-ratio:560/160"></canvas>
+        </div>
         <div class="current-multiplier" id="liveMultiplier">1.00x</div>
-        <div class="plane-icon">🛩️</div>
-        <div class="status-badge" id="gameStatusText">⚡ ውርርድ አልተደረገም</div>
+        <div class="status-badge" id="gameStatusText">⚡ Place a bet to start flight</div>
     </div>
 
-    <!-- ውርርድ ቅንብሮች -->
+    <!-- Betting panel -->
     <div class="bet-section">
         <div class="bet-row">
-            <span class="bet-label">💰 ውርርድ (ETB)</span>
-            <input type="number" id="betAmount" class="bet-amount-input" value="4.00" step="1" min="1">
+            <span style="font-weight:600;">💰 BET (ETB)</span>
+            <input type="number" id="betAmountInput" class="bet-input" value="4.00" step="1" min="1">
         </div>
         <div class="quick-buttons">
             <button class="quick-btn" data-bet="4">4 ETB</button>
@@ -345,298 +340,387 @@
             <button class="quick-btn" data-bet="80">80 ETB</button>
             <button class="quick-btn" data-bet="400">400 ETB</button>
         </div>
-        <div class="action-buttons">
-            <button class="btn-place" id="placeBetBtn">🚀 ውርርድ አስገባ</button>
-            <button class="btn-cashout" id="cashoutBtn">💸 ገንዘብ አውጣ</button>
+        <div class="action-group">
+            <button class="btn-place" id="placeBetBtn">🚀 PLACE BET</button>
+            <button class="btn-cashout" id="cashoutBtn">💸 CASHOUT</button>
         </div>
     </div>
 
-    <!-- የጨዋታ ስታቲስቲክስ -->
-    <div class="info-stats">
-        <span>🏆 ከፍተኛ ሽልማት: <span id="maxWinSpan">0.00</span> ETB</span>
-        <span>🔄 ዙር: <span id="roundNumber">217</span>/<span id="totalRounds">218</span></span>
-        <span>📈 የአሁን ማባዣ: <span id="currentMultiText">1.00x</span></span>
+    <!-- Stats and recent rounds -->
+    <div class="stats-footer">
+        <span>🏆 MAX WIN: <span id="maxWinSpan">0.00</span> ETB</span>
+        <span>🎲 ROUND: <span id="roundNumber">217</span></span>
+        <span>📈 MULT: <span id="currentMultiText">1.00x</span></span>
     </div>
-    <div class="round-history" id="lastRounds">
-        <!-- ተጨማሪ የማባዣ ታሪክ -->
-    </div>
-    <footer>⚡ አውሮፕላኑ ከመብረሩ በፊት ውርርድ ያስገቡ! በሚበርበት ጊዜ ማባዣ ይጨምራል።</footer>
+    <div class="round-history" id="lastRounds"></div>
+    <footer>✈️ Plane climbs → multiplier increases. Cashout before crash! Auto cashout + sound effects + live chart.</footer>
 </div>
 
 <script>
-    // ------------------- የጨዋታ ሁኔታ ------------------
-    let balance = 50000.00;      // ETB
+    // ------------------- GAME STATE ------------------
+    let balance = 50000.00;
     let currentBet = 0.00;
-    let isGameActive = false;     // ውርርድ ከተደረገ በኋላ አውሮፕላን እየበረረ ነው
+    let isGameActive = false;       // bet placed, plane in air
+    let roundActive = false;        // multiplier increasing
     let currentMultiplier = 1.00;
-    let animationFrame = null;
-    let roundInterval = null;
-    let roundActive = false;      // የአውሮፕላን ጨዋታ እየሄደ ነው (multiplier እየጨመረ)
-    let lastMultipliers = [1.31, 1.98, 2.29, 1.50, 16.69, 1.21, 1.42];  // ያለፉ ውጤቶች
+    let crashPoint = 1.00;
+    let multiplierInterval = null;
+    let autoCashoutMultiplier = 0;   // 0 = disabled
+    let soundEnabled = true;
+    let maxWinAmount = 0.00;
     let roundCounter = 217;
-    let maxWin = 0.00;
-    let gameLoopTimeout = null;
+    let lastMultipliers = [1.31, 1.98, 2.29, 1.50, 16.69, 1.21, 1.42];
+
+    // Canvas chart
+    const canvas = document.getElementById('flightCanvas');
+    const ctx = canvas.getContext('2d');
+    let chartPoints = [{x: 0, y: 1}];
 
     // DOM elements
     const balanceSpan = document.getElementById('balanceDisplay');
     const liveMultiplierSpan = document.getElementById('liveMultiplier');
     const gameStatusSpan = document.getElementById('gameStatusText');
-    const betInput = document.getElementById('betAmount');
+    const betAmountInput = document.getElementById('betAmountInput');
     const placeBtn = document.getElementById('placeBetBtn');
     const cashoutBtn = document.getElementById('cashoutBtn');
     const maxWinSpan = document.getElementById('maxWinSpan');
     const roundNumberSpan = document.getElementById('roundNumber');
-    const totalRoundsSpan = document.getElementById('totalRounds');
     const currentMultiText = document.getElementById('currentMultiText');
     const multiplierHistoryDiv = document.getElementById('multiplierHistory');
     const lastRoundsDiv = document.getElementById('lastRounds');
+    const autoActiveLabel = document.getElementById('autoActiveLabel');
+    const autoMultiplierInput = document.getElementById('autoMultiplierInput');
+    const setAutoBtn = document.getElementById('setAutoBtn');
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
 
-    // ተጨማሪ የማሳያ ተግባር
-    function updateUI() {
-        balanceSpan.innerText = balance.toFixed(2);
-        if (maxWin < balance) {
-            // ከፍተኛ ሽልማት መዝግብ (ከ cashout ጋር)
-        }
-        maxWinSpan.innerText = maxWin.toFixed(2);
-        roundNumberSpan.innerText = roundCounter;
-        totalRoundsSpan.innerText = roundCounter + 1;
-        currentMultiText.innerText = currentMultiplier.toFixed(2) + 'x';
-        liveMultiplierSpan.innerText = currentMultiplier.toFixed(2) + 'x';
+    // Helper: play sound (using Web Audio or simple Audio)
+    function playSound(type) {
+        if (!soundEnabled) return;
+        try {
+            let audio;
+            if (type === 'cashout') {
+                audio = new Audio('https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3');
+            } else if (type === 'crash') {
+                audio = new Audio('https://www.soundjay.com/misc/sounds/explosion-01.mp3');
+            } else if (type === 'takeoff') {
+                audio = new Audio('https://www.soundjay.com/transport/plane-flying-01.mp3');
+            } else if (type === 'win') {
+                audio = new Audio('https://www.soundjay.com/misc/sounds/coins-1.mp3');
+            } else {
+                return;
+            }
+            audio.volume = 0.35;
+            audio.play().catch(e => console.log("Audio not allowed"));
+        } catch(e) { console.log("audio error"); }
     }
 
-    // የማባዣ ታሪክ ማሳደግ
+    // UI updates
+    function updateUI() {
+        balanceSpan.innerText = balance.toFixed(2);
+        liveMultiplierSpan.innerText = currentMultiplier.toFixed(2) + 'x';
+        currentMultiText.innerText = currentMultiplier.toFixed(2) + 'x';
+        maxWinSpan.innerText = maxWinAmount.toFixed(2);
+        roundNumberSpan.innerText = roundCounter;
+    }
+
+    // update multiplier history strip
     function updateMultiplierHistory(newMult) {
-        lastMultipliers.unshift(newMult);
-        if(lastMultipliers.length > 8) lastMultipliers.pop();
-        // ማሳያ ማደራጀት
+        lastMultipliers.unshift(parseFloat(newMult.toFixed(2)));
+        if(lastMultipliers.length > 9) lastMultipliers.pop();
         multiplierHistoryDiv.innerHTML = '';
-        lastMultipliers.slice(0,7).forEach(m => {
+        lastMultipliers.slice(0,8).forEach(m => {
             const chip = document.createElement('span');
             chip.className = 'multiplier-chip';
             chip.innerText = m.toFixed(2) + 'x';
             multiplierHistoryDiv.appendChild(chip);
         });
-        // በታችኛው ረድፍ ላይ የቅርብ ጊዜ ውጤቶች
-        lastRoundsDiv.innerHTML = lastMultipliers.slice(0,5).map(m => `<span style="background:#00000066; padding:4px 12px; border-radius:20px;">${m.toFixed(2)}x</span>`).join('');
+        lastRoundsDiv.innerHTML = lastMultipliers.slice(0,5).map(m => `<span style="background:#00000066; padding:4px 14px; border-radius:20px;">${m.toFixed(2)}x</span>`).join('');
     }
 
-    // አዲስ ዙር ሲጀምር crash point ማመንጨት (1.00 - 100.00)
+    // draw flight chart (exponential / smooth curve)
+    function drawFlightGraph() {
+        if (!canvas || !ctx) return;
+        const w = canvas.width;
+        const h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+        if (chartPoints.length < 2) return;
+        ctx.beginPath();
+        ctx.strokeStyle = '#FFD966';
+        ctx.lineWidth = 3;
+        ctx.shadowBlur = 0;
+        for (let i = 0; i < chartPoints.length; i++) {
+            let x = (chartPoints[i].x / 12) * w;   // max time 12 sec approx
+            let y = h - (Math.min(chartPoints[i].y, 40) / 40) * h;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        // draw plane icon at last point
+        if (chartPoints.length > 0) {
+            let last = chartPoints[chartPoints.length-1];
+            let lastX = (last.x / 12) * w;
+            let lastY = h - (Math.min(last.y, 40) / 40) * h;
+            ctx.font = '22px "Segoe UI"';
+            ctx.fillStyle = '#ffdd99';
+            ctx.fillText('✈️', lastX-12, lastY-6);
+        }
+        // draw grid
+        ctx.beginPath();
+        ctx.strokeStyle = '#2a334a';
+        ctx.lineWidth = 0.5;
+        for(let i=1;i<=4;i++) {
+            let yGrid = h - (i/4)*h;
+            ctx.moveTo(0, yGrid);
+            ctx.lineTo(w, yGrid);
+            ctx.stroke();
+        }
+    }
+
+    function addChartPoint(multiplier, timeSec) {
+        chartPoints.push({x: timeSec, y: multiplier});
+        if(chartPoints.length > 60) chartPoints.shift();
+        drawFlightGraph();
+    }
+
+    // generate random crash point (1.05 - 100)
     function generateCrashPoint() {
-        // እውነተኛ አቪዬተር መሰል RTP አሰራር: 1.00 እስከ 100 መካከል በራንደም ግን አንዳንድ ጊዜ በትንሹ ይወድቃል
         let r = Math.random();
-        // አብዛኛውን ጊዜ ከ1.2 እስከ 10, አልፎ አልፎ ትልቅ
-        if(r < 0.55) return 1 + Math.random() * 1.8;       // 1.00 - 2.80
-        else if(r < 0.85) return 2.8 + Math.random() * 4;   // 2.8 - 6.8
-        else return 7 + Math.random() * 25;                 // 7 - 32
+        if(r < 0.58) return 1 + Math.random() * 2.2;      // 1.00 - 3.2
+        else if(r < 0.86) return 3.2 + Math.random() * 5;  // 3.2 - 8.2
+        else return 8.5 + Math.random() * 28;              // up to 36.5
     }
 
-    let crashPoint = 0.00;
-    let multiplierInterval = null;
+    // reset game after crash or cashout
+    function stopGame(keepBetActive = false) {
+        if(multiplierInterval) {
+            clearInterval(multiplierInterval);
+            multiplierInterval = null;
+        }
+        roundActive = false;
+        if(!keepBetActive) {
+            isGameActive = false;
+        }
+        enableButtons(true);
+    }
 
-    // ጨዋታ ማቆም (crash)
+    // crash sequence
     function crashGame() {
         if(!roundActive) return;
         if(multiplierInterval) clearInterval(multiplierInterval);
         multiplierInterval = null;
         roundActive = false;
-        // የአሁን ውርርድ ካለ እና ካልወጣ ማጣት
+        // if player still has active bet -> lose money
         if(isGameActive && currentBet > 0) {
-            // ተጫዋቹ አልወጣም => ውርርድ ይቀንሳል
-            balance -= currentBet;
-            if(balance < 0) balance = 0;
-            gameStatusSpan.innerText = `💥 አውሮፕላኑ ፈረሰ! ከሽሯል ${currentBet.toFixed(2)} ETB`;
-            updateUI();
+            // already deducted when placed, so no extra deduction, but notify loss
+            gameStatusSpan.innerText = `💥 PLANE CRASHED! You lost ${currentBet.toFixed(2)} ETB`;
+            playSound('crash');
+            // trigger confetti? no, loss.
             currentBet = 0;
             isGameActive = false;
+        } else if(isGameActive && currentBet === 0) {
+            isGameActive = false;
         }
-        // የተዘጋጀ crash point ወደ ታሪክ መዝግብ
-        let crashedMult = currentMultiplier;
-        updateMultiplierHistory(crashedMult);
-        // ዙሩ ተጠናቋል
+        // record crash multiplier in history
+        let crashedValue = currentMultiplier;
+        updateMultiplierHistory(crashedValue);
+        // reset chart for next round?
+        chartPoints = [{x:0, y:1}];
+        drawFlightGraph();
+        updateUI();
         gameStatusSpan.style.background = "#4a1a2a";
         setTimeout(() => {
             if(!roundActive && !isGameActive) {
-                gameStatusSpan.innerText = "🛬 አውሮፕላን ተደምስሷል. አዲስ ውርርድ ያስገቡ";
-                gameStatusSpan.style.background = "#1e2a3a";
+                gameStatusSpan.innerText = "🛬 Plane crashed. Place new bet";
+                gameStatusSpan.style.background = "#1a2538";
             }
         }, 1800);
-        stopGameLoop();
+        stopGame(false);
         enableButtons(true);
+        // increment round counter after crash
+        roundCounter++;
+        roundNumberSpan.innerText = roundCounter;
+        updateUI();
     }
 
-    // ማባዣ መጨመር (loop)
-    function startMultiplierIncrease() {
+    // multiplier increment loop
+    let startTime = 0;
+    function startMultiplierRise() {
         if(multiplierInterval) clearInterval(multiplierInterval);
-        let step = 0;
         currentMultiplier = 1.00;
-        updateUI();
+        chartPoints = [{x:0, y:1}];
+        drawFlightGraph();
+        let elapsed = 0;
         multiplierInterval = setInterval(() => {
             if(!roundActive) return;
-            // ማባዣ መጨመር (ያለማቋረጥ)
-            let increment = 0.02 + (Math.random() * 0.03);
-            currentMultiplier = +(currentMultiplier + increment).toFixed(2);
+            elapsed += 0.18;
+            let increment = 0.02 + (Math.random() * 0.045);
+            currentMultiplier = +(currentMultiplier + increment).toFixed(3);
+            addChartPoint(currentMultiplier, elapsed);
             if(currentMultiplier >= crashPoint && roundActive) {
-                // crash ይሆናል
                 currentMultiplier = crashPoint;
                 updateUI();
                 crashGame();
                 return;
             }
             updateUI();
-            // ከፍተኛ ምንጭ ከሆነ እንዲያሳይ
-            if(currentMultiplier > 50) {
-                liveMultiplierSpan.style.color = "#ff4444";
-            } else {
-                liveMultiplierSpan.style.color = "#FFE55C";
+            // Auto cashout check
+            if(autoCashoutMultiplier > 0 && currentMultiplier >= autoCashoutMultiplier && roundActive && isGameActive && currentBet > 0) {
+                // auto cashout trigger
+                cashout(true);
             }
-        }, 160);
+            if(currentMultiplier > 25) liveMultiplierSpan.style.color = "#ff7777";
+            else liveMultiplierSpan.style.color = "#FFE484";
+        }, 150);
     }
 
-    function stopGameLoop() {
-        if(multiplierInterval) {
-            clearInterval(multiplierInterval);
-            multiplierInterval = null;
+    // Cashout function
+    function cashout(isAuto = false) {
+        if(!roundActive || !isGameActive || currentBet <= 0) {
+            if(!isAuto) gameStatusSpan.innerText = "No active bet or round not started!";
+            return;
         }
-        if(gameLoopTimeout) clearTimeout(gameLoopTimeout);
+        let winAmount = currentBet * currentMultiplier;
+        balance += winAmount;
+        if(winAmount > maxWinAmount) maxWinAmount = winAmount;
+        updateUI();
+        // record cashout multiplier to history
+        updateMultiplierHistory(currentMultiplier);
+        playSound('cashout');
+        if(winAmount > 100) canvasConfetti({particleCount:120, spread:70, origin:{y:0.6}});
+        gameStatusSpan.innerText = `🎉 CASHED OUT! Won ${winAmount.toFixed(2)} ETB @ ${currentMultiplier.toFixed(2)}x 🎉`;
+        // stop round
+        if(multiplierInterval) clearInterval(multiplierInterval);
+        multiplierInterval = null;
         roundActive = false;
-        // ጨዋታ ከጨረሰ በኋላ የ cashout/place እንዲሰራ
+        isGameActive = false;
+        currentBet = 0;
+        enableButtons(true);
+        chartPoints = [{x:0, y:1}];
+        drawFlightGraph();
+        gameStatusSpan.style.background = "#1f5530";
+        setTimeout(() => {
+            if(!roundActive) gameStatusSpan.style.background = "#1a2538";
+        }, 1500);
+        roundCounter++;
+        roundNumberSpan.innerText = roundCounter;
+        updateUI();
     }
 
-    // ውርርድ ማስገባት (አዲስ ዙር መጀመር)
+    // Place bet
     function placeBet() {
         if(roundActive) {
-            gameStatusSpan.innerText = "⚠️ አውሮፕላኑ በበረራ ላይ ነው! ቀጣዩን ዙር ይጠብቁ";
+            gameStatusSpan.innerText = "⚠️ Flight in progress! Wait for next round.";
             return;
         }
         if(isGameActive) {
-            gameStatusSpan.innerText = "ቀድሞ ውርርድ አለ. ይጠብቁ ወይም ገንዘብ ያውጡ";
+            gameStatusSpan.innerText = "Bet already active. Cashout or wait.";
             return;
         }
-        let betVal = parseFloat(betInput.value);
-        if(isNaN(betVal) || betVal <= 0) betVal = 4;
+        let betVal = parseFloat(betAmountInput.value);
+        if(isNaN(betVal) || betVal <= 0) betVal = 4.00;
         if(betVal > balance) {
-            gameStatusSpan.innerText = "❌ በቂ ገንዘብ የለም!";
+            gameStatusSpan.innerText = "❌ Insufficient balance!";
             return;
         }
-        if(betVal < 1) betVal = 1;
         currentBet = betVal;
         balance -= currentBet;
         updateUI();
-        // አዲስ ዙር መክፈት
+        // start fresh round
         roundActive = true;
         isGameActive = true;
         crashPoint = generateCrashPoint();
         currentMultiplier = 1.00;
         updateUI();
-        // የጨዋታ ሁኔታ መለወጥ
-        gameStatusSpan.innerText = `✈️ እየበረረ ነው... ማባዣ እየጨመረ ${currentMultiplier.toFixed(2)}x`;
-        startMultiplierIncrease();
+        startMultiplierRise();
+        playSound('takeoff');
+        gameStatusSpan.innerText = `✈️ Plane taking off! Multiplier climbing... Bet: ${currentBet.toFixed(2)} ETB`;
         enableButtons(false);
-        // ከተወሰነ ጊዜ በኋላ crash ሊሆን ይችላል (ተጨማሪ ዋስትና)
-    }
-
-    // Cashout: ገንዘብ ማውጣት
-    function cashout() {
-        if(!roundActive || !isGameActive) {
-            gameStatusSpan.innerText = "ንቁ ውርርድ የለም ወይም አውሮፕላኑ አልበረረም!";
-            return;
-        }
-        if(currentBet <= 0) {
-            gameStatusSpan.innerText = "ምንም ውርርድ የለም!";
-            return;
-        }
-        // አሁን ባለው ማባዣ ይሰላል
-        let winAmount = currentBet * currentMultiplier;
-        balance += winAmount;
-        if(winAmount > maxWin) maxWin = winAmount;
-        updateUI();
-        gameStatusSpan.innerText = `🎉 ገንዘብ ወጥቷል! አሸንፈዋል ${winAmount.toFixed(2)} ETB በ ${currentMultiplier.toFixed(2)}x`;
-        // ውጤቱን ወደ ታሪክ ጨምር
-        updateMultiplierHistory(currentMultiplier);
-        // ጨዋታውን አቁም
-        stopGameLoop();
-        roundActive = false;
-        isGameActive = false;
-        currentBet = 0;
-        enableButtons(true);
-        // ማባዣ ዳራ መልሶ ማስጀመር
-        currentMultiplier = 1.00;
-        updateUI();
-        liveMultiplierSpan.innerText = "1.00x";
-        gameStatusSpan.style.background = "#1e5530";
-        setTimeout(() => {
-            if(!roundActive) gameStatusSpan.style.background = "#1e2a3a";
-        },1500);
+        // Disable place button but cashout enabled
+        placeBtn.disabled = true;
+        cashoutBtn.disabled = false;
+        // update round display
+        roundNumberSpan.innerText = roundCounter;
     }
 
     function enableButtons(enable) {
         if(enable) {
             placeBtn.disabled = false;
             cashoutBtn.disabled = false;
-            betInput.disabled = false;
+            betAmountInput.disabled = false;
         } else {
-            placeBtn.disabled = true;
-            cashoutBtn.disabled = false;   // cashout ሁልጊዜ መጫን ይቻላል ጨዋታ በሚኖርበት ጊዜ
-            betInput.disabled = true;
+            if(roundActive) {
+                placeBtn.disabled = true;
+                cashoutBtn.disabled = false;
+            } else {
+                placeBtn.disabled = false;
+                cashoutBtn.disabled = true;
+            }
+            betAmountInput.disabled = roundActive;
         }
-        // ንቁ ውርርድ ሲኖር ውርርድ ማስገባት አይቻልም
-        if(roundActive) {
-            placeBtn.disabled = true;
-        } else {
-            placeBtn.disabled = false;
-        }
+        // extra: if no active round, cashout disabled
+        if(!roundActive && !isGameActive) cashoutBtn.disabled = true;
+        else if(roundActive && isGameActive) cashoutBtn.disabled = false;
     }
 
-    // ፈጣን የውርርድ አዝራሮች
+    // Quick bet buttons
     document.querySelectorAll('.quick-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             if(roundActive) {
-                gameStatusSpan.innerText = "እባክዎ የአውሮፕላኑን ዙር ይጠብቁ";
+                gameStatusSpan.innerText = "Wait, plane is flying! Next round.";
                 return;
             }
             let val = parseFloat(btn.getAttribute('data-bet'));
-            if(!isNaN(val)) {
-                betInput.value = val.toFixed(2);
-            }
+            if(!isNaN(val)) betAmountInput.value = val.toFixed(2);
         });
     });
 
-    // ክስተቶች
-    placeBtn.addEventListener('click', placeBet);
-    cashoutBtn.addEventListener('click', cashout);
+    // Auto cashout setter
+    setAutoBtn.addEventListener('click', () => {
+        let val = parseFloat(autoMultiplierInput.value);
+        if(isNaN(val) || val < 1.1) val = 2.5;
+        autoCashoutMultiplier = val;
+        autoActiveLabel.innerText = `✅ ${val.toFixed(2)}x`;
+        autoActiveLabel.style.color = "#aaffaa";
+        setTimeout(() => {
+            if(autoCashoutMultiplier > 0) autoActiveLabel.innerText = `⚡ ${autoCashoutMultiplier.toFixed(2)}x`;
+        }, 1800);
+    });
 
-    // መጀመሪያ ላይ ማሳያ ማዘጋጀት
-    function initGame() {
+    // Sound toggle
+    soundToggleBtn.addEventListener('click', () => {
+        soundEnabled = !soundEnabled;
+        soundToggleBtn.innerText = soundEnabled ? "🔊 SOUND ON" : "🔇 SOUND OFF";
+    });
+
+    // Event listeners
+    placeBtn.addEventListener('click', placeBet);
+    cashoutBtn.addEventListener('click', () => cashout(false));
+
+    // Initialize UI with existing data
+    function init() {
         updateUI();
         updateMultiplierHistory(1.08);
         lastMultipliers = [1.31, 1.98, 2.29, 1.50, 16.69, 1.21, 1.42];
-        updateMultiplierHistory(1.08);
+        updateMultiplierHistory(1.05);
         currentMultiplier = 1.00;
         liveMultiplierSpan.innerText = "1.00x";
-        gameStatusSpan.innerText = "✨ ውርርድ ያስገቡ እና አውሮፕላኑ እንዲበር ያድርጉ!";
+        gameStatusSpan.innerText = "✨ Ready. Place bet & watch the plane!";
         enableButtons(true);
         roundActive = false;
         isGameActive = false;
         currentBet = 0;
         roundCounter = 217;
-        totalRoundsSpan.innerText = "218";
-        roundNumberSpan.innerText = "217";
+        roundNumberSpan.innerText = roundCounter;
+        drawFlightGraph();
+        autoCashoutMultiplier = 0;
+        autoActiveLabel.innerText = "⚡ OFF";
+        autoMultiplierInput.value = "2.5";
+        soundEnabled = true;
+        soundToggleBtn.innerText = "🔊 SOUND ON";
     }
-
-    initGame();
-    // ለማስመሰል ተጨማሪ ዙር መቁጠሪያ አውቶማቲክ ማደስ crash ሲደረግ
-    function incrementRoundAfterCrash() {
-        if(!roundActive && !isGameActive) {
-            roundCounter++;
-            roundNumberSpan.innerText = roundCounter;
-            totalRoundsSpan.innerText = roundCounter+1;
-        }
-    }
-    setInterval(() => {
-        if(!roundActive && !isGameActive) {
-            incrementRoundAfterCrash();
-        }
-    }, 800);
+    init();
+    // ensure chart responsive redraw on resize
+    window.addEventListener('resize', () => drawFlightGraph());
 </script>
 </body>
 </html>
