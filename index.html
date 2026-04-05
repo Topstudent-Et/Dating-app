@@ -3,192 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WORLD GAMES - ELITE AVIATOR V11</title>
+    <title>WORLD GAMES - ELITE AVIATOR V13</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;700;900&display=swap');
-        body { background-color: #050505; color: white; font-family: 'Inter', sans-serif; overflow: hidden; margin: 0; }
+        body { background-color: #050505; color: white; font-family: 'Inter', sans-serif; overflow: hidden; margin: 0; transition: 0.5s; }
         .font-game { font-family: 'Orbitron', sans-serif; }
-        .aviator-screen { background: radial-gradient(circle at bottom left, #1a0505 0%, #000 100%); height: 200px; position: relative; border-radius: 20px; border: 1px solid #333; overflow: hidden; }
-        #gamePath { stroke: #ff0044; stroke-width: 5; fill: none; filter: drop-shadow(0 0 10px #ff0044); transition: 0.1s linear; }
+        .aviator-screen { background: radial-gradient(circle at bottom left, #1a0505 0%, #000 100%); height: 210px; position: relative; border-radius: 20px; border: 1px solid #333; overflow: hidden; }
+        #gamePath { stroke: #ff0044; stroke-width: 5; fill: none; filter: drop-shadow(0 0 10px #ff0044); }
         .plane-jet { position: absolute; bottom: 15px; left: 15px; font-size: 40px; z-index: 100; transition: 0.1s linear; }
         .nav-bar { background: #0a0a0a; position: fixed; bottom: 0; width: 100%; height: 65px; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #1a1a1a; z-index: 1000; }
-        .nav-item { color: #444; font-size: 8px; font-weight: bold; text-align: center; cursor: pointer; }
+        .nav-item { color: #444; font-size: 9px; font-weight: bold; text-align: center; }
         .nav-item.active { color: #ff0044; transform: scale(1.1); }
         .page { display: none; height: calc(100vh - 65px); overflow-y: auto; padding: 12px; }
         .active-page { display: block; animation: fadeIn 0.3s ease-in; }
         .admin-view { position: fixed; inset: 0; background: #000; z-index: 9999; display: none; flex-direction: column; }
-        .mode-switch { display: flex; background: #111; border-radius: 50px; padding: 3px; border: 1px solid #222; }
-        .mode-btn { flex: 1; padding: 5px 0; border-radius: 50px; font-size: 8px; font-weight: 900; transition: 0.3s; }
-        .mode-btn.active { background: #ff0044; color: white; box-shadow: 0 0 10px #ff0044; }
+        .mode-switch { display: flex; background: #111; border-radius: 50px; padding: 4px; border: 1px solid #333; }
+        .mode-btn { flex: 1; padding: 6px 0; border-radius: 50px; font-size: 9px; font-weight: 900; transition: 0.4s; text-align: center; cursor: pointer; }
+        .demo-active { background: #ef4444; color: white; box-shadow: 0 0 15px #ef4444; }
+        .real-active { background: #22c55e; color: white; box-shadow: 0 0 15px #22c55e; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        input { background: #111 !important; border: 1px solid #222 !important; color: white !important; outline: none; }
-        .winner-card { background: linear-gradient(90deg, #111 0%, #080808 100%); transition: 0.3s; }
-        .winner-card:hover { border-color: #ff0044; }
+        input, textarea { background: #111 !important; border: 1px solid #222 !important; color: white !important; outline: none; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body>
 
     <div id="adminPanel" class="admin-view">
-        <div class="p-4 bg-red-900 flex justify-between items-center shadow-lg">
-            <h2 class="font-black text-xs uppercase">CONTROL CENTER</h2>
-            <button onclick="closeAdmin()" class="bg-black px-4 py-1 rounded-full text-[10px] font-bold uppercase">Exit</button>
+        <div class="p-4 bg-gray-900 flex justify-between items-center border-b border-white/10">
+            <h2 class="font-black text-xs text-red-500">ADMIN CONTROL</h2>
+            <button onclick="closeAdmin()" class="bg-red-600 px-4 py-1 rounded-full text-[10px] font-bold">EXIT</button>
         </div>
-        <div class="p-4 flex-1 overflow-y-auto space-y-4 pb-20">
-            <div class="bg-[#111] p-3 rounded-xl">
-                <h3 class="text-[9px] font-black text-blue-500 mb-2 border-b border-gray-800 pb-1">INCOMING SCREENSHOTS</h3>
-                <div id="admReqList" class="space-y-4"></div>
-            </div>
-            <div class="bg-[#111] p-3 rounded-xl">
-                <h3 class="text-[9px] font-black text-blue-500 mb-2 border-b border-gray-800 pb-1">SUPPORT MESSAGES</h3>
-                <div id="admSupList" class="space-y-2"></div>
-            </div>
+        <div class="p-4 flex-1 overflow-y-auto space-y-6 pb-24 no-scrollbar">
+            <div id="admReqList" class="space-y-4"></div>
+            <div id="admSupList" class="space-y-3"></div>
         </div>
     </div>
 
-    <header class="p-2.5 flex justify-between items-center bg-black/90 sticky top-0 z-50 border-b border-white/5">
-        <div class="flex items-center gap-2">
-            <div id="hPfp" class="w-8 h-8 rounded-full border border-red-600 bg-red-900 flex items-center justify-center text-[10px] overflow-hidden"></div>
+    <header class="p-3 flex justify-between items-center bg-black sticky top-0 z-50 border-b border-white/5">
+        <div class="flex items-center gap-3">
+            <div id="hPfp" class="w-9 h-9 rounded-full border-2 border-red-600 bg-red-900 flex items-center justify-center overflow-hidden"></div>
             <div>
-                <h1 class="text-red-600 font-black italic text-md leading-none">AVIATOR</h1>
-                <p id="hUser" class="text-[7px] text-gray-500 font-bold uppercase mt-1">@Guest</p>
+                <h1 class="text-red-600 font-black italic text-lg leading-none">AVIATOR</h1>
+                <div class="flex gap-2 items-center mt-1">
+                    <button onclick="toggleLang()" class="bg-white/10 px-1.5 py-0.5 rounded text-[7px] text-gray-300 font-bold border border-white/5">ENG/አማር</button>
+                    <p id="hUser" class="text-[8px] text-gray-500 font-bold uppercase">@Guest</p>
+                </div>
             </div>
         </div>
         
-        <div class="flex flex-col items-end gap-1.5">
-            <div class="mode-switch w-24">
-                <div id="demoBtn" onclick="switchMode(true)" class="mode-btn active text-center">DEMO</div>
-                <div id="realBtn" onclick="switchMode(false)" class="mode-btn text-center">REAL</div>
+        <div class="flex flex-col items-end gap-2">
+            <div class="mode-switch w-28">
+                <div id="demoBtn" onclick="switchMode(true)" class="mode-btn demo-active">DEMO</div>
+                <div id="realBtn" onclick="switchMode(false)" class="mode-btn">REAL</div>
             </div>
-            <div class="bg-[#111] px-3 py-1 rounded-lg border border-green-900/30">
-                <span id="hBal" class="text-green-400 font-black text-xs">500.00</span> <span class="text-[7px] text-gray-600 uppercase">ETB</span>
+            <div id="balBox" class="bg-[#111] px-4 py-1 rounded-xl border border-red-500/30">
+                <span id="hBal" class="text-white font-black text-sm">500.00</span> <span class="text-[8px] text-gray-500 font-bold uppercase l-curr">ETB</span>
             </div>
         </div>
     </header>
 
     <section id="home" class="page active-page">
-        <div id="hist" class="flex gap-1.5 mb-2 overflow-x-auto no-scrollbar pb-1"></div>
-        <div id="gameArea" class="aviator-screen flex items-center justify-center">
-            <button onclick="toggleMute()" class="absolute top-2 left-2 z-[200] bg-black/50 p-1.5 rounded-full"><i id="muteIcon" class="fa-solid fa-volume-high text-white text-[9px]"></i></button>
+        <div id="hist" class="flex gap-2 mb-3 overflow-x-auto no-scrollbar"></div>
+        <div id="gameArea" class="aviator-screen flex items-center justify-center transition-all duration-500">
+            <button onclick="toggleMute()" class="absolute top-3 left-3 z-[200] bg-black/60 p-2 rounded-full"><i id="muteIcon" class="fa-solid fa-volume-high text-white text-[10px]"></i></button>
             <svg width="100%" height="100%" style="position:absolute;"><path id="gamePath" d="M 0 200 Q 0 200 0 200" /></svg>
-            <div id="mTxt" class="font-game text-5xl italic text-white z-10 drop-shadow-2xl">1.00x</div>
+            <div id="mTxt" class="font-game text-6xl italic text-white z-10 drop-shadow-2xl">1.00x</div>
             <div id="plane" class="plane-jet">✈️</div>
-            <div id="gStatus" class="absolute top-2 text-[8px] text-gray-400 font-black uppercase tracking-tighter">Waiting...</div>
+            <div id="gStatus" class="absolute top-3 text-[9px] text-gray-400 font-black uppercase l-waiting">Waiting...</div>
         </div>
 
-        <div class="mt-3 grid grid-cols-2 gap-2">
-            <div class="bg-[#111] p-2 rounded-xl border border-gray-800">
-                <input id="bInp" type="number" value="10" class="w-full text-center font-black text-sm py-1.5 rounded-lg mb-1.5">
-                <input id="autoOut" type="number" step="0.1" placeholder="Auto Cashout" class="w-full text-center text-[9px] py-1.5 rounded-lg">
+        <div class="mt-4 grid grid-cols-2 gap-3">
+            <div class="bg-[#111] p-3 rounded-2xl border border-gray-800">
+                <label class="text-[8px] text-gray-500 font-bold block mb-1 l-amt">AMOUNT</label>
+                <input id="bInp" type="number" value="10" class="w-full text-center font-black text-lg py-2 rounded-xl mb-2">
+                <input id="autoOut" type="number" step="0.1" placeholder="Auto" class="w-full text-center text-[10px] py-2 rounded-xl">
             </div>
-            <button id="bBtn" onclick="hBet()" class="bg-[#28a745] rounded-xl text-xl font-black italic shadow-lg">BET<br><span id="bSub" class="text-[9px] opacity-70">10.00 ETB</span></button>
+            <button id="bBtn" onclick="hBet()" class="bg-red-600 rounded-2xl text-2xl font-black italic shadow-lg l-bet">BET</button>
         </div>
 
-        <div class="mt-3 bg-[#0a0a0a] rounded-xl p-3 border border-gray-900 h-32 overflow-hidden">
-            <div id="fList" class="space-y-1 text-[9px]"></div>
+        <div class="mt-4 bg-[#0a0a0a] rounded-2xl p-4 border border-gray-900 h-36 overflow-hidden">
+            <div id="fList" class="space-y-2 text-[10px]"></div>
         </div>
     </section>
 
     <section id="deposit" class="page">
-        <div class="bg-yellow-600/10 p-4 rounded-2xl border border-yellow-600/30 mb-4 text-center">
-            <p class="text-[9px] text-yellow-500 font-bold uppercase mb-1">CBE Account</p>
-            <p class="text-lg font-black select-all">1000179571815</p>
-            <div class="h-[1px] bg-white/5 my-2"></div>
-            <p class="text-[9px] text-blue-500 font-bold uppercase mb-1">Telebirr</p>
-            <p class="text-lg font-black select-all">0906067696</p>
+        <div class="bg-gradient-to-b from-gray-900 to-black p-5 rounded-3xl border border-white/10 mb-5 text-center">
+            <p class="text-[10px] text-yellow-500 font-black uppercase mb-1">CBE Account</p>
+            <p class="text-xl font-black select-all mb-4">1000179571815</p>
+            <div class="h-[1px] bg-white/5 my-4"></div>
+            <p class="text-[10px] text-blue-500 font-black uppercase mb-1">Telebirr</p>
+            <p class="text-xl font-black select-all">0906067696</p>
         </div>
-        <div class="bg-[#111] p-5 rounded-3xl border border-dashed border-gray-800 text-center">
+        <div class="bg-[#111] p-6 rounded-3xl border-2 border-dashed border-gray-800 text-center">
             <input type="file" id="ssInp" class="hidden" accept="image/*">
-            <button onclick="document.getElementById('ssInp').click()" class="w-full bg-gray-800 py-3 rounded-xl text-[10px] font-bold mb-3 uppercase italic"><i class="fa-solid fa-camera mr-2"></i>Select Receipt Photo</button>
-            <div id="previewBox" class="hidden mb-3"><img id="ssPreview" class="rounded-xl max-h-40 mx-auto border border-gray-700"></div>
-            <button onclick="subSS()" class="w-full bg-red-600 py-3 rounded-xl font-black text-[11px] uppercase shadow-lg">Upload Receipt</button>
+            <button onclick="document.getElementById('ssInp').click()" class="w-full bg-gray-800 py-4 rounded-2xl text-[11px] font-black mb-4 uppercase l-select"><i class="fa-solid fa-camera mr-2"></i>Select Receipt</button>
+            <div id="previewBox" class="hidden mb-4"><img id="ssPreview" class="rounded-2xl max-h-48 mx-auto border-2 border-gray-700 shadow-2xl"></div>
+            <button onclick="subSS()" class="w-full bg-red-600 py-4 rounded-2xl font-black text-xs uppercase l-submit shadow-xl">Submit to Admin</button>
         </div>
     </section>
 
     <section id="leader" class="page">
-        <h2 class="text-xl font-black mb-4 italic text-center text-red-600">LEADERBOARD (TOP 150)</h2>
-        <div id="lList" class="space-y-2 pb-10"></div>
+        <div class="flex items-center justify-center gap-3 mb-6">
+            <i class="fa-solid fa-trophy text-yellow-500 text-2xl"></i>
+            <h2 class="text-xl font-black italic l-top">TOP 7500 WINNERS</h2>
+        </div>
+        <div id="lList" class="grid grid-cols-1 gap-2 pb-12 no-scrollbar"></div>
     </section>
 
     <section id="account" class="page">
-        <div class="text-center mb-6">
-            <div id="accPfp" class="mx-auto mb-3 w-20 h-20 rounded-full border-2 border-red-600 bg-red-900 flex items-center justify-center overflow-hidden"></div>
-            <h2 id="accUser" class="text-xl font-black italic">@User</h2>
+        <div class="flex flex-col items-center mb-8">
+            <div id="accPfpMain" class="w-20 h-20 rounded-full border-4 border-red-600 bg-red-900 flex items-center justify-center overflow-hidden mb-3"></div>
+            <h2 id="accUserMain" class="text-2xl font-black italic">@User</h2>
         </div>
-        
-        <div class="bg-[#111] p-4 rounded-2xl border border-gray-800 mb-4">
-            <h3 class="text-[10px] font-black text-orange-500 border-b border-gray-800 pb-2 uppercase mb-3">Withdraw Funds</h3>
-            <input id="wAcc" type="text" placeholder="Method & Account Number" class="w-full p-3 rounded-xl text-xs mb-2">
-            <input id="wAmt" type="number" placeholder="Amount (Min 50)" class="w-full p-3 rounded-xl text-xs mb-3">
-            <button onclick="reqWithdraw()" class="w-full bg-white text-black py-3 rounded-xl font-black text-[10px] uppercase">Request Withdrawal</button>
+        <div class="bg-[#111] p-5 rounded-3xl border border-gray-800 mb-5">
+            <h3 class="text-[11px] font-black text-blue-500 border-b border-gray-800 pb-3 uppercase mb-4 l-support">Customer Support</h3>
+            <textarea id="supMsg" placeholder="..." class="w-full bg-black border border-gray-800 p-4 rounded-2xl text-xs h-28 outline-none mb-3"></textarea>
+            <button onclick="sendSupport()" class="w-full bg-blue-600 py-4 rounded-2xl font-black text-xs uppercase l-send">Send Message</button>
         </div>
-
-        <div class="bg-[#111] p-4 rounded-2xl border border-gray-800 mb-4">
-            <h3 class="text-[10px] font-black text-blue-500 border-b border-gray-800 pb-2 uppercase mb-3">Support Ticket</h3>
-            <textarea id="supMsg" placeholder="Describe your issue..." class="w-full bg-black border border-gray-900 p-3 rounded-xl text-xs h-20 outline-none mb-2"></textarea>
-            <button onclick="sendSupport()" class="w-full bg-blue-600 py-3 rounded-xl font-bold text-[10px] uppercase">Submit Support</button>
-        </div>
-
-        <button id="admBtn" onclick="tryAdm()" class="w-full bg-red-900/10 text-red-900 py-3 rounded-xl text-[8px] font-black uppercase">Admin Dashboard</button>
+        <button id="admBtn" onclick="tryAdm()" class="w-full bg-red-950/20 text-red-900 py-4 rounded-2xl text-[9px] font-black uppercase border border-red-950/30">Admin Dashboard</button>
     </section>
 
     <nav class="nav-bar">
-        <div onclick="showP('home')" class="nav-item active" id="n-home"><i class="fa-solid fa-gamepad text-2xl mb-1"></i><br>PLAY</div>
-        <div onclick="showP('deposit')" class="nav-item" id="n-deposit"><i class="fa-solid fa-wallet text-2xl mb-1"></i><br>WALLET</div>
-        <div onclick="showP('leader')" class="nav-item" id="n-leader"><i class="fa-solid fa-trophy text-2xl mb-1"></i><br>TOP 150</div>
-        <div onclick="showP('account')" class="nav-item" id="n-account"><i class="fa-solid fa-headset text-2xl mb-1"></i><br>SUPPORT</div>
+        <div onclick="showP('home')" class="nav-item active" id="n-home"><i class="fa-solid fa-jet-fighter text-2xl mb-1"></i><br><span class="l-nav-play">PLAY</span></div>
+        <div onclick="showP('deposit')" class="nav-item" id="n-deposit"><i class="fa-solid fa-wallet text-2xl mb-1"></i><br><span class="l-nav-wallet">WALLET</span></div>
+        <div onclick="showP('leader')" class="nav-item" id="n-leader"><i class="fa-solid fa-ranking-star text-2xl mb-1"></i><br><span class="l-nav-top">TOP</span></div>
+        <div onclick="showP('account')" class="nav-item" id="n-account"><i class="fa-solid fa-circle-info text-2xl mb-1"></i><br><span class="l-nav-sup">SUPPORT</span></div>
     </nav>
 
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-
+        const tg = window.Telegram.WebApp; tg.expand();
         const ADMIN_UNAME = "Dawit_Fikadu21";
-        let realBal = parseFloat(localStorage.getItem('v11_real_bal')) || 0;
+        let realBal = parseFloat(localStorage.getItem('v13_real_bal')) || 0;
         let demoBal = 500.00;
         let isDemo = true;
-        let isMuted = false;
-        let userData = { uname: tg.initDataUnsafe?.user?.username || "Nahom_Designer", photo: tg.initDataUnsafe?.user?.photo_url || null };
+        let curLang = "EN";
+        let userData = { uname: tg.initDataUnsafe?.user?.username || "User_Dai", photo: tg.initDataUnsafe?.user?.photo_url || null };
+
+        const texts = {
+            EN: { play: "PLAY", wallet: "WALLET", top: "TOP 7500", sup: "SUPPORT", wait: "Waiting...", amt: "AMOUNT", bet: "BET", select: "Select Receipt", submit: "Submit to Admin", send: "Send Message", support: "Customer Support", curr: "ETB" },
+            AMH: { play: "ተጫወት", wallet: "ኪስ", top: "7500 ምርጦች", sup: "እርዳታ", wait: "በመጠባበቅ ላይ...", amt: "መጠን", bet: "መድብ", select: "ደረሰኝ ምረጥ", submit: "ለአድሚን ላክ", send: "መልዕክት ላክ", support: "የደንበኞች አገልግሎት", curr: "ብር" }
+        };
+
+        function toggleLang() {
+            curLang = curLang === "EN" ? "AMH" : "EN";
+            const t = texts[curLang];
+            document.querySelector('.l-nav-play').innerText = t.play;
+            document.querySelector('.l-nav-wallet').innerText = t.wallet;
+            document.querySelector('.l-nav-top').innerText = t.play; // reuse short
+            document.querySelector('.l-nav-sup').innerText = t.sup;
+            document.querySelector('.l-waiting').innerText = t.wait;
+            document.querySelector('.l-amt').innerText = t.amt;
+            document.querySelector('.l-bet').innerText = t.bet;
+            document.querySelector('.l-select').innerText = t.select;
+            document.querySelector('.l-submit').innerText = t.submit;
+            document.querySelector('.l-send').innerText = t.send;
+            document.querySelector('.l-support').innerText = t.support;
+            document.querySelector('.l-top').innerText = t.top;
+            document.querySelector('.l-curr').innerText = t.curr;
+        }
 
         function init() {
             document.getElementById('hUser').innerText = "@" + userData.uname;
-            document.getElementById('accUser').innerText = "@" + userData.uname;
-            const pfp = userData.photo ? `<img src="${userData.photo}" class="w-full h-full object-cover">` : `<span>${userData.uname[0]}</span>`;
+            document.getElementById('accUserMain').innerText = "@" + userData.uname;
+            const pfp = userData.photo ? `<img src="${userData.photo}" class="w-full h-full object-cover">` : `<span class="text-xl font-black">${userData.uname[0]}</span>`;
             document.getElementById('hPfp').innerHTML = pfp;
-            document.getElementById('accPfp').innerHTML = pfp;
+            document.getElementById('accPfpMain').innerHTML = pfp;
 
             document.getElementById('ssInp').onchange = (e) => {
                 const r = new FileReader();
                 r.onload = () => { document.getElementById('ssPreview').src = r.result; document.getElementById('previewBox').classList.remove('hidden'); };
                 r.readAsDataURL(e.target.files[0]);
             };
-
-            updateDisplay(); renderLeaders(); startLoop();
+            updateDisplay(); renderLeaders(); startLoop(); genFakes();
         }
 
         function switchMode(demo) {
             isDemo = demo;
-            document.getElementById('demoBtn').className = demo ? "mode-btn active" : "mode-btn";
-            document.getElementById('realBtn').className = !demo ? "mode-btn active" : "mode-btn";
+            document.getElementById('demoBtn').className = demo ? "mode-btn demo-active" : "mode-btn";
+            document.getElementById('realBtn').className = !demo ? "mode-btn real-active" : "mode-btn";
+            document.getElementById('bBtn').className = demo ? "bg-red-600 rounded-2xl text-2xl font-black italic l-bet" : "bg-green-600 rounded-2xl text-2xl font-black italic l-bet";
+            document.getElementById('gameArea').style.background = demo ? "radial-gradient(circle at bottom left, #1a0505 0%, #000 100%)" : "radial-gradient(circle at bottom left, #051a05 0%, #000 100%)";
             updateDisplay();
         }
 
         function updateDisplay() {
             document.getElementById('hBal').innerText = (isDemo ? demoBal : realBal).toFixed(2);
+            document.getElementById('hBal').style.color = isDemo ? "#ef4444" : "#22c55e";
         }
 
-        // --- DATA LOGIC ---
         function subSS() {
             const file = document.getElementById('ssInp').files[0];
-            if(!file) return tg.showAlert("Please select a photo first!");
+            if(!file) return tg.showAlert("Please select a screenshot!");
             const r = new FileReader();
             r.onload = () => {
-                let ss = JSON.parse(localStorage.getItem('sys_v11_ss')) || [];
-                ss.push({ user: userData.uname, img: r.result, time: new Date().toLocaleTimeString() });
-                localStorage.setItem('sys_v11_ss', JSON.stringify(ss));
-                tg.showAlert("Screenshot sent successfully!");
+                let ss = JSON.parse(localStorage.getItem('sys_v13_ss')) || [];
+                ss.push({ user: userData.uname, img: r.result, time: new Date().toLocaleString() });
+                localStorage.setItem('sys_v13_ss', JSON.stringify(ss));
+                tg.showAlert("✅ Screenshot sent to Admin!");
                 document.getElementById('previewBox').classList.add('hidden');
             };
             r.readAsDataURL(file);
@@ -197,22 +211,22 @@
         function sendSupport() {
             const msg = document.getElementById('supMsg').value;
             if(!msg) return tg.showAlert("Please enter your message!");
-            let sups = JSON.parse(localStorage.getItem('sys_v11_sup')) || [];
-            sups.push({ user: userData.uname, msg: msg, time: new Date().toLocaleTimeString() });
-            localStorage.setItem('sys_v11_sup', JSON.stringify(sups));
-            tg.showAlert("Message sent to Admin!");
+            let sups = JSON.parse(localStorage.getItem('sys_v13_sup')) || [];
+            sups.push({ user: userData.uname, msg: msg, time: new Date().toLocaleString() });
+            localStorage.setItem('sys_v13_sup', JSON.stringify(sups));
+            tg.showAlert("✅ Message sent!");
             document.getElementById('supMsg').value = "";
         }
 
-        // --- GAME LOGIC ---
+        // GAME
         let flying = false; let mult = 1.00; let myB = { active: false, amt: 0 };
-        let history = ["1.2x", "4.5x", "1.0x", "2.3x"];
+        let history = ["1.0x", "2.1x", "1.5x"];
 
         function startLoop() {
             if(flying) return;
             let w = 5;
             let t = setInterval(() => {
-                document.getElementById('gStatus').innerText = `NEXT ROUND IN ${w}S`;
+                document.getElementById('gStatus').innerText = `TAKEOFF IN ${w}S`;
                 document.getElementById('mTxt').innerText = "1.00x";
                 if(w-- <= 0) { clearInterval(t); launch(); }
             }, 1000);
@@ -220,36 +234,30 @@
 
         function launch() {
             flying = true; mult = 1.00;
-            let crashAt = 1.05 + (Math.random() * 8);
+            let crashAt = 1.01 + (Math.random() * 8);
             let aOut = parseFloat(document.getElementById('autoOut').value);
-
             let engine = setInterval(() => {
-                mult += 0.03;
+                mult += 0.04;
                 document.getElementById('mTxt').innerText = mult.toFixed(2) + "x";
-                let x = mult * 20, y = mult * 18;
+                let x = mult * 15, y = mult * 14;
                 document.getElementById('plane').style.transform = `translate(${x}px, -${y}px)`;
                 document.getElementById('gamePath').setAttribute('d', `M 0 200 Q ${x/2} ${200-y} ${x+10} ${200-y-10}`);
-                
-                if(myB.active) {
-                    document.getElementById('bBtn').querySelector('span').innerText = (myB.amt * mult).toFixed(2) + " ETB";
-                    if(aOut && mult >= aOut) cashOut();
-                }
+                if(myB.active && aOut && mult >= aOut) cashOut();
                 if(mult >= crashAt) { clearInterval(engine); crash(); }
             }, 80);
         }
 
         function crash() {
-            flying = false;
-            document.getElementById('mTxt').innerText = "FLEW AWAY!";
+            flying = false; document.getElementById('mTxt').innerText = "CRASHED!";
             document.getElementById('mTxt').style.color = "#ff0044";
-            history.unshift(mult.toFixed(2) + "x"); if(history.length > 8) history.pop();
+            history.unshift(mult.toFixed(2) + "x"); if(history.length > 10) history.pop();
             renderHistory(); myB.active = false; resetB();
             setTimeout(() => {
                 document.getElementById('plane').style.transform = "translate(0,0)";
                 document.getElementById('gamePath').setAttribute('d', 'M 0 200 Q 0 200 0 200');
                 document.getElementById('mTxt').style.color = "white";
                 startLoop();
-            }, 2000);
+            }, 2500);
         }
 
         function hBet() {
@@ -257,80 +265,75 @@
             let a = parseInt(document.getElementById('bInp').value);
             let cur = isDemo ? demoBal : realBal;
             if(a > cur) return tg.showAlert("Insufficient Funds!");
-            if(isDemo) demoBal -= a; else { realBal -= a; localStorage.setItem('v11_real_bal', realBal); }
+            if(isDemo) demoBal -= a; else { realBal -= a; localStorage.setItem('v13_real_bal', realBal); }
             myB = { active: true, amt: a };
-            document.getElementById('bBtn').innerHTML = "WAITING...";
-            document.getElementById('bBtn').className = "bg-orange-600 rounded-xl text-xl font-black italic";
+            document.getElementById('bBtn').innerHTML = "CASH OUT";
+            document.getElementById('bBtn').className = "bg-orange-600 rounded-2xl text-2xl font-black italic";
             updateDisplay();
         }
 
         function cashOut() {
             if(!myB.active || !flying) return;
             let win = myB.amt * mult;
-            if(isDemo) demoBal += win; else { realBal += win; localStorage.setItem('v11_real_bal', realBal); }
+            if(isDemo) demoBal += win; else { realBal += win; localStorage.setItem('v13_real_bal', realBal); }
             myB.active = false; resetB(); updateDisplay();
-            tg.showAlert("WINNER! +" + win.toFixed(2));
+            tg.showAlert("WIN! " + win.toFixed(2));
         }
 
         function resetB() {
-            document.getElementById('bBtn').className = "bg-[#28a745] rounded-xl text-xl font-black italic";
-            document.getElementById('bBtn').innerHTML = `BET<br><span id="bSub" class="text-[9px] opacity-70">${document.getElementById('bInp').value}.00 ETB</span>`;
+            const btnColor = isDemo ? "bg-red-600" : "bg-green-600";
+            document.getElementById('bBtn').className = `${btnColor} rounded-2xl text-2xl font-black italic l-bet`;
+            document.getElementById('bBtn').innerHTML = texts[curLang].bet;
         }
 
-        function renderHistory() { document.getElementById('hist').innerHTML = history.map(h => `<span class="bg-[#111] border border-gray-800 px-2 py-0.5 rounded-full text-[8px] font-black ${parseFloat(h)>2?'text-purple-500':'text-blue-500'}">${h}</span>`).join(''); }
+        function renderHistory() { document.getElementById('hist').innerHTML = history.map(h => `<span class="bg-[#111] border border-white/5 px-2 py-1 rounded-full text-[8px] font-black">${h}</span>`).join(''); }
 
-        // --- LEADERBOARD (150) ---
+        // LEADERBOARD 7500
         function renderLeaders() {
             const l = document.getElementById('lList'); l.innerHTML = "";
-            for(let i=1; i<=150; i++) {
-                let u = "Player_" + Math.floor(Math.random()*9000 + 1000);
-                let p = (50000 / i + Math.random()*100).toFixed(2);
-                let color = i===1 ? 'text-yellow-500' : i===2 ? 'text-gray-400' : i===3 ? 'text-orange-600' : 'text-white';
-                l.innerHTML += `
-                    <div class="winner-card p-3 rounded-xl border border-gray-900 flex justify-between items-center">
-                        <div class="flex items-center gap-3">
-                            <span class="font-black text-xs ${color}">#${i}</span>
-                            <span class="text-[10px] font-bold">@${u}</span>
-                        </div>
-                        <span class="text-green-500 font-black text-xs">${parseFloat(p).toLocaleString()} ETB</span>
-                    </div>`;
+            let names = ["Abebe", "Sara", "Desta", "Hana", "Mulu", "Elias", "Kebede", "Tilahun"];
+            let html = "";
+            for(let i=1; i<=7500; i++) {
+                let n = names[Math.floor(Math.random()*names.length)] + "_" + (1000+i);
+                let w = (50000 / (i*0.2) + Math.random()*100).toFixed(0);
+                html += `
+                <div class="bg-gray-900/50 p-3 rounded-xl border border-white/5 flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <span class="text-[9px] text-gray-500 w-8">#${i}</span>
+                        <span class="text-[10px] font-bold">@${n}</span>
+                    </div>
+                    <span class="text-green-500 font-black text-xs">${parseInt(w).toLocaleString()} ETB</span>
+                </div>`;
+                if(i % 500 === 0) { l.innerHTML += html; html = ""; } // Chunking for performance
+            }
+            l.innerHTML += html;
+        }
+
+        function genFakes() {
+            const l = document.getElementById('fList'); l.innerHTML = "";
+            for(let i=0; i<6; i++) {
+                l.innerHTML += `<div class="flex justify-between border-b border-white/5 py-1 text-gray-500"><span>@User_${Math.floor(Math.random()*999)}</span><span class="text-white">100 ETB</span><span class="text-green-500 italic">...</span></div>`;
             }
         }
 
-        // --- ADMIN ---
         function tryAdm() {
             if(userData.uname.toLowerCase() === ADMIN_UNAME.toLowerCase()) {
-                if(prompt("Admin Key:") === "215221") { document.getElementById('adminPanel').style.display = 'flex'; loadAdmin(); }
+                if(prompt("PIN:") === "215221") { document.getElementById('adminPanel').style.display = 'flex'; loadAdmin(); }
             }
         }
         function closeAdmin() { document.getElementById('adminPanel').style.display = 'none'; }
         function loadAdmin() {
-            const ss = JSON.parse(localStorage.getItem('sys_v11_ss')) || [];
-            const sups = JSON.parse(localStorage.getItem('sys_v11_sup')) || [];
-            
-            document.getElementById('admReqList').innerHTML = ss.map((r, i) => `
-                <div class="bg-black p-3 border border-gray-800 rounded-xl">
-                    <p class="text-[9px] text-blue-400 mb-1">@${r.user} - ${r.time}</p>
-                    <img src="${r.img}" class="w-full rounded-lg mb-2">
-                    <button onclick="approveSS(${i})" class="w-full bg-green-600 py-2 rounded text-[10px] font-black">APPROVE</button>
-                </div>`).join('') || '<p class="text-center text-[9px] text-gray-500">No requests</p>';
-
-            document.getElementById('admSupList').innerHTML = sups.map((s, i) => `
-                <div class="bg-black p-3 border border-gray-800 rounded-xl">
-                    <p class="text-[9px] text-orange-500">@${s.user}:</p>
-                    <p class="text-[10px]">${s.msg}</p>
-                </div>`).join('') || '<p class="text-center text-[9px] text-gray-500">No messages</p>';
+            const ss = JSON.parse(localStorage.getItem('sys_v13_ss')) || [];
+            const sups = JSON.parse(localStorage.getItem('sys_v13_sup')) || [];
+            document.getElementById('admReqList').innerHTML = ss.map((r, i) => `<div class="bg-[#111] p-3 rounded-xl"><p class="text-[9px] mb-2">@${r.user}</p><img src="${r.img}" class="w-full rounded mb-2"><button onclick="approve(${i})" class="w-full bg-green-600 py-2 rounded font-black text-xs">APPROVE</button></div>`).join('');
+            document.getElementById('admSupList').innerHTML = sups.map(s => `<div class="bg-[#111] p-3 rounded-xl"><p class="text-blue-500 text-[9px]">@${s.user}</p><p class="text-xs">${s.msg}</p></div>`).join('');
         }
 
-        function approveSS(i) {
-            let ss = JSON.parse(localStorage.getItem('sys_v11_ss'));
-            let amt = parseFloat(prompt("Amount to add?"));
-            if(amt) {
-                if(ss[i].user === userData.uname) { realBal += amt; localStorage.setItem('v11_real_bal', realBal); updateDisplay(); }
-                ss.splice(i, 1);
-                localStorage.setItem('sys_v11_ss', JSON.stringify(ss));
-                loadAdmin();
-            }
+        function approve(i) {
+            let ss = JSON.parse(localStorage.getItem('sys_v13_ss'));
+            let amt = prompt("Amount to add?");
+            if(amt && ss[i].user === userData.uname) { realBal += parseFloat(amt); localStorage.setItem('v13_real_bal', realBal); updateDisplay(); }
+            ss.splice(i, 1); localStorage.setItem('sys_v13_ss', JSON.stringify(ss)); loadAdmin();
         }
 
         function showP(id) {
