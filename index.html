@@ -3,160 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DAI AVIATOR PRO - MINI APP</title>
+    <title>DAI AVIATOR PREMIUM</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@400;900&display=swap');
         body { background-color: #0b0e11; color: white; font-family: 'Roboto', sans-serif; overflow: hidden; margin: 0; }
         .font-game { font-family: 'Orbitron', sans-serif; }
         
-        /* Game Screen */
         .aviator-screen { 
-            background: radial-gradient(circle at bottom left, #1c0a12 0%, #000 100%);
-            height: 260px; position: relative; border-radius: 12px; overflow: hidden; border: 1px solid #2d1a24;
+            background: linear-gradient(to bottom, #1a2a6c, #b21f1f, #fdbb2d);
+            background: radial-gradient(circle at center, #1e3a8a 0%, #000 100%);
+            height: 240px; position: relative; border-radius: 15px; overflow: hidden; border: 1px solid #1e3a8a;
         }
 
-        /* 3D Animated Plane SVG */
-        .plane-container {
-            position: absolute; bottom: 20px; left: 20px; width: 90px; z-index: 50;
-            transition: transform 0.1s linear;
-        }
-        .propeller { animation: spin 0.1s linear infinite; transform-origin: 50% 50%; }
-        @keyframes spin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+        /* Snow Plane Sprite */
+        .plane-box { position: absolute; bottom: 20px; left: 20px; width: 70px; z-index: 50; transition: transform 0.1s linear; }
+        .snow-particle { position: absolute; background: white; border-radius: 50%; opacity: 0.8; pointer-events: none; }
 
-        .multiplier-val { font-size: 3.5rem; font-weight: 900; z-index: 100; position: relative; text-shadow: 0 0 20px rgba(255, 255, 255, 0.4); }
+        .multiplier-val { font-size: 3.5rem; font-weight: 900; z-index: 100; position: relative; text-shadow: 0 0 20px rgba(255, 255, 255, 0.6); }
 
-        /* History & Tabs */
-        .history-item { background: #1c2127; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: bold; min-width: 42px; text-align: center; }
-        .tab-active { color: #d32f2f; border-bottom: 2px solid #d32f2f; }
+        .nav-bar { background: #1c2127; position: fixed; bottom: 0; width: 100%; height: 70px; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #333; z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #888; font-size: 10px; cursor: pointer; }
+        .nav-item.active { color: #d32f2f; }
 
-        /* Buttons */
-        .btn-bet { background-color: #28a745; border-radius: 8px; font-weight: 800; transition: 0.2s; }
-        .btn-cashout { background-color: #ff9800; animation: pulse 1s infinite; }
+        .page { display: none; height: calc(100vh - 70px); overflow-y: auto; padding-bottom: 80px; }
+        .active-page { display: block; }
+
+        .btn-bet { background: #28a745; border-radius: 12px; font-weight: 800; }
+        .btn-cashout { background: #ff9800; animation: pulse 1s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
-
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
     </style>
 </head>
 <body>
 
-    <div id="loginModal" class="modal">
-        <div class="bg-[#1c2127] p-6 rounded-2xl w-full max-w-sm border border-gray-700 text-center">
-            <div class="text-red-600 font-black italic text-3xl mb-4">Aviator</div>
-            <p class="text-sm text-gray-400 mb-6">Connect your Telegram account to continue.</p>
-            <input id="tgUser" type="text" placeholder="@username" class="w-full bg-black p-4 rounded-xl border border-gray-700 mb-4 outline-none text-center">
-            <button onclick="login()" class="w-full bg-red-600 py-4 rounded-xl font-black text-lg">PLAY NOW</button>
-        </div>
-    </div>
-
-    <div class="p-3 flex justify-between items-center bg-[#1c2127] border-b border-gray-800">
-        <div>
+    <div class="p-3 flex justify-between items-center bg-[#1c2127] border-b border-gray-800 sticky top-0 z-[500]">
+        <div class="flex items-center gap-2">
             <span class="text-red-600 font-black italic text-xl">Aviator</span>
-            <p id="userTag" class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">@Guest</p>
         </div>
-        <div class="bg-black px-4 py-1.5 rounded-full border border-green-900">
-            <span id="bal" class="text-green-500 font-bold">0.00</span> <span class="text-[10px] text-gray-500">ETB</span>
+        <div class="bg-black px-4 py-1.5 rounded-full border border-blue-900">
+            <span id="bal" class="text-green-500 font-bold">10.00</span> <span class="text-[10px] text-gray-500">ETB</span>
         </div>
     </div>
 
-    <div id="history" class="flex gap-2 p-2 bg-[#0b0e11] overflow-x-auto border-b border-gray-900 no-scrollbar">
-        </div>
-
-    <div class="p-3">
+    <section id="home" class="page active-page p-3">
+        <div id="history" class="flex gap-2 mb-2 overflow-x-auto no-scrollbar py-1"></div>
+        
         <div class="aviator-screen flex items-center justify-center">
             <div id="multi" class="multiplier-val font-game">1.00x</div>
-            
-            <div id="plane-box" class="plane-container">
+            <div id="plane-box" class="plane-box">
                 <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M15,30 Q15,10 50,15 L85,25 Q95,30 85,35 L50,45 Q15,50 15,30" fill="#d32f2f" stroke="white" stroke-width="1.5"/>
-                    <path d="M45,18 L35,5 L50,5 L55,18 Z" fill="#b91c1c"/>
-                    <path d="M45,42 L35,55 L50,55 L55,42 Z" fill="#b91c1c"/>
-                    <circle cx="88" cy="30" r="4" fill="#333" class="propeller"/>
-                    <rect x="25" y="25" width="15" height="5" rx="2" fill="white" opacity="0.4"/>
-                </svg>
+                    <path d="M10,30 L50,25 L90,30 L50,35 Z" fill="#fff" opacity="0.9"/> <rect x="40" y="5" width="5" height="50" fill="#d32f2f" rx="2"/> <circle cx="95" cy="30" r="3" fill="#333"/> </svg>
             </div>
+            <div id="snow-field"></div>
         </div>
 
-        <div class="mt-4 bg-[#1c2127] p-3 rounded-xl border border-gray-800">
+        <div class="mt-4 bg-[#1c2127] p-4 rounded-2xl border border-gray-800">
             <div class="flex gap-3">
                 <div class="w-1/3 space-y-2">
-                    <div class="bg-black flex items-center justify-between px-2 py-2 rounded-lg border border-gray-800">
-                        <button onclick="adj(-5)" class="text-gray-500 font-bold px-2">−</button>
-                        <input id="betAmt" type="number" value="10" class="bg-transparent text-center w-full font-bold outline-none">
-                        <button onclick="adj(5)" class="text-gray-500 font-bold px-2">+</button>
+                    <div class="bg-black flex items-center justify-between p-2 rounded-lg">
+                        <button onclick="adj(-1)" class="text-gray-500 font-bold px-2">−</button>
+                        <input id="betAmt" type="number" value="10" class="bg-transparent text-center w-full font-bold outline-none text-sm">
+                        <button onclick="adj(1)" class="text-gray-500 font-bold px-2">+</button>
                     </div>
                     <div class="grid grid-cols-2 gap-1">
-                        <button onclick="setV(50)" class="bg-gray-800 text-[10px] py-1.5 rounded font-bold">50</button>
-                        <button onclick="setV(100)" class="bg-gray-800 text-[10px] py-1.5 rounded font-bold">100</button>
+                        <button onclick="setV(50)" class="bg-gray-800 text-[10px] py-2 rounded">50</button>
+                        <button onclick="setV(100)" class="bg-gray-800 text-[10px] py-2 rounded">100</button>
                     </div>
                 </div>
-                <button id="betBtn" onclick="handleAction()" class="btn-bet flex-1 text-xl py-4">BET<br><span id="betLbl" class="text-xs font-normal">10.00 ETB</span></button>
+                <button id="betBtn" onclick="handleBet()" class="btn-bet flex-1 text-xl">BET<br><span id="betLbl" class="text-xs font-normal">10.00 ETB</span></button>
             </div>
         </div>
+    </section>
 
-        <div class="mt-4 bg-[#14191f] rounded-xl border border-gray-800 overflow-hidden h-40 flex flex-col">
-            <div class="p-2 bg-black/40 flex justify-between text-[10px] font-bold border-b border-gray-900">
-                <span>LIVE COMPETITION</span>
-                <span onclick="copyLink()" class="text-blue-400 cursor-pointer">🔗 COPY REFERRAL</span>
-            </div>
-            <div id="pList" class="flex-1 overflow-y-auto">
+    <section id="wallet" class="page p-5">
+        <h2 class="text-2xl font-black mb-6">Financial Hub</h2>
+        <div class="space-y-4">
+            <div class="bg-[#1c2127] p-5 rounded-2xl border border-blue-900 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center font-bold">TB</div>
+                    <div><p class="font-bold">Telebirr</p><p class="text-xs text-gray-500">Deposit / Withdraw</p></div>
                 </div>
+                <i class="fa-solid fa-chevron-right text-gray-600"></i>
+            </div>
+            <div class="bg-[#1c2127] p-5 rounded-2xl border border-yellow-700 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-yellow-600 rounded-full flex items-center justify-center font-bold">CBE</div>
+                    <div><p class="font-bold">CBE Birr</p><p class="text-xs text-gray-500">Bank Transfer</p></div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-600"></i>
+            </div>
         </div>
+    </section>
+
+    <section id="referral" class="page p-5 text-center">
+        <div class="bg-gradient-to-br from-red-600 to-red-900 p-8 rounded-3xl mb-6">
+            <i class="fa-solid fa-gift text-5xl mb-4"></i>
+            <h2 class="text-2xl font-black">Invite Friends</h2>
+            <p class="text-sm opacity-80">Get 10% commission on every bet your friends make!</p>
+        </div>
+        <div class="bg-black p-4 rounded-xl border border-gray-800 mb-4">
+            <p class="text-[10px] text-gray-500 mb-1">YOUR UNIQUE LINK</p>
+            <p id="refLink" class="text-xs font-bold text-blue-400">t.me/yourbot?start=user123</p>
+        </div>
+        <button onclick="copyRef()" class="w-full bg-white text-black py-4 rounded-xl font-black">COPY LINK</button>
+    </section>
+
+    <section id="profile" class="page p-5">
+        <div class="flex items-center gap-4 mb-10">
+            <div id="pfp" class="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center text-3xl font-black border-2 border-red-600">?</div>
+            <div>
+                <h3 id="tgName" class="text-xl font-bold">@Username</h3>
+                <p id="tgId" class="text-xs text-gray-500">ID: 000000000</p>
+            </div>
+        </div>
+        <div class="bg-[#1c2127] rounded-2xl overflow-hidden">
+            <div class="p-4 border-b border-gray-800 flex justify-between"><span>Total Bets</span><span class="font-bold">0</span></div>
+            <div class="p-4 border-b border-gray-800 flex justify-between"><span>Total Wins</span><span class="font-bold text-green-500">0.00 ETB</span></div>
+            <div class="p-4 flex justify-between"><span>Status</span><span class="text-blue-400">Active</span></div>
+        </div>
+    </section>
+
+    <div class="nav-bar">
+        <div onclick="showPage('home')" class="nav-item active" id="nav-home"><i class="fa-solid fa-plane-up text-xl mb-1"></i><span>Game</span></div>
+        <div onclick="showPage('wallet')" class="nav-item" id="nav-wallet"><i class="fa-solid fa-wallet text-xl mb-1"></i><span>Wallet</span></div>
+        <div onclick="showPage('referral')" class="nav-item" id="nav-referral"><i class="fa-solid fa-user-plus text-xl mb-1"></i><span>Refer</span></div>
+        <div onclick="showPage('profile')" class="nav-item" id="nav-profile"><i class="fa-solid fa-user text-xl mb-1"></i><span>Profile</span></div>
     </div>
 
-    <audio id="snd" loop src="https://www.soundjay.com/transportation/sounds/propeller-plane-flying-1.mp3"></audio>
-
     <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
         let balance = parseFloat(localStorage.getItem('dai_bal')) || 10.00;
-        let username = localStorage.getItem('dai_user') || "";
-        let history = JSON.parse(localStorage.getItem('dai_hist')) || ["1.24x", "5.10x", "1.08x"];
+        let userData = {
+            name: tg.initDataUnsafe?.user?.username || tg.initDataUnsafe?.user?.first_name || "Guest",
+            id: tg.initDataUnsafe?.user?.id || "LocalUser"
+        };
         let isFlying = false;
         let multiplier = 1.00;
-        let myBet = { active: false, amt: 0 };
-        let gameLoop;
-        let totalPool = 0; // Total money bet in current round
-
-        window.onload = () => {
-            if(!username) document.getElementById('loginModal').style.display = 'flex';
-            else init();
-            renderHistory();
-        };
-
-        function login() {
-            let u = document.getElementById('tgUser').value;
-            if(u.length < 3) return alert("Enter your Telegram name!");
-            username = u.startsWith('@') ? u : '@' + u;
-            localStorage.setItem('dai_user', username);
-            if(!localStorage.getItem('dai_bal')) localStorage.setItem('dai_bal', 10.00);
-            document.getElementById('loginModal').style.display = 'none';
-            init();
-        }
+        let activeBet = { active: false, amt: 0 };
+        let history = JSON.parse(localStorage.getItem('dai_history')) || ["1.20x", "2.10x", "1.05x"];
 
         function init() {
-            document.getElementById('userTag').innerText = username;
+            document.getElementById('tgName').innerText = "@" + userData.name;
+            document.getElementById('tgId').innerText = "ID: " + userData.id;
+            document.getElementById('pfp').innerText = userData.name[0].toUpperCase();
             document.getElementById('bal').innerText = balance.toFixed(2);
-            startWaiting();
+            document.getElementById('refLink').innerText = `t.me/yourbot?start=${userData.id}`;
+            renderHistory();
+            startCycle();
         }
 
-        function adj(v) { let e = document.getElementById('betAmt'); e.value = Math.max(1, parseInt(e.value) + v); updateL(); }
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('active-page');
+            document.getElementById('nav-' + id).classList.add('active');
+        }
+
+        function adj(v) { let i = document.getElementById('betAmt'); i.value = Math.max(1, parseInt(i.value) + v); updateL(); }
         function setV(v) { document.getElementById('betAmt').value = v; updateL(); }
         function updateL() { document.getElementById('betLbl').innerText = document.getElementById('betAmt').value + ".00 ETB"; }
 
-        function handleAction() {
+        function handleBet() {
             let btn = document.getElementById('betBtn');
             let amt = parseInt(document.getElementById('betAmt').value);
-            if(!isFlying && !myBet.active) {
+            if(!isFlying && !activeBet.active) {
                 if(amt > balance) return alert("Low Balance!");
                 balance -= amt;
-                myBet = { active: true, amt: amt };
-                totalPool += amt;
-                btn.innerHTML = "WAITING...<br><span class='text-xs'>CANCEL</span>";
-                btn.classList.replace('bg-green-600', 'bg-red-900');
+                activeBet = { active: true, amt: amt };
+                btn.innerHTML = "WAITING...<br><span class='text-[10px]'>CANCEL</span>";
+                btn.classList.replace('bg-[#28a745]', 'bg-red-900');
                 save();
-            } else if (isFlying && myBet.active) {
-                let win = myBet.amt * multiplier;
+            } else if (isFlying && activeBet.active) {
+                let win = activeBet.amt * multiplier;
                 balance += win;
-                myBet.active = false;
+                activeBet.active = false;
                 alert(`WIN: ${win.toFixed(2)} ETB`);
                 resetBtn();
                 save();
@@ -165,7 +189,7 @@
 
         function resetBtn() {
             let b = document.getElementById('betBtn');
-            b.className = "btn-bet flex-1 text-xl py-4 bg-green-600";
+            b.className = "btn-bet flex-1 text-xl bg-[#28a745]";
             updateL();
             b.innerHTML = `BET<br><span class="text-xs font-normal">${document.getElementById('betAmt').value}.00 ETB</span>`;
         }
@@ -175,84 +199,78 @@
             document.getElementById('bal').innerText = balance.toFixed(2);
         }
 
-        function startWaiting() {
+        function startCycle() {
             if(isFlying) return;
             let wait = 5;
-            totalPool = 0;
             let t = setInterval(() => {
                 document.getElementById('multi').innerText = `Next in ${wait}s`;
                 document.getElementById('multi').style.fontSize = "1.5rem";
                 if(wait-- <= 0) { clearInterval(t); launch(); }
-                mockBets();
             }, 1000);
         }
 
         function launch() {
             isFlying = true; multiplier = 1.00;
-            document.getElementById('snd').play();
             document.getElementById('multi').style.fontSize = "3.5rem";
             document.getElementById('multi').style.color = "white";
 
-            if(myBet.active) {
+            if(activeBet.active) {
                 document.getElementById('betBtn').classList.replace('bg-red-900', 'btn-cashout');
-                document.getElementById('betBtn').innerHTML = `CASH OUT<br><span>${(myBet.amt * multiplier).toFixed(2)}</span>`;
+                document.getElementById('betBtn').innerHTML = `CASH OUT<br><span>${(activeBet.amt * multiplier).toFixed(2)}</span>`;
             }
 
-            // --- PROFIT LOGIC (60/40) ---
-            // If total payout hits 60% of pool, crash. Or random house edge.
-            let crashAt = Math.random() < 0.4 ? (1 + Math.random() * 0.15) : (1.15 + Math.random() * 10);
+            // 40% Admin Profit Logic
+            let crashAt = Math.random() < 0.4 ? (1 + Math.random() * 0.18) : (1.18 + Math.random() * 10);
 
-            gameLoop = setInterval(() => {
+            let loop = setInterval(() => {
                 multiplier += 0.03;
                 document.getElementById('multi').innerText = multiplier.toFixed(2) + "x";
                 document.getElementById('plane-box').style.transform = `translate(${multiplier * 20}px, -${multiplier * 15}px)`;
+                createSnow();
 
-                if(myBet.active) {
-                    document.getElementById('betBtn').querySelector('span').innerText = (myBet.amt * multiplier).toFixed(2) + " ETB";
-                    // Dynamic crash check: if player win > 60% of pool (simulated)
-                    if(multiplier > 1.6 && Math.random() < 0.1) crashAt = multiplier; 
+                if(activeBet.active) {
+                    document.getElementById('betBtn').querySelector('span').innerText = (activeBet.amt * multiplier).toFixed(2) + " ETB";
                 }
-
-                if(multiplier >= crashAt) crash();
+                if(multiplier >= crashAt) {
+                    clearInterval(loop);
+                    crash();
+                }
             }, 100);
         }
 
         function crash() {
-            clearInterval(gameLoop);
             isFlying = false;
-            document.getElementById('snd').pause();
-            document.getElementById('snd').currentTime = 0;
             document.getElementById('multi').innerText = "FLEW AWAY!";
             document.getElementById('multi').style.color = "#ff1e4d";
-
             history.unshift(multiplier.toFixed(2) + "x");
             if(history.length > 10) history.pop();
-            localStorage.setItem('dai_hist', JSON.stringify(history));
+            localStorage.setItem('dai_history', JSON.stringify(history));
             renderHistory();
-
-            if(myBet.active) { myBet.active = false; resetBtn(); }
+            if(activeBet.active) { activeBet.active = false; resetBtn(); }
             setTimeout(() => {
                 document.getElementById('plane-box').style.transform = "translate(0,0)";
-                startWaiting();
+                document.getElementById('snow-field').innerHTML = "";
+                startCycle();
             }, 3000);
         }
 
+        function createSnow() {
+            let f = document.getElementById('snow-field');
+            let s = document.createElement('div');
+            s.className = "snow-particle";
+            s.style.width = "4px"; s.style.height = "4px";
+            s.style.left = "40px"; s.style.bottom = "40px";
+            f.appendChild(s);
+            setTimeout(() => s.remove(), 1000);
+        }
+
         function renderHistory() {
-            document.getElementById('history').innerHTML = history.map(v => `<span class="history-item ${parseFloat(v)>2?'text-purple-500':'text-blue-400'}">${v}</span>`).join('');
+            document.getElementById('history').innerHTML = history.map(v => `<span class="bg-gray-800 px-3 py-1 rounded-full text-[10px] font-bold ${parseFloat(v)>2?'text-purple-500':'text-blue-400'}">${v}</span>`).join('');
         }
 
-        function mockBets() {
-            const bots = ["@Abel_X", "@Sami_Pro", "@Hana_Eth", "@Muller_7", "@Dagi_Vip"];
-            let list = document.getElementById('pList');
-            let bName = bots[Math.floor(Math.random()*bots.length)];
-            let bAmt = (Math.random()*200).toFixed(0);
-            totalPool += parseInt(bAmt);
-            let row = `<div class="p-2 border-b border-gray-900 flex justify-between text-gray-400"><span>👤 ${bName}</span><span>${bAmt} ETB</span></div>`;
-            list.insertAdjacentHTML('afterbegin', row);
-            if(list.children.length > 8) list.lastChild.remove();
-        }
+        function copyRef() { alert("Link Copied!"); }
 
-        function copyLink() { alert("Referral Link Copied!"); }
+        init();
     </script>
 </body>
 </html>
