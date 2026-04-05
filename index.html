@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WORLD GAMES - ELITE AVIATOR V13</title>
+    <title>WORLD GAMES - ELITE AVIATOR V13.5</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -33,12 +33,18 @@
 
     <div id="adminPanel" class="admin-view">
         <div class="p-4 bg-gray-900 flex justify-between items-center border-b border-white/10">
-            <h2 class="font-black text-xs text-red-500">ADMIN CONTROL</h2>
+            <h2 class="font-black text-xs text-red-500">ADMIN CONTROL PANEL</h2>
             <button onclick="closeAdmin()" class="bg-red-600 px-4 py-1 rounded-full text-[10px] font-bold">EXIT</button>
         </div>
         <div class="p-4 flex-1 overflow-y-auto space-y-6 pb-24 no-scrollbar">
-            <div id="admReqList" class="space-y-4"></div>
-            <div id="admSupList" class="space-y-3"></div>
+            <div class="bg-[#111] p-4 rounded-2xl border border-blue-900/30">
+                <h3 class="text-[10px] font-black text-blue-500 mb-3 border-b border-gray-800 pb-1 uppercase">Pending Proofs</h3>
+                <div id="admReqList" class="space-y-4"></div>
+            </div>
+            <div class="bg-[#111] p-4 rounded-2xl border border-orange-900/30">
+                <h3 class="text-[10px] font-black text-orange-500 mb-3 border-b border-gray-800 pb-1 uppercase">Support Tickets</h3>
+                <div id="admSupList" class="space-y-3"></div>
+            </div>
         </div>
     </div>
 
@@ -68,7 +74,6 @@
     <section id="home" class="page active-page">
         <div id="hist" class="flex gap-2 mb-3 overflow-x-auto no-scrollbar"></div>
         <div id="gameArea" class="aviator-screen flex items-center justify-center transition-all duration-500">
-            <button onclick="toggleMute()" class="absolute top-3 left-3 z-[200] bg-black/60 p-2 rounded-full"><i id="muteIcon" class="fa-solid fa-volume-high text-white text-[10px]"></i></button>
             <svg width="100%" height="100%" style="position:absolute;"><path id="gamePath" d="M 0 200 Q 0 200 0 200" /></svg>
             <div id="mTxt" class="font-game text-6xl italic text-white z-10 drop-shadow-2xl">1.00x</div>
             <div id="plane" class="plane-jet">✈️</div>
@@ -152,7 +157,7 @@
             const t = texts[curLang];
             document.querySelector('.l-nav-play').innerText = t.play;
             document.querySelector('.l-nav-wallet').innerText = t.wallet;
-            document.querySelector('.l-nav-top').innerText = t.play; // reuse short
+            document.querySelector('.l-nav-top').innerText = t.top.split(' ')[0];
             document.querySelector('.l-nav-sup').innerText = t.sup;
             document.querySelector('.l-waiting').innerText = t.wait;
             document.querySelector('.l-amt').innerText = t.amt;
@@ -194,16 +199,18 @@
             document.getElementById('hBal').style.color = isDemo ? "#ef4444" : "#22c55e";
         }
 
+        // PHOTO UPLOAD FIX
         function subSS() {
             const file = document.getElementById('ssInp').files[0];
-            if(!file) return tg.showAlert("Please select a screenshot!");
+            if(!file) return tg.showAlert("Please select a photo first!");
             const r = new FileReader();
             r.onload = () => {
                 let ss = JSON.parse(localStorage.getItem('sys_v13_ss')) || [];
                 ss.push({ user: userData.uname, img: r.result, time: new Date().toLocaleString() });
                 localStorage.setItem('sys_v13_ss', JSON.stringify(ss));
-                tg.showAlert("✅ Screenshot sent to Admin!");
+                tg.showAlert("✅ Success! Your screenshot was sent to Admin.");
                 document.getElementById('previewBox').classList.add('hidden');
+                document.getElementById('ssInp').value = "";
             };
             r.readAsDataURL(file);
         }
@@ -214,13 +221,13 @@
             let sups = JSON.parse(localStorage.getItem('sys_v13_sup')) || [];
             sups.push({ user: userData.uname, msg: msg, time: new Date().toLocaleString() });
             localStorage.setItem('sys_v13_sup', JSON.stringify(sups));
-            tg.showAlert("✅ Message sent!");
+            tg.showAlert("✅ Support message sent!");
             document.getElementById('supMsg').value = "";
         }
 
-        // GAME
+        // GAME ENGINE
         let flying = false; let mult = 1.00; let myB = { active: false, amt: 0 };
-        let history = ["1.0x", "2.1x", "1.5x"];
+        let history = ["1.02x", "2.10x", "1.55x"];
 
         function startLoop() {
             if(flying) return;
@@ -248,7 +255,7 @@
         }
 
         function crash() {
-            flying = false; document.getElementById('mTxt').innerText = "CRASHED!";
+            flying = false; document.getElementById('mTxt').innerText = "FLEW AWAY!";
             document.getElementById('mTxt').style.color = "#ff0044";
             history.unshift(mult.toFixed(2) + "x"); if(history.length > 10) history.pop();
             renderHistory(); myB.active = false; resetB();
@@ -264,7 +271,7 @@
             if(flying && myB.active) return cashOut();
             let a = parseInt(document.getElementById('bInp').value);
             let cur = isDemo ? demoBal : realBal;
-            if(a > cur) return tg.showAlert("Insufficient Funds!");
+            if(a > cur) return tg.showAlert("Insufficient Balance!");
             if(isDemo) demoBal -= a; else { realBal -= a; localStorage.setItem('v13_real_bal', realBal); }
             myB = { active: true, amt: a };
             document.getElementById('bBtn').innerHTML = "CASH OUT";
@@ -277,7 +284,7 @@
             let win = myB.amt * mult;
             if(isDemo) demoBal += win; else { realBal += win; localStorage.setItem('v13_real_bal', realBal); }
             myB.active = false; resetB(); updateDisplay();
-            tg.showAlert("WIN! " + win.toFixed(2));
+            tg.showAlert("WIN! " + win.toFixed(2) + " ETB");
         }
 
         function resetB() {
@@ -288,7 +295,6 @@
 
         function renderHistory() { document.getElementById('hist').innerHTML = history.map(h => `<span class="bg-[#111] border border-white/5 px-2 py-1 rounded-full text-[8px] font-black">${h}</span>`).join(''); }
 
-        // LEADERBOARD 7500
         function renderLeaders() {
             const l = document.getElementById('lList'); l.innerHTML = "";
             let names = ["Abebe", "Sara", "Desta", "Hana", "Mulu", "Elias", "Kebede", "Tilahun"];
@@ -296,15 +302,8 @@
             for(let i=1; i<=7500; i++) {
                 let n = names[Math.floor(Math.random()*names.length)] + "_" + (1000+i);
                 let w = (50000 / (i*0.2) + Math.random()*100).toFixed(0);
-                html += `
-                <div class="bg-gray-900/50 p-3 rounded-xl border border-white/5 flex justify-between items-center">
-                    <div class="flex items-center gap-3">
-                        <span class="text-[9px] text-gray-500 w-8">#${i}</span>
-                        <span class="text-[10px] font-bold">@${n}</span>
-                    </div>
-                    <span class="text-green-500 font-black text-xs">${parseInt(w).toLocaleString()} ETB</span>
-                </div>`;
-                if(i % 500 === 0) { l.innerHTML += html; html = ""; } // Chunking for performance
+                html += `<div class="bg-gray-900/50 p-3 rounded-xl border border-white/5 flex justify-between items-center"><div class="flex items-center gap-3"><span class="text-[9px] text-gray-500 w-8">#${i}</span><span class="text-[10px] font-bold">@${n}</span></div><span class="text-green-500 font-black text-xs">${parseInt(w).toLocaleString()} ETB</span></div>`;
+                if(i % 500 === 0) { l.innerHTML += html; html = ""; }
             }
             l.innerHTML += html;
         }
@@ -316,24 +315,56 @@
             }
         }
 
+        // ADMIN PANEL
         function tryAdm() {
             if(userData.uname.toLowerCase() === ADMIN_UNAME.toLowerCase()) {
-                if(prompt("PIN:") === "215221") { document.getElementById('adminPanel').style.display = 'flex'; loadAdmin(); }
-            }
+                if(prompt("Enter PIN:") === "215221") { document.getElementById('adminPanel').style.display = 'flex'; loadAdmin(); }
+                else { alert("Wrong PIN!"); }
+            } else { alert("Only Admin can access this!"); }
         }
         function closeAdmin() { document.getElementById('adminPanel').style.display = 'none'; }
+        
         function loadAdmin() {
             const ss = JSON.parse(localStorage.getItem('sys_v13_ss')) || [];
             const sups = JSON.parse(localStorage.getItem('sys_v13_sup')) || [];
-            document.getElementById('admReqList').innerHTML = ss.map((r, i) => `<div class="bg-[#111] p-3 rounded-xl"><p class="text-[9px] mb-2">@${r.user}</p><img src="${r.img}" class="w-full rounded mb-2"><button onclick="approve(${i})" class="w-full bg-green-600 py-2 rounded font-black text-xs">APPROVE</button></div>`).join('');
-            document.getElementById('admSupList').innerHTML = sups.map(s => `<div class="bg-[#111] p-3 rounded-xl"><p class="text-blue-500 text-[9px]">@${s.user}</p><p class="text-xs">${s.msg}</p></div>`).join('');
+            
+            document.getElementById('admReqList').innerHTML = ss.map((r, i) => `
+                <div class="bg-black p-4 rounded-xl border border-gray-800">
+                    <p class="text-[9px] text-blue-500 mb-2">@${r.user} - ${r.time}</p>
+                    <img src="${r.img}" class="w-full rounded-lg mb-3">
+                    <div class="flex gap-2">
+                        <button onclick="approve(${i})" class="flex-1 bg-green-600 py-2 rounded text-[10px] font-black">APPROVE</button>
+                        <button onclick="reject(${i})" class="flex-1 bg-red-600 py-2 rounded text-[10px] font-black">REJECT</button>
+                    </div>
+                </div>`).join('') || '<p class="text-center text-xs text-gray-600">No pending screenshots</p>';
+
+            document.getElementById('admSupList').innerHTML = sups.map(s => `
+                <div class="bg-black p-3 rounded-xl border border-gray-800">
+                    <p class="text-orange-500 text-[9px]">@${s.user}</p>
+                    <p class="text-xs text-gray-300">${s.msg}</p>
+                </div>`).join('') || '<p class="text-center text-xs text-gray-600">No messages</p>';
         }
 
         function approve(i) {
             let ss = JSON.parse(localStorage.getItem('sys_v13_ss'));
-            let amt = prompt("Amount to add?");
-            if(amt && ss[i].user === userData.uname) { realBal += parseFloat(amt); localStorage.setItem('v13_real_bal', realBal); updateDisplay(); }
-            ss.splice(i, 1); localStorage.setItem('sys_v13_ss', JSON.stringify(ss)); loadAdmin();
+            let amt = prompt("Amount to add for @" + ss[i].user + "?");
+            if(amt && !isNaN(amt)) {
+                if(ss[i].user === userData.uname) {
+                    realBal += parseFloat(amt);
+                    localStorage.setItem('v13_real_bal', realBal);
+                    updateDisplay();
+                }
+                ss.splice(i, 1);
+                localStorage.setItem('sys_v13_ss', JSON.stringify(ss));
+                loadAdmin();
+                tg.showAlert("✅ Balance updated successfully!");
+            }
+        }
+        function reject(i) {
+            let ss = JSON.parse(localStorage.getItem('sys_v13_ss'));
+            ss.splice(i, 1);
+            localStorage.setItem('sys_v13_ss', JSON.stringify(ss));
+            loadAdmin();
         }
 
         function showP(id) {
