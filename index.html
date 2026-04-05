@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DAI AVIATOR PREMIUM - V2</title>
+    <title>DAI AVIATOR PRO - ADMIN CONTROL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,94 +11,56 @@
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@400;900&display=swap');
         body { background-color: #0b0e11; color: white; font-family: 'Roboto', sans-serif; overflow: hidden; margin: 0; }
         .font-game { font-family: 'Orbitron', sans-serif; }
-        
-        /* Game Canvas Area */
         .aviator-screen { 
-            background: radial-gradient(circle at bottom left, #1c0a12 0%, #000 100%);
-            height: 300px; position: relative; border-radius: 15px; overflow: hidden; border: 1px solid #2d1a24;
+            background: radial-gradient(circle at bottom left, #0f172a 0%, #000 100%);
+            height: 300px; position: relative; border-radius: 20px; overflow: hidden; border: 1px solid #1e293b;
         }
-
-        /* The Red Path Curve */
-        #gamePath {
-            position: absolute; bottom: 0; left: 0;
-            stroke: #d32f2f; stroke-width: 5; fill: none;
-            filter: drop-shadow(0 0 10px #ff0000);
-        }
-
-        /* Enlarged Plane Wrapper */
-        .plane-wrapper {
-            position: absolute; bottom: 15px; left: 15px; width: 90px; z-index: 100;
-            transition: transform 0.1s linear;
-        }
-
-        .multiplier-display { font-size: 4rem; font-weight: 900; z-index: 200; position: relative; text-shadow: 0 0 25px rgba(255, 255, 255, 0.6); }
-
-        /* Navigation */
+        #gamePath { stroke: #ef4444; stroke-width: 6; fill: none; filter: drop-shadow(0 0 12px #ff0000); }
+        .plane-emoji { position: absolute; bottom: 15px; left: 15px; font-size: 50px; z-index: 100; transition: transform 0.1s linear; }
+        .multiplier-display { font-size: 4.5rem; font-weight: 900; z-index: 200; position: relative; text-shadow: 0 0 30px rgba(255, 255, 255, 0.4); }
         .nav-bar { background: #1c2127; position: fixed; bottom: 0; width: 100%; height: 65px; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #333; z-index: 1000; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: #888; font-size: 10px; cursor: pointer; }
-        .nav-item.active { color: #d32f2f; }
-
+        .nav-item.active { color: #ef4444; }
         .page { display: none; height: calc(100vh - 65px); overflow-y: auto; padding-bottom: 80px; }
         .active-page { display: block; }
-
-        .btn-bet { background: #28a745; border-radius: 12px; font-weight: 800; transition: 0.2s; }
-        .btn-cashout { background: #ff9800; animation: pulse 1s infinite; }
+        .btn-bet { background: #22c55e; border-radius: 15px; font-weight: 800; }
+        .btn-cashout { background: #f59e0b; animation: pulse 1s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-
-        /* Profile Photo Styles */
-        .pfp-mini { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #d32f2f; object-fit: cover; }
-        .pfp-placeholder { width: 30px; height: 30px; border-radius: 50%; background: #333; display: flex; items-center justify-center; border: 2px solid #d32f2f; font-weight: bold; font-size: 14px; }
-        .pfp-large { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #d32f2f; object-fit: cover; margin: 0 auto; }
+        .pfp-img { width: 35px; height: 35px; border-radius: 50%; border: 2px solid #ef4444; }
     </style>
 </head>
 <body>
 
     <div class="p-3 flex justify-between items-center bg-[#1c2127] border-b border-gray-800 sticky top-0 z-[500]">
         <div class="flex items-center gap-3">
-            <div id="headerPfpContainer"></div> <div class="flex flex-col">
+            <div id="headerPfp"></div>
+            <div class="flex flex-col">
                 <span class="text-red-600 font-black italic text-xl">Aviator</span>
-                <span id="tgName" class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">@Guest</span>
+                <span id="tgName" class="text-[9px] text-gray-500 font-bold uppercase">@Guest</span>
             </div>
         </div>
         <div class="bg-black px-4 py-1.5 rounded-full border border-green-900">
-            <span id="balDisplay" class="text-green-500 font-bold text-sm">10.00</span> <span class="text-[10px] text-gray-500">ETB</span>
+            <span id="balDisplay" class="text-green-500 font-bold text-sm">0.00</span> <span class="text-[10px] text-gray-500">ETB</span>
         </div>
     </div>
 
     <section id="home" class="page active-page p-3">
-        <div id="historyBar" class="flex gap-2 mb-2 overflow-x-auto no-scrollbar py-1 text-[10px]"></div>
-        
+        <div id="historyBar" class="flex gap-2 mb-2 overflow-x-auto no-scrollbar py-1"></div>
         <div class="aviator-screen flex items-center justify-center">
-            <svg id="gameArea" width="100%" height="100%" style="position:absolute; top:0; left:0;">
-                <path id="gamePath" d="M 0 300 Q 0 300 0 300" />
-            </svg>
-            
+            <svg id="gameArea" width="100%" height="100%" style="position:absolute; top:0; left:0;"><path id="gamePath" d="M 0 300 Q 0 300 0 300" /></svg>
             <div id="multiText" class="multiplier-display font-game">1.00x</div>
-            
-            <div id="plane" class="plane-wrapper">
-                <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5,30 Q5,10 50,15 L95,25 Q105,30 95,35 L50,45 Q5,50 5,30" fill="#d32f2f" stroke="white" stroke-width="2"/>
-                    <path d="M45,18 L35,5 L50,5 L55,18 Z" fill="#b91c1c" stroke="white" stroke-width="1"/>
-                    <path d="M45,42 L35,55 L50,55 L55,42 Z" fill="#b91c1c" stroke="white" stroke-width="1"/>
-                    <circle cx="95" cy="30" r="5" fill="#111" />
-                    <rect x="25" y="25" width="20" height="6" rx="3" fill="white" opacity="0.5"/>
-                </svg>
-            </div>
-            <div id="statusMsg" class="absolute top-2 text-[10px] text-gray-500 font-bold uppercase">Waiting...</div>
+            <div id="plane" class="plane-emoji">✈️</div>
+            <div id="statusMsg" class="absolute top-2 text-[10px] text-gray-400 font-bold">READY TO FLY</div>
         </div>
-
-        <div class="mt-4 bg-[#1c2127] p-4 rounded-2xl border border-gray-800">
+        <div class="mt-4 bg-[#1c2127] p-4 rounded-2xl border border-gray-800 shadow-2xl">
             <div class="flex gap-3">
                 <div class="w-1/3 space-y-2">
-                    <div class="bg-black flex items-center justify-between p-2 rounded-lg border border-gray-700">
-                        <button onclick="adjBet(-5)" class="text-gray-400 font-bold px-2">−</button>
+                    <div class="bg-black flex items-center justify-between p-2 rounded-xl border border-gray-700">
+                        <button onclick="adjBet(-10)" class="text-gray-400 font-bold px-2">−</button>
                         <input id="betInput" type="number" value="10" class="bg-transparent text-center w-full font-bold outline-none text-sm">
-                        <button onclick="adjBet(5)" class="text-gray-400 font-bold px-2">+</button>
+                        <button onclick="adjBet(10)" class="text-gray-400 font-bold px-2">+</button>
                     </div>
-                    <div class="grid grid-cols-2 gap-1">
-                        <button onclick="setBet(50)" class="bg-gray-800 text-[10px] py-2 rounded font-bold">50</button>
-                        <button onclick="setBet(100)" class="bg-gray-800 text-[10px] py-2 rounded font-bold">100</button>
-                    </div>
+                    <button onclick="setBet(100)" class="w-full bg-gray-800 text-[10px] py-2 rounded-lg font-bold uppercase">MAX BET</button>
                 </div>
                 <button id="mainBetBtn" onclick="onBetClick()" class="btn-bet flex-1 text-xl shadow-lg">BET<br><span id="betLabel" class="text-xs font-normal">10.00 ETB</span></button>
             </div>
@@ -106,87 +68,73 @@
     </section>
 
     <section id="wallet" class="page p-5">
-        <h2 class="text-xl font-black mb-4">Wallet</h2>
-        <div class="bg-[#1c2127] p-4 rounded-xl border border-blue-900 mb-3 flex justify-between">
-            <span>Telebirr</span><button class="text-blue-500">Deposit</button>
+        <h2 class="text-2xl font-black mb-6">Deposit Money</h2>
+        <div class="bg-blue-900/20 p-5 rounded-2xl border border-blue-800 mb-4">
+            <p class="text-sm text-gray-300 mb-2">1. Send money via Telebirr or CBE.</p>
+            <p class="text-sm text-gray-300 mb-4">2. Click 'Verify' and wait for Admin to approve.</p>
+            <button onclick="tg.showAlert('Verification request sent to Admin!')" class="w-full bg-blue-600 py-3 rounded-xl font-bold">VERIFY DEPOSIT</button>
         </div>
-        <div class="bg-[#1c2127] p-4 rounded-xl border border-green-900 mb-3 flex justify-between">
-            <span>CBE Birr</span><button class="text-green-500">Deposit</button>
-        </div>
-    </section>
-
-    <section id="referral" class="page p-5 text-center">
-        <div class="bg-red-900/20 p-6 rounded-2xl border border-red-900">
-            <h2 class="text-lg font-bold mb-2">Refer & Earn 10%</h2>
-            <p id="refUrl" class="text-[10px] text-blue-400 mb-4">t.me/bot?start=id</p>
-            <button onclick="alert('Copied!')" class="bg-white text-black px-6 py-2 rounded-lg font-bold text-sm">Copy Link</button>
-        </div>
+        <p class="text-[10px] text-gray-500 text-center uppercase tracking-widest">Admin will credit your account after manual check</p>
     </section>
 
     <section id="profile" class="page p-5">
-        <div class="bg-[#1c2127] p-6 rounded-2xl text-center border border-gray-800">
-            <div id="profilePfpContainer" class="mb-4"></div> <h3 id="profName" class="font-bold text-xl">@User</h3>
-            <p id="profId" class="text-xs text-gray-500 mb-4">ID: 000000000</p>
-            <div class="flex justify-around bg-black p-4 rounded-xl">
-                <div><p class="text-xs text-gray-500">Total Bets</p><p class="font-bold">0</p></div>
-                <div><p class="text-xs text-gray-500">Total Wins</p><p class="font-bold text-green-500">0.00</p></div>
+        <div class="bg-[#1c2127] p-8 rounded-3xl text-center border border-gray-800 shadow-xl">
+            <div id="largePfp" class="mx-auto mb-4"></div>
+            <h3 id="profName" class="font-bold text-xl">@User</h3>
+            <div class="mt-6 grid grid-cols-2 gap-4">
+                <div class="bg-black p-4 rounded-2xl border border-gray-800"><p class="text-xs text-gray-500">Wins</p><p id="totalWins" class="text-green-500 font-black">0.00</p></div>
+                <div class="bg-black p-4 rounded-2xl border border-gray-800"><p class="text-xs text-gray-500">Status</p><p class="text-blue-500 font-black">Verified</p></div>
             </div>
         </div>
     </section>
 
     <div class="nav-bar">
-        <div onclick="showPage('home')" class="nav-item active" id="nav-home"><i class="fa-solid fa-plane-up text-lg mb-1"></i><span>Game</span></div>
-        <div onclick="showPage('wallet')" class="nav-item" id="nav-wallet"><i class="fa-solid fa-wallet text-lg mb-1"></i><span>Wallet</span></div>
-        <div onclick="showPage('referral')" class="nav-item" id="nav-referral"><i class="fa-solid fa-user-plus text-lg mb-1"></i><span>Refer</span></div>
-        <div onclick="showPage('profile')" class="nav-item" id="nav-profile"><i class="fa-solid fa-user text-lg mb-1"></i><span>Profile</span></div>
+        <div onclick="showPage('home')" class="nav-item active" id="nav-home"><i class="fa-solid fa-gamepad text-lg mb-1"></i><span>Game</span></div>
+        <div onclick="showPage('wallet')" class="nav-item" id="nav-wallet"><i class="fa-solid fa-plus-circle text-lg mb-1"></i><span>Deposit</span></div>
+        <div onclick="showPage('profile')" class="nav-item" id="nav-profile"><i class="fa-solid fa-circle-user text-lg mb-1"></i><span>Profile</span></div>
     </div>
 
-    <audio id="sndProp" loop src="https://www.soundjay.com/transportation/sounds/propeller-plane-flying-1.mp3"></audio>
-    <audio id="sndExplode" src="https://www.soundjay.com/button/sounds/button-10.mp3"></audio>
+    <audio id="sndFly" loop src="https://www.soundjay.com/transportation/sounds/propeller-plane-flying-1.mp3"></audio>
+    <audio id="sndCrash" src="https://www.soundjay.com/button/sounds/button-10.mp3"></audio>
+    <audio id="sndEmpty" src="https://www.soundjay.com/misc/sounds/fail-trumpet-01.mp3"></audio>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        let balance = parseFloat(localStorage.getItem('dai_bal')) || 10.00;
+        // 10 ETB Initial Bonus check
+        let isFirstTime = localStorage.getItem('is_new_v2') === null;
+        let balance = parseFloat(localStorage.getItem('dai_bal_v2'));
+        
+        if(isFirstTime) {
+            balance = 10.00;
+            localStorage.setItem('dai_bal_v2', balance);
+            localStorage.setItem('is_new_v2', 'no');
+            tg.showPopup({title: 'Welcome Gift', message: 'You received 10 ETB for your first game!'});
+        }
+
         let userData = {
             name: tg.initDataUnsafe?.user?.username || tg.initDataUnsafe?.user?.first_name || "Guest",
-            id: tg.initDataUnsafe?.user?.id || "Local",
-            photo: tg.initDataUnsafe?.user?.photo_url || null // Get photo URL
+            photo: tg.initDataUnsafe?.user?.photo_url || null
         };
 
         let isFlying = false;
         let multiplier = 1.00;
-        let myBet = { active: false, amt: 0 };
-        let history = JSON.parse(localStorage.getItem('dai_history')) || ["1.50x", "3.20x", "1.08x"];
+        let activeBet = { active: false, amt: 0 };
+        let history = JSON.parse(localStorage.getItem('dai_hist_v2')) || ["1.20x", "5.40x", "1.02x"];
 
         function init() {
-            // Setup Identity
             document.getElementById('tgName').innerText = "@" + userData.name;
             document.getElementById('profName').innerText = "@" + userData.name;
-            document.getElementById('profId').innerText = "ID: " + userData.id;
             document.getElementById('balDisplay').innerText = balance.toFixed(2);
-            document.getElementById('refUrl').innerText = `t.me/YourBot?start=${userData.id}`;
             
-            setupProfilePhotos(); // Render Photos
+            // Photo logic
+            const pfpHtml = userData.photo ? `<img src="${userData.photo}" class="pfp-img">` : `<div class="pfp-img bg-red-600 flex items-center justify-center font-bold text-sm">${userData.name[0]}</div>`;
+            document.getElementById('headerPfp').innerHTML = pfpHtml;
+            document.getElementById('largePfp').innerHTML = pfpHtml.replace('35px','80px').replace('text-sm','text-4xl');
+
             renderHistory();
-            autoRunEngine(); // Start 24/7 Engine
-        }
-
-        function setupProfilePhotos() {
-            const headerCont = document.getElementById('headerPfpContainer');
-            const profCont = document.getElementById('profilePfpContainer');
-            const initial = userData.name[0].toUpperCase();
-
-            if (userData.photo) {
-                // If user has a photo, show it
-                headerCont.innerHTML = `<img src="${userData.photo}" class="pfp-mini" alt="pfp">`;
-                profCont.innerHTML = `<img src="${userData.photo}" class="pfp-large" alt="pfp">`;
-            } else {
-                // If no photo, show placeholder with initial
-                headerCont.innerHTML = `<div class="pfp-placeholder">${initial}</div>`;
-                profCont.innerHTML = `<div class="pfp-placeholder" style="width:80px;height:80px;font-size:32px;">${initial}</div>`;
-            }
+            startEngine();
         }
 
         function showPage(id) {
@@ -196,116 +144,109 @@
             document.getElementById('nav-' + id).classList.add('active');
         }
 
-        function adjBet(v) { let i = document.getElementById('betInput'); i.value = Math.max(1, parseInt(i.value) + v); updateBetLabel(); }
-        function setBet(v) { document.getElementById('betInput').value = v; updateBetLabel(); }
-        function updateBetLabel() { document.getElementById('betLabel').innerText = document.getElementById('betInput').value + ".00 ETB"; }
+        function adjBet(v) { let i = document.getElementById('betInput'); i.value = Math.max(1, parseInt(i.value) + v); updateL(); }
+        function setBet(v) { document.getElementById('betInput').value = v; updateL(); }
+        function updateL() { document.getElementById('betLabel').innerText = document.getElementById('betInput').value + ".00 ETB"; }
 
         function onBetClick() {
             let btn = document.getElementById('mainBetBtn');
             let amt = parseInt(document.getElementById('betInput').value);
-            if(!isFlying && !myBet.active) {
-                if(amt > balance) return alert("Low Balance!");
+            
+            if(!isFlying && !activeBet.active) {
+                if(balance <= 0) {
+                    document.getElementById('sndEmpty').play();
+                    return tg.showAlert("Your balance is 0! Please deposit to continue.");
+                }
+                if(amt > balance) return tg.showAlert("Insufficient Funds!");
+                
                 balance -= amt;
-                myBet = { active: true, amt: amt };
+                activeBet = { active: true, amt: amt };
                 btn.innerHTML = "WAITING...<br><span class='text-[10px] font-normal'>CANCEL</span>";
-                btn.classList.replace('bg-[#28a745]', 'bg-red-900');
+                btn.classList.replace('bg-[#22c55e]', 'bg-red-900');
                 save();
-            } else if (isFlying && myBet.active) {
-                let win = myBet.amt * multiplier;
+            } else if (isFlying && activeBet.active) {
+                let win = activeBet.amt * multiplier;
                 balance += win;
-                myBet.active = false;
-                alert(`SUCCESS! Won ${win.toFixed(2)} ETB`);
-                resetBetButton();
+                activeBet.active = false;
+                tg.showAlert(`SUCCESS! You won ${win.toFixed(2)} ETB`);
+                resetBetUI();
                 save();
             }
         }
 
-        function resetBetButton() {
+        function resetBetUI() {
             let b = document.getElementById('mainBetBtn');
-            b.className = "btn-bet flex-1 text-xl bg-[#28a745]";
-            updateBetLabel();
+            b.className = "btn-bet flex-1 text-xl bg-[#22c55e]";
+            updateL();
             b.innerHTML = `BET<br><span class="text-xs font-normal">${document.getElementById('betInput').value}.00 ETB</span>`;
         }
 
         function save() {
-            localStorage.setItem('dai_bal', balance);
+            localStorage.setItem('dai_bal_v2', balance);
             document.getElementById('balDisplay').innerText = balance.toFixed(2);
         }
 
-        // --- 24/7 ENGINE ---
-        function autoRunEngine() {
+        function startEngine() {
             if(isFlying) return;
-            let wait = 8;
-            let timer = setInterval(() => {
-                document.getElementById('statusMsg').innerText = `Next Round in ${wait}s`;
+            let wait = 7;
+            let t = setInterval(() => {
+                document.getElementById('statusMsg').innerText = `NEXT FLIGHT IN ${wait}S`;
                 document.getElementById('multiText').innerText = "1.00x";
-                if(wait-- <= 0) { clearInterval(timer); launchPlane(); }
+                if(wait-- <= 0) { clearInterval(t); takeoff(); }
             }, 1000);
         }
 
-        function launchPlane() {
+        function takeoff() {
             isFlying = true; multiplier = 1.00;
-            document.getElementById('statusMsg').innerText = "Plane is Flying";
-            document.getElementById('sndProp').play();
-            
-            if(myBet.active) {
+            document.getElementById('sndFly').play();
+            if(activeBet.active) {
                 document.getElementById('mainBetBtn').classList.replace('bg-red-900', 'btn-cashout');
-                document.getElementById('mainBetBtn').innerHTML = `CASH OUT<br><span>${(myBet.amt * multiplier).toFixed(2)}</span>`;
+                document.getElementById('mainBetBtn').innerHTML = `CASH OUT<br><span>${(activeBet.amt * multiplier).toFixed(2)}</span>`;
             }
 
-            // 40% Admin Profit Logic
-            let crashAt = Math.random() < 0.4 ? (1 + Math.random() * 0.18) : (1.18 + Math.random() * 10);
+            // 40% Admin House Edge Logic
+            let crashPoint = Math.random() < 0.4 ? (1 + Math.random() * 0.15) : (1.15 + Math.random() * 12);
 
             let engine = setInterval(() => {
                 multiplier += 0.02;
-                let mText = document.getElementById('multiText');
-                mText.innerText = multiplier.toFixed(2) + "x";
+                document.getElementById('multiText').innerText = multiplier.toFixed(2) + "x";
                 
-                // Plane Animation & Path
-                let x = multiplier * 25; // Adjusted for larger plane
-                let y = multiplier * 20; 
+                let x = multiplier * 24; let y = multiplier * 20;
                 document.getElementById('plane').style.transform = `translate(${x}px, -${y}px)`;
-                
-                // Draw Path Curve
-                let path = document.getElementById('gamePath');
-                path.setAttribute('d', `M 0 300 Q ${x/2} ${300-y} ${x+15} ${300-y-15}`);
+                document.getElementById('gamePath').setAttribute('d', `M 0 300 Q ${x/2} ${300-y} ${x+15} ${300-y-15}`);
 
-                if(myBet.active) {
-                    document.getElementById('mainBetBtn').querySelector('span').innerText = (myBet.amt * multiplier).toFixed(2) + " ETB";
+                if(activeBet.active) {
+                    document.getElementById('mainBetBtn').querySelector('span').innerText = (activeBet.amt * multiplier).toFixed(2) + " ETB";
                 }
 
-                if(multiplier >= crashAt) {
-                    clearInterval(engine);
-                    explode();
-                }
+                if(multiplier >= crashPoint) { clearInterval(engine); crash(); }
             }, 80);
         }
 
-        function explode() {
+        function crash() {
             isFlying = false;
-            document.getElementById('sndProp').pause();
-            document.getElementById('sndProp').currentTime = 0;
-            document.getElementById('sndExplode').play();
+            document.getElementById('sndFly').pause(); document.getElementById('sndFly').currentTime = 0;
+            document.getElementById('sndCrash').play();
             document.getElementById('multiText').innerText = "FLEW AWAY!";
-            document.getElementById('multiText').style.color = "#ff1e4d";
+            document.getElementById('multiText').style.color = "#ef4444";
             
             history.unshift(multiplier.toFixed(2) + "x");
             if(history.length > 10) history.pop();
-            localStorage.setItem('dai_history', JSON.stringify(history));
+            localStorage.setItem('dai_hist_v2', JSON.stringify(history));
             renderHistory();
 
-            if(myBet.active) { myBet.active = false; resetBetButton(); }
+            if(activeBet.active) { activeBet.active = false; resetBetUI(); }
 
             setTimeout(() => {
                 document.getElementById('plane').style.transform = "translate(0,0)";
                 document.getElementById('gamePath').setAttribute('d', 'M 0 300 Q 0 300 0 300');
                 document.getElementById('multiText').style.color = "white";
-                autoRunEngine();
+                startEngine();
             }, 3000);
         }
 
         function renderHistory() {
-            document.getElementById('historyBar').innerHTML = history.map(v => `<span class="bg-gray-800 px-3 py-1 rounded-full font-bold ${parseFloat(v)>2?'text-purple-500':'text-blue-400'}">${v}</span>`).join('');
+            document.getElementById('historyBar').innerHTML = history.map(v => `<span class="bg-gray-800 px-3 py-1 rounded-full text-[9px] font-bold ${parseFloat(v)>2?'text-purple-500':'text-blue-400'}">${v}</span>`).join('');
         }
 
         init();
