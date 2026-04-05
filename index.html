@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AVIATOR V25 - 24/7 LIVE</title>
+    <title>AVIATOR V26 - PRO EDITION</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;700;900&display=swap');
-        :root { --primary: #ff0044; --secondary: #22c55e; --bg: #050505; }
-        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; -webkit-tap-highlight-color: transparent; }
+        :root { --primary: #ff0044; --bg: #050505; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; }
         .font-game { font-family: 'Orbitron', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .page { display: none; height: calc(100vh - 75px); overflow-y: auto; padding: 15px; scroll-behavior: smooth; }
+        .glass { background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .page { display: none; height: calc(100vh - 75px); overflow-y: auto; padding: 15px; }
         .active-page { display: block; }
-        .nav-bar { background: rgba(10, 10, 10, 0.98); position: fixed; bottom: 0; width: 100%; height: 75px; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #1a1a1a; z-index: 1000; }
-        .nav-item { color: #444; font-size: 9px; font-weight: 900; text-align: center; }
+        .nav-bar { background: #0a0a0a; position: fixed; bottom: 0; width: 100%; height: 75px; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #1a1a1a; z-index: 1000; }
+        .nav-item { color: #555; font-size: 10px; font-weight: 900; text-align: center; }
         .nav-item.active { color: var(--primary); }
-        .aviator-screen { background: radial-gradient(circle at bottom left, #1a0505 0%, #000 100%); height: 210px; position: relative; border-radius: 25px; overflow: hidden; border: 1px solid #222; }
-        #gamePath { stroke: var(--primary); stroke-width: 5; fill: none; filter: drop-shadow(0 0 8px var(--primary)); }
-        .plane-jet { position: absolute; bottom: 20px; left: 20px; font-size: 38px; z-index: 10; transition: 0.1s linear; }
-        .btn-preset { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 6px 12px; rounded: 12px; font-size: 10px; font-weight: 900; }
+        .aviator-screen { background: radial-gradient(circle at bottom left, #250505 0%, #000 100%); height: 210px; position: relative; border-radius: 25px; overflow: hidden; border: 1.5px solid #222; }
+        #gamePath { stroke: var(--primary); stroke-width: 6; fill: none; filter: drop-shadow(0 0 10px var(--primary)); }
+        .plane-jet { position: absolute; bottom: 20px; left: 20px; font-size: 40px; z-index: 10; transition: 0.1s linear; }
+        .mode-switch { padding: 12px 25px; border-radius: 50px; font-weight: 900; font-size: 14px; text-transform: uppercase; transition: 0.3s; box-shadow: 0 0 15px rgba(255,0,0,0.2); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
@@ -29,141 +29,129 @@
 
     <div id="adminPanel" class="fixed inset-0 bg-black z-[9999] hidden flex-col">
         <div class="p-5 glass flex justify-between items-center">
-            <h2 class="text-red-600 font-black italic">V25 CONTROL PANEL</h2>
-            <button onclick="closeAdmin()" class="bg-red-600 text-white px-5 py-2 rounded-full text-[10px] font-black uppercase">Close</button>
+            <h2 class="text-red-600 font-black italic">V26 ADMIN DASH</h2>
+            <button onclick="closeAdmin()" class="bg-red-600 text-white px-6 py-2 rounded-full font-black">EXIT</button>
         </div>
         <div id="admContent" class="p-4 flex-1 overflow-y-auto space-y-4 no-scrollbar"></div>
     </div>
 
     <header class="p-4 flex justify-between items-center glass sticky top-0 z-50">
         <div class="flex items-center gap-3">
-            <div id="hPfp" class="w-10 h-10 rounded-xl bg-red-950/30 border border-white/5 overflow-hidden flex items-center justify-center"></div>
+            <div id="hPfp" class="w-10 h-10 rounded-xl bg-red-900/20 border border-white/10 overflow-hidden flex items-center justify-center"></div>
             <div>
                 <h1 class="text-red-600 font-game italic text-lg leading-none">AVIATOR</h1>
-                <p id="hUser" class="text-[9px] text-gray-600 font-black mt-1 uppercase">@Guest</p>
+                <p id="hUser" class="text-[9px] text-gray-500 font-black mt-1 uppercase">@Guest</p>
             </div>
         </div>
-        <div class="flex flex-col items-end gap-1">
-            <div class="bg-black/80 border border-white/10 rounded-full px-4 py-1.5 flex items-center gap-2">
-                <span id="hBal" class="font-black text-sm text-green-500">0.00</span>
-                <span class="text-[8px] text-gray-500 font-black uppercase">ETB</span>
+        <div class="flex flex-col items-end gap-2">
+            <div class="bg-black border border-white/10 rounded-full px-4 py-1.5 flex items-center gap-2">
+                <span id="hBal" class="font-black text-sm text-green-500">500.00</span>
+                <span class="text-[9px] text-gray-500 font-bold uppercase">ETB</span>
             </div>
-            <button id="modeBtn" onclick="switchMode()" class="text-[8px] font-black text-red-500 border border-red-500/30 px-3 py-0.5 rounded-full uppercase italic">Demo Mode</button>
+            <button id="modeBtn" onclick="switchMode()" class="mode-switch bg-red-600/10 text-red-600 border border-red-600">Demo Mode</button>
         </div>
     </header>
 
     <section id="home" class="page active-page no-scrollbar">
-        <div id="hist" class="flex gap-2 mb-3 overflow-x-auto no-scrollbar py-1"></div>
+        <div id="hist" class="flex gap-2 mb-3 overflow-x-auto no-scrollbar"></div>
 
-        <div class="aviator-screen flex items-center justify-center mb-4">
+        <div class="aviator-screen flex items-center justify-center mb-5">
             <svg width="100%" height="100%" style="position:absolute;"><path id="gamePath" d="M 0 210 Q 0 210 0 210" /></svg>
-            <div id="mTxt" class="font-game text-6xl italic text-white z-20">1.00x</div>
+            <div id="mTxt" class="font-game text-7xl italic text-white z-20">1.00x</div>
             <div id="plane" class="plane-jet">✈️</div>
-            <div id="gStatus" class="absolute top-4 glass px-5 py-1 rounded-full text-[9px] font-black text-gray-400 uppercase tracking-widest italic">READY...</div>
+            <div id="gStatus" class="absolute top-4 glass px-5 py-1 rounded-full text-[10px] font-black text-gray-400 uppercase tracking-widest">Wait...</div>
         </div>
 
-        <div class="glass p-5 rounded-[30px] mb-4">
-            <div class="flex justify-between items-center mb-4">
-                <div class="flex flex-col">
-                    <span class="text-[9px] text-gray-500 font-black uppercase mb-1">Bet Amount</span>
-                    <input id="bInp" type="number" value="10" class="bg-transparent text-2xl font-black outline-none w-24">
+        <div class="glass p-6 rounded-[35px] mb-5">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <span class="text-[10px] text-gray-500 font-black uppercase italic mb-1 block">Stake</span>
+                    <input id="bInp" type="number" value="10" class="bg-transparent text-3xl font-black outline-none w-28 text-white">
                 </div>
-                <div class="flex flex-wrap gap-2 justify-end w-2/3">
-                    <button onclick="setB(10)" class="btn-preset">10</button>
-                    <button onclick="setB(20)" class="btn-preset">20</button>
-                    <button onclick="setB(50)" class="btn-preset">50</button>
-                    <button onclick="setB(100)" class="btn-preset">100</button>
-                    <button onclick="setB(200)" class="btn-preset">200</button>
+                <div class="flex flex-wrap gap-2 justify-end">
+                    <button onclick="setB(50)" class="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-xs font-black">50</button>
+                    <button onclick="setB(100)" class="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-xs font-black">100</button>
+                    <button onclick="setB(200)" class="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-xs font-black">200</button>
                 </div>
             </div>
-            <button id="bBtn" onclick="handleBet()" class="w-full bg-red-600 py-5 rounded-2xl text-2xl font-black italic shadow-xl active:scale-95 transition-all">BET</button>
+            <button id="bBtn" onclick="handleBet()" class="w-full bg-red-600 py-6 rounded-[25px] text-3xl font-black italic shadow-2xl active:scale-95 transition-all">BET</button>
         </div>
 
-        <div class="glass p-5 rounded-[30px]">
-            <div class="flex justify-between items-center mb-4">
-                <span class="text-[9px] text-gray-500 font-black uppercase italic">Auto Out At</span>
-                <input id="autoOut" type="number" step="0.1" placeholder="OFF" class="bg-white/5 w-20 text-center font-black rounded-lg py-1 text-sm border border-white/5">
-            </div>
-            <div class="flex justify-around">
-                <button onclick="setA(2.0)" class="btn-preset px-4">2x</button>
-                <button onclick="setA(4.0)" class="btn-preset px-4">4x</button>
-                <button onclick="setA(6.0)" class="btn-preset px-4">6x</button>
-                <button onclick="setA(8.0)" class="btn-preset px-4">8x</button>
-                <button onclick="setA(10.0)" class="btn-preset px-4">10x</button>
+        <div class="glass p-5 rounded-[30px] flex justify-between items-center">
+            <span class="text-[11px] font-black text-gray-500 uppercase italic">Auto Cashout:</span>
+            <div class="flex gap-2">
+                <button onclick="setA(2.0)" class="bg-white/5 px-4 py-1.5 rounded-lg text-[10px] font-black border border-white/10">2x</button>
+                <button onclick="setA(5.0)" class="bg-white/5 px-4 py-1.5 rounded-lg text-[10px] font-black border border-white/10">5x</button>
+                <input id="autoOut" type="number" step="0.1" placeholder="OFF" class="bg-black w-16 text-center font-black rounded-lg border border-red-600/30 text-sm">
             </div>
         </div>
     </section>
 
     <section id="deposit" class="page no-scrollbar">
         <div class="glass p-6 rounded-[35px] mb-6">
-            <h3 class="text-xs font-black text-yellow-500 mb-4 uppercase italic">Bank Details (Tap to Copy)</h3>
-            <div onclick="copyT('1000179571815')" class="flex justify-between items-center bg-black/40 p-4 rounded-2xl mb-3 border border-white/5">
+            <p class="text-[11px] text-yellow-500 font-black uppercase mb-4 italic">Bank Info (Tap to Copy)</p>
+            <div onclick="copyT('1000179571815')" class="flex justify-between items-center bg-black p-5 rounded-2xl mb-4 border border-white/5">
                 <span class="font-black text-lg tracking-widest">1000179571815</span>
-                <i class="fa-solid fa-copy text-yellow-500"></i>
+                <i class="fa-solid fa-copy text-yellow-600"></i>
             </div>
-            <div onclick="copyT('0906067696')" class="flex justify-between items-center bg-black/40 p-4 rounded-2xl border border-white/5">
+            <div onclick="copyT('0906067696')" class="flex justify-between items-center bg-black p-5 rounded-2xl border border-white/5">
                 <span class="font-black text-lg tracking-widest">0906067696</span>
-                <i class="fa-solid fa-copy text-blue-500"></i>
+                <i class="fa-solid fa-copy text-blue-600"></i>
             </div>
         </div>
 
-        <div class="glass p-7 rounded-[40px] text-center border-dashed border-2 border-gray-800">
-            <p class="text-[10px] font-black text-gray-400 mb-5 uppercase italic">Upload Receipt / ደረሰኝ ላክ</p>
+        <div class="glass p-8 rounded-[45px] text-center border-dashed border-2 border-gray-800">
+            <p class="text-[11px] font-black text-gray-400 mb-6 uppercase italic tracking-tighter">የከፈሉበትን ደረሰኝ እዚህ ይላኩ</p>
             <input type="file" id="ssInp" class="hidden" accept="image/*">
-            <button onclick="document.getElementById('ssInp').click()" class="w-full bg-white/5 py-5 rounded-2xl text-[11px] font-black mb-4 border border-white/5 uppercase italic">Select Photo</button>
-            <div id="prevBox" class="hidden mb-4"><img id="ssPrev" class="rounded-2xl max-h-52 mx-auto border border-gray-700"></div>
-            <button onclick="submitSS()" class="w-full bg-red-600 py-5 rounded-3xl font-black text-sm uppercase shadow-2xl italic">Submit Receipt</button>
+            <button onclick="document.getElementById('ssInp').click()" class="w-full bg-white/5 py-5 rounded-2xl text-[12px] font-black mb-5 border border-white/10 uppercase"><i class="fa-solid fa-image mr-2 text-red-600"></i> SELECT SCREENSHOT</button>
+            <div id="prevBox" class="hidden mb-6 p-2 bg-white/5 rounded-3xl"><img id="ssPrev" class="rounded-2xl max-h-60 mx-auto border border-white/10 shadow-2xl"></div>
+            <button onclick="submitSS()" id="subBtn" class="w-full bg-red-600 py-5 rounded-3xl font-black text-sm uppercase shadow-2xl shadow-red-900/40">SUBMIT RECEIPT</button>
         </div>
     </section>
 
     <section id="leaderboard" class="page no-scrollbar">
-        <h2 class="text-center text-xl font-black italic text-red-600 mb-6 uppercase tracking-tighter">Top 1000 Elite Winners</h2>
-        <div id="lList" class="space-y-3 pb-24"></div>
+        <h2 class="text-center text-xl font-black italic text-red-600 mb-6 uppercase tracking-widest">Top 1000 Elite</h2>
+        <div id="lList" class="space-y-3 pb-20"></div>
     </section>
 
     <section id="profile" class="page no-scrollbar">
-        <div class="flex flex-col items-center mb-8">
-            <div id="pfpBig" class="w-24 h-24 rounded-[35px] bg-red-950/20 border-2 border-red-600/30 overflow-hidden flex items-center justify-center mb-4"></div>
-            <h2 id="userBig" class="text-2xl font-black italic">@User</h2>
+        <div class="flex flex-col items-center mb-10 mt-5">
+            <div id="pfpBig" class="w-24 h-24 rounded-[40px] bg-red-950/20 border-2 border-red-600/30 overflow-hidden flex items-center justify-center mb-4"></div>
+            <h2 id="userBig" class="text-3xl font-black italic uppercase">@User</h2>
+            <p id="refShow" class="text-[9px] text-gray-600 mt-2 font-bold tracking-widest"></p>
         </div>
-
-        <div class="glass p-6 rounded-[35px] mb-6">
-            <h3 class="text-[10px] font-black text-blue-500 mb-3 uppercase italic tracking-widest">Your Referral Link</h3>
-            <div class="flex items-center gap-3 bg-black/40 p-4 rounded-2xl border border-white/5">
-                <input id="refLink" readonly class="bg-transparent text-[10px] font-bold outline-none flex-1 overflow-hidden text-gray-400">
-                <button onclick="copyT(document.getElementById('refLink').value)" class="text-blue-500 text-sm"><i class="fa-solid fa-share-nodes"></i></button>
-            </div>
-            <p class="text-[8px] text-gray-600 mt-2 italic">Earn 10% bonus for every friend invited via @world_all_gamesbot</p>
+        <div onclick="copyT(document.getElementById('refShow').innerText)" class="glass p-6 rounded-[35px] text-center border border-blue-900/20 active:scale-95 transition-all">
+            <i class="fa-solid fa-share-nodes text-blue-500 text-2xl mb-3"></i>
+            <h3 class="text-xs font-black uppercase mb-1 italic text-blue-400">Share & Earn 10%</h3>
+            <p class="text-[9px] text-gray-500 font-bold uppercase italic">Tap to copy your referral link</p>
         </div>
-
-        <button onclick="checkAdm()" class="w-full py-4 text-[8px] font-black text-gray-800 uppercase tracking-[5px]">Admin Access</button>
+        <button onclick="checkAdm()" class="w-full py-8 text-[9px] font-black text-gray-900 uppercase tracking-[10px]">Admin</button>
     </section>
 
     <nav class="nav-bar">
-        <div onclick="showP('home')" id="n-home" class="nav-item active"><i class="fa-solid fa-gamepad text-2xl mb-1"></i><br>PLAY</div>
+        <div onclick="showP('home')" id="n-home" class="nav-item active"><i class="fa-solid fa-rocket text-2xl mb-1"></i><br>PLAY</div>
         <div onclick="showP('deposit')" id="n-deposit" class="nav-item"><i class="fa-solid fa-wallet text-2xl mb-1"></i><br>WALLET</div>
-        <div onclick="showP('leaderboard')" id="n-leaderboard" class="nav-item"><i class="fa-solid fa-crown text-2xl mb-1"></i><br>TOP 1000</div>
-        <div onclick="showP('profile')" id="n-profile" class="nav-item"><i class="fa-solid fa-user-circle text-2xl mb-1"></i><br>PROFILE</div>
+        <div onclick="showP('leaderboard')" id="n-leaderboard" class="nav-item"><i class="fa-solid fa-crown text-2xl mb-1"></i><br>TOP</div>
+        <div onclick="showP('profile')" id="n-profile" class="nav-item"><i class="fa-solid fa-user-gear text-2xl mb-1"></i><br>ME</div>
     </nav>
 
     <script>
         const tg = window.Telegram.WebApp; tg.expand();
-        const ADM_NAME = "Dawit_Fikadu21";
-        let realBal = parseFloat(localStorage.getItem('v25_real_bal')) || 0;
+        const ADM_UNAME = "Dawit_Fikadu21";
+        let realBal = parseFloat(localStorage.getItem('v26_real')) || 0;
         let demoBal = 500.00;
         let isDemo = true;
-        let isFlying = false; let mult = 1.0;
-        let myBet = { active: false, amt: 0 };
-        let history = ["1.52x", "12.0x", "1.02x", "4.1x", "2.3x"];
-        let userData = { uname: tg.initDataUnsafe?.user?.username || "Dai_Guest", photo: tg.initDataUnsafe?.user?.photo_url || null };
+        let flying = false; let mult = 1.0; let myBet = { active: false, amt: 0 };
+        let history = ["2.50x", "1.10x", "5.40x", "1.00x", "12.3x"];
+        let user = { uname: tg.initDataUnsafe?.user?.username || "Dai_Dev", photo: tg.initDataUnsafe?.user?.photo_url || null };
 
         function init() {
-            document.getElementById('hUser').innerText = "@" + userData.uname;
-            document.getElementById('userBig').innerText = "@" + userData.uname;
-            document.getElementById('refLink').value = `https://t.me/world_all_gamesbot?start=ref_${userData.uname}`;
-            const pfpHtml = userData.photo ? `<img src="${userData.photo}" class="w-full h-full object-cover">` : `<span class="text-2xl font-black text-red-500">${userData.uname[0]}</span>`;
-            document.getElementById('hPfp').innerHTML = pfpHtml;
-            document.getElementById('pfpBig').innerHTML = pfpHtml;
+            document.getElementById('hUser').innerText = "@" + user.uname;
+            document.getElementById('userBig').innerText = "@" + user.uname;
+            document.getElementById('refShow').innerText = "https://t.me/world_all_gamesbot?start=ref_" + user.uname;
+            const pfp = user.photo ? `<img src="${user.photo}" class="w-full h-full object-cover">` : `<span class="text-3xl font-black text-red-500">${user.uname[0]}</span>`;
+            document.getElementById('hPfp').innerHTML = pfp;
+            document.getElementById('pfpBig').innerHTML = pfp;
             
             document.getElementById('ssInp').onchange = (e) => {
                 const r = new FileReader();
@@ -174,44 +162,40 @@
             updateDisplay(); renderLeaders(); renderHist(); loop();
         }
 
-        // --- GAME ENGINE (40% PROFIT & 24/7 AUTO) ---
+        // --- 40% PROFIT & GAME ---
         function loop() {
-            if(isFlying) return;
+            if(flying) return;
             let timer = 6;
             let t = setInterval(() => {
                 document.getElementById('gStatus').innerText = `NEXT FLIGHT IN ${timer}S`;
-                document.getElementById('mTxt').innerText = "1.00x";
                 if(timer-- <= 0) { clearInterval(t); launch(); }
             }, 1000);
         }
 
         function launch() {
-            isFlying = true; mult = 1.0;
-            // 40% Profit Algorithm
-            let crashPoint = 1.01 + (Math.random() * 9.0);
-            if(myBet.active && myBet.amt > 500) crashPoint = 1.01 + (Math.random() * 1.3); // High bet = early crash
+            flying = true; mult = 1.0;
+            // 40% PROFIT LOGIC: ካዚኖው እንዳይከስር ቁጥሩን መቆጣጠር
+            let crash = 1.01 + (Math.random() * 8.0);
+            if(myBet.active && myBet.amt >= 500) crash = 1.05 + (Math.random() * 0.8);
 
             let auto = parseFloat(document.getElementById('autoOut').value);
             let eng = setInterval(() => {
                 mult += 0.05;
                 document.getElementById('mTxt').innerText = mult.toFixed(2) + "x";
-                let x = mult * 16, y = mult * 13;
+                let x = mult * 17, y = mult * 13;
                 document.getElementById('plane').style.transform = `translate(${x}px, -${y}px)`;
                 document.getElementById('gamePath').setAttribute('d', `M 0 210 Q ${x/2} ${210-y} ${x+12} ${210-y-12}`);
 
                 if(myBet.active && auto && mult >= auto) cashOut();
-                if(mult >= crashPoint) { clearInterval(eng); explode(); }
-            }, 80);
+                if(mult >= crash) { clearInterval(eng); explode(); }
+            }, 90);
         }
 
         function explode() {
-            isFlying = false;
-            document.getElementById('mTxt').innerText = "FLEW AWAY!";
+            flying = false; document.getElementById('mTxt').innerText = "FLEW AWAY!";
             document.getElementById('mTxt').style.color = "#ff0044";
-            history.unshift(mult.toFixed(2) + "x"); if(history.length > 10) history.pop();
-            renderHist();
-            myBet.active = false;
-            resetB();
+            history.unshift(mult.toFixed(2) + "x"); if(history.length > 8) history.pop();
+            renderHist(); myBet.active = false; resetB();
             setTimeout(() => {
                 document.getElementById('plane').style.transform = "translate(0,0)";
                 document.getElementById('gamePath').setAttribute('d', 'M 0 210 Q 0 210 0 210');
@@ -221,104 +205,100 @@
         }
 
         function handleBet() {
-            if(isFlying) {
-                if(myBet.active) return cashOut();
-                else return tg.showAlert("Flight in progress! Wait for next round.");
-            }
+            if(flying) return myBet.active ? cashOut() : tg.showAlert("Wait for next round!");
             let a = parseInt(document.getElementById('bInp').value);
             let cur = isDemo ? demoBal : realBal;
             if(a > cur || a <= 0) return tg.showAlert("Insufficient Funds!");
 
-            if(isDemo) demoBal -= a; else { realBal -= a; localStorage.setItem('v25_real_bal', realBal); }
+            if(isDemo) demoBal -= a; else { realBal -= a; localStorage.setItem('v26_real', realBal); }
             myBet = { active: true, amt: a };
             updateDisplay();
             document.getElementById('bBtn').innerText = "CASH OUT";
-            document.getElementById('bBtn').className = "w-full bg-orange-600 py-5 rounded-2xl text-2xl font-black italic shadow-xl";
+            document.getElementById('bBtn').className = "w-full bg-orange-600 py-6 rounded-[25px] text-3xl font-black italic shadow-2xl";
         }
 
         function cashOut() {
-            if(!myBet.active || !isFlying) return;
+            if(!myBet.active || !flying) return;
             let win = myBet.amt * mult;
-            if(isDemo) demoBal += win; else { realBal += win; localStorage.setItem('v25_real_bal', realBal); }
-            myBet.active = false;
-            resetB(); updateDisplay();
+            if(isDemo) demoBal += win; else { realBal += win; localStorage.setItem('v26_real', realBal); }
+            myBet.active = false; resetB(); updateDisplay();
             tg.showAlert(`✅ WON: ${win.toFixed(2)} ETB`);
         }
 
-        // --- UI HELPERS ---
+        function switchMode() {
+            isDemo = !isDemo;
+            const btn = document.getElementById('modeBtn');
+            btn.innerText = isDemo ? "Demo Mode" : "Real Mode";
+            btn.className = isDemo ? "mode-switch bg-red-600/10 text-red-600 border border-red-600" : "mode-switch bg-green-600 text-black border border-green-600 shadow-[0_0_20px_rgba(34,197,94,0.4)]";
+            updateDisplay();
+        }
+
+        // --- CORE FUNCTIONS ---
         function setB(n) { document.getElementById('bInp').value = n; }
         function setA(n) { document.getElementById('autoOut').value = n; }
         function resetB() {
             document.getElementById('bBtn').innerText = "BET";
-            document.getElementById('bBtn').className = "w-full bg-red-600 py-5 rounded-2xl text-2xl font-black italic shadow-xl";
+            document.getElementById('bBtn').className = "w-full bg-red-600 py-6 rounded-[25px] text-3xl font-black italic shadow-2xl";
         }
         function updateDisplay() {
             document.getElementById('hBal').innerText = (isDemo ? demoBal : realBal).toFixed(2);
             document.getElementById('hBal').style.color = isDemo ? "#ef4444" : "#22c55e";
         }
         function renderHist() {
-            document.getElementById('hist').innerHTML = history.map(h => `<span class="bg-white/5 border border-white/5 px-4 py-1.5 rounded-xl text-[10px] font-black italic">${h}</span>`).join('');
+            document.getElementById('hist').innerHTML = history.map(h => `<span class="bg-white/5 border border-white/10 px-4 py-1.5 rounded-xl text-[10px] font-black italic">${h}</span>`).join('');
         }
-        function switchMode() {
-            isDemo = !isDemo;
-            document.getElementById('modeBtn').innerText = isDemo ? "Demo Mode" : "Real Mode";
-            document.getElementById('modeBtn').className = isDemo ? "text-[8px] font-black text-red-500 border border-red-500/30 px-3 py-0.5 rounded-full uppercase italic" : "text-[8px] font-black text-green-500 border border-green-500/30 px-3 py-0.5 rounded-full uppercase italic";
-            updateDisplay();
-        }
-
-        // --- LEADERS (1000 USERS) ---
         function renderLeaders() {
             const l = document.getElementById('lList'); l.innerHTML = "";
-            let chunk = "";
+            let data = "";
             for(let i=1; i<=1000; i++) {
-                let win = (Math.random() * 15000 + 500).toFixed(0);
-                chunk += `<div class="glass p-4 rounded-2xl flex justify-between items-center"><div class="flex items-center gap-3"><span class="text-[10px] text-gray-600 font-black italic">#${i}</span><span class="text-xs font-bold">@User_${i*13}</span></div><span class="text-green-500 font-black text-sm">${parseInt(win).toLocaleString()} <span class="text-[8px] text-gray-600 italic">ETB</span></span></div>`;
-                if(i % 100 === 0) { l.innerHTML += chunk; chunk = ""; }
+                data += `<div class="glass p-4 rounded-2xl flex justify-between items-center"><div class="flex items-center gap-3"><span class="text-xs text-gray-600 font-black italic">#${i}</span><span class="text-sm font-bold uppercase">User_${i*7}</span></div><span class="text-green-500 font-black text-sm">${(Math.random()*20000+500).toFixed(0)} <span class="text-[8px] text-gray-500">ETB</span></span></div>`;
+                if(i % 100 === 0) { l.innerHTML += data; data = ""; }
             }
         }
 
-        // --- ADMIN & SS ---
+        // --- PHOTO & ADMIN ---
         function submitSS() {
-            const file = document.getElementById('ssInp').files[0];
-            if(!file) return tg.showAlert("Please select a photo!");
+            const f = document.getElementById('ssInp').files[0];
+            if(!f) return tg.showAlert("Please select a screenshot first!");
             const r = new FileReader();
             r.onload = () => {
-                let db = JSON.parse(localStorage.getItem('sys_v25_db')) || [];
-                db.push({ user: userData.uname, img: r.result, time: new Date().toLocaleString() });
-                localStorage.setItem('sys_v25_db', JSON.stringify(db));
-                tg.showAlert("✅ Success! Admin will verify and add balance.");
+                let db = JSON.parse(localStorage.getItem('v26_db')) || [];
+                db.push({ user: user.uname, img: r.result, time: new Date().toLocaleString() });
+                localStorage.setItem('v26_db', JSON.stringify(db));
+                tg.showAlert("✅ Success! Sent to admin for verification.");
                 document.getElementById('prevBox').classList.add('hidden');
+                document.getElementById('ssInp').value = "";
             };
-            r.readAsDataURL(file);
+            r.readAsDataURL(f);
         }
 
         function checkAdm() {
-            if(userData.uname === ADM_NAME && prompt("PIN:") === "215221") {
+            if(user.uname === ADM_UNAME && prompt("PIN:") === "215221") {
                 document.getElementById('adminPanel').style.display = 'flex'; loadAdm();
             }
         }
         function closeAdmin() { document.getElementById('adminPanel').style.display = 'none'; }
         function loadAdm() {
-            const db = JSON.parse(localStorage.getItem('sys_v25_db')) || [];
-            document.getElementById('admContent').innerHTML = db.map((item, i) => `
+            const db = JSON.parse(localStorage.getItem('v26_db')) || [];
+            document.getElementById('admContent').innerHTML = db.map((it, i) => `
                 <div class="glass p-5 rounded-3xl">
-                    <p class="text-blue-500 text-[10px] font-black uppercase mb-3">@${item.user} | ${item.time}</p>
-                    <img src="${item.img}" class="w-full rounded-2xl mb-4 border border-gray-800">
+                    <p class="text-blue-500 text-[10px] font-black uppercase mb-3">@${it.user} | ${it.time}</p>
+                    <img src="${it.img}" class="w-full rounded-2xl mb-4 border border-gray-800">
                     <div class="flex gap-2">
-                        <button onclick="approve(${i})" class="flex-1 bg-green-600 py-3 rounded-xl font-black text-[10px]">APPROVE ✅</button>
-                        <button onclick="reject(${i})" class="flex-1 bg-red-600 py-3 rounded-xl font-black text-[10px]">REJECT ❌</button>
+                        <button onclick="approve(${i})" class="flex-1 bg-green-600 py-3 rounded-xl font-black text-[11px]">APPROVE ✅</button>
+                        <button onclick="reject(${i})" class="flex-1 bg-red-600 py-3 rounded-xl font-black text-[11px]">REJECT ❌</button>
                     </div>
-                </div>`).join('') || "No requests.";
+                </div>`).join('') || "No requests found.";
         }
         function approve(i) {
-            let db = JSON.parse(localStorage.getItem('sys_v25_db'));
+            let db = JSON.parse(localStorage.getItem('v26_db'));
             let amt = prompt("Amount for @" + db[i].user + "?");
-            if(amt && db[i].user === userData.uname) { realBal += parseFloat(amt); localStorage.setItem('v25_real_bal', realBal); updateDisplay(); }
-            db.splice(i, 1); localStorage.setItem('sys_v25_db', JSON.stringify(db)); loadAdm();
+            if(amt && db[i].user === user.uname) { realBal += parseFloat(amt); localStorage.setItem('v25_real', realBal); updateDisplay(); }
+            db.splice(i, 1); localStorage.setItem('v26_db', JSON.stringify(db)); loadAdm();
         }
         function reject(i) {
-            let db = JSON.parse(localStorage.getItem('sys_v25_db'));
-            db.splice(i, 1); localStorage.setItem('sys_v25_db', JSON.stringify(db)); loadAdm();
+            let db = JSON.parse(localStorage.getItem('v26_db'));
+            db.splice(i, 1); localStorage.setItem('v26_db', JSON.stringify(db)); loadAdm();
         }
 
         function copyT(t) {
