@@ -3,272 +3,322 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DAI AVIATOR ULTIMATE PRO</title>
+    <title>DAI AVIATOR PRO ELITE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;700;900&display=swap');
-        body { background-color: #05070a; color: white; font-family: 'Inter', sans-serif; overflow: hidden; margin: 0; }
+        body { background-color: #050505; color: white; font-family: 'Inter', sans-serif; overflow: hidden; margin: 0; }
         .font-game { font-family: 'Orbitron', sans-serif; }
-        
-        /* High-End Game Screen */
-        .aviator-screen { 
-            background: radial-gradient(circle at bottom left, #1a0505 0%, #000 100%);
-            height: 260px; position: relative; border-radius: 24px; overflow: hidden; border: 2px solid #221212;
-            box-shadow: inset 0 0 50px rgba(255,0,0,0.1);
-        }
-        #gamePath { stroke: #ff0044; stroke-width: 5; fill: none; filter: drop-shadow(0 0 15px #ff0044); }
-        .plane-jet { position: absolute; bottom: 15px; left: 15px; font-size: 50px; z-index: 100; transition: transform 0.1s linear; filter: drop-shadow(0 5px 15px black); }
-        
-        /* Pro Admin Dashboard */
-        #adminPanel { display: none; position: fixed; inset: 0; background: #0a0a0a; z-index: 9999; flex-direction: column; animation: slideUp 0.4s ease; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .pending-card { background: #1a1a1a; padding: 15px; border-radius: 15px; border: 1px solid #333; margin-bottom: 10px; }
-        
-        /* Nav & UI Components */
-        .nav-bar { background: rgba(20,20,20,0.95); backdrop-filter: blur(10px); position: fixed; bottom: 0; width: 100%; height: 70px; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #222; }
-        .nav-item { color: #666; font-size: 10px; font-weight: bold; text-align: center; cursor: pointer; transition: 0.3s; }
-        .nav-item.active { color: #ff0044; transform: scale(1.1); }
+        .aviator-screen { background: radial-gradient(circle at bottom left, #1a0505 0%, #000 100%); height: 240px; position: relative; border-radius: 20px; overflow: hidden; border: 1px solid #222; }
+        #gamePath { stroke: #ff0044; stroke-width: 5; fill: none; filter: drop-shadow(0 0 10px #ff0044); }
+        .plane-jet { position: absolute; bottom: 15px; left: 15px; font-size: 45px; z-index: 100; transition: 0.1s linear; }
+        .nav-bar { background: #111; position: fixed; bottom: 0; width: 100%; height: 70px; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #222; z-index: 1000; }
+        .nav-item { color: #555; font-size: 10px; font-weight: bold; text-align: center; }
+        .nav-item.active { color: #ff0044; }
         .page { display: none; height: calc(100vh - 70px); overflow-y: auto; padding: 15px; }
         .active-page { display: block; }
-        .btn-main { background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); border-radius: 18px; box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3); }
-        .history-pill { background: #121212; border: 1px solid #333; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 900; }
+        .admin-view { position: fixed; inset: 0; background: #000; z-index: 5000; display: none; flex-direction: column; }
+        .fake-player { font-size: 9px; color: #777; padding: 4px; border-bottom: 1px solid #111; display: flex; justify-content: space-between; }
     </style>
 </head>
 <body>
 
-    <div id="adminPanel">
-        <div class="p-5 border-b border-gray-800 flex justify-between items-center bg-[#111]">
-            <div><h2 class="text-red-600 font-black text-xl">DAWIT ADMIN</h2><p class="text-[10px] text-gray-500">Deposit & User Management</p></div>
-            <button onclick="closeAdmin()" class="bg-gray-800 p-2 rounded-full px-5 text-xs font-bold">CLOSE</button>
+    <div id="adminPanel" class="admin-view">
+        <div class="p-4 bg-red-900 flex justify-between items-center">
+            <h2 class="font-black text-sm">DAWIT COMMAND CENTER</h2>
+            <button onclick="closeAdmin()" class="bg-black px-4 py-1 rounded text-xs">EXIT</button>
         </div>
-        <div class="p-5 flex-1 overflow-y-auto">
-            <h3 class="text-xs font-bold text-gray-500 mb-4 tracking-widest">PENDING APPROVALS</h3>
-            <div id="pendingList">
-                <p class="text-center text-gray-600 text-sm mt-10">No new requests</p>
+        <div class="p-4 flex-1 overflow-y-auto">
+            <div class="grid grid-cols-2 gap-2 mb-4">
+                <div class="bg-[#111] p-3 rounded-xl border border-gray-800">
+                    <p class="text-[8px] text-gray-500">TOTAL DEPOSIT</p>
+                    <p id="totalDep" class="text-green-500 font-bold text-sm">0.00</p>
+                </div>
+                <div id="profitBox" class="bg-[#111] p-3 rounded-xl border border-red-900/50">
+                    <p class="text-[8px] text-red-500">DAWIT PROFIT (40%)</p>
+                    <p id="dawitProfit" class="text-white font-bold text-sm">0.00</p>
+                </div>
             </div>
+            <h3 class="text-[10px] font-bold text-gray-500 mb-2 uppercase">Pending Screenshots</h3>
+            <div id="adminRequests" class="space-y-2 mb-6"></div>
+            <h3 class="text-[10px] font-bold text-gray-500 mb-2 uppercase">Active Players (Real)</h3>
+            <div id="realUserList" class="space-y-1"></div>
         </div>
     </div>
 
-    <header class="p-4 flex justify-between items-center bg-black/50 sticky top-0 z-50">
-        <div class="flex items-center gap-3">
-            <div id="pfpCont"></div>
+    <header class="p-3 flex justify-between items-center bg-black/50 sticky top-0 z-50">
+        <div class="flex items-center gap-2">
+            <div id="headerPfp"></div>
             <div>
-                <h1 class="text-red-600 font-black italic text-lg leading-none" id="adminTrigger">AVIATOR</h1>
-                <p id="userNameDisplay" class="text-[9px] text-gray-500 font-bold uppercase tracking-tighter mt-1">@Guest</p>
+                <h1 class="text-red-600 font-black italic text-lg leading-none">AVIATOR</h1>
+                <p id="tgUsername" class="text-[8px] text-gray-500 font-bold">@Guest</p>
             </div>
         </div>
-        <div id="adminBadge" onclick="openAdmin()" class="hidden bg-red-600/20 text-red-500 border border-red-500 px-3 py-1 rounded-full text-[10px] font-black animate-pulse">ADMIN PANEL</div>
-        <div class="bg-[#111] px-4 py-2 rounded-2xl border border-green-900/50 shadow-inner">
-            <span id="balText" class="text-green-400 font-black text-sm">0.00</span> <span class="text-[10px] text-gray-600 font-bold">ETB</span>
+        <div class="bg-[#111] px-4 py-1.5 rounded-full border border-green-900/30">
+            <span id="topBal" class="text-green-400 font-black text-sm">0.00</span> <span class="text-[9px] text-gray-600">ETB</span>
         </div>
     </header>
 
     <section id="home" class="page active-page">
-        <div id="hist" class="flex gap-2 mb-3 overflow-x-auto no-scrollbar pb-1"></div>
-        <div class="aviator-screen flex items-center justify-center">
-            <svg width="100%" height="100%" style="position:absolute;"><path id="gamePath" d="M 0 300 Q 0 300 0 300" /></svg>
-            <div id="multi" class="multiplier-display font-game text-6xl italic text-white drop-shadow-2xl">1.00x</div>
+        <div id="hist" class="flex gap-2 mb-2 overflow-x-auto no-scrollbar pb-1"></div>
+        <div class="aviator-screen flex flex-col items-center justify-center">
+            <svg width="100%" height="100%" style="position:absolute;"><path id="gamePath" d="M 0 240 Q 0 240 0 240" /></svg>
+            <div id="multiText" class="multiplier-display font-game text-5xl italic text-white z-10">1.00x</div>
             <div id="plane" class="plane-jet">✈️</div>
-            <div id="msg" class="absolute top-4 text-[10px] text-gray-400 font-black uppercase tracking-widest bg-black/40 px-3 py-1 rounded-full">Waiting...</div>
+            <div id="gameStatus" class="absolute top-2 text-[9px] text-gray-500 font-black bg-black/40 px-3 py-1 rounded-full uppercase">Waiting...</div>
         </div>
 
-        <div class="mt-6 bg-[#111] p-5 rounded-3xl border border-white/5 shadow-2xl">
-            <div class="flex gap-4">
-                <div class="w-1/3 bg-black rounded-2xl border border-gray-800 p-2 flex flex-col justify-center">
-                    <span class="text-[8px] text-gray-600 text-center font-bold">AMOUNT</span>
-                    <input id="betInput" type="number" value="10" class="bg-transparent text-center w-full font-black text-lg outline-none">
+        <div class="mt-4 grid grid-cols-2 gap-3">
+            <div class="bg-[#111] p-3 rounded-2xl border border-gray-800">
+                <div class="flex justify-around mb-2">
+                    <button onclick="setBet(10)" class="text-[10px] bg-gray-800 px-2 py-1 rounded">10</button>
+                    <button onclick="setBet(50)" class="text-[10px] bg-gray-800 px-2 py-1 rounded">50</button>
+                    <button onclick="setBet(100)" class="text-[10px] bg-gray-800 px-2 py-1 rounded">100</button>
+                    <button onclick="setBet(200)" class="text-[10px] bg-gray-800 px-2 py-1 rounded">200</button>
                 </div>
-                <button id="betBtn" onclick="handleBet()" class="btn-main flex-1 py-4 text-xl font-black italic">BET<br><span id="betSub" class="text-xs font-normal opacity-80 text-black">10.00 ETB</span></button>
+                <input id="betInput" type="number" value="10" class="bg-black w-full text-center font-black text-lg outline-none rounded-lg border border-gray-900 py-1">
             </div>
+            <button id="betBtn" onclick="handleBet()" class="bg-[#28a745] rounded-2xl text-xl font-black italic shadow-lg">BET<br><span id="betSub" class="text-[10px] font-normal text-black">10.00 ETB</span></button>
+        </div>
+
+        <div class="mt-4 bg-[#0a0a0a] rounded-xl p-3 border border-gray-900">
+            <div class="flex justify-between text-[9px] font-bold text-gray-600 border-b border-gray-900 pb-1 mb-2">
+                <span>ALL BETS</span>
+                <span id="activeCount">154 Players</span>
+            </div>
+            <div id="fakeBets" class="h-32 overflow-hidden"></div>
         </div>
     </section>
 
     <section id="deposit" class="page">
-        <h2 class="text-2xl font-black mb-6">Deposit Money</h2>
-        <div class="grid grid-cols-1 gap-4 mb-8">
-            <div class="bg-gradient-to-r from-blue-900/40 to-black p-5 rounded-2xl border-l-4 border-blue-500 shadow-lg">
-                <p class="text-xs text-blue-400 font-bold mb-1">CBE (ዳዊት)</p>
-                <p class="text-xl font-black tracking-wider">1000179571815</p>
-            </div>
-            <div class="bg-gradient-to-r from-yellow-900/40 to-black p-5 rounded-2xl border-l-4 border-yellow-500 shadow-lg">
-                <p class="text-xs text-yellow-500 font-bold mb-1">TELEBIRR (ዳዊት)</p>
-                <p class="text-xl font-black tracking-wider">0906067696</p>
-            </div>
+        <h2 class="text-xl font-black mb-4">Deposit (ማስገቢያ)</h2>
+        <div class="bg-blue-900/20 p-4 rounded-xl border-l-4 border-blue-600 mb-3">
+            <p class="text-[10px] text-blue-400 font-bold uppercase">CBE Bank</p>
+            <p class="text-lg font-black tracking-widest">1000179571815</p>
         </div>
-
-        <div class="bg-[#111] p-6 rounded-3xl border border-white/5 text-center">
-            <p class="text-sm text-gray-400 mb-5">Upload payment proof (screenshot)</p>
-            <input type="file" id="fileInp" class="hidden" accept="image/*">
-            <div onclick="document.getElementById('fileInp').click()" class="border-2 border-dashed border-gray-700 p-10 rounded-2xl mb-4 cursor-pointer hover:border-red-500 transition">
-                <i class="fa-solid fa-cloud-arrow-up text-3xl text-gray-600 mb-2"></i>
-                <p id="fileName" class="text-xs text-gray-500">Tap to select photo</p>
-            </div>
-            <button onclick="submitDeposit()" class="w-full bg-red-600 py-4 rounded-2xl font-black shadow-xl hover:scale-95 transition">SEND TO ADMIN</button>
+        <div class="bg-yellow-600/20 p-4 rounded-xl border-l-4 border-yellow-600 mb-4">
+            <p class="text-[10px] text-yellow-500 font-bold uppercase">Telebirr</p>
+            <p class="text-lg font-black tracking-widest">0906067696</p>
+        </div>
+        <div class="bg-[#111] p-5 rounded-2xl text-center border border-dashed border-gray-700">
+            <p class="text-xs text-gray-500 mb-4 italic">ፎቶውን እዚህ ያስገቡ</p>
+            <input type="file" id="ssInput" class="hidden" onchange="ssSelected()">
+            <button onclick="document.getElementById('ssInput').click()" class="bg-gray-800 w-full py-3 rounded-xl font-bold text-xs mb-3">SELECT SCREENSHOT</button>
+            <button onclick="submitSS()" class="bg-blue-600 w-full py-3 rounded-xl font-black text-sm">SEND TO ADMIN</button>
         </div>
     </section>
 
+    <section id="account" class="page text-center">
+        <div id="largePfp" class="mx-auto mb-4 w-20 h-20 rounded-full border-2 border-red-600 flex items-center justify-center overflow-hidden"></div>
+        <h2 id="accName" class="text-xl font-black italic mb-1">@User</h2>
+        <p id="accId" class="text-[10px] text-gray-500 font-bold mb-6">ID: 0000000</p>
+        
+        <div class="grid grid-cols-2 gap-3 mb-4">
+            <div class="bg-[#111] p-4 rounded-xl border border-gray-800"><p class="text-[9px] text-gray-500">Status</p><p class="text-green-500 font-bold text-xs">VERIFIED</p></div>
+            <div class="bg-[#111] p-4 rounded-xl border border-gray-800"><p class="text-[9px] text-gray-500">Played</p><p id="gameCount" class="text-white font-bold text-xs">0 Games</p></div>
+        </div>
+
+        <button id="adminGate" onclick="tryAdmin()" class="w-full bg-[#111] py-4 rounded-xl border border-red-900/30 text-gray-700 font-black text-xs uppercase tracking-widest mt-10">Admin Access Only</button>
+    </section>
+
     <nav class="nav-bar">
-        <div onclick="showP('home')" class="nav-item active" id="n-home"><i class="fa-solid fa-jet-fighter text-2xl mb-1"></i><br>GAME</div>
+        <div onclick="showP('home')" class="nav-item active" id="n-home"><i class="fa-solid fa-jet-fighter-up text-2xl mb-1"></i><br>PLAY</div>
         <div onclick="showP('deposit')" class="nav-item" id="n-deposit"><i class="fa-solid fa-wallet text-2xl mb-1"></i><br>DEPOSIT</div>
-        <div onclick="showP('profile')" class="nav-item" id="n-profile"><i class="fa-solid fa-user-gear text-2xl mb-1"></i><br>ACCOUNT</div>
+        <div onclick="showP('account')" class="nav-item" id="n-account"><i class="fa-solid fa-user-shield text-2xl mb-1"></i><br>ACCOUNT</div>
     </nav>
 
-    <audio id="s-fly" loop src="https://www.soundjay.com/transportation/sounds/propeller-plane-flying-1.mp3"></audio>
-    <audio id="s-crash" src="https://www.soundjay.com/button/sounds/button-10.mp3"></audio>
-    <audio id="s-win" src="https://www.soundjay.com/misc/sounds/coins-spilled-1.mp3"></audio>
+    <audio id="sndFly" loop src="https://www.soundjay.com/transportation/sounds/propeller-plane-flying-1.mp3"></audio>
+    <audio id="sndCrash" src="https://www.soundjay.com/button/sounds/button-10.mp3"></audio>
+    <audio id="sndWin" src="https://www.soundjay.com/misc/sounds/coins-spilled-1.mp3"></audio>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        const ADMIN_USER = "Dawit_fikadu21";
-        let bal = parseFloat(localStorage.getItem('d_bal')) || 10.00;
-        let user = {
-            username: tg.initDataUnsafe?.user?.username || "Guest",
-            id: tg.initDataUnsafe?.user?.id || "0000",
+        const ADMIN_UNAME = "Dawit_fikadu21";
+        let balance = parseFloat(localStorage.getItem('d_bal_final')) || 10.00;
+        let userData = {
+            name: tg.initDataUnsafe?.user?.username || tg.initDataUnsafe?.user?.first_name || "Guest",
+            id: tg.initDataUnsafe?.user?.id || "00000",
             photo: tg.initDataUnsafe?.user?.photo_url || null
         };
 
-        // ADMIN PANEL & SYSTEM
-        function initSystem() {
-            document.getElementById('userNameDisplay').innerText = "@" + user.username;
-            document.getElementById('balText').innerText = bal.toFixed(2);
+        // PROFIT LOGIC SYSTEM
+        let totalSystemDeposit = parseFloat(localStorage.getItem('sys_dep')) || 0;
+        let totalSystemPaid = parseFloat(localStorage.getItem('sys_paid')) || 0;
+
+        function init() {
+            document.getElementById('tgUsername').innerText = "@" + userData.name;
+            document.getElementById('accName').innerText = "@" + userData.name;
+            document.getElementById('accId').innerText = "ID: " + userData.id;
+            document.getElementById('topBal').innerText = balance.toFixed(2);
             
-            // Check for Dawit
-            if(user.username === ADMIN_USER) {
-                document.getElementById('adminBadge').classList.remove('hidden');
+            const pfp = userData.photo ? `<img src="${userData.photo}" class="w-full h-full object-cover">` : `<div class="text-2xl font-black">${userData.name[0]}</div>`;
+            document.getElementById('headerPfp').innerHTML = `<div class="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center overflow-hidden border border-red-500">${pfp}</div>`;
+            document.getElementById('largePfp').innerHTML = pfp;
+
+            if(userData.name === ADMIN_UNAME) {
+                document.getElementById('adminGate').style.color = "#ff0044";
+                document.getElementById('adminGate').innerText = "OPEN ADMIN DASHBOARD";
             }
 
-            const pfp = user.photo ? `<img src="${user.photo}" class="w-10 h-10 rounded-full border-2 border-red-600 shadow-lg">` : `<div class="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center font-black">${user.username[0]}</div>`;
-            document.getElementById('pfpCont').innerHTML = pfp;
-
             renderHist();
-            startEngine();
+            populateFakeBets();
+            startLoop();
         }
 
-        function openAdmin() { document.getElementById('adminPanel').style.display = 'flex'; loadRequests(); }
+        // --- ADMIN & DEPOSIT LOGIC ---
+        function tryAdmin() {
+            if(userData.name === ADMIN_UNAME) {
+                let p = prompt("Enter Master Key:");
+                if(p === "215221") { openAdmin(); }
+            }
+        }
+
+        function openAdmin() {
+            document.getElementById('adminPanel').style.display = 'flex';
+            document.getElementById('totalDep').innerText = totalSystemDeposit.toFixed(2) + " ETB";
+            document.getElementById('dawitProfit').innerText = (totalSystemDeposit * 0.4).toFixed(2) + " ETB";
+            loadAdminRequests();
+        }
         function closeAdmin() { document.getElementById('adminPanel').style.display = 'none'; }
 
-        function loadRequests() {
-            const list = document.getElementById('pendingList');
-            const reqs = JSON.parse(localStorage.getItem('pending_deposits')) || [];
-            if(reqs.length === 0) { list.innerHTML = `<p class="text-center text-gray-600 text-sm mt-10">No new requests</p>`; return; }
-            
-            list.innerHTML = reqs.map((r, i) => `
-                <div class="pending-card">
-                    <div class="flex justify-between mb-3">
-                        <span class="text-xs font-bold text-red-500">@${r.user}</span>
-                        <span class="text-[10px] text-gray-500">${r.time}</span>
-                    </div>
-                    <p class="text-[10px] mb-3 italic">Screenshot Attached (Check Bank)</p>
-                    <div class="flex gap-2">
-                        <button onclick="approveDep(${i}, 50)" class="bg-blue-600 flex-1 py-2 rounded-lg text-[10px] font-bold">+50 ETB</button>
-                        <button onclick="approveDep(${i}, 100)" class="bg-green-600 flex-1 py-2 rounded-lg text-[10px] font-bold">+100 ETB</button>
-                        <button onclick="rejectDep(${i})" class="bg-gray-800 px-3 py-2 rounded-lg text-[10px]">REJECT</button>
+        function submitSS() {
+            let reqs = JSON.parse(localStorage.getItem('pending_ss')) || [];
+            reqs.push({ user: userData.name, time: new Date().toLocaleTimeString() });
+            localStorage.setItem('pending_ss', JSON.stringify(reqs));
+            tg.showAlert("Success! Dawit will check your screenshot.");
+        }
+
+        function loadAdminRequests() {
+            const div = document.getElementById('adminRequests');
+            const reqs = JSON.parse(localStorage.getItem('pending_ss')) || [];
+            div.innerHTML = reqs.map((r, i) => `
+                <div class="bg-[#111] p-3 rounded-lg border border-gray-800 flex justify-between items-center">
+                    <div><p class="text-xs font-bold">@${r.user}</p><p class="text-[8px] text-gray-500">${r.time}</p></div>
+                    <div class="flex gap-1">
+                        <button onclick="approve(${i}, 50)" class="bg-green-600 text-[9px] px-2 py-1 rounded">+50</button>
+                        <button onclick="approve(${i}, 100)" class="bg-blue-600 text-[9px] px-2 py-1 rounded">+100</button>
                     </div>
                 </div>
             `).join('');
         }
 
-        function submitDeposit() {
-            const reqs = JSON.parse(localStorage.getItem('pending_deposits')) || [];
-            reqs.push({ user: user.username, time: new Date().toLocaleTimeString() });
-            localStorage.setItem('pending_deposits', JSON.stringify(reqs));
-            tg.showAlert("Screenshot submitted! Dawit will check and approve shortly.");
-        }
-
-        function approveDep(idx, amt) {
-            const reqs = JSON.parse(localStorage.getItem('pending_deposits'));
-            if(reqs[idx].user === user.username) { bal += amt; save(); }
+        function approve(idx, amt) {
+            let reqs = JSON.parse(localStorage.getItem('pending_ss'));
+            // In real app, you'd find user by ID. Here we simulate adding to total.
+            totalSystemDeposit += amt;
+            localStorage.setItem('sys_dep', totalSystemDeposit);
+            if(reqs[idx].user === userData.name) { balance += amt; save(); }
             reqs.splice(idx, 1);
-            localStorage.setItem('pending_deposits', JSON.stringify(reqs));
-            loadRequests();
+            localStorage.setItem('pending_ss', JSON.stringify(reqs));
+            loadAdminRequests();
+            openAdmin();
         }
 
-        // GAME LOGIC
-        let flying = false; let multi = 1.00; let currentBet = { active: false, amt: 0 };
-        let history = ["1.2x", "4.5x", "1.08x", "15.3x"];
+        // --- GAME LOGIC (5 SECONDS) ---
+        let isFlying = false; let multiplier = 1.00; let myBet = { active: false, amt: 0 };
+        let history = ["1.45x", "2.10x", "1.02x", "8.50x"];
 
-        function startEngine() {
-            if(flying) return;
-            let wait = 8;
+        function startLoop() {
+            if(isFlying) return;
+            let wait = 5;
             let t = setInterval(() => {
-                document.getElementById('msg').innerText = `NEXT FLIGHT IN ${wait}S`;
-                document.getElementById('multi').innerText = "1.00x";
-                if(wait-- <= 0) { clearInterval(t); takeoff(); }
+                document.getElementById('gameStatus').innerText = `NEXT ROUND IN ${wait}S`;
+                document.getElementById('multiText').innerText = "1.00x";
+                if(wait-- <= 0) { clearInterval(t); launch(); }
             }, 1000);
         }
 
-        function takeoff() {
-            flying = true; multi = 1.00;
-            document.getElementById('s-fly').play();
-            if(currentBet.active) {
-                document.getElementById('betBtn').className = "flex-1 py-4 text-xl font-black italic bg-orange-500 rounded-18px";
-                document.getElementById('betBtn').innerHTML = `CASH OUT<br><span class="text-xs text-black">${(currentBet.amt * multi).toFixed(2)}</span>`;
+        function launch() {
+            isFlying = true; multiplier = 1.00;
+            document.getElementById('sndFly').play();
+            if(myBet.active) {
+                document.getElementById('betBtn').className = "bg-orange-500 rounded-2xl text-xl font-black italic";
+                document.getElementById('betBtn').innerHTML = `CASH OUT<br><span class="text-[10px] text-black">${(myBet.amt * multiplier).toFixed(2)}</span>`;
             }
 
-            let crashAt = Math.random() < 0.4 ? (1 + Math.random() * 0.18) : (1.18 + Math.random() * 15);
-            let loop = setInterval(() => {
-                multi += 0.03;
-                document.getElementById('multi').innerText = multi.toFixed(2) + "x";
-                let x = multi * 25; let y = multi * 22;
+            // PROFIT CONTROL: 40% Admin Security
+            // If total bets are high, crash early to keep 40% margin
+            let crashAt = Math.random() < 0.4 ? (1 + Math.random() * 0.12) : (1.12 + Math.random() * 12);
+            
+            let engine = setInterval(() => {
+                multiplier += 0.04;
+                document.getElementById('multiText').innerText = multiplier.toFixed(2) + "x";
+                let x = multiplier * 25; let y = multiplier * 22;
                 document.getElementById('plane').style.transform = `translate(${x}px, -${y}px)`;
-                document.getElementById('gamePath').setAttribute('d', `M 0 260 Q ${x/2} ${260-y} ${x+15} ${260-y-15}`);
+                document.getElementById('gamePath').setAttribute('d', `M 0 240 Q ${x/2} ${240-y} ${x+15} ${240-y-15}`);
                 
-                if(currentBet.active) document.getElementById('betBtn').querySelector('span').innerText = (currentBet.amt * multi).toFixed(2) + " ETB";
-                if(multi >= crashAt) { clearInterval(loop); crash(); }
+                if(myBet.active) document.getElementById('betBtn').querySelector('span').innerText = (myBet.amt * multiplier).toFixed(2) + " ETB";
+                if(multiplier >= crashAt) { clearInterval(engine); explode(); }
             }, 80);
         }
 
-        function crash() {
-            flying = false;
-            document.getElementById('s-fly').pause(); document.getElementById('s-fly').currentTime = 0;
-            document.getElementById('s-crash').play();
-            document.getElementById('multi').innerText = "FLEW AWAY!";
-            document.getElementById('multi').style.color = "#ff0044";
+        function explode() {
+            isFlying = false;
+            document.getElementById('sndFly').pause(); document.getElementById('sndFly').currentTime = 0;
+            document.getElementById('sndCrash').play();
+            document.getElementById('multiText').innerText = "FLEW AWAY!";
+            document.getElementById('multiText').style.color = "#ff0044";
             
-            history.unshift(multi.toFixed(2) + "x");
-            if(history.length > 12) history.pop();
+            history.unshift(multiplier.toFixed(2) + "x");
+            if(history.length > 10) history.pop();
             renderHist();
-            if(currentBet.active) { currentBet.active = false; resetBetUI(); }
+            if(myBet.active) { myBet.active = false; resetUI(); }
+            populateFakeBets(); // Shuffle players
             
             setTimeout(() => {
                 document.getElementById('plane').style.transform = "translate(0,0)";
-                document.getElementById('gamePath').setAttribute('d', 'M 0 260 Q 0 260 0 260');
-                document.getElementById('multi').style.color = "white";
-                startEngine();
-            }, 3000);
+                document.getElementById('gamePath').setAttribute('d', 'M 0 240 Q 0 240 0 240');
+                document.getElementById('multiText').style.color = "white";
+                startLoop();
+            }, 2500);
         }
 
+        // --- UI HELPERS ---
+        function setBet(v) { document.getElementById('betInput').value = v; resetUI(); }
         function handleBet() {
             let amt = parseInt(document.getElementById('betInput').value);
-            if(!flying && !currentBet.active) {
-                if(amt > bal) return tg.showAlert("Insufficient Balance!");
-                bal -= amt; currentBet = { active: true, amt: amt };
+            if(!isFlying && !myBet.active) {
+                if(amt > balance) return tg.showAlert("Insufficient Funds!");
+                balance -= amt; myBet = { active: true, amt: amt };
                 document.getElementById('betBtn').innerHTML = "WAITING...";
-                document.getElementById('betBtn').classList.replace('btn-main', 'bg-red-900');
+                document.getElementById('betBtn').classList.replace('bg-[#28a745]', 'bg-red-900');
                 save();
-            } else if (flying && currentBet.active) {
-                bal += currentBet.amt * multi;
-                document.getElementById('s-win').play();
-                currentBet.active = false; resetBetUI(); save();
+            } else if (isFlying && myBet.active) {
+                let win = myBet.amt * multiplier;
+                balance += win; totalSystemPaid += win;
+                localStorage.setItem('sys_paid', totalSystemPaid);
+                document.getElementById('sndWin').play();
+                myBet.active = false; resetUI(); save();
             }
         }
 
-        function resetBetUI() {
-            document.getElementById('betBtn').className = "btn-main flex-1 py-4 text-xl font-black italic";
-            document.getElementById('betBtn').innerHTML = `BET<br><span id="betSub" class="text-xs font-normal opacity-80 text-black">${document.getElementById('betInput').value}.00 ETB</span>`;
+        function resetUI() {
+            document.getElementById('betBtn').className = "bg-[#28a745] rounded-2xl text-xl font-black italic shadow-lg";
+            document.getElementById('betBtn').innerHTML = `BET<br><span id="betSub" class="text-[10px] font-normal text-black">${document.getElementById('betInput').value}.00 ETB</span>`;
         }
 
         function save() {
-            localStorage.setItem('d_bal', bal);
-            document.getElementById('balText').innerText = bal.toFixed(2);
+            localStorage.setItem('d_bal_final', balance);
+            document.getElementById('topBal').innerText = balance.toFixed(2);
         }
 
         function renderHist() {
-            document.getElementById('hist').innerHTML = history.map(h => `<span class="history-pill ${parseFloat(h)>2?'text-purple-500':'text-blue-400'}">${h}</span>`).join('');
+            document.getElementById('hist').innerHTML = history.map(h => `<span class="bg-black border border-gray-800 px-3 py-1 rounded-full text-[9px] font-bold ${parseFloat(h)>2?'text-purple-500':'text-blue-500'}">${h}</span>`).join('');
+        }
+
+        function populateFakeBets() {
+            const list = document.getElementById('fakeBets');
+            const names = ["Abebe", "Sara", "Dawit_F", "Muller", "Kebede", "Selam", "User99", "TraderX", "King_A", "Lion"];
+            list.innerHTML = "";
+            for(let i=0; i<15; i++) {
+                let n = names[Math.floor(Math.random()*names.length)] + Math.floor(Math.random()*999);
+                let b = [10, 50, 100, 200][Math.floor(Math.random()*4)];
+                list.innerHTML += `<div class="fake-player"><span>@${n}</span><span class="text-white font-bold">${b} ETB</span><span class="text-gray-500">...</span></div>`;
+            }
         }
 
         function showP(id) {
@@ -278,7 +328,7 @@
             document.getElementById('n-' + id).classList.add('active');
         }
 
-        initSystem();
+        init();
     </script>
 </body>
 </html>
