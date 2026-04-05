@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DAI AVIATOR - MASTER ADMIN</title>
+    <title>DAI AVIATOR - EXCLUSIVE ADMIN</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -12,42 +12,42 @@
         body { background-color: #0b0e11; color: white; font-family: 'Roboto', sans-serif; overflow: hidden; margin: 0; }
         .font-game { font-family: 'Orbitron', sans-serif; }
         .aviator-screen { 
-            background: radial-gradient(circle at bottom left, #0f172a 0%, #000 100%);
-            height: 280px; position: relative; border-radius: 20px; border: 1px solid #1e293b; overflow: hidden;
+            background: radial-gradient(circle at bottom left, #1c0a12 0%, #000 100%);
+            height: 280px; position: relative; border-radius: 20px; overflow: hidden; border: 1px solid #2d1a24;
         }
-        #gamePath { stroke: #ef4444; stroke-width: 6; fill: none; filter: drop-shadow(0 0 12px #ff0000); }
-        .plane-emoji { position: absolute; bottom: 15px; left: 15px; font-size: 65px; z-index: 100; transition: transform 0.1s linear; filter: drop-shadow(2px 4px 6px black); }
+        #gamePath { stroke: #d32f2f; stroke-width: 6; fill: none; filter: drop-shadow(0 0 10px #ff0000); }
+        .plane-emoji { position: absolute; bottom: 15px; left: 15px; font-size: 55px; z-index: 100; transition: transform 0.1s linear; }
+        .multiplier-display { font-size: 4.5rem; font-weight: 900; z-index: 200; position: relative; }
+        
+        /* Navigation */
         .nav-bar { background: #1c2127; position: fixed; bottom: 0; width: 100%; height: 65px; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #333; z-index: 1000; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: #888; font-size: 10px; cursor: pointer; }
-        .nav-item.active { color: #ef4444; }
+        .nav-item.active { color: #d32f2f; }
         .page { display: none; height: calc(100vh - 65px); overflow-y: auto; padding-bottom: 80px; }
         .active-page { display: block; }
-        
-        /* Admin Dashboard Styles */
-        .admin-view { position: fixed; inset: 0; background: #0b0e11; z-index: 5000; display: none; flex-direction: column; }
-        .user-card { background: #1c2127; padding: 15px; border-radius: 15px; margin-bottom: 10px; border-left: 4px solid #ef4444; }
+
+        /* Secret Admin Panel */
+        #secretAdminPanel { display: none; position: fixed; inset: 0; background: #000; z-index: 9999; padding: 20px; flex-direction: column; }
+        .user-row { background: #1c2127; padding: 12px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
 <body>
 
-    <div id="adminDashboard" class="admin-view">
-        <div class="p-4 bg-red-900 flex justify-between items-center">
-            <h2 class="font-black">DAWIT'S CONTROL PANEL</h2>
-            <button onclick="closeAdmin()" class="bg-black px-4 py-1 rounded-lg text-sm">EXIT</button>
+    <div id="secretAdminPanel">
+        <div class="flex justify-between items-center border-b border-red-600 pb-3 mb-4">
+            <h2 class="text-red-500 font-black text-xl underline">DAWIT'S COMMAND CENTER</h2>
+            <button onclick="closeAdmin()" class="bg-gray-800 px-4 py-1 rounded text-xs font-bold">CLOSE</button>
         </div>
-        <div class="p-4 flex-1 overflow-y-auto" id="adminContent">
-            <h3 class="text-gray-400 text-xs mb-4 uppercase font-bold">Player Management</h3>
-            <div id="userList">
-                </div>
-        </div>
+        <div id="adminUserList" class="overflow-y-auto flex-1">
+            </div>
     </div>
 
     <div class="p-3 flex justify-between items-center bg-[#1c2127] border-b border-gray-800 sticky top-0 z-[500]">
         <div class="flex items-center gap-3">
             <div id="headerPfp"></div>
             <div class="flex flex-col">
-                <span class="text-red-600 font-black italic text-xl" onclick="enterAdmin()">Aviator</span>
-                <span id="tgName" class="text-[9px] text-gray-500 font-bold uppercase">@Guest</span>
+                <span class="text-red-600 font-black italic text-xl">Aviator</span>
+                <span id="tgName" onclick="tryOpenAdmin()" class="text-[9px] text-gray-500 font-bold uppercase cursor-pointer">@Guest</span>
             </div>
         </div>
         <div class="bg-black px-4 py-1.5 rounded-full border border-green-900">
@@ -55,180 +55,148 @@
         </div>
     </div>
 
-    <section id="home" class="page active-page p-3">
+    <section id="home" class="page active-page p-3 text-center">
         <div id="historyBar" class="flex gap-2 mb-2 overflow-x-auto no-scrollbar py-1"></div>
+        
         <div class="aviator-screen flex items-center justify-center">
-            <svg id="gameArea" width="100%" height="100%" style="position:absolute; top:0; left:0;"><path id="gamePath" d="M 0 300 Q 0 300 0 300" /></svg>
-            <div id="multiText" class="multiplier-display font-game text-white text-6xl font-black italic">1.00x</div>
-            <div id="plane" class="plane-emoji">🛩️</div>
-            <div id="statusMsg" class="absolute top-2 text-[10px] text-gray-500 font-bold uppercase">Waiting...</div>
+            <svg width="100%" height="100%" style="position:absolute;"><path id="gamePath" d="M 0 300 Q 0 300 0 300" /></svg>
+            <div id="multiText" class="multiplier-display font-game italic text-white">1.00x</div>
+            <div id="plane" class="plane-emoji">✈️</div>
+            <div id="statusMsg" class="absolute top-2 text-[10px] text-gray-500 font-bold">WAITING FOR NEXT ROUND</div>
         </div>
-        <div class="mt-4 bg-[#1c2127] p-4 rounded-2xl border border-gray-800">
-            <div class="flex gap-3">
-                <div class="w-1/3"><div class="bg-black flex items-center justify-between p-2 rounded-xl border border-gray-800"><input id="betInput" type="number" value="10" class="bg-transparent text-center w-full font-bold outline-none text-sm"></div></div>
-                <button id="mainBetBtn" onclick="onBetClick()" class="bg-[#22c55e] flex-1 text-xl font-black rounded-2xl shadow-lg py-3">BET<br><span id="betLabel" class="text-xs font-normal text-black">10.00 ETB</span></button>
+
+        <div class="mt-4 bg-[#1c2127] p-5 rounded-2xl border border-gray-800">
+            <div class="flex gap-4">
+                <div class="w-1/3">
+                    <input id="betInput" type="number" value="10" class="w-full bg-black border border-gray-700 p-3 rounded-xl text-center font-bold outline-none">
+                </div>
+                <button id="mainBetBtn" onclick="onBetClick()" class="bg-[#28a745] flex-1 text-xl font-black rounded-xl shadow-lg">BET<br><span id="betLabel" class="text-xs font-normal">10.00 ETB</span></button>
             </div>
         </div>
     </section>
 
-    <section id="deposit" class="page p-5">
-        <h2 class="text-2xl font-black mb-4 uppercase">Deposit</h2>
-        <div class="space-y-3 mb-6">
-            <div class="bg-black p-4 rounded-xl border-l-4 border-blue-500">
-                <p class="text-[10px] text-gray-500">Telebirr (Dawit)</p>
-                <p class="font-bold">0906067696</p>
+    <section id="wallet" class="page p-5">
+        <h2 class="text-2xl font-black mb-6">Deposit (ማስገቢያ)</h2>
+        <div class="space-y-4">
+            <div class="bg-[#1c2127] p-4 rounded-xl border-l-4 border-yellow-500">
+                <p class="text-xs text-gray-400">Telebirr (ዳዊት)</p>
+                <p class="text-xl font-bold">0906067696</p>
             </div>
-            <div class="bg-black p-4 rounded-xl border-l-4 border-green-500">
-                <p class="text-[10px] text-gray-500">CBE (Dawit)</p>
-                <p class="font-bold">1000179571815</p>
+            <div class="bg-[#1c2127] p-4 rounded-xl border-l-4 border-blue-500">
+                <p class="text-xs text-gray-400">CBE (ዳዊት)</p>
+                <p class="text-lg font-bold">1000179571815</p>
             </div>
-        </div>
-        <div class="bg-[#1c2127] p-5 rounded-2xl border border-dashed border-gray-600 text-center">
-            <p class="text-xs text-gray-400 mb-4 italic">ክፍያውን ከፈጸሙ በኋላ ስክሪንሾት እዚህ ይላኩ</p>
-            <input type="file" id="ssInput" class="hidden" onchange="handleSS(this)">
-            <button onclick="document.getElementById('ssInput').click()" class="w-full bg-blue-600 py-3 rounded-xl font-bold mb-2">UPLOAD SCREENSHOT</button>
-            <p id="ssStatus" class="text-[10px] text-green-500 hidden font-bold">FILE ATTACHED! CLICK SUBMIT</p>
-            <button onclick="submitToAdmin()" class="w-full bg-gray-800 py-3 rounded-xl font-bold text-xs">SUBMIT TO ADMIN</button>
-        </div>
-    </section>
-
-    <section id="profile" class="page p-5">
-        <div class="bg-[#1c2127] p-8 rounded-3xl text-center border border-gray-800">
-            <div id="largePfp" class="mx-auto mb-4"></div>
-            <h3 id="profName" class="font-bold text-xl italic text-red-500">@User</h3>
-            <p id="profId" class="text-[10px] text-gray-500 mb-6 font-bold">ID: 0000000</p>
-            <button onclick="showPage('deposit')" class="w-full bg-red-600 py-3 rounded-xl font-bold mb-2">ADD FUNDS</button>
-            <button onclick="tg.showAlert('Withdraw request sent to @Dawit_fikadu21')" class="w-full bg-gray-800 py-3 rounded-xl font-bold">WITHDRAW</button>
+            <button onclick="window.open('https://t.me/Dawit_fikadu21')" class="w-full bg-blue-600 py-3 rounded-xl font-bold">SEND SCREENSHOT</button>
         </div>
     </section>
 
     <div class="nav-bar">
-        <div onclick="showPage('home')" class="nav-item active" id="nav-home"><i class="fa-solid fa-plane-up text-lg mb-1"></i><span>Game</span></div>
-        <div onclick="showPage('deposit')" class="nav-item" id="nav-deposit"><i class="fa-solid fa-wallet text-lg mb-1"></i><span>Deposit</span></div>
+        <div onclick="showPage('home')" class="nav-item active" id="nav-home"><i class="fa-solid fa-plane text-lg mb-1"></i><span>Game</span></div>
+        <div onclick="showPage('wallet')" class="nav-item" id="nav-wallet"><i class="fa-solid fa-wallet text-lg mb-1"></i><span>Deposit</span></div>
         <div onclick="showPage('profile')" class="nav-item" id="nav-profile"><i class="fa-solid fa-user text-lg mb-1"></i><span>Profile</span></div>
     </div>
+
+    <audio id="sndFly" loop src="https://www.soundjay.com/transportation/sounds/propeller-plane-flying-1.mp3"></audio>
+    <audio id="sndCrash" src="https://www.soundjay.com/button/sounds/button-10.mp3"></audio>
+    <audio id="sndMoney" src="https://www.soundjay.com/misc/sounds/coins-spilled-1.mp3"></audio>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        let balance = parseFloat(localStorage.getItem('dawit_bal')) || 10.00;
-        let userData = {
-            name: tg.initDataUnsafe?.user?.username || tg.initDataUnsafe?.user?.first_name || "Guest",
-            id: tg.initDataUnsafe?.user?.id || "N/A",
-            photo: tg.initDataUnsafe?.user?.photo_url || null
-        };
-
-        // Simulated DB for Admin
-        let allUsers = JSON.parse(localStorage.getItem('all_users')) || {};
-        allUsers[userData.id] = { name: userData.name, balance: balance, lastSS: null };
-        localStorage.setItem('all_users', JSON.stringify(allUsers));
+        // Security check: ONLY Dawit
+        const ADMIN_USERNAME = "Dawit_fikadu21";
+        let balance = parseFloat(localStorage.getItem('dawit_bal_v3')) || 10.00;
+        let currentUser = tg.initDataUnsafe?.user?.username || "Guest";
 
         function init() {
-            document.getElementById('tgName').innerText = "@" + userData.name;
-            document.getElementById('profName').innerText = "@" + userData.name;
-            document.getElementById('profId').innerText = "ID: " + userData.id;
+            document.getElementById('tgName').innerText = "@" + currentUser;
             document.getElementById('balDisplay').innerText = balance.toFixed(2);
-            
-            const pfp = userData.photo ? `<img src="${userData.photo}" class="w-[35px] h-[35px] rounded-full border border-red-500">` : `<div class="w-[35px] h-[35px] rounded-full bg-red-600 flex items-center justify-center font-bold">${userData.name[0]}</div>`;
-            document.getElementById('headerPfp').innerHTML = pfp;
-            document.getElementById('largePfp').innerHTML = pfp.replace('35px','80px').replace('35px','80px');
-            
+            renderHistory();
             startLoop();
         }
 
-        // --- ADMIN LOGIC ---
-        function enterAdmin() {
-            let p = prompt("Admin Password:");
-            if(p === "215221") {
-                updateAdminList();
-                document.getElementById('adminDashboard').style.display = 'flex';
-            }
-        }
-        function closeAdmin() { document.getElementById('adminDashboard').style.display = 'none'; }
-        
-        function updateAdminList() {
-            let list = document.getElementById('userList');
-            let users = JSON.parse(localStorage.getItem('all_users'));
-            list.innerHTML = "";
-            for(let id in users) {
-                list.innerHTML += `
-                    <div class="user-card flex justify-between items-center">
-                        <div><p class="font-bold text-sm">@${users[id].name}</p><p class="text-[9px] text-gray-400">ID: ${id}</p></div>
-                        <div class="text-right">
-                            <p class="text-green-500 font-black">${users[id].balance.toFixed(2)} ETB</p>
-                            <button onclick="editUser('${id}')" class="text-[9px] bg-red-600 px-2 py-1 rounded">EDIT</button>
-                        </div>
-                    </div>`;
+        // --- SECRET ADMIN LOGIC ---
+        function tryOpenAdmin() {
+            // Check if current user is exactly @Dawit_fikadu21
+            if(currentUser === ADMIN_USERNAME) {
+                let pass = prompt("Welcome Dawit. Enter Key:");
+                if(pass === "215221") {
+                    loadAdminData();
+                    document.getElementById('secretAdminPanel').style.display = 'flex';
+                }
+            } else {
+                console.log("Access Denied: Not Dawit");
             }
         }
 
-        function editUser(id) {
-            let newB = prompt("New Balance for " + id);
-            if(newB != null) {
-                let users = JSON.parse(localStorage.getItem('all_users'));
-                users[id].balance = parseFloat(newB);
-                if(id == userData.id) { balance = parseFloat(newB); save(); }
-                localStorage.setItem('all_users', JSON.stringify(users));
-                updateAdminList();
-            }
+        function closeAdmin() { document.getElementById('secretAdminPanel').style.display = 'none'; }
+
+        function loadAdminData() {
+            const list = document.getElementById('adminUserList');
+            // In a real app, this would fetch from your database
+            list.innerHTML = `
+                <div class="user-row">
+                    <span>@${currentUser} (YOU)</span>
+                    <button onclick="modBal()" class="bg-red-600 px-3 py-1 rounded text-[10px]">EDIT BAL</button>
+                </div>
+                <p class="text-[9px] text-gray-500 mt-4 text-center italic">Only you can see this menu, Dawit.</p>
+            `;
         }
 
-        function handleSS(input) { if(input.files && input.files[0]) document.getElementById('ssStatus').classList.remove('hidden'); }
-        function submitToAdmin() {
-            tg.showAlert("Screenshot submitted to Dawit! Please wait for approval.");
-            document.getElementById('ssStatus').classList.add('hidden');
+        function modBal() {
+            let n = prompt("Set New Balance:");
+            if(n) { balance = parseFloat(n); save(); alert("Done!"); }
         }
 
-        function showPage(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(id).classList.add('active-page');
-            document.getElementById('nav-' + id).classList.add('active');
-        }
+        // --- GAME ENGINE ---
+        let isFlying = false; let mult = 1.00; let myBet = { active: false, amt: 0 };
+        let history = ["1.50x", "12.0x", "1.05x"];
 
-        function save() {
-            localStorage.setItem('dawit_bal', balance);
-            document.getElementById('balDisplay').innerText = balance.toFixed(2);
-            let users = JSON.parse(localStorage.getItem('all_users'));
-            users[userData.id].balance = balance;
-            localStorage.setItem('all_users', JSON.stringify(users));
-        }
-
-        // --- GAME LOOP ---
-        let isFlying = false; let multiplier = 1.00; let activeBet = { active: false, amt: 0 };
         function startLoop() {
             if(isFlying) return;
             let w = 8;
             let t = setInterval(() => {
-                document.getElementById('statusMsg').innerText = `NEXT FLIGHT IN ${w}S`;
-                document.getElementById('multiText').innerText = "1.00x";
-                if(w-- <= 0) { clearInterval(t); launch(); }
+                document.getElementById('statusMsg').innerText = `NEXT TAKEOFF IN ${w}S`;
+                if(w-- <= 0) { clearInterval(t); takeoff(); }
             }, 1000);
         }
 
-        function launch() {
-            isFlying = true; multiplier = 1.00;
-            if(activeBet.active) {
-                document.getElementById('mainBetBtn').className = "bg-yellow-500 flex-1 text-xl font-black rounded-2xl py-3";
-                document.getElementById('mainBetBtn').innerHTML = `CASH OUT<br><span>${(activeBet.amt * multiplier).toFixed(2)}</span>`;
+        function takeoff() {
+            isFlying = true; mult = 1.00;
+            document.getElementById('sndFly').play();
+            if(myBet.active) {
+                document.getElementById('mainBetBtn').className = "bg-orange-500 flex-1 text-xl font-black rounded-xl";
+                document.getElementById('mainBetBtn').innerHTML = `CASH OUT<br><span>${(myBet.amt * mult).toFixed(2)}</span>`;
             }
+
+            // 40% Admin Profit Logic
             let crashAt = Math.random() < 0.4 ? (1 + Math.random() * 0.15) : (1.15 + Math.random() * 15);
+            
             let engine = setInterval(() => {
-                multiplier += 0.03;
-                document.getElementById('multiText').innerText = multiplier.toFixed(2) + "x";
-                let x = multiplier * 25; let y = multiplier * 20;
+                mult += 0.03;
+                document.getElementById('multiText').innerText = mult.toFixed(2) + "x";
+                let x = mult * 25; let y = mult * 22;
                 document.getElementById('plane').style.transform = `translate(${x}px, -${y}px)`;
-                document.getElementById('gamePath').setAttribute('d', `M 0 300 Q ${x/2} ${300-y} ${x+20} ${300-y-20}`);
-                if(activeBet.active) document.getElementById('mainBetBtn').querySelector('span').innerText = (activeBet.amt * multiplier).toFixed(2) + " ETB";
-                if(multiplier >= crashAt) { clearInterval(engine); explode(); }
+                document.getElementById('gamePath').setAttribute('d', `M 0 300 Q ${x/2} ${300-y} ${x+10} ${300-y-10}`);
+                
+                if(myBet.active) document.getElementById('mainBetBtn').querySelector('span').innerText = (myBet.amt * mult).toFixed(2) + " ETB";
+                
+                if(mult >= crashAt) { clearInterval(engine); crash(); }
             }, 80);
         }
 
-        function explode() {
-            isFlying = false; document.getElementById('multiText').innerText = "FLEW AWAY!";
-            document.getElementById('multiText').style.color = "#ef4444";
-            if(activeBet.active) { activeBet.active = false; resetUI(); }
+        function crash() {
+            isFlying = false;
+            document.getElementById('sndFly').pause(); document.getElementById('sndFly').currentTime = 0;
+            document.getElementById('sndCrash').play();
+            document.getElementById('multiText').innerText = "FLEW AWAY!";
+            document.getElementById('multiText').style.color = "#ff1e4d";
+            
+            history.unshift(mult.toFixed(2) + "x"); history.pop();
+            renderHistory();
+            if(myBet.active) { myBet.active = false; resetUI(); }
+            
             setTimeout(() => {
                 document.getElementById('plane').style.transform = "translate(0,0)";
                 document.getElementById('gamePath').setAttribute('d', 'M 0 300 Q 0 300 0 300');
@@ -239,22 +207,36 @@
 
         function onBetClick() {
             let amt = parseInt(document.getElementById('betInput').value);
-            if(!isFlying && !activeBet.active) {
-                if(amt > balance) return alert("Low Balance!");
-                balance -= amt; activeBet = { active: true, amt: amt };
+            if(!isFlying && !myBet.active) {
+                if(amt > balance) return tg.showAlert("No Money!");
+                balance -= amt; myBet = { active: true, amt: amt };
                 document.getElementById('mainBetBtn').innerHTML = "WAITING...";
-                document.getElementById('mainBetBtn').classList.replace('bg-[#22c55e]', 'bg-red-900');
+                document.getElementById('mainBetBtn').classList.replace('bg-[#28a745]', 'bg-red-900');
                 save();
-            } else if (isFlying && activeBet.active) {
-                balance += activeBet.amt * multiplier;
-                activeBet.active = false; resetUI(); save();
-                tg.showAlert("Success!");
+            } else if (isFlying && myBet.active) {
+                balance += myBet.amt * mult;
+                document.getElementById('sndMoney').play();
+                myBet.active = false; resetUI(); save();
             }
         }
 
         function resetUI() {
-            document.getElementById('mainBetBtn').className = "bg-[#22c55e] flex-1 text-xl font-black rounded-2xl py-3";
-            document.getElementById('mainBetBtn').innerHTML = `BET<br><span class="text-xs font-normal text-black">${document.getElementById('betInput').value}.00 ETB</span>`;
+            document.getElementById('mainBetBtn').className = "bg-[#28a745] flex-1 text-xl font-black rounded-xl";
+            document.getElementById('mainBetBtn').innerHTML = `BET<br><span class="text-xs font-normal">${document.getElementById('betInput').value}.00 ETB</span>`;
+        }
+
+        function save() {
+            localStorage.setItem('dawit_bal_v3', balance);
+            document.getElementById('balDisplay').innerText = balance.toFixed(2);
+        }
+
+        function renderHistory() {
+            document.getElementById('historyBar').innerHTML = history.map(v => `<span class="bg-gray-800 px-3 py-1 rounded-full text-[9px] font-bold text-blue-400">${v}</span>`).join('');
+        }
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+            document.getElementById(id).classList.add('active-page');
         }
 
         init();
