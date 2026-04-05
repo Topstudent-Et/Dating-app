@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ELITE AVIATOR V20 - PROFIT ENGINE</title>
+    <title>ELITE AVIATOR V20 - COMPLETE EDITION</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -17,15 +17,24 @@
         .active-page { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.99); } to { opacity: 1; transform: scale(1); } }
         .nav-bar { background: rgba(10, 10, 10, 0.95); position: fixed; bottom: 0; width: 100%; height: 75px; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #1a1a1a; z-index: 1000; }
-        .nav-item { color: #444; font-size: 9px; font-weight: 900; text-align: center; }
-        .nav-item.active { color: var(--primary); }
+        .nav-item { color: #444; font-size: 9px; font-weight: 900; text-align: center; transition: 0.2s; }
+        .nav-item.active { color: var(--primary); transform: scale(1.05); }
         .aviator-screen { background: radial-gradient(circle at bottom left, #1a0505 0%, #000 100%); height: 230px; position: relative; border-radius: 30px; overflow: hidden; border: 1px solid #222; }
         #gamePath { stroke: var(--primary); stroke-width: 6; fill: none; filter: drop-shadow(0 0 8px var(--primary)); }
-        .plane-jet { position: absolute; bottom: 20px; left: 20px; font-size: 40px; z-index: 10; transition: 0.1s linear; }
+        .plane-jet { position: absolute; bottom: 20px; left: 20px; font-size: 40px; z-index: 10; transition: 0.05s linear; }
+        .history-dot { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; background: #111; border: 1px solid #222; }
+        .history-dot.crashed { background: #ff004420; border-color: #ff0044; color: #ff0044; }
+        .history-dot.cashed { background: #00ff4420; border-color: #00ff44; color: #00ff44; }
+        .chat-message { padding: 8px 12px; background: rgba(255,255,255,0.05); border-radius: 20px; margin-bottom: 8px; font-size: 12px; }
+        .chat-message .name { color: #ff0044; font-weight: bold; margin-right: 8px; }
+        .vip-badge { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; font-weight: 900; padding: 2px 8px; border-radius: 20px; font-size: 8px; }
+        @keyframes pulse { 0% { opacity: 0.6; } 100% { opacity: 1; } }
+        .notif { animation: pulse 0.5s infinite; }
     </style>
 </head>
 <body>
 
+    <!-- ADMIN PANEL -->
     <div id="adminPanel" class="fixed inset-0 bg-black z-[9999] hidden flex-col">
         <div class="p-5 glass flex justify-between items-center border-b border-white/5">
             <h2 class="text-red-600 font-black italic">V20 ADMIN PANEL</h2>
@@ -34,6 +43,7 @@
         <div id="admContent" class="p-4 flex-1 overflow-y-auto space-y-4"></div>
     </div>
 
+    <!-- HEADER -->
     <header class="p-4 flex justify-between items-center glass sticky top-0 z-50">
         <div class="flex items-center gap-3">
             <div id="hPfp" class="w-10 h-10 rounded-xl bg-red-900/20 border border-white/5 flex items-center justify-center overflow-hidden"></div>
@@ -42,15 +52,16 @@
                 <p id="hUser" class="text-[9px] text-gray-500 font-black mt-1 uppercase tracking-widest">@Guest</p>
             </div>
         </div>
-        <div class="flex flex-col items-end gap-1">
+        <div class="flex items-center gap-3">
+            <div id="vipBadge" class="hidden vip-badge text-[8px]">💎 VIP</div>
             <div class="bg-black/60 border border-white/10 rounded-full px-5 py-1.5 flex items-center gap-2">
                 <span id="hBal" class="font-black text-sm text-green-500">500.00</span>
                 <span class="text-[8px] text-gray-600 font-black">ETB</span>
             </div>
-            <div id="profitTag" class="text-[7px] text-gray-700 font-black uppercase">Secure 40% Profit Active</div>
         </div>
     </header>
 
+    <!-- MAIN GAME PAGE -->
     <section id="home" class="page active-page">
         <div class="aviator-screen flex items-center justify-center">
             <svg width="100%" height="100%" style="position:absolute;"><path id="gamePath" d="M 0 230 Q 0 230 0 230" /></svg>
@@ -59,7 +70,10 @@
             <div id="gStatus" class="absolute top-4 glass px-5 py-1 rounded-full text-[9px] font-black text-gray-400 uppercase tracking-widest">READY...</div>
         </div>
 
-        <div class="mt-6 grid grid-cols-2 gap-4">
+        <!-- HISTORY DOTS -->
+        <div id="historyContainer" class="flex gap-2 justify-center my-4 overflow-x-auto pb-2"></div>
+
+        <div class="mt-2 grid grid-cols-2 gap-4">
             <div class="glass p-5 rounded-[30px]">
                 <p class="text-[8px] text-gray-600 font-black mb-1 uppercase italic">Stake Amount</p>
                 <input id="bInp" type="number" value="10" class="w-full bg-transparent text-center font-black text-3xl outline-none text-white">
@@ -80,6 +94,7 @@
         </div>
     </section>
 
+    <!-- DEPOSIT PAGE -->
     <section id="deposit" class="page">
         <div class="glass p-6 rounded-[35px] mb-6">
             <p class="text-[10px] text-yellow-500 font-black uppercase mb-3">Official Accounts</p>
@@ -102,6 +117,7 @@
         </div>
     </section>
 
+    <!-- WITHDRAW PAGE -->
     <section id="withdraw" class="page text-center">
         <i class="fa-solid fa-money-bill-transfer text-green-500 text-5xl mb-6 mt-10"></i>
         <h2 class="text-2xl font-black italic mb-6">WITHDRAWAL</h2>
@@ -112,19 +128,54 @@
         </div>
     </section>
 
+    <!-- HELP / PROFILE PAGE -->
     <section id="help" class="page">
         <div class="flex flex-col items-center mb-8">
             <div id="accPfp" class="w-24 h-24 rounded-[35px] bg-red-950/20 border-2 border-red-600/30 flex items-center justify-center overflow-hidden mb-4"></div>
             <h2 id="accUser" class="text-2xl font-black italic uppercase">@User</h2>
+            <div class="flex gap-2 mt-2">
+                <span id="accLevel" class="text-[10px] bg-gray-800 px-3 py-1 rounded-full">🏆 Level 1</span>
+                <span id="accReferrals" class="text-[10px] bg-gray-800 px-3 py-1 rounded-full">👥 0 Ref</span>
+            </div>
         </div>
-        <div class="glass p-6 rounded-[35px] mb-6">
-            <h3 class="text-xs font-black text-blue-500 mb-4 uppercase">Support Ticket</h3>
-            <textarea id="supMsg" placeholder="መልዕክትዎን እዚህ ይፃፉ..." class="w-full bg-black/50 border border-white/10 p-5 rounded-2xl text-xs h-32 outline-none mb-4"></textarea>
-            <button onclick="tg.showAlert('Support Ticket Sent!')" class="w-full bg-blue-600 py-4 rounded-2xl font-black text-[10px] uppercase">SEND MESSAGE</button>
+
+        <!-- REFERRAL SECTION -->
+        <div class="glass p-5 rounded-[35px] mb-5">
+            <h3 class="text-xs font-black text-yellow-500 mb-3 uppercase">🎁 Referral Bonus (5%)</h3>
+            <div class="flex justify-between items-center bg-black/40 p-3 rounded-xl">
+                <code id="refCode" class="text-[11px] font-mono">LOADING...</code>
+                <button onclick="copyRefLink()" class="bg-yellow-600/30 px-4 py-1 rounded-full text-[10px] font-black">COPY</button>
+            </div>
+            <p class="text-[9px] text-gray-500 mt-3">Each friend gives you 5% of their deposit!</p>
         </div>
+
+        <!-- CHAT SECTION -->
+        <div class="glass p-5 rounded-[35px] mb-5">
+            <h3 class="text-xs font-black text-blue-500 mb-3 uppercase"><i class="fa-regular fa-comment"></i> Live Chat</h3>
+            <div id="chatMessages" class="h-48 overflow-y-auto mb-3 space-y-2"></div>
+            <div class="flex gap-2">
+                <input type="text" id="chatInput" placeholder="Type message..." class="flex-1 bg-black/50 border border-white/10 p-3 rounded-xl text-xs outline-none">
+                <button onclick="sendChatMessage()" class="bg-blue-600 px-5 rounded-xl text-[10px] font-black">SEND</button>
+            </div>
+        </div>
+
+        <!-- DAILY BONUS -->
+        <div class="glass p-5 rounded-[35px] mb-5 text-center">
+            <h3 class="text-xs font-black text-green-500 mb-2">🎁 Daily Bonus</h3>
+            <div id="dailyBonusInfo" class="text-[11px] mb-3"></div>
+            <button id="dailyBonusBtn" onclick="claimDailyBonus()" class="bg-green-600/40 w-full py-3 rounded-xl text-[11px] font-black">CLAIM</button>
+        </div>
+
+        <!-- TOURNAMENT SECTION -->
+        <div class="glass p-5 rounded-[35px] mb-5">
+            <h3 class="text-xs font-black text-purple-500 mb-3 uppercase">🏆 Weekly Tournament</h3>
+            <div id="tournamentStanding" class="space-y-2 text-[11px]"></div>
+        </div>
+
         <button onclick="checkAdmin()" class="w-full py-4 text-[9px] font-black text-gray-800 uppercase tracking-[4px]">System Access</button>
     </section>
 
+    <!-- BOTTOM NAV -->
     <nav class="nav-bar">
         <div onclick="showP('home')" id="n-home" class="nav-item active"><i class="fa-solid fa-plane-up text-2xl mb-1"></i><br>PLAY</div>
         <div onclick="showP('deposit')" id="n-deposit" class="nav-item"><i class="fa-solid fa-wallet text-2xl mb-1"></i><br>WALLET</div>
@@ -132,18 +183,38 @@
         <div onclick="showP('help')" id="n-help" class="nav-item"><i class="fa-solid fa-user-gear text-2xl mb-1"></i><br>ME</div>
     </nav>
 
+    <audio id="crashSound" preload="auto">
+        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
         const tg = window.Telegram.WebApp; tg.expand();
-        const MY_ADMIN_UNAME = "Dawit_Fikadu21"; // የአንተ ዩዘርኔም
-        let realBal = parseFloat(localStorage.getItem('v20_real_bal')) || 0;
-        let isFlying = false; let mult = 1.00;
+        const MY_ADMIN_UNAME = "Dawit_Fikadu21";
+        
+        // GAME STATE
+        let realBal = parseFloat(localStorage.getItem('v20_real_bal')) || 500;
+        let isFlying = false; 
+        let mult = 1.00;
         let myBet = { active: false, amt: 0 };
-        let userData = { uname: tg.initDataUnsafe?.user?.username || "Dai_User", photo: tg.initDataUnsafe?.user?.photo_url || null };
+        let crashHistory = JSON.parse(localStorage.getItem('v20_history')) || [];
+        
+        // USER DATA
+        let userData = { 
+            uname: tg.initDataUnsafe?.user?.username || "Dai_User", 
+            id: tg.initDataUnsafe?.user?.id || Math.floor(Math.random() * 1000000),
+            photo: tg.initDataUnsafe?.user?.photo_url || null,
+            referrals: parseInt(localStorage.getItem('v20_ref_count')) || 0,
+            totalDeposit: parseFloat(localStorage.getItem('v20_total_deposit')) || 0
+        };
+        
+        let activePlayers = [];
+        let chatMessages = JSON.parse(localStorage.getItem('v20_chat')) || [];
+        let tournamentWins = JSON.parse(localStorage.getItem('v20_tournament')) || {};
 
-        // 40% PROFIT LOGIC VARIABLES
-        let activePlayers = []; 
-        const PROFIT_PERCENT = 0.40; // 40% ለካዚኖው
+        // PROFIT CONSTANT
+        const PROFIT_PERCENT = 0.40;
 
+        // ========== INITIALIZATION ==========
         function init() {
             document.getElementById('hUser').innerText = "@" + userData.uname;
             document.getElementById('accUser').innerText = "@" + userData.uname;
@@ -151,7 +222,22 @@
             document.getElementById('hPfp').innerHTML = pfpHtml;
             document.getElementById('accPfp').innerHTML = pfpHtml;
             
+            // Referral code
+            let refCode = localStorage.getItem('v20_ref_code');
+            if(!refCode) {
+                refCode = userData.uname + Math.floor(Math.random() * 10000);
+                localStorage.setItem('v20_ref_code', refCode);
+            }
+            document.getElementById('refCode').innerText = refCode;
+            
+            document.getElementById('accReferrals').innerText = `👥 ${userData.referrals} Ref`;
+            updateLevel();
+            
             updateBal();
+            updateHistoryDisplay();
+            loadChat();
+            updateDailyBonusUI();
+            updateTournament();
             startLoop();
             generateFakePlayers();
 
@@ -160,29 +246,56 @@
                 r.onload = () => { document.getElementById('ssPreview').src = r.result; document.getElementById('previewBox').classList.remove('hidden'); };
                 r.readAsDataURL(e.target.files[0]);
             };
+            
+            // Check for referral in URL
+            checkReferral();
+        }
+
+        function updateLevel() {
+            let level = 1;
+            if(realBal >= 5000) level = 5;
+            else if(realBal >= 2000) level = 4;
+            else if(realBal >= 1000) level = 3;
+            else if(realBal >= 500) level = 2;
+            document.getElementById('accLevel').innerHTML = `🏆 Level ${level}`;
+            if(level >= 3) document.getElementById('vipBadge').classList.remove('hidden');
+            else document.getElementById('vipBadge').classList.add('hidden');
         }
 
         function updateBal() {
             document.getElementById('hBal').innerText = realBal.toFixed(2);
+            localStorage.setItem('v20_real_bal', realBal);
+            updateLevel();
         }
 
-        // --- PROFIT ENGINE LOGIC (40% ትርፍ ማስጠበቂያ) ---
+        // ========== REFERRAL SYSTEM ==========
+        function checkReferral() {
+            let params = new URLSearchParams(window.location.search);
+            let ref = params.get('ref');
+            if(ref && ref !== localStorage.getItem('v20_ref_code') && !localStorage.getItem('v20_ref_used')) {
+                localStorage.setItem('v20_ref_used', 'true');
+                let bonus = 50;
+                realBal += bonus;
+                updateBal();
+                tg.showAlert(`🎉 Welcome! +${bonus} ETB from referral!`);
+                
+                // In real app, would notify referrer
+            }
+        }
+        
+        function copyRefLink() {
+            let code = localStorage.getItem('v20_ref_code');
+            let link = `https://t.me/${tg.initDataUnsafe?.user?.username ? tg.initDataUnsafe.user.username : 'aviator_bot'}?start=ref_${code}`;
+            copyText(link);
+        }
+
+        // ========== GAME LOGIC ==========
         function calculateCrashPoint() {
-            // በጨዋታው ውስጥ ያሉትን ጠቅላላ ተጫዋቾች ድምር እንቆጥራለን
             let totalStaked = myBet.active ? myBet.amt : 0;
             activePlayers.forEach(p => totalStaked += p.bet);
-
-            // ካዚኖው 40% እንዲያተርፍ፣ ተጫዋቾች መውሰድ የሚችሉት ከጠቅላላው 60% ብቻ ነው
             let maxPayable = totalStaked * (1 - PROFIT_PERCENT);
-            
-            // ሁሉም ሰው 1.5x ላይ ቢወጣ እንኳን ካዚኖው እንዳይከስር ቼክ እናደርጋለን
-            // ይህ አልጎሪዝም በዘፈቀደ ቁጥር እና በገንዘብ ድምር መካከል ሚዛን ይጠብቃል
-            let randomCrash = 1.01 + (Math.random() * 8); 
-            
-            // ገንዘብ ከበዛ አውሮፕላኑ ቶሎ እንዲፈነዳ እናደርጋለን
-            if(totalStaked > 1000) {
-                return Math.min(randomCrash, 1.20 + (Math.random() * 0.5));
-            }
+            let randomCrash = 1.01 + (Math.random() * 8);
+            if(totalStaked > 1000) return Math.min(randomCrash, 1.20 + (Math.random() * 0.8));
             return randomCrash;
         }
 
@@ -196,34 +309,53 @@
         }
 
         function launch() {
-            isFlying = true; mult = 1.00;
-            let crashPoint = calculateCrashPoint(); // 40% ትርፍ የሚያስጠብቀው ነጥብ እዚህ ይሰላል
+            isFlying = true; 
+            mult = 1.00;
+            let crashPoint = calculateCrashPoint();
             let auto = parseFloat(document.getElementById('autoOut').value);
+            let startTime = Date.now();
             
             let engine = setInterval(() => {
                 mult += 0.06;
                 document.getElementById('mTxt').innerText = mult.toFixed(2) + "x";
                 
-                let x = mult * 15, y = mult * 12;
+                let x = Math.min(mult * 15, 280);
+                let y = Math.min(mult * 12, 200);
                 document.getElementById('plane').style.transform = `translate(${x}px, -${y}px)`;
                 document.getElementById('gamePath').setAttribute('d', `M 0 230 Q ${x/2} ${230-y} ${x+10} ${230-y-10}`);
 
                 if(myBet.active && auto && mult >= auto) cashOut();
 
-                if(mult >= crashPoint) { clearInterval(engine); explode(); }
+                if(mult >= crashPoint) { 
+                    clearInterval(engine); 
+                    explode(); 
+                }
             }, 100);
         }
 
         function explode() {
             isFlying = false;
-            document.getElementById('mTxt').innerText = "FLEW AWAY!";
+            document.getElementById('mTxt').innerHTML = "💥 CRASHED!";
             document.getElementById('mTxt').style.color = "#ff0044";
+            
+            // Play sound
+            let audio = document.getElementById('crashSound');
+            if(audio) audio.play().catch(e=>console.log);
+            
+            // Add to history
+            crashHistory.unshift({ multiplier: mult.toFixed(2), result: 'crashed' });
+            if(crashHistory.length > 10) crashHistory.pop();
+            localStorage.setItem('v20_history', JSON.stringify(crashHistory));
+            updateHistoryDisplay();
+            
             myBet.active = false;
             resetBetBtn();
+            
             setTimeout(() => {
                 document.getElementById('plane').style.transform = "translate(0,0)";
                 document.getElementById('gamePath').setAttribute('d', 'M 0 230 Q 0 230 0 230');
                 document.getElementById('mTxt').style.color = "white";
+                document.getElementById('mTxt').innerHTML = "1.00x";
                 generateFakePlayers();
                 startLoop();
             }, 3000);
@@ -235,7 +367,6 @@
             if(amt > realBal || amt <= 0) return tg.showAlert("Insufficient Balance!");
             
             realBal -= amt;
-            localStorage.setItem('v20_real_bal', realBal);
             myBet = { active: true, amt: amt };
             updateBal();
             
@@ -247,10 +378,24 @@
             if(!myBet.active || !isFlying) return;
             let win = myBet.amt * mult;
             realBal += win;
-            localStorage.setItem('v20_real_bal', realBal);
+            updateBal();
+            
+            // Tournament tracking
+            let today = new Date().toDateString();
+            if(!tournamentWins[today]) tournamentWins[today] = {};
+            if(!tournamentWins[today][userData.uname]) tournamentWins[today][userData.uname] = 0;
+            tournamentWins[today][userData.uname] += win;
+            localStorage.setItem('v20_tournament', JSON.stringify(tournamentWins));
+            updateTournament();
+            
+            // Add to history
+            crashHistory.unshift({ multiplier: mult.toFixed(2), result: 'cashed', win: win.toFixed(2) });
+            if(crashHistory.length > 10) crashHistory.pop();
+            localStorage.setItem('v20_history', JSON.stringify(crashHistory));
+            updateHistoryDisplay();
+            
             myBet.active = false;
             resetBetBtn();
-            updateBal();
             tg.showAlert(`✅ WON: ${win.toFixed(2)} ETB`);
         }
 
@@ -259,7 +404,16 @@
             document.getElementById('bBtn').className = "bg-red-600 rounded-[30px] text-3xl font-black italic shadow-xl";
         }
 
-        // --- DEPOSIT & PHOTO SUBMIT LOGIC ---
+        function updateHistoryDisplay() {
+            const container = document.getElementById('historyContainer');
+            container.innerHTML = crashHistory.map(h => `
+                <div class="history-dot ${h.result}">
+                    ${h.multiplier}x
+                </div>
+            `).join('');
+        }
+
+        // ========== DEPOSIT & WITHDRAW ==========
         function submitReceipt() {
             const file = document.getElementById('ssInp').files[0];
             if(!file) return tg.showAlert("እባክህ መጀመሪያ ፎቶ ምረጥ!");
@@ -270,34 +424,123 @@
                 db.push({ 
                     type: 'DEPOSIT', 
                     user: userData.uname, 
+                    userId: userData.id,
                     img: reader.result, 
                     time: new Date().toLocaleString() 
                 });
                 localStorage.setItem('sys_v20_db', JSON.stringify(db));
-                tg.showAlert("✅ ደረሰኙ ለአድሚን ተልኳል! ባላንሱ እስኪሞላ ድረስ ትንሽ ይጠብቁ።");
+                tg.showAlert("✅ ደረሰኙ ለአድሚን ተልኳል!");
                 document.getElementById('previewBox').classList.add('hidden');
+                document.getElementById('ssInp').value = '';
             };
             reader.readAsDataURL(file);
         }
 
-        // --- WITHDRAW LOGIC ---
         function reqWithdraw() {
             let a = parseFloat(document.getElementById('wAmt').value);
             let acc = document.getElementById('wAcc').value;
-            if(!a || a < 100 || !acc) return tg.showAlert("Please enter valid amount (Min 100) and account.");
+            if(!a || a < 100 || !acc) return tg.showAlert("Min 100 ETB and valid account required.");
             if(a > realBal) return tg.showAlert("Insufficient balance.");
 
             realBal -= a;
-            localStorage.setItem('v20_real_bal', realBal);
             updateBal();
 
             let db = JSON.parse(localStorage.getItem('sys_v20_db')) || [];
-            db.push({ type: 'WITHDRAW', user: userData.uname, amt: a, acc: acc, time: new Date().toLocaleString() });
+            db.push({ type: 'WITHDRAW', user: userData.uname, userId: userData.id, amt: a, acc: acc, time: new Date().toLocaleString() });
             localStorage.setItem('sys_v20_db', JSON.stringify(db));
             tg.showAlert("✅ Withdrawal Request Sent!");
+            document.getElementById('wAmt').value = '';
+            document.getElementById('wAcc').value = '';
         }
 
-        // --- ADMIN PANEL LOGIC ---
+        // ========== DAILY BONUS ==========
+        function updateDailyBonusUI() {
+            let lastClaim = localStorage.getItem('v20_daily_bonus');
+            let today = new Date().toDateString();
+            if(lastClaim === today) {
+                document.getElementById('dailyBonusInfo').innerHTML = "✅ Already claimed today! Come back tomorrow.";
+                document.getElementById('dailyBonusBtn').disabled = true;
+                document.getElementById('dailyBonusBtn').classList.add('opacity-50');
+            } else {
+                document.getElementById('dailyBonusInfo').innerHTML = "🎲 Claim 20-200 ETB daily!";
+                document.getElementById('dailyBonusBtn').disabled = false;
+                document.getElementById('dailyBonusBtn').classList.remove('opacity-50');
+            }
+        }
+        
+        function claimDailyBonus() {
+            let lastClaim = localStorage.getItem('v20_daily_bonus');
+            let today = new Date().toDateString();
+            if(lastClaim === today) return tg.showAlert("Already claimed today!");
+            
+            let bonus = Math.floor(Math.random() * 180) + 20;
+            realBal += bonus;
+            updateBal();
+            localStorage.setItem('v20_daily_bonus', today);
+            updateDailyBonusUI();
+            tg.showAlert(`🎁 Daily Bonus: +${bonus} ETB!`);
+        }
+
+        // ========== TOURNAMENT ==========
+        function updateTournament() {
+            let today = new Date().toDateString();
+            let winners = tournamentWins[today] || {};
+            let sorted = Object.entries(winners).sort((a,b) => b[1] - a[1]).slice(0,5);
+            let container = document.getElementById('tournamentStanding');
+            if(sorted.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center">No players yet today!</p>';
+            } else {
+                container.innerHTML = sorted.map(([name, win], i) => `
+                    <div class="flex justify-between items-center ${name === userData.uname ? 'text-yellow-500' : 'text-gray-400'}">
+                        <span>${i+1}. @${name}</span>
+                        <span class="font-black">${win.toFixed(0)} ETB</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // ========== CHAT SYSTEM ==========
+        function loadChat() {
+            let container = document.getElementById('chatMessages');
+            container.innerHTML = chatMessages.slice(-30).map(msg => `
+                <div class="chat-message">
+                    <span class="name">${msg.user}</span>
+                    <span class="text-gray-300">${msg.text}</span>
+                    <span class="text-[8px] text-gray-600 float-right">${msg.time}</span>
+                </div>
+            `).join('');
+        }
+        
+        function sendChatMessage() {
+            let input = document.getElementById('chatInput');
+            let text = input.value.trim();
+            if(!text) return;
+            chatMessages.push({
+                user: '@' + userData.uname,
+                text: text,
+                time: new Date().toLocaleTimeString()
+            });
+            if(chatMessages.length > 100) chatMessages.shift();
+            localStorage.setItem('v20_chat', JSON.stringify(chatMessages));
+            loadChat();
+            input.value = '';
+        }
+
+        // ========== FAKE PLAYERS ==========
+        function generateFakePlayers() {
+            activePlayers = [];
+            const list = document.getElementById('livePlayers');
+            list.innerHTML = "";
+            let fakeNames = ["Alpha", "Shadow", "Phoenix", "Eagle", "Tiger", "Dragon", "Wolf", "Falcon"];
+            for(let i=0; i<5; i++) {
+                let pBet = Math.floor(Math.random() * 200) + 20;
+                let fakeUser = fakeNames[Math.floor(Math.random() * fakeNames.length)] + (Math.floor(Math.random() * 99));
+                activePlayers.push({ user: fakeUser, bet: pBet });
+                list.innerHTML += `<div class="flex justify-between items-center text-gray-500 italic"><span>@${fakeUser}</span><span>${pBet}</span><span class="text-yellow-500 font-black">${Math.random() > 0.6 ? 'Cashed '+(Math.random()*2+1).toFixed(1)+'x' : 'Waiting...'}</span></div>`;
+            }
+        }
+
+        // ========== ADMIN PANEL ==========
         function checkAdmin() {
             if(userData.uname === MY_ADMIN_UNAME) {
                 let pin = prompt("Enter Admin PIN:");
@@ -307,7 +550,9 @@
                 }
             }
         }
+        
         function closeAdmin() { document.getElementById('adminPanel').style.display = 'none'; }
+        
         function loadAdminData() {
             const db = JSON.parse(localStorage.getItem('sys_v20_db')) || [];
             document.getElementById('admContent').innerHTML = db.map((item, i) => `
@@ -318,23 +563,29 @@
                         <button onclick="approveItem(${i})" class="flex-1 bg-green-600 py-3 rounded-xl font-black text-[10px]">APPROVE ✅</button>
                         <button onclick="rejectItem(${i})" class="flex-1 bg-red-900 py-3 rounded-xl font-black text-[10px]">REJECT ❌</button>
                     </div>
-                </div>`).join('') || '<p class="text-center text-gray-700 mt-10">No pending requests.</p>';
+                </div>
+            `).join('') || '<p class="text-center text-gray-700 mt-10">No pending requests.</p>';
         }
 
         function approveItem(i) {
             let db = JSON.parse(localStorage.getItem('sys_v20_db'));
             if(db[i].type === 'DEPOSIT') {
                 let amt = prompt("How much ETB to add for @" + db[i].user + "?");
-                if(amt && db[i].user === userData.uname) { 
-                    realBal += parseFloat(amt); 
-                    localStorage.setItem('v20_real_bal', realBal); 
-                    updateBal(); 
+                if(amt && parseFloat(amt) > 0) { 
+                    if(db[i].user === userData.uname) {
+                        realBal += parseFloat(amt); 
+                        updateBal();
+                    }
+                    // Update total deposit for referrals
+                    userData.totalDeposit += parseFloat(amt);
+                    localStorage.setItem('v20_total_deposit', userData.totalDeposit);
                 }
             }
             db.splice(i, 1);
             localStorage.setItem('sys_v20_db', JSON.stringify(db));
             loadAdminData();
         }
+        
         function rejectItem(i) {
             let db = JSON.parse(localStorage.getItem('sys_v20_db'));
             db.splice(i, 1);
@@ -342,9 +593,14 @@
             loadAdminData();
         }
 
-        // --- HELPERS ---
+        // ========== UTILITIES ==========
         function copyText(t) {
-            const el = document.createElement('textarea'); el.value = t; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
+            const el = document.createElement('textarea'); 
+            el.value = t; 
+            document.body.appendChild(el); 
+            el.select(); 
+            document.execCommand('copy'); 
+            document.body.removeChild(el);
             if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
             tg.showAlert("Copied: " + t);
         }
@@ -356,17 +612,7 @@
             document.getElementById('n-' + id).classList.add('active');
         }
 
-        function generateFakePlayers() {
-            activePlayers = [];
-            const list = document.getElementById('livePlayers');
-            list.innerHTML = "";
-            for(let i=0; i<6; i++) {
-                let pBet = Math.floor(Math.random() * 200) + 20;
-                activePlayers.push({ user: "User_"+Math.floor(Math.random()*999), bet: pBet });
-                list.innerHTML += `<div class="flex justify-between items-center text-gray-500 italic"><span>@Player_${i}</span><span>${pBet}</span><span class="text-green-500 font-black">Waiting...</span></div>`;
-            }
-        }
-
+        // Start everything
         init();
     </script>
 </body>
