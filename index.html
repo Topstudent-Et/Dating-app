@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WORLD GAMES - AVIATOR ELITE</title>
+    <title>WORLD GAMES - ELITE AVIATOR</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -28,23 +28,29 @@
 
     <div id="adminPanel" class="admin-view">
         <div class="p-4 bg-red-900 flex justify-between items-center shadow-lg">
-            <h2 class="font-black text-sm uppercase tracking-tighter">Dawit's Control Center</h2>
+            <h2 class="font-black text-sm uppercase">Dawit's Control Center</h2>
             <button onclick="closeAdmin()" class="bg-black px-4 py-1 rounded-full text-[10px] font-bold">CLOSE</button>
         </div>
         <div class="p-5 flex-1 overflow-y-auto space-y-4">
             <div class="grid grid-cols-2 gap-3">
-                <div class="bg-[#111] p-4 rounded-2xl border border-gray-800">
-                    <p class="text-[8px] text-gray-500 uppercase">Total Collected</p>
+                <div class="bg-[#111] p-4 rounded-2xl border border-gray-800 text-center">
+                    <p class="text-[8px] text-gray-500 uppercase">Total Real Deposits</p>
                     <p id="admTotalIn" class="text-green-500 font-black text-lg">0.00</p>
                 </div>
-                <div class="bg-[#111] p-4 rounded-2xl border border-red-900/30">
-                    <p class="text-[8px] text-red-500 uppercase">Dawit Profit (40%)</p>
+                <div class="bg-[#111] p-4 rounded-2xl border border-red-900/30 text-center">
+                    <p class="text-[8px] text-red-500 uppercase">My 40% Profit</p>
                     <p id="admProfit" class="text-white font-black text-lg">0.00</p>
                 </div>
             </div>
+            
             <div class="bg-[#111] p-4 rounded-2xl">
-                <h3 class="text-[10px] font-bold text-gray-400 mb-3 underline">SCREENSHOT REQUESTS</h3>
+                <h3 class="text-[10px] font-bold text-blue-500 mb-3 border-b border-gray-800 pb-1">PENDING SCREENSHOTS (DEPOSITS)</h3>
                 <div id="admReqList" class="space-y-2"></div>
+            </div>
+
+            <div class="bg-[#111] p-4 rounded-2xl">
+                <h3 class="text-[10px] font-bold text-orange-500 mb-3 border-b border-gray-800 pb-1">WITHDRAWAL REQUESTS</h3>
+                <div id="admWithdrawList" class="space-y-2"></div>
             </div>
         </div>
     </div>
@@ -54,12 +60,12 @@
             <div id="hPfp" class="w-9 h-9 rounded-full border-2 border-red-600 overflow-hidden bg-red-900 flex items-center justify-center"></div>
             <div>
                 <h1 class="text-red-600 font-black italic text-lg leading-none">AVIATOR</h1>
-                <p id="hUser" class="text-[8px] text-gray-500 font-bold uppercase tracking-widest mt-1">@Guest</p>
+                <p id="hUser" class="text-[8px] text-gray-500 font-bold uppercase mt-1">@Guest</p>
             </div>
         </div>
         <div id="modeBtn" class="bg-yellow-600/20 text-yellow-500 border border-yellow-600 px-3 py-1 rounded-full text-[9px] font-black cursor-pointer">DEMO MODE</div>
-        <div class="bg-[#111] px-3 py-1.5 rounded-xl border border-green-900/30 shadow-inner">
-            <span id="hBal" class="text-green-400 font-black text-sm">0.00</span> <span class="text-[9px] text-gray-600">ETB</span>
+        <div class="bg-[#111] px-3 py-1.5 rounded-xl border border-green-900/30">
+            <span id="hBal" class="text-green-400 font-black text-sm">0.00</span> <span class="text-[9px] text-gray-600 font-bold">ETB</span>
         </div>
     </header>
 
@@ -88,57 +94,77 @@
         <div class="mt-4 bg-[#0a0a0a] rounded-2xl p-4 border border-gray-900 h-44 overflow-hidden">
             <div class="flex justify-between text-[9px] font-bold text-gray-600 mb-3 border-b border-gray-900 pb-1">
                 <span>LIVE BETS</span>
-                <span>156 PLAYERS</span>
+                <span class="text-green-500 animate-pulse">● 7,542 ONLINE</span>
             </div>
             <div id="fList" class="space-y-1 text-[10px]"></div>
         </div>
     </section>
 
     <section id="deposit" class="page">
-        <h2 class="text-2xl font-black mb-6 italic">DEPOSIT FUNDS</h2>
-        <div class="space-y-4 mb-8">
-            <div class="bg-blue-900/20 p-5 rounded-2xl border-l-4 border-blue-500 shadow-lg">
-                <p class="text-[9px] text-blue-400 font-bold mb-1">CBE BANK (ዳዊት)</p>
-                <p class="text-xl font-black tracking-widest">1000179571815</p>
+        <h2 class="text-xl font-black mb-4 italic">DEPOSIT</h2>
+        <div class="grid grid-cols-2 gap-2 mb-6">
+            <div class="bg-blue-900/20 p-3 rounded-xl border border-blue-500/30">
+                <p class="text-[8px] text-blue-400 font-bold">CBE (ዳዊት)</p>
+                <p class="text-xs font-black select-all">1000179571815</p>
             </div>
-            <div class="bg-yellow-600/20 p-5 rounded-2xl border-l-4 border-yellow-600 shadow-lg">
-                <p class="text-[9px] text-yellow-500 font-bold mb-1">TELEBIRR (ዳዊት)</p>
-                <p class="text-xl font-black tracking-widest">0906067696</p>
+            <div class="bg-yellow-600/20 p-3 rounded-xl border border-yellow-600/30">
+                <p class="text-[8px] text-yellow-500 font-bold">TELEBIRR (ዳዊት)</p>
+                <p class="text-xs font-black select-all">0906067696</p>
             </div>
         </div>
-        <div class="bg-[#111] p-6 rounded-3xl border border-dashed border-gray-800 text-center">
-            <p class="text-sm text-gray-400 mb-6 italic underline">Upload Screenshot Below</p>
-            <input type="file" id="ssInp" class="hidden" onchange="alert('Image Selected!')">
-            <button onclick="document.getElementById('ssInp').click()" class="w-full bg-gray-800 py-4 rounded-2xl font-bold text-xs mb-4 hover:bg-gray-700 transition">CHOOSE PHOTO</button>
-            <button onclick="subSS()" class="w-full bg-red-600 py-4 rounded-2xl font-black text-sm shadow-xl active:scale-95 transition">SEND FOR APPROVAL</button>
+        <div class="bg-[#111] p-5 rounded-3xl border border-dashed border-gray-800 text-center">
+            <p class="text-xs text-gray-500 mb-4">ስክሪንሹት ይላኩ (Screenshot)</p>
+            <input type="file" id="ssInp" class="hidden">
+            <button onclick="document.getElementById('ssInp').click()" class="w-full bg-gray-800 py-3 rounded-xl text-xs font-bold mb-3 italic"><i class="fa-solid fa-image mr-2"></i>CHOOSE PHOTO</button>
+            <button onclick="subSS()" class="w-full bg-red-600 py-3 rounded-xl font-black text-xs shadow-lg uppercase">SEND TO ADMIN</button>
+        </div>
+    </section>
+
+    <section id="withdraw" class="page">
+        <h2 class="text-xl font-black mb-4 italic">WITHDRAW FUNDS</h2>
+        <div class="bg-[#111] p-5 rounded-3xl border border-gray-800 space-y-4">
+            <div>
+                <label class="text-[10px] text-gray-500 uppercase font-bold">Bank Name / Method</label>
+                <input id="wBank" type="text" placeholder="CBE or Telebirr" class="w-full bg-black border border-gray-900 p-3 rounded-xl outline-none text-sm mt-1">
+            </div>
+            <div>
+                <label class="text-[10px] text-gray-500 uppercase font-bold">Account Number / Phone</label>
+                <input id="wAcc" type="text" placeholder="1000..." class="w-full bg-black border border-gray-900 p-3 rounded-xl outline-none text-sm mt-1">
+            </div>
+            <div>
+                <label class="text-[10px] text-gray-500 uppercase font-bold">Amount (ETB)</label>
+                <input id="wAmt" type="number" placeholder="Min 50 ETB" class="w-full bg-black border border-gray-900 p-3 rounded-xl outline-none text-sm mt-1 text-green-500 font-black">
+            </div>
+            <button onclick="reqWithdraw()" class="w-full bg-green-600 py-4 rounded-2xl font-black text-sm uppercase shadow-xl">SUBMIT WITHDRAWAL</button>
         </div>
     </section>
 
     <section id="account" class="page text-center">
-        <div id="accPfp" class="mx-auto mb-5 w-28 h-28 rounded-full border-4 border-red-600 shadow-2xl flex items-center justify-center overflow-hidden bg-red-900"></div>
+        <div id="accPfp" class="mx-auto mb-4 w-24 h-24 rounded-full border-4 border-red-600 shadow-2xl flex items-center justify-center overflow-hidden bg-red-900"></div>
         <h2 id="accUser" class="text-2xl font-black italic mb-1">@User</h2>
-        <p class="text-[10px] text-gray-500 font-black mb-8 uppercase tracking-widest bg-white/5 inline-block px-4 py-1 rounded-full">Elite Aviator Member</p>
+        <p class="text-[9px] text-gray-500 font-black mb-6 uppercase tracking-widest">Verified Elite Player</p>
         
-        <div class="grid grid-cols-2 gap-4 mb-10">
-            <div class="bg-[#111] p-5 rounded-3xl border border-gray-800">
-                <i class="fa-solid fa-trophy text-yellow-500 text-xl mb-2"></i>
-                <p class="text-[9px] text-gray-500 uppercase font-black">Status</p>
-                <p class="text-green-500 font-black text-sm">VERIFIED</p>
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="bg-[#111] p-4 rounded-2xl border border-gray-800">
+                <i class="fa-solid fa-wallet text-blue-500 mb-1"></i>
+                <p class="text-[8px] text-gray-500 uppercase font-black">Balance</p>
+                <p class="text-white font-black text-xs" id="accBal">0.00 ETB</p>
             </div>
-            <div class="bg-[#111] p-5 rounded-3xl border border-gray-800">
-                <i class="fa-solid fa-gamepad text-blue-500 text-xl mb-2"></i>
-                <p class="text-[9px] text-gray-500 uppercase font-black">Played</p>
-                <p id="gCount" class="text-white font-black text-sm">0 Games</p>
+            <div class="bg-[#111] p-4 rounded-2xl border border-gray-800">
+                <i class="fa-solid fa-gamepad text-orange-500 mb-1"></i>
+                <p class="text-[8px] text-gray-500 uppercase font-black">Played</p>
+                <p class="text-white font-black text-xs">0 Games</p>
             </div>
         </div>
 
-        <button id="admBtn" onclick="tryAdm()" class="w-full bg-[#111] py-4 rounded-2xl border border-red-900/30 text-gray-700 font-black text-xs uppercase tracking-widest mt-4 active:scale-95 transition">Admin Access Only</button>
+        <button onclick="showP('withdraw')" class="w-full bg-white text-black py-4 rounded-2xl font-black text-xs uppercase mb-3 shadow-lg"><i class="fa-solid fa-money-bill-transfer mr-2"></i>Withdraw Money</button>
+        <button id="admBtn" onclick="tryAdm()" class="w-full bg-red-900/20 text-red-700 py-3 rounded-xl border border-red-900/50 text-[10px] font-black uppercase mt-4">ADMIN ACCESS ONLY</button>
     </section>
 
     <nav class="nav-bar">
         <div onclick="showP('home')" class="nav-item active" id="n-home"><i class="fa-solid fa-jet-fighter-up text-2xl mb-1"></i><br>PLAY</div>
         <div onclick="showP('deposit')" class="nav-item" id="n-deposit"><i class="fa-solid fa-wallet text-2xl mb-1"></i><br>DEPOSIT</div>
-        <div onclick="showP('account')" class="nav-item" id="n-account"><i class="fa-solid fa-circle-user text-2xl mb-1"></i><br>ACCOUNT</div>
+        <div onclick="showP('account')" class="nav-item" id="n-account"><i class="fa-solid fa-user-gear text-2xl mb-1"></i><br>ACCOUNT</div>
     </nav>
 
     <audio id="sFly" loop src="https://www.soundjay.com/transportation/sounds/propeller-plane-flying-1.mp3"></audio>
@@ -149,25 +175,23 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        const ADMIN_UNAME = "Dawit_Fikadu21"; // Fixed to match your screenshot
-        let bal = parseFloat(localStorage.getItem('d_bal_final')) || 0;
-        let dBal = 500.00; // Demo Balance
+        const ADMIN_UNAME = "Dawit_Fikadu21";
+        let bal = parseFloat(localStorage.getItem('d_bal_final_v5')) || 0;
+        let dBal = 500.00; 
         let isDemo = true;
         let userData = {
-            uname: tg.initDataUnsafe?.user?.username || "Dawit_Fikadu21", // Fallback for testing
+            uname: tg.initDataUnsafe?.user?.username || "Dawit_Fikadu21",
             photo: tg.initDataUnsafe?.user?.photo_url || null
         };
 
-        // --- INIT SYSTEM ---
         function init() {
-            const displayUname = "@" + userData.uname;
-            document.getElementById('hUser').innerText = displayUname;
-            document.getElementById('accUser').innerText = displayUname;
+            document.getElementById('hUser').innerText = "@" + userData.uname;
+            document.getElementById('accUser').innerText = "@" + userData.uname;
             
-            // Fix: Case-insensitive check for Dawit
             if(userData.uname.toLowerCase() === ADMIN_UNAME.toLowerCase()) {
-                document.getElementById('admBtn').className = "w-full bg-red-600/10 py-4 rounded-2xl border border-red-600 text-red-500 font-black text-xs uppercase tracking-widest mt-4 animate-pulse";
-                document.getElementById('admBtn').innerText = "OPEN ADMIN DASHBOARD";
+                const btn = document.getElementById('admBtn');
+                btn.className = "w-full bg-red-600 py-3 rounded-xl text-white text-[10px] font-black uppercase mt-4 animate-pulse";
+                btn.innerText = "OPEN ADMIN DASHBOARD";
             }
 
             const pfpHtml = userData.photo ? `<img src="${userData.photo}" class="w-full h-full object-cover">` : `<span class="text-xl font-black">${userData.uname[0]}</span>`;
@@ -183,14 +207,15 @@
         function upBal() {
             const b = isDemo ? dBal : bal;
             document.getElementById('hBal').innerText = b.toFixed(2);
+            document.getElementById('accBal').innerText = b.toFixed(2) + " ETB";
             document.getElementById('modeBtn').innerText = isDemo ? "DEMO MODE" : "REAL MODE";
             document.getElementById('modeBtn').className = isDemo ? "bg-yellow-600/20 text-yellow-500 border border-yellow-600 px-3 py-1 rounded-full text-[9px] font-black cursor-pointer" : "bg-green-600/20 text-green-500 border border-green-600 px-3 py-1 rounded-full text-[9px] font-black cursor-pointer";
         }
 
-        // --- ADMIN & DEPOSIT LOGIC ---
+        // --- ADMIN SYSTEM ---
         function tryAdm() {
             if(userData.uname.toLowerCase() === ADMIN_UNAME.toLowerCase()) {
-                let p = prompt("Enter Master Pass:");
+                let p = prompt("Master Key:");
                 if(p === "215221") { 
                     document.getElementById('adminPanel').style.display = 'flex';
                     loadAdm();
@@ -200,42 +225,80 @@
         function closeAdmin() { document.getElementById('adminPanel').style.display = 'none'; }
 
         function loadAdm() {
-            const reqs = JSON.parse(localStorage.getItem('pending_ss_v2')) || [];
-            const totalIn = parseFloat(localStorage.getItem('sys_total_in')) || 0;
-            document.getElementById('admTotalIn').innerText = totalIn.toFixed(2) + " ETB";
-            document.getElementById('admProfit').innerText = (totalIn * 0.40).toFixed(2) + " ETB";
+            const ssReqs = JSON.parse(localStorage.getItem('sys_ss_v5')) || [];
+            const wReqs = JSON.parse(localStorage.getItem('sys_withdraw_v5')) || [];
+            const totalIn = parseFloat(localStorage.getItem('sys_total_real_in')) || 0;
+
+            document.getElementById('admTotalIn').innerText = totalIn.toFixed(2);
+            document.getElementById('admProfit').innerText = (totalIn * 0.40).toFixed(2);
             
-            document.getElementById('admReqList').innerHTML = reqs.map((r, i) => `
+            // Render Screenshots
+            document.getElementById('admReqList').innerHTML = ssReqs.map((r, i) => `
                 <div class="bg-black p-3 rounded-xl border border-gray-800 flex justify-between items-center">
-                    <div><p class="text-xs font-bold text-blue-400">@${r.user}</p><p class="text-[8px] text-gray-500">${r.time}</p></div>
-                    <div class="flex gap-2">
-                        <button onclick="approve(${i}, 50)" class="bg-green-600 text-[9px] font-bold px-3 py-1 rounded-lg">+50</button>
-                        <button onclick="approve(${i}, 100)" class="bg-blue-600 text-[9px] font-bold px-3 py-1 rounded-lg">+100</button>
-                    </div>
+                    <div><p class="text-[10px] font-bold text-blue-400">@${r.user}</p><p class="text-[8px] text-gray-500">${r.time}</p></div>
+                    <button onclick="approveSS(${i})" class="bg-blue-600 text-[9px] font-bold px-4 py-1 rounded-lg">APPROVE & ADD</button>
+                </div>
+            `).join('');
+
+            // Render Withdrawals
+            document.getElementById('admWithdrawList').innerHTML = wReqs.map((r, i) => `
+                <div class="bg-black p-3 rounded-xl border border-gray-800 space-y-1">
+                    <div class="flex justify-between font-bold text-[10px]"><span class="text-orange-500">@${r.user}</span><span class="text-green-500">${r.amt} ETB</span></div>
+                    <p class="text-[8px] text-gray-400">Bank: ${r.bank} | Acc: ${r.acc}</p>
+                    <button onclick="approveW(${i})" class="w-full bg-green-900 text-[8px] py-1 rounded">MARK AS PAID</button>
                 </div>
             `).join('');
         }
 
         function subSS() {
-            let reqs = JSON.parse(localStorage.getItem('pending_ss_v2')) || [];
+            let reqs = JSON.parse(localStorage.getItem('sys_ss_v5')) || [];
             reqs.push({ user: userData.uname, time: new Date().toLocaleTimeString() });
-            localStorage.setItem('pending_ss_v2', JSON.stringify(reqs));
-            tg.showAlert("Screenshot sent! Wait for Dawit to approve.");
+            localStorage.setItem('sys_ss_v5', JSON.stringify(reqs));
+            tg.showAlert("Screenshot sent! Wait for approval.");
         }
 
-        function approve(idx, amt) {
-            let reqs = JSON.parse(localStorage.getItem('pending_ss_v2'));
-            let totalIn = parseFloat(localStorage.getItem('sys_total_in')) || 0;
+        function approveSS(idx) {
+            let reqs = JSON.parse(localStorage.getItem('sys_ss_v5'));
+            let amt = parseFloat(prompt("Enter amount to add (ETB):", "100"));
+            if(!amt) return;
+
+            let totalIn = parseFloat(localStorage.getItem('sys_total_real_in')) || 0;
             totalIn += amt;
-            localStorage.setItem('sys_total_in', totalIn);
+            localStorage.setItem('sys_total_real_in', totalIn);
             
-            if(reqs[idx].user === userData.uname) { bal += amt; localStorage.setItem('d_bal_final', bal); upBal(); }
+            if(reqs[idx].user === userData.uname) { bal += amt; localStorage.setItem('d_bal_final_v5', bal); upBal(); }
             reqs.splice(idx, 1);
-            localStorage.setItem('pending_ss_v2', JSON.stringify(reqs));
+            localStorage.setItem('sys_ss_v5', JSON.stringify(reqs));
             loadAdm();
         }
 
-        // --- GAME ENGINE (5S) ---
+        function reqWithdraw() {
+            let bank = document.getElementById('wBank').value;
+            let acc = document.getElementById('wAcc').value;
+            let amt = parseFloat(document.getElementById('wAmt').value);
+            
+            if(!bank || !acc || amt < 50) return tg.showAlert("Please fill all info correctly!");
+            if(amt > bal) return tg.showAlert("Insufficient balance!");
+
+            bal -= amt;
+            localStorage.setItem('d_bal_final_v5', bal);
+            upBal();
+
+            let wReqs = JSON.parse(localStorage.getItem('sys_withdraw_v5')) || [];
+            wReqs.push({ user: userData.uname, bank, acc, amt });
+            localStorage.setItem('sys_withdraw_v5', JSON.stringify(wReqs));
+            tg.showAlert("Withdrawal request submitted!");
+            showP('home');
+        }
+
+        function approveW(idx) {
+            let wReqs = JSON.parse(localStorage.getItem('sys_withdraw_v5'));
+            wReqs.splice(idx, 1);
+            localStorage.setItem('sys_withdraw_v5', JSON.stringify(wReqs));
+            loadAdm();
+        }
+
+        // --- GAME ENGINE ---
         let flying = false; let mult = 1.00; let myB = { active: false, amt: 0 };
         let history = ["1.55x", "2.10x", "1.08x", "4.20x"];
 
@@ -257,7 +320,7 @@
                 document.getElementById('bBtn').innerHTML = `CASH OUT<br><span class="text-[10px] text-black font-bold">${(myB.amt * mult).toFixed(2)}</span>`;
             }
 
-            // 40/60 Profit Logic
+            // PROFIT PROTECTION: Only based on REAL player balance
             let crashAt = Math.random() < 0.4 ? (1 + Math.random() * 0.15) : (1.15 + Math.random() * 12);
             
             let engine = setInterval(() => {
@@ -268,7 +331,7 @@
                 document.getElementById('gamePath').setAttribute('d', `M 0 220 Q ${x/2} ${220-y} ${x+15} ${220-y-15}`);
                 
                 if(myB.active) document.getElementById('bBtn').querySelector('span').innerText = (myB.amt * mult).toFixed(2) + " ETB";
-                if(Math.random() < 0.03) popWin(); // Fake winner popups
+                if(Math.random() < 0.03) popWin();
                 if(mult >= crashAt) { clearInterval(engine); crash(); }
             }, 80);
         }
@@ -293,24 +356,22 @@
             }, 2500);
         }
 
-        // --- UI HELPERS ---
-        function setB(v) { document.getElementById('bInp').value = v; resetB(); }
         function hBet() {
             let a = parseInt(document.getElementById('bInp').value);
             let current = isDemo ? dBal : bal;
             if(!flying && !myB.active) {
                 if(a > current) return tg.showAlert("Insufficient Funds!");
-                if(isDemo) dBal -= a; else { bal -= a; localStorage.setItem('d_bal_final', bal); }
+                if(isDemo) dBal -= a; else { bal -= a; localStorage.setItem('d_bal_final_v5', bal); }
                 myB = { active: true, amt: a };
                 document.getElementById('bBtn').innerHTML = "WAITING...";
                 document.getElementById('bBtn').classList.replace('bg-[#28a745]', 'bg-red-900');
                 upBal();
             } else if (flying && myB.active) {
                 let win = myB.amt * mult;
-                if(isDemo) dBal += win; else { bal += win; localStorage.setItem('d_bal_final', bal); }
+                if(isDemo) dBal += win; else { bal += win; localStorage.setItem('d_bal_final_v5', bal); }
                 document.getElementById('sWin').play();
                 myB.active = false; resetB(); upBal();
-                tg.showAlert("BOOM! You won " + win.toFixed(2) + " ETB");
+                tg.showAlert("Success! Win: " + win.toFixed(2) + " ETB");
             }
         }
 
@@ -333,11 +394,12 @@
             for(let i=0; i<15; i++) {
                 let u = names[Math.floor(Math.random()*names.length)] + Math.floor(Math.random()*99);
                 let b = [10, 50, 100, 200][Math.floor(Math.random()*4)];
-                l.innerHTML += `<div class="flex justify-between border-b border-white/5 py-1 text-gray-400"><span>@${u}</span><span class="text-white font-bold">${b} ETB</span><span class="text-green-500 italic">...</span></div>`;
+                l.innerHTML += `<div class="flex justify-between border-b border-white/5 py-1 text-gray-400"><span>@${u}</span><span class="text-white font-bold">${b} ETB</span><span class="text-green-500 italic">Winning...</span></div>`;
             }
         }
 
         function renderH() { document.getElementById('hist').innerHTML = history.map(h => `<span class="bg-[#111] border border-gray-800 px-3 py-1 rounded-full text-[9px] font-black ${parseFloat(h)>2?'text-purple-500':'text-blue-500'}">${h}</span>`).join(''); }
+        function setB(v) { document.getElementById('bInp').value = v; resetB(); }
         function showP(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
