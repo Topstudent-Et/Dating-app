@@ -3,63 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AVIA-MASTER V30 PRO</title>
+    <title>AVIA-MASTER V32 ULTRA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;700;900&display=swap');
-        :root { --accent: #ff0044; --bg-glow: radial-gradient(circle at bottom left, #200505 0%, #000 100%); }
+        :root { --accent: #ff0044; --gold: #ffd700; --silver: #c0c0c0; --bronze: #cd7f32; }
         body { background: #050505; color: white; font-family: 'Inter', sans-serif; overflow: hidden; margin: 0; transition: 0.5s; }
-        .real-mode { --accent: #22c55e; --bg-glow: radial-gradient(circle at bottom left, #052005 0%, #000 100%); }
+        .real-mode { --accent: #22c55e; }
         .font-game { font-family: 'Orbitron', sans-serif; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
         
-        /* Navigation at Top */
+        /* Nav */
         .nav-top { position: fixed; top: 0; width: 100%; height: 70px; display: flex; justify-content: space-around; align-items: center; background: #0a0a0a; border-bottom: 1px solid #1a1a1a; z-index: 1000; }
-        .nav-item { color: #444; font-size: 10px; font-weight: 800; text-align: center; cursor: pointer; }
+        .nav-item { color: #444; font-size: 10px; font-weight: 800; text-align: center; cursor: pointer; transition: 0.3s; }
         .nav-item.active { color: var(--accent); transform: scale(1.1); }
 
-        .page { display: none; height: calc(100vh - 70px); margin-top: 70px; overflow-y: auto; padding: 15px; padding-bottom: 80px; }
+        .page { display: none; height: calc(100vh - 70px); margin-top: 70px; overflow-y: auto; padding: 15px; padding-bottom: 100px; }
         .active-page { display: block; }
 
-        /* Game Core */
-        .screen { background: var(--bg-glow); height: 240px; position: relative; border-radius: 24px; overflow: hidden; border: 2px solid #1a1a1a; box-shadow: inset 0 0 50px rgba(0,0,0,0.5); }
+        /* Game UI */
+        .screen { background: radial-gradient(circle at bottom left, #1a0505 0%, #000 100%); height: 240px; position: relative; border-radius: 24px; overflow: hidden; border: 2px solid #1a1a1a; }
+        .real-mode .screen { background: radial-gradient(circle at bottom left, #051a05 0%, #000 100%); }
         #gamePath { stroke: var(--accent); stroke-width: 6; fill: none; filter: drop-shadow(0 0 10px var(--accent)); }
         .plane { position: absolute; bottom: 20px; left: 20px; font-size: 45px; z-index: 10; transition: 0.1s linear; transform: rotate(-15deg); }
         
-        .btn-main { background: var(--accent); transition: 0.3s; color: white; font-weight: 900; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
+        /* Podium Style */
+        .podium { display: flex; justify-content: center; align-items: flex-end; gap: 8px; margin: 20px 0; }
+        .p-card { text-align: center; padding: 12px; border-radius: 20px; position: relative; background: rgba(255,255,255,0.02); border-width: 2px; }
+        .p1 { height: 160px; width: 110px; border-color: var(--gold); box-shadow: 0 0 20px rgba(255,215,0,0.2); order: 2; }
+        .p2 { height: 130px; width: 100px; border-color: var(--silver); order: 1; }
+        .p3 { height: 110px; width: 100px; border-color: var(--bronze); order: 3; }
         
-        /* Leaderboard Podium */
-        .podium-box { display: flex; justify-content: center; align-items: flex-end; gap: 10px; margin: 30px 0; }
-        .rank { text-align: center; padding: 15px; border-radius: 20px; position: relative; }
-        .rank-1 { height: 140px; width: 100px; background: linear-gradient(to top, #ffd70033, transparent); border: 2px solid #ffd700; order: 2; }
-        .rank-2 { height: 110px; width: 90px; background: linear-gradient(to top, #c0c0c033, transparent); border: 2px solid #c0c0c0; order: 1; }
-        .rank-3 { height: 90px; width: 90px; background: linear-gradient(to top, #cd7f3233, transparent); border: 2px solid #cd7f32; order: 3; }
+        .v-badge { color: #38bdf8; font-size: 10px; margin-left: 3px; }
+        .mute-btn { position: absolute; top: 10px; right: 10px; z-index: 50; background: rgba(0,0,0,0.5); padding: 8px; border-radius: 50%; }
     </style>
 </head>
 <body class="no-scrollbar">
 
     <nav class="nav-top">
-        <div onclick="showP('home')" id="n-home" class="nav-item active"><i class="fa-solid fa-rocket text-2xl mb-1"></i><br>PLAY</div>
+        <div onclick="showP('home')" id="n-home" class="nav-item active"><i class="fa-solid fa-plane-up text-2xl mb-1"></i><br>PLAY</div>
         <div onclick="showP('deposit')" id="n-deposit" class="nav-item"><i class="fa-solid fa-wallet text-2xl mb-1"></i><br>WALLET</div>
-        <div onclick="showP('leaderboard')" id="n-leaderboard" class="nav-item"><i class="fa-solid fa-crown text-2xl mb-1"></i><br>TOP</div>
-        <div onclick="showP('profile')" id="n-profile" class="nav-item"><i class="fa-solid fa-user-circle text-2xl mb-1"></i><br>ME</div>
+        <div onclick="showP('leaderboard')" id="n-leaderboard" class="nav-item"><i class="fa-solid fa-award text-2xl mb-1"></i><br>TOP</div>
+        <div onclick="showP('profile')" id="n-profile" class="nav-item"><i class="fa-solid fa-user-check text-2xl mb-1"></i><br>ME</div>
     </nav>
 
     <section id="home" class="page active-page no-scrollbar">
+        <button onclick="toggleMute()" class="mute-btn"><i id="muteIcon" class="fa-solid fa-volume-high"></i></button>
+        
         <div class="flex justify-between items-center mb-4">
-             <div class="flex items-center gap-3">
-                <div id="hPfp" class="w-10 h-10 rounded-xl bg-gray-900 border border-white/10 flex items-center justify-center overflow-hidden"></div>
+             <div class="flex items-center gap-2">
+                <div id="hPfp" class="w-10 h-10 rounded-xl bg-zinc-900 border border-white/10 overflow-hidden flex items-center justify-center"></div>
                 <div>
-                    <p id="hName" class="text-xs font-black">@User</p>
+                    <p class="text-xs font-black flex items-center"><span id="hName">@User</span> <i class="fa-solid fa-circle-check v-badge"></i></p>
                     <p id="hBal" class="text-[10px] font-bold text-green-500">0.00 ETB</p>
                 </div>
             </div>
-            <div class="flex gap-1">
-                <button onclick="setMode(true)" id="mDemo" class="px-4 py-2 rounded-lg text-[10px] font-black border-2 border-red-600 bg-red-600/20">DEMO</button>
-                <button onclick="setMode(false)" id="mReal" class="px-4 py-2 rounded-lg text-[10px] font-black border-2 border-gray-800 text-gray-500">REAL</button>
+            <div class="flex bg-zinc-900 p-1 rounded-xl border border-white/5">
+                <button onclick="setMode(true)" id="mDemo" class="px-4 py-2 rounded-lg text-[9px] font-black bg-red-600">DEMO</button>
+                <button onclick="setMode(false)" id="mReal" class="px-4 py-2 rounded-lg text-[9px] font-black text-zinc-500">REAL</button>
             </div>
         </div>
 
@@ -67,115 +70,111 @@
             <svg width="100%" height="100%" style="position:absolute;"><path id="gamePath" d="M 0 240 Q 0 240 0 240" /></svg>
             <div id="mTxt" class="font-game text-7xl italic text-white z-20">1.00x</div>
             <div id="plane" class="plane">✈️</div>
-            <div id="gStatus" class="absolute top-3 glass px-4 py-1 rounded-full text-[9px] font-black text-gray-500 italic uppercase">Waiting for next round...</div>
         </div>
 
         <div class="glass p-5 rounded-[30px] mb-4">
             <div class="flex justify-between items-center mb-4 bg-black/40 p-3 rounded-2xl border border-white/5">
                 <button onclick="adjB(-10)" class="text-3xl font-black px-4">-</button>
-                <input id="bInp" type="number" value="10" class="text-3xl font-black w-full text-center bg-transparent outline-none">
+                <input id="bInp" type="number" value="10" class="text-2xl font-black w-full text-center bg-transparent outline-none">
                 <button onclick="adjB(10)" class="text-3xl font-black px-4">+</button>
             </div>
-            <div class="grid grid-cols-4 gap-2 mb-4">
-                <button onclick="setB(20)" class="bg-white/5 py-2 rounded-lg text-[11px] font-bold">20</button>
-                <button onclick="setB(50)" class="bg-white/5 py-2 rounded-lg text-[11px] font-bold">50</button>
-                <button onclick="setB(100)" class="bg-white/5 py-2 rounded-lg text-[11px] font-bold">100</button>
-                <button onclick="setB(200)" class="bg-white/5 py-2 rounded-lg text-[11px] font-bold">200</button>
+            <div class="grid grid-cols-3 gap-2 mb-4">
+                <button onclick="setB(40)" class="bg-white/5 py-3 rounded-xl text-xs font-bold">40 ETB</button>
+                <button onclick="setB(100)" class="bg-white/5 py-3 rounded-xl text-xs font-bold">100 ETB</button>
+                <button onclick="setB(200)" class="bg-white/5 py-3 rounded-xl text-xs font-bold">200 ETB</button>
             </div>
-            <button id="bBtn" onclick="handleBet()" class="btn-main w-full py-6 rounded-3xl text-3xl italic shadow-2xl active:scale-95 transition-all">BET</button>
+            <button id="bBtn" onclick="handleBet()" class="w-full py-6 rounded-3xl text-3xl font-black italic shadow-2xl transition-all" style="background:var(--accent)">BET</button>
         </div>
 
-        <div id="liveList" class="space-y-2 max-h-60 overflow-y-auto no-scrollbar pb-10"></div>
+        <div id="liveList" class="space-y-2 pb-10"></div>
     </section>
 
     <section id="deposit" class="page no-scrollbar">
-        <div class="glass p-6 rounded-[30px] mb-5 border-l-4 border-yellow-500">
-            <h4 class="text-yellow-500 font-black text-xs mb-4 uppercase">Deposit Bank Accounts</h4>
-            <div onclick="copyT('1000179571815')" class="flex justify-between items-center bg-black/50 p-5 rounded-2xl mb-3 border border-white/5 active:scale-95">
-                <div><p class="text-[10px] text-gray-500">CBE (ኢትዮጵያ ንግድ ባንክ)</p><p class="font-black text-lg">1000179571815</p></div>
-                <i class="fa-solid fa-copy text-yellow-600"></i>
+        <div class="glass p-6 rounded-[30px] mb-6">
+            <p class="text-xs text-zinc-500 mb-4 uppercase font-black italic">Bank Transfer</p>
+            <div onclick="copyT('1000179571815')" class="flex justify-between items-center bg-zinc-900 p-5 rounded-2xl mb-3">
+                <span class="font-black">CBE: 1000179571815</span><i class="fa-solid fa-copy text-yellow-600"></i>
             </div>
-            <div onclick="copyT('0906067696')" class="flex justify-between items-center bg-black/50 p-5 rounded-2xl border border-white/5 active:scale-95">
-                <div><p class="text-[10px] text-gray-500">Telebirr (ቴሌብር)</p><p class="font-black text-lg">0906067696</p></div>
-                <i class="fa-solid fa-copy text-blue-600"></i>
+            <div onclick="copyT('0906067696')" class="flex justify-between items-center bg-zinc-900 p-5 rounded-2xl">
+                <span class="font-black">Telebirr: 0906067696</span><i class="fa-solid fa-copy text-blue-600"></i>
             </div>
         </div>
 
-        <div class="glass p-6 rounded-[35px] text-center border-2 border-dashed border-gray-800">
-            <p class="text-xs font-black text-gray-400 mb-6 uppercase tracking-widest">Submit Receipt / ደረሰኝ ላክ</p>
+        <div class="glass p-8 rounded-[40px] text-center border-2 border-dashed border-zinc-800">
+            <h3 class="font-black text-sm mb-6 uppercase">Upload Receipt (ደረሰኝ)</h3>
             <input type="file" id="ssInp" class="hidden" accept="image/*" onchange="previewImg(this)">
-            <button onclick="document.getElementById('ssInp').click()" class="w-full bg-white/5 py-5 rounded-2xl font-black mb-4 border border-white/10 uppercase italic">Select Photo / ፋይል ምረጥ</button>
-            <div id="prevBox" class="hidden mb-6"><img id="ssPrev" class="rounded-2xl max-h-60 mx-auto border-2 border-white/10 shadow-2xl"></div>
-            <button id="submitBtn" onclick="submitReceipt()" class="btn-main w-full py-5 rounded-2xl font-black text-lg shadow-2xl uppercase italic">Send to Admin</button>
+            <button onclick="document.getElementById('ssInp').click()" class="w-full bg-white/5 py-5 rounded-2xl font-black mb-4 border border-white/10 italic">📂 SELECT IMAGE FILE</button>
+            <div id="prevBox" class="hidden mb-6"><img id="ssPrev" class="rounded-2xl max-h-60 mx-auto shadow-2xl border border-white/10"></div>
+            <button id="submitBtn" onclick="submitReceipt()" class="w-full py-5 rounded-2xl font-black shadow-2xl uppercase italic" style="background:var(--accent)">Confirm & Send</button>
         </div>
     </section>
 
     <section id="leaderboard" class="page no-scrollbar">
-        <h2 class="text-center text-2xl font-black italic text-yellow-500 uppercase mb-2">Top 100 Winners</h2>
-        <div class="podium-box">
-            <div class="rank rank-2"><i class="fa-solid fa-medal text-gray-400 text-3xl mb-2"></i><p class="text-[10px] font-black" id="top2">አበበ</p><p class="text-[8px] text-green-500">45,200 ETB</p></div>
-            <div class="rank rank-1"><i class="fa-solid fa-crown text-yellow-500 text-5xl mb-2"></i><p class="text-xs font-black" id="top1">ከበደ</p><p class="text-[10px] text-green-500">89,500 ETB</p></div>
-            <div class="rank rank-3"><i class="fa-solid fa-medal text-orange-700 text-3xl mb-2"></i><p class="text-[10px] font-black" id="top3">ጫልቱ</p><p class="text-[8px] text-green-500">32,100 ETB</p></div>
+        <h2 class="text-center text-xl font-black italic text-zinc-400 uppercase mb-4">Elite Winners</h2>
+        <div class="podium">
+            <div class="p-card p2"><i class="fa-solid fa-medal text-silver-400 text-3xl mb-2"></i><p class="text-[10px] font-black">@Abebe_21</p><p class="text-[9px] text-green-500">42,500 ETB</p></div>
+            <div class="p-card p1"><i class="fa-solid fa-crown text-yellow-500 text-5xl mb-2"></i><p class="text-[11px] font-black">@Dai_Dev <i class="fa-solid fa-circle-check v-badge"></i></p><p class="text-[10px] text-green-500">95,800 ETB</p></div>
+            <div class="p-card p3"><i class="fa-solid fa-medal text-orange-700 text-3xl mb-2"></i><p class="text-[10px] font-black">@Chaltu_O</p><p class="text-[9px] text-green-500">28,100 ETB</p></div>
         </div>
-        <div id="lList" class="space-y-2 pb-20 px-2"></div>
+        <div id="lList" class="space-y-2 px-2 pb-20"></div>
     </section>
 
     <section id="profile" class="page no-scrollbar text-center">
-        <div class="mt-10 mb-10">
-            <div id="pfpBig" class="w-28 h-28 rounded-[40px] bg-gray-900 border-2 border-white/10 mx-auto mb-4 overflow-hidden flex items-center justify-center"></div>
-            <h2 id="uBig" class="text-3xl font-black italic">@User</h2>
-            <p class="text-xs text-gray-500 font-bold mt-2 uppercase tracking-widest">Verified Account</p>
+        <div class="mt-10">
+            <div id="pfpBig" class="w-32 h-32 rounded-[50px] bg-zinc-900 border-4 border-white/5 mx-auto mb-6 overflow-hidden flex items-center justify-center"></div>
+            <h2 class="text-3xl font-black italic flex justify-center items-center"><span id="uBig">@User</span> <i class="fa-solid fa-circle-check text-[#38bdf8] ml-2 text-xl"></i></h2>
+            <div class="mt-8 space-y-3">
+                <div class="glass p-4 rounded-2xl mx-10 flex justify-between"><span>Status:</span><span class="text-blue-400 font-bold uppercase">Verified</span></div>
+                <div class="glass p-4 rounded-2xl mx-10 flex justify-between"><span>Rank:</span><span class="text-yellow-500 font-bold uppercase">Pro Pilot</span></div>
+            </div>
         </div>
         
-        <div id="admArea" class="hidden glass p-6 rounded-3xl border-2 border-red-600/30">
-            <h3 class="text-red-600 font-black italic text-xl mb-4">ADMIN CONTROL</h3>
-            <button onclick="openAdm()" class="w-full py-4 bg-red-600 rounded-2xl font-black shadow-xl">VIEW PENDING RECEIPTS</button>
+        <div id="admArea" class="hidden mt-10 p-5">
+            <button onclick="openAdm()" class="w-full py-5 bg-red-600 rounded-3xl font-black italic shadow-xl">OPEN ADMIN PANEL</button>
         </div>
     </section>
 
     <div id="admModal" class="fixed inset-0 bg-black z-[2000] hidden flex-col">
         <div class="p-6 flex justify-between items-center border-b border-white/5">
             <h2 class="font-black text-red-600 italic">PENDING APPROVALS</h2>
-            <button onclick="closeAdm()" class="bg-white/10 px-4 py-2 rounded-full font-black text-xs">CLOSE</button>
+            <button onclick="closeAdm()" class="bg-white/10 px-4 py-2 rounded-full font-black text-xs">EXIT</button>
         </div>
-        <div id="admList" class="p-4 flex-1 overflow-y-auto space-y-4 no-scrollbar"></div>
+        <div id="admList" class="p-4 flex-1 overflow-y-auto space-y-4"></div>
     </div>
 
-    <audio id="sndFly" loop src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"></audio>
-    <audio id="sndExplode" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
-    <audio id="sndWin" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
+    <audio id="sndFly" loop src="https://www.soundjay.com/transportation/sounds/jet-plane-fly-over-1.mp3"></audio>
+    <audio id="sndExplode" src="https://www.soundjay.com/button/sounds/button-10.mp3"></audio>
+    <audio id="sndWin" src="https://www.soundjay.com/human/sounds/applause-01.mp3"></audio>
 
     <script>
         const tg = window.Telegram.WebApp; tg.expand();
         const ADM_USER = "Dawit_Fikadu21";
-        let isDemo = true;
-        let realBal = parseFloat(localStorage.getItem('v30_real')) || 0;
+        let isDemo = true; let isMuted = false;
+        let realBal = parseFloat(localStorage.getItem('v32_real')) || 0;
         let demoBal = 500.00;
         let isFlying = false; let mult = 1.0; let myBet = { active: false, amt: 0 };
 
-        const names = ["አበበ","ከበደ","ጫልቱ","ዘነበች","ፋንቱ","ግርማ","ብስራት","ዮናስ","መሰረት","ሃይሉ","ራሄል","ኤልሳቤጥ","ሳሙኤል","ትዕግስት","በላይነህ","ዘውዴ"];
+        const names = ["አበበ","ከበደ","ጫልቱ","ዘነበች","ግርማ","ፋንቱ","ብስራት","ዮናስ","መሰረት","ራሄል","ኤልሳቤጥ","ሳሙኤል"];
 
         function init() {
             const user = tg.initDataUnsafe?.user;
-            const uname = user?.username || "Guest_User";
+            const uname = user?.username || "Dai_Dev";
             document.getElementById('hName').innerText = "@" + uname;
             document.getElementById('uBig').innerText = "@" + uname;
             
-            const pfpHtml = user?.photo_url ? `<img src="${user.photo_url}" class="w-full h-full object-cover">` : `<span class="text-2xl font-black text-red-600">${uname[0].toUpperCase()}</span>`;
+            const pfpHtml = user?.photo_url ? `<img src="${user.photo_url}" class="w-full h-full object-cover">` : `<span class="text-3xl font-black text-red-600">${uname[0].toUpperCase()}</span>`;
             document.getElementById('hPfp').innerHTML = pfpHtml;
             document.getElementById('pfpBig').innerHTML = pfpHtml;
 
             if(uname === ADM_USER) document.getElementById('admArea').classList.remove('hidden');
-            
             updateDisplay(); renderLeaders(); loop();
         }
 
-        // --- CORE GAME ---
+        // --- GAME ENGINE ---
         function loop() {
             if(isFlying) return;
-            let timer = 5;
+            let timer = 6;
             let t = setInterval(() => {
-                document.getElementById('gStatus').innerText = `Flight starts in ${timer}s`;
                 if(timer-- <= 0) { clearInterval(t); launch(); }
                 if(timer === 3) genFakeBets();
             }, 1000);
@@ -183,8 +182,7 @@
 
         function launch() {
             isFlying = true; mult = 1.0;
-            document.getElementById('sndFly').play();
-            document.getElementById('gStatus').innerText = "Flying...";
+            if(!isMuted) document.getElementById('sndFly').play();
             
             let crash = 1.01 + (Math.random() * 8.0);
             if(myBet.active && myBet.amt >= 100) crash = 1.01 + (Math.random() * 0.9);
@@ -204,8 +202,8 @@
         function explode() {
             isFlying = false;
             document.getElementById('sndFly').pause(); document.getElementById('sndFly').currentTime = 0;
-            document.getElementById('sndExplode').play();
-            document.getElementById('mTxt').innerText = "EXPLODED!";
+            if(!isMuted) document.getElementById('sndExplode').play();
+            document.getElementById('mTxt').innerText = "BOOM!";
             document.getElementById('mTxt').style.color = "#ff0044";
             myBet.active = false; resetBUI();
             setTimeout(() => {
@@ -216,83 +214,82 @@
             }, 3000);
         }
 
+        function cashOut() {
+            if(!myBet.active || !isFlying) return;
+            let win = myBet.amt * mult;
+            if(isDemo) demoBal += win; else { realBal += win; localStorage.setItem('v32_real', realBal); }
+            myBet.active = false; resetBUI(); updateDisplay();
+            if(!isMuted) document.getElementById('sndWin').play();
+            tg.showAlert(`✅ WON ${win.toFixed(2)} ETB!`);
+        }
+
         function handleBet() {
-            if(isFlying) return myBet.active ? cashOut() : tg.showAlert("Flight already in progress!");
+            if(isFlying) return myBet.active ? cashOut() : tg.showAlert("Flight started!");
             let a = parseInt(document.getElementById('bInp').value);
             let cur = isDemo ? demoBal : realBal;
-            if(a > cur || a <= 0) return tg.showAlert("Insufficient Balance!");
-            
-            if(isDemo) demoBal -= a; else { realBal -= a; localStorage.setItem('v30_real', realBal); }
+            if(a > cur || a <= 0) return tg.showAlert("No Balance!");
+            if(isDemo) demoBal -= a; else { realBal -= a; localStorage.setItem('v32_real', realBal); }
             myBet = { active: true, amt: a };
             updateDisplay();
             document.getElementById('bBtn').innerText = "CASH OUT";
             document.getElementById('bBtn').style.background = "#ea580c";
         }
 
-        function cashOut() {
-            if(!myBet.active || !isFlying) return;
-            let win = myBet.amt * mult;
-            if(isDemo) demoBal += win; else { realBal += win; localStorage.setItem('v30_real', realBal); }
-            myBet.active = false; resetBUI(); updateDisplay();
-            document.getElementById('sndWin').play();
-            tg.showAlert(`✅ You WON: ${win.toFixed(2)} ETB`);
-        }
-
-        // --- UI & DATA ---
-        function setMode(demo) {
-            isDemo = demo;
-            document.body.classList.toggle('real-mode', !demo);
-            document.getElementById('mDemo').className = demo ? "px-4 py-2 rounded-lg text-[10px] font-black border-2 border-red-600 bg-red-600/20" : "px-4 py-2 rounded-lg text-[10px] font-black border-2 border-gray-800 text-gray-500";
-            document.getElementById('mReal').className = !demo ? "px-4 py-2 rounded-lg text-[10px] font-black border-2 border-green-600 bg-green-600/20" : "px-4 py-2 rounded-lg text-[10px] font-black border-2 border-gray-800 text-gray-500";
-            updateDisplay();
-        }
-
-        function updateDisplay() {
-            document.getElementById('hBal').innerText = (isDemo ? demoBal : realBal).toFixed(2) + " ETB";
-        }
-
-        function genFakeBets() {
-            const list = document.getElementById('liveList'); list.innerHTML = "";
-            for(let i=0; i<12; i++) {
-                let name = names[Math.floor(Math.random()*names.length)] + (Math.random() > 0.5 ? " " + names[Math.floor(Math.random()*names.length)] : "");
-                let t = 1.2 + (Math.random()*5);
-                list.innerHTML += `<div id="p-${i}" data-t="${t}" data-b="${Math.floor(Math.random()*500)+10}" class="flex justify-between items-center glass p-3 rounded-xl border border-white/5"><span class="text-[11px] font-black uppercase text-gray-400">${name}</span><span class="st text-[10px] font-bold">Waiting...</span></div>`;
-            }
-        }
-
-        function updateFakeBets(m) {
-            document.querySelectorAll('#liveList div').forEach(el => {
-                let t = parseFloat(el.getAttribute('data-t'));
-                if(m >= t && el.querySelector('.st').innerText === "Waiting...") {
-                    let win = (parseFloat(el.getAttribute('data-b'))*t).toFixed(0);
-                    el.querySelector('.st').innerText = `+${win} ETB (${t.toFixed(2)}x)`;
-                    el.querySelector('.st').className = "st text-[10px] font-black text-green-500";
-                    el.style.borderColor = "rgba(34, 197, 94, 0.2)";
-                }
-            });
-        }
-
-        function renderLeaders() {
-            const l = document.getElementById('lList'); l.innerHTML = "";
-            for(let i=4; i<=100; i++) {
-                let name = names[Math.floor(Math.random()*names.length)];
-                l.innerHTML += `<div class="glass p-4 rounded-2xl flex justify-between items-center border border-white/5"><div class="flex items-center gap-3"><span class="text-[10px] font-black text-gray-600">#${i}</span><span class="text-xs font-bold uppercase">${name}</span></div><span class="text-green-500 font-black text-xs">${(Math.random()*20000+500).toFixed(0)} ETB</span></div>`;
-            }
-        }
-
-        // --- SYSTEM UTILS ---
-        function adjB(v) { let i = document.getElementById('bInp'); i.value = Math.max(10, parseInt(i.value) + v); }
-        function setB(v) { document.getElementById('bInp').value = v; }
-        function resetBUI() { document.getElementById('bBtn').innerText = "BET"; document.getElementById('bBtn').style.background = "var(--accent)"; }
+        // --- SYSTEM ---
         function showP(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(id).classList.add('active-page');
             document.getElementById('n-' + id).classList.add('active');
+            
+            // Stop sound if not on home
+            if(id !== 'home') { document.getElementById('sndFly').pause(); }
+            else if(isFlying && !isMuted) { document.getElementById('sndFly').play(); }
         }
-        function copyT(t) { const el = document.createElement('textarea'); el.value = t; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); tg.showAlert("✅ Copped!"); }
 
-        // --- ADMIN & RECEIPT ---
+        function toggleMute() {
+            isMuted = !isMuted;
+            document.getElementById('muteIcon').className = isMuted ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-high";
+            if(isMuted) document.getElementById('sndFly').pause();
+        }
+
+        function setMode(demo) {
+            isDemo = demo;
+            document.body.classList.toggle('real-mode', !demo);
+            document.getElementById('mDemo').className = demo ? "px-4 py-2 rounded-lg text-[9px] font-black bg-red-600" : "px-4 py-2 rounded-lg text-[9px] font-black text-zinc-500";
+            document.getElementById('mReal').className = !demo ? "px-4 py-2 rounded-lg text-[9px] font-black bg-green-600" : "px-4 py-2 rounded-lg text-[9px] font-black text-zinc-500";
+            updateDisplay();
+        }
+
+        function updateDisplay() { document.getElementById('hBal').innerText = (isDemo ? demoBal : realBal).toFixed(2) + " ETB"; }
+        function setB(v) { document.getElementById('bInp').value = v; }
+        function adjB(v) { let i = document.getElementById('bInp'); i.value = Math.max(10, parseInt(i.value) + v); }
+        function resetBUI() { document.getElementById('bBtn').innerText = "BET"; document.getElementById('bBtn').style.background = "var(--accent)"; }
+
+        function genFakeBets() {
+            const list = document.getElementById('liveList'); list.innerHTML = "";
+            for(let i=0; i<10; i++) {
+                let n = names[Math.floor(Math.random()*names.length)];
+                list.innerHTML += `<div id="p-${i}" data-t="${1.2+(Math.random()*4)}" data-b="${Math.floor(Math.random()*300)+10}" class="flex justify-between glass p-3 rounded-xl border border-white/5"><span class="text-[11px] font-black italic uppercase">${n} <i class="fa-solid fa-circle-check v-badge"></i></span><span class="st text-[10px] font-bold">Waiting...</span></div>`;
+            }
+        }
+        function updateFakeBets(m) {
+            document.querySelectorAll('#liveList div').forEach(el => {
+                let t = parseFloat(el.getAttribute('data-t'));
+                if(m >= t && el.querySelector('.st').innerText === "Waiting...") {
+                    el.querySelector('.st').innerText = `+${(el.getAttribute('data-b')*t).toFixed(0)} ETB`;
+                    el.querySelector('.st').className = "st text-[10px] font-black text-green-500";
+                }
+            });
+        }
+        function renderLeaders() {
+            const l = document.getElementById('lList'); l.innerHTML = "";
+            for(let i=4; i<=100; i++) {
+                l.innerHTML += `<div class="glass p-4 rounded-2xl flex justify-between items-center"><div class="flex items-center gap-3"><span class="text-[9px] font-black text-zinc-600">#${i}</span><span class="text-xs font-bold uppercase">${names[Math.floor(Math.random()*names.length)]}</span></div><span class="text-green-500 font-black text-xs">${(Math.random()*15000+500).toFixed(0)} ETB</span></div>`;
+            }
+        }
+
+        // --- FILE & ADMIN ---
         function previewImg(input) {
             if(input.files && input.files[0]) {
                 const r = new FileReader();
@@ -302,13 +299,13 @@
         }
         function submitReceipt() {
             const f = document.getElementById('ssInp').files[0];
-            if(!f) return tg.showAlert("Please select a file first!");
+            if(!f) return tg.showAlert("Please select a file!");
             const r = new FileReader();
             r.onload = () => {
-                let db = JSON.parse(localStorage.getItem('v30_db')) || [];
-                db.push({ user: tg.initDataUnsafe?.user?.username || "Guest", img: r.result, time: new Date().toLocaleString() });
-                localStorage.setItem('v30_db', JSON.stringify(db));
-                tg.showAlert("✅ Receipt sent to Admin!");
+                let db = JSON.parse(localStorage.getItem('v32_db')) || [];
+                db.push({ user: tg.initDataUnsafe?.user?.username || "Guest", img: r.result, time: new Date().toLocaleTimeString() });
+                localStorage.setItem('v32_db', JSON.stringify(db));
+                tg.showAlert("✅ Sent to Admin!");
                 document.getElementById('prevBox').classList.add('hidden');
                 document.getElementById('ssInp').value = "";
             };
@@ -317,31 +314,29 @@
         function openAdm() { document.getElementById('admModal').classList.remove('hidden'); loadAdm(); }
         function closeAdm() { document.getElementById('admModal').classList.add('hidden'); }
         function loadAdm() {
-            const db = JSON.parse(localStorage.getItem('v30_db')) || [];
+            const db = JSON.parse(localStorage.getItem('v32_db')) || [];
             document.getElementById('admList').innerHTML = db.map((it, i) => `
-                <div class="glass p-5 rounded-3xl border border-white/10">
-                    <p class="text-[10px] text-blue-500 mb-2 font-black uppercase">@${it.user} | ${it.time}</p>
-                    <img src="${it.img}" class="w-full rounded-2xl mb-4 border border-white/5">
+                <div class="glass p-5 rounded-3xl">
+                    <p class="text-[10px] text-blue-500 mb-3 font-black">@${it.user} | ${it.time}</p>
+                    <img src="${it.img}" class="w-full rounded-2xl mb-4">
                     <div class="flex gap-2">
-                        <button onclick="approve(${i})" class="flex-1 bg-green-600 py-4 rounded-xl font-black uppercase">Approve</button>
-                        <button onclick="reject(${i})" class="flex-1 bg-red-600 py-4 rounded-xl font-black uppercase">Reject</button>
+                        <button onclick="approve(${i})" class="flex-1 bg-green-600 py-4 rounded-xl font-black">APPROVE</button>
+                        <button onclick="reject(${i})" class="flex-1 bg-red-600 py-4 rounded-xl font-black">REJECT</button>
                     </div>
-                </div>`).join('') || "<p class='text-center text-gray-500 mt-20 font-black'>NO PENDING RECEIPTS</p>";
+                </div>`).join('') || "<p class='text-center text-zinc-600 mt-20'>No Pending Receipts</p>";
         }
         function approve(i) {
-            let db = JSON.parse(localStorage.getItem('v30_db'));
-            let amt = prompt("Amount to add (ETB)?");
-            if(amt && !isNaN(amt)) {
+            let db = JSON.parse(localStorage.getItem('v32_db'));
+            let amt = prompt("Amount?");
+            if(amt) {
                 if(db[i].user === (tg.initDataUnsafe?.user?.username || "Guest")) {
-                    realBal += parseFloat(amt);
-                    localStorage.setItem('v30_real', realBal);
-                    updateDisplay();
+                    realBal += parseFloat(amt); localStorage.setItem('v32_real', realBal); updateDisplay();
                 }
-                tg.showAlert(`✅ Added ${amt} ETB to @${db[i].user}`);
-                db.splice(i, 1); localStorage.setItem('v30_db', JSON.stringify(db)); loadAdm();
+                db.splice(i, 1); localStorage.setItem('v32_db', JSON.stringify(db)); loadAdm();
             }
         }
-        function reject(i) { let db = JSON.parse(localStorage.getItem('v30_db')); db.splice(i, 1); localStorage.setItem('v30_db', JSON.stringify(db)); loadAdm(); }
+        function reject(i) { let db = JSON.parse(localStorage.getItem('v32_db')); db.splice(i, 1); localStorage.setItem('v32_db', JSON.stringify(db)); loadAdm(); }
+        function copyT(t) { const el = document.createElement('textarea'); el.value = t; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); tg.showAlert("Copped!"); }
 
         init();
     </script>
