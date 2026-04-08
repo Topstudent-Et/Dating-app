@@ -15,7 +15,7 @@
             --accent: #ff0044;
             --real-green: #00ff66;
             --blue-v: #38bdf8;
-            --dark-bg: #000000;  /* pure black background */
+            --dark-bg: #000000;
         }
         
         body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: white; overflow-x: hidden; }
@@ -78,7 +78,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* Game container with blue border */
         .game-container {
             background: #000000;
             border-radius: 32px;
@@ -102,7 +101,6 @@
             transition: stroke 0.1s;
         }
         
-        /* Trail color based on mode */
         .trail-real { stroke: var(--real-green); }
         .trail-demo { stroke: #ff4444; }
         
@@ -198,7 +196,6 @@
             color: black;
         }
         
-        /* Podium */
         .podium {
             display: flex;
             justify-content: center;
@@ -232,12 +229,8 @@
         .podium-item.second .podium-avatar { width: 65px; height: 65px; background: linear-gradient(135deg, #c0c0c0, #808080); }
         .podium-item.third .podium-avatar { width: 55px; height: 55px; background: linear-gradient(135deg, #cd7f32, #8b4513); }
         
-        /* Profile images lowered to avoid overlap */
-        .profile-img-container {
-            margin-top: 10px;
-        }
+        .profile-img-container { margin-top: 10px; }
         
-        /* Countdown large numbers */
         .countdown-number {
             font-size: 80px;
             font-weight: 900;
@@ -248,7 +241,6 @@
 </head>
 <body>
 
-    <!-- Header -->
     <header class="fixed top-0 left-0 right-0 z-50 px-4 py-3 flex justify-between items-center border-b border-white/10 backdrop-blur-xl bg-black/50">
         <div class="flex items-center gap-3">
             <div id="userAvatar" class="w-11 h-11 rounded-full bg-gradient-to-r from-red-500 to-pink-500 flex items-center justify-center overflow-hidden text-xl">
@@ -271,7 +263,6 @@
         </div>
     </header>
 
-    <!-- Home Page -->
     <section id="homePage" class="page active-page">
         <div id="historyList" class="flex gap-2 overflow-x-auto mb-4 pb-2 no-scrollbar"></div>
         
@@ -284,14 +275,12 @@
                     <span class="font-game text-7xl font-black italic drop-shadow-lg">1.00x</span>
                 </div>
                 <div id="plane" class="absolute" style="bottom: 20px; left: 20px; font-size: 48px; transform: rotate(-20deg);">✈️</div>
-                <!-- Countdown overlay -->
                 <div id="countdownOverlay" class="absolute inset-0 flex items-center justify-center bg-black/70 rounded-3xl hidden">
                     <span id="countdownNumber" class="countdown-number">5</span>
                 </div>
             </div>
         </div>
         
-        <!-- Bet Panel Left -->
         <div class="glass p-4 mb-3">
             <div class="flex justify-between items-center mb-3">
                 <span class="text-xs opacity-60"><i class="fa-solid fa-arrow-left"></i> LEFT SLOT</span>
@@ -314,7 +303,6 @@
             </div>
         </div>
         
-        <!-- Bet Panel Right -->
         <div class="glass p-4 mb-3">
             <div class="flex justify-between items-center mb-3">
                 <span class="text-xs opacity-60"><i class="fa-solid fa-arrow-right"></i> RIGHT SLOT</span>
@@ -337,7 +325,6 @@
             </div>
         </div>
         
-        <!-- Live Feed -->
         <div class="glass p-3 mt-2">
             <div class="flex items-center gap-2 mb-2">
                 <span class="text-xs font-bold"><i class="fa-solid fa-fire text-red-500"></i> LIVE WINNERS</span>
@@ -346,9 +333,7 @@
         </div>
     </section>
 
-    <!-- Top Winners Page -->
     <section id="topPage" class="page">
-        <!-- Podium with real users + fake users for show -->
         <div class="podium">
             <div class="podium-item second">
                 <div class="podium-avatar">🥈</div>
@@ -367,7 +352,6 @@
             </div>
         </div>
         
-        <!-- Tabs -->
         <div class="flex gap-2 mb-4">
             <button onclick="loadTopWinners('daily')" id="dailyTab" class="flex-1 py-2 rounded-xl text-xs font-bold bg-red-600">TODAY</button>
             <button onclick="loadTopWinners('weekly')" id="weeklyTab" class="flex-1 py-2 rounded-xl text-xs font-bold bg-zinc-800">WEEKLY</button>
@@ -377,7 +361,6 @@
         <div id="winnersList" class="space-y-2"></div>
     </section>
 
-    <!-- Wallet Page -->
     <section id="walletPage" class="page">
         <div class="flex gap-3 mb-5">
             <button onclick="showWalletSection('deposit')" id="depositTab" class="flex-1 py-4 rounded-2xl font-black bg-red-600">💰 DEPOSIT</button>
@@ -410,7 +393,6 @@
         </div>
     </section>
 
-    <!-- Profile Page -->
     <section id="profilePage" class="page">
         <div class="glass p-6 text-center mb-5 profile-img-container">
             <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-r from-red-500 to-pink-500 flex items-center justify-center overflow-hidden text-4xl mb-3">
@@ -423,7 +405,6 @@
             </div>
         </div>
         
-        <!-- Stats Cards -->
         <div class="grid grid-cols-2 gap-3 mb-5">
             <div class="glass p-3 text-center">
                 <div class="text-[10px] opacity-60">Remaining Balance</div>
@@ -439,7 +420,6 @@
             </div>
         </div>
         
-        <!-- Referral -->
         <div class="glass p-4 mb-5">
             <div class="flex items-center gap-2 mb-3">
                 <i class="fa-solid fa-users text-blue-400"></i>
@@ -453,7 +433,6 @@
             <div class="mt-2 text-center text-xs opacity-60">Bot: @world_all_gamesbot</div>
         </div>
         
-        <!-- Admin Panel -->
         <div id="adminPanel" class="admin-panel glass p-4 hidden">
             <div class="flex items-center gap-2 mb-4 border-b border-yellow-500/30 pb-2">
                 <i class="fa-solid fa-shield-haltered text-yellow-500"></i>
@@ -487,7 +466,6 @@
         </div>
     </section>
 
-    <!-- Navigation -->
     <nav class="nav-bar">
         <div onclick="switchPage('homePage')" id="navHome" class="nav-item active"><i class="fa-solid fa-plane"></i></div>
         <div onclick="switchPage('topPage')" id="navTop" class="nav-item"><i class="fa-solid fa-trophy"></i></div>
@@ -496,12 +474,29 @@
     </nav>
 
     <script>
+        // ==================== AUDIO ====================
+        function playSound(type) {
+            try {
+                let audio = new Audio();
+                if (type === 'win') {
+                    audio.src = 'https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3';
+                } else if (type === 'crash') {
+                    audio.src = 'https://www.soundjay.com/misc/sounds/explosion-01.mp3';
+                } else if (type === 'bet') {
+                    audio.src = 'https://www.soundjay.com/misc/sounds/button-click-01.mp3';
+                } else if (type === 'cashout') {
+                    audio.src = 'https://www.soundjay.com/misc/sounds/coin-drop-02.mp3';
+                }
+                audio.volume = 0.3;
+                audio.play().catch(e => console.log('Audio play failed:', e));
+            } catch(e) {}
+        }
+
         // ==================== INITIALIZATION ====================
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.enableClosingConfirmation();
         
-        // Game State
         let isRealMode = true;
         let gameActive = false;
         let currentMultiplier = 1.00;
@@ -510,25 +505,39 @@
         let countdownInterval = null;
         let isCountdownActive = false;
         
-        // User Data
-        let user = {
-            id: null,
-            username: 'Guest',
-            photoUrl: null,
-            realBalance: parseFloat(localStorage.getItem('avia_real_balance')) || 100,
-            demoBalance: parseFloat(localStorage.getItem('avia_demo_balance')) || 1000,
-            totalWon: parseFloat(localStorage.getItem('avia_total_won')) || 0,
-            totalGames: parseInt(localStorage.getItem('avia_total_games')) || 0,
-            referralCount: parseInt(localStorage.getItem('avia_referral_count')) || 0
+        // Get unique user ID
+        const tgUser = tg.initDataUnsafe?.user;
+        let userId = tgUser ? tgUser.id : 'guest_' + Date.now();
+        let username = tgUser ? (tgUser.username || tgUser.first_name || 'User') : 'Guest';
+        let photoUrl = tgUser?.photo_url || null;
+        
+        // User-specific storage keys
+        const storageKeys = {
+            realBalance: `avia_real_balance_${userId}`,
+            demoBalance: `avia_demo_balance_${userId}`,
+            totalWon: `avia_total_won_${userId}`,
+            totalGames: `avia_total_games_${userId}`,
+            referralCount: `avia_referral_count_${userId}`,
+            gameHistory: `game_history_${userId}`,
+            transactions: `user_transactions_${userId}`
         };
         
-        // Bets
+        let user = {
+            id: userId,
+            username: username,
+            photoUrl: photoUrl,
+            realBalance: parseFloat(localStorage.getItem(storageKeys.realBalance)) || 100,
+            demoBalance: parseFloat(localStorage.getItem(storageKeys.demoBalance)) || 1000,
+            totalWon: parseFloat(localStorage.getItem(storageKeys.totalWon)) || 0,
+            totalGames: parseInt(localStorage.getItem(storageKeys.totalGames)) || 0,
+            referralCount: parseInt(localStorage.getItem(storageKeys.referralCount)) || 0
+        };
+        
         let bets = {
             1: { active: false, amount: 10, autoCash: 0 },
             2: { active: false, amount: 10, autoCash: 0 }
         };
         
-        // Admin Data - Only for authorized user
         const AUTHORIZED_ADMIN = "Dawit_Fikadu21";
         let adminData = {
             totalDeposit: parseFloat(localStorage.getItem('admin_total_deposit')) || 0,
@@ -537,50 +546,39 @@
             pendingTransactions: JSON.parse(localStorage.getItem('admin_pending_tx')) || []
         };
         
-        // History
-        let gameHistory = JSON.parse(localStorage.getItem('game_history')) || [];
-        let transactions = JSON.parse(localStorage.getItem('user_transactions')) || [];
+        let gameHistory = JSON.parse(localStorage.getItem(storageKeys.gameHistory)) || [];
+        let transactions = JSON.parse(localStorage.getItem(storageKeys.transactions)) || [];
         
-        // Get Telegram User
-        const tgUser = tg.initDataUnsafe?.user;
-        if (tgUser) {
-            user.id = tgUser.id;
-            user.username = tgUser.username || tgUser.first_name || 'User';
-            user.photoUrl = tgUser.photo_url || null;
-            
-            document.getElementById('userName').innerHTML = '@' + user.username;
-            document.getElementById('profileName').innerHTML = '@' + user.username;
-            
-            if (user.photoUrl) {
-                document.getElementById('avatarImg').src = user.photoUrl;
-                document.getElementById('avatarImg').style.display = 'block';
-                document.getElementById('avatarPlaceholder').style.display = 'none';
-                document.getElementById('profileAvatarImg').src = user.photoUrl;
-                document.getElementById('profileAvatarImg').style.display = 'block';
-                document.getElementById('profileAvatarPlaceholder').style.display = 'none';
-            }
+        // Update UI with user info
+        document.getElementById('userName').innerHTML = '@' + user.username;
+        document.getElementById('profileName').innerHTML = '@' + user.username;
+        if (photoUrl) {
+            document.getElementById('avatarImg').src = photoUrl;
+            document.getElementById('avatarImg').style.display = 'block';
+            document.getElementById('avatarPlaceholder').style.display = 'none';
+            document.getElementById('profileAvatarImg').src = photoUrl;
+            document.getElementById('profileAvatarImg').style.display = 'block';
+            document.getElementById('profileAvatarPlaceholder').style.display = 'none';
         }
         
-        // Check if authorized admin
         const isAdmin = (user.username === AUTHORIZED_ADMIN);
         if (isAdmin) {
             document.getElementById('adminPanel').classList.remove('hidden');
             updateAdminDisplay();
         }
         
-        // Check Referral
+        // Referral
         const urlParams = new URLSearchParams(window.location.search);
         const referrer = urlParams.get('ref');
-        if (referrer && !localStorage.getItem('referred_' + user.id)) {
-            localStorage.setItem('referred_' + user.id, 'true');
+        if (referrer && !localStorage.getItem(`referred_${userId}`)) {
+            localStorage.setItem(`referred_${userId}`, 'true');
             if (isRealMode) {
                 user.realBalance += 5;
-                localStorage.setItem('avia_real_balance', user.realBalance);
+                localStorage.setItem(storageKeys.realBalance, user.realBalance);
                 showToast(`🎉 Invited by ${referrer}! +5 ETB bonus`);
             }
         }
         
-        // Referral Link
         const botUsername = 'world_all_gamesbot';
         const referralLink = `https://t.me/${botUsername}?start=ref_${user.username}`;
         document.getElementById('referralLinkInput').value = referralLink;
@@ -615,16 +613,10 @@
             crashPoint = 1.1 + (Math.random() * 10);
             if (crashPoint > 50) crashPoint = 50;
             
-            // Update trail color based on mode
             const path = document.getElementById('gamePath');
             path.classList.remove('trail-real', 'trail-demo');
-            if (isRealMode) {
-                path.classList.add('trail-real');
-            } else {
-                path.classList.add('trail-demo');
-            }
+            path.classList.add(isRealMode ? 'trail-real' : 'trail-demo');
             
-            // Admin profit from real bets (20%)
             if (isRealMode) {
                 let totalRealBet = 0;
                 if (bets[1].active) totalRealBet += bets[1].amount;
@@ -675,21 +667,22 @@
             if (isRealMode) {
                 user.realBalance += winAmount;
                 user.totalWon += winAmount;
-                localStorage.setItem('avia_real_balance', user.realBalance);
-                localStorage.setItem('avia_total_won', user.totalWon);
+                localStorage.setItem(storageKeys.realBalance, user.realBalance);
+                localStorage.setItem(storageKeys.totalWon, user.totalWon);
             } else {
                 user.demoBalance += winAmount;
-                localStorage.setItem('avia_demo_balance', user.demoBalance);
+                localStorage.setItem(storageKeys.demoBalance, user.demoBalance);
             }
             
             user.totalGames++;
-            localStorage.setItem('avia_total_games', user.totalGames);
+            localStorage.setItem(storageKeys.totalGames, user.totalGames);
             
             bets[slotId].active = false;
             updateBalanceDisplay();
             updateBetButton(slotId);
             addLiveFeed(user.username, winAmount);
             showToast(`🎉 You won! ${winAmount.toFixed(0)} ETB (${currentMultiplier.toFixed(2)}x)`);
+            playSound('win');
             vibrate(100);
         }
         
@@ -707,8 +700,9 @@
             
             gameHistory.unshift({ multiplier: crashPoint.toFixed(2), timestamp: Date.now() });
             if (gameHistory.length > 20) gameHistory.pop();
-            localStorage.setItem('game_history', JSON.stringify(gameHistory));
+            localStorage.setItem(storageKeys.gameHistory, JSON.stringify(gameHistory));
             updateHistoryDisplay();
+            playSound('crash');
             vibrate(300);
             
             setTimeout(() => {
@@ -738,16 +732,17 @@
             
             if (isRealMode) {
                 user.realBalance -= bets[slotId].amount;
-                localStorage.setItem('avia_real_balance', user.realBalance);
+                localStorage.setItem(storageKeys.realBalance, user.realBalance);
             } else {
                 user.demoBalance -= bets[slotId].amount;
-                localStorage.setItem('avia_demo_balance', user.demoBalance);
+                localStorage.setItem(storageKeys.demoBalance, user.demoBalance);
             }
             
             bets[slotId].active = true;
             updateBalanceDisplay();
             updateBetButton(slotId);
             showToast(`✅ ${bets[slotId].amount} ETB bet placed`);
+            playSound('bet');
         }
         
         // ==================== UI HELPERS ====================
@@ -834,37 +829,30 @@
             }
             updateBalanceDisplay();
             showToast(isRealMode ? 'REAL MODE ACTIVE' : 'DEMO MODE ACTIVE');
-            // Update trail color for next game
             const path = document.getElementById('gamePath');
             path.classList.remove('trail-real', 'trail-demo');
-            if (isRealMode) path.classList.add('trail-real');
-            else path.classList.add('trail-demo');
+            path.classList.add(isRealMode ? 'trail-real' : 'trail-demo');
         }
         
-        // ==================== TOP WINNERS (with fake users + real ranking) ====================
+        // ==================== TOP WINNERS ====================
         function loadTopWinners(type) {
             const tabs = ['daily', 'weekly', 'alltime'];
             tabs.forEach(t => {
                 document.getElementById(t + 'Tab').className = t === type ? 'flex-1 py-2 rounded-xl text-xs font-bold bg-red-600' : 'flex-1 py-2 rounded-xl text-xs font-bold bg-zinc-800';
             });
             
-            // Real users with their actual amounts (simulated)
             const realUsers = [
                 { name: 'Dawi_Fikadu', amount: type === 'daily' ? 12500 : (type === 'weekly' ? 45000 : 245000) },
                 { name: 'Lemi_X', amount: type === 'daily' ? 8700 : (type === 'weekly' ? 32000 : 124500) },
                 { name: 'Abebe_K', amount: type === 'daily' ? 5600 : (type === 'weekly' ? 21800 : 89300) }
             ];
             
-            // Fake users to make the list longer
             const fakeUsers = [
                 { name: 'Fake_Player1', amount: type === 'daily' ? 3400 : (type === 'weekly' ? 9800 : 45200) },
                 { name: 'Fake_Player2', amount: type === 'daily' ? 2100 : (type === 'weekly' ? 7600 : 32100) },
-                { name: 'Fake_Player3', amount: type === 'daily' ? 1500 : (type === 'weekly' ? 5400 : 19800) },
-                { name: 'Fake_Player4', amount: type === 'daily' ? 900 : (type === 'weekly' ? 3200 : 12400) },
-                { name: 'Fake_Player5', amount: type === 'daily' ? 500 : (type === 'weekly' ? 1800 : 8700) }
+                { name: 'Fake_Player3', amount: type === 'daily' ? 1500 : (type === 'weekly' ? 5400 : 19800) }
             ];
             
-            // Combine and sort by amount descending
             let allUsers = [...realUsers, ...fakeUsers];
             allUsers.sort((a,b) => b.amount - a.amount);
             
@@ -887,7 +875,7 @@
             });
         }
         
-        // ==================== WALLET (only user's own data) ====================
+        // ==================== WALLET (User-specific) ====================
         function showWalletSection(section) {
             const depositSec = document.getElementById('depositSection');
             const withdrawSec = document.getElementById('withdrawSection');
@@ -913,12 +901,14 @@
             const amount = parseFloat(document.getElementById('depositAmount').value);
             if (!name || !ft || !amount) { showToast('Please fill all fields'); return; }
             
-            // Store only the user's own deposit request (no cross-user data)
             const transaction = { id: Date.now(), type: 'deposit', name, ft, amount, status: 'pending', timestamp: new Date().toISOString() };
             adminData.pendingTransactions.unshift(transaction);
             localStorage.setItem('admin_pending_tx', JSON.stringify(adminData.pendingTransactions));
+            
+            // Store only user's own transactions
             transactions.unshift(transaction);
-            localStorage.setItem('user_transactions', JSON.stringify(transactions));
+            localStorage.setItem(storageKeys.transactions, JSON.stringify(transactions));
+            
             showToast('✅ Request sent! Will be approved soon');
             updateTransactionDisplay();
             if (isAdmin) updateAdminDisplay();
@@ -937,8 +927,10 @@
             const transaction = { id: Date.now(), type: 'withdraw', account, amount, status: 'pending', timestamp: new Date().toISOString() };
             adminData.pendingTransactions.unshift(transaction);
             localStorage.setItem('admin_pending_tx', JSON.stringify(adminData.pendingTransactions));
+            
             transactions.unshift(transaction);
-            localStorage.setItem('user_transactions', JSON.stringify(transactions));
+            localStorage.setItem(storageKeys.transactions, JSON.stringify(transactions));
+            
             showToast('✅ Withdrawal request sent!');
             updateTransactionDisplay();
             if (isAdmin) updateAdminDisplay();
@@ -990,18 +982,18 @@
                 tx.status = 'completed';
                 if (tx.type === 'deposit') {
                     adminData.totalDeposit += tx.amount;
-                    if (isRealMode) { user.realBalance += tx.amount; localStorage.setItem('avia_real_balance', user.realBalance); }
+                    if (isRealMode) { user.realBalance += tx.amount; localStorage.setItem(storageKeys.realBalance, user.realBalance); }
                     updateBalanceDisplay();
                 } else {
                     adminData.totalWithdraw += tx.amount;
-                    if (isRealMode) { user.realBalance -= tx.amount; localStorage.setItem('avia_real_balance', user.realBalance); }
+                    if (isRealMode) { user.realBalance -= tx.amount; localStorage.setItem(storageKeys.realBalance, user.realBalance); }
                     updateBalanceDisplay();
                 }
                 const userTx = transactions.find(t => t.id === txId);
                 if (userTx) userTx.status = 'completed';
+                localStorage.setItem(storageKeys.transactions, JSON.stringify(transactions));
                 adminData.pendingTransactions = adminData.pendingTransactions.filter(t => t.id !== txId);
                 localStorage.setItem('admin_pending_tx', JSON.stringify(adminData.pendingTransactions));
-                localStorage.setItem('user_transactions', JSON.stringify(transactions));
                 localStorage.setItem('admin_total_deposit', adminData.totalDeposit);
                 localStorage.setItem('admin_total_withdraw', adminData.totalWithdraw);
                 updateAdminDisplay();
@@ -1017,9 +1009,9 @@
                 tx.status = 'rejected';
                 const userTx = transactions.find(t => t.id === txId);
                 if (userTx) userTx.status = 'rejected';
+                localStorage.setItem(storageKeys.transactions, JSON.stringify(transactions));
                 adminData.pendingTransactions = adminData.pendingTransactions.filter(t => t.id !== txId);
                 localStorage.setItem('admin_pending_tx', JSON.stringify(adminData.pendingTransactions));
-                localStorage.setItem('user_transactions', JSON.stringify(transactions));
                 updateAdminDisplay();
                 updateTransactionDisplay();
                 showToast(`❌ ${tx.amount} ETB request rejected`);
@@ -1068,7 +1060,6 @@
             setMode(true);
             startCountdown();
             
-            // Simulate live feed
             setInterval(() => {
                 const fakeWinners = ['Abebe_K', 'Lemi_X', 'Hana_23', 'Samuel_T'];
                 const randomWinner = fakeWinners[Math.floor(Math.random() * fakeWinners.length)];
