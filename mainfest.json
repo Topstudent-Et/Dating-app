@@ -1,0 +1,21 @@
+{
+    "name": "AVIA-MASTER ELITE",
+    "short_name": "AVIA",
+    "description": "Crash game on Telegram",
+    "start_url": ".",
+    "display": "standalone",
+    "theme_color": "#ff0044",
+    "background_color": "#000000",
+    "icons": [
+        {
+            "src": "https://via.placeholder.com/192x192?text=AVIA",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "https://via.placeholder.com/512x512?text=AVIA",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
