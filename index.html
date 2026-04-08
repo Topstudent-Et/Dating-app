@@ -190,6 +190,45 @@
             background: var(--real-green);
             color: black;
         }
+        
+        /* Podium Animation */
+        .podium {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .podium-item {
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        @keyframes wobble {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        .podium-item.first { animation: wobble 2s infinite ease-in-out; }
+        .podium-item.second { animation: wobble 2s infinite ease-in-out 0.3s; }
+        .podium-item.third { animation: wobble 2s infinite ease-in-out 0.6s; }
+        
+        .podium-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin: 0 auto 8px;
+        }
+        
+        .podium-item.first .podium-avatar { width: 80px; height: 80px; font-size: 40px; background: linear-gradient(135deg, #ffd700, #ff6b00); }
+        .podium-item.second .podium-avatar { width: 65px; height: 65px; background: linear-gradient(135deg, #c0c0c0, #808080); }
+        .podium-item.third .podium-avatar { width: 55px; height: 55px; background: linear-gradient(135deg, #cd7f32, #8b4513); }
     </style>
 </head>
 <body>
@@ -288,6 +327,37 @@
         </div>
     </section>
 
+    <!-- Top Winners Page -->
+    <section id="topPage" class="page">
+        <!-- Podium -->
+        <div class="podium">
+            <div class="podium-item second">
+                <div class="podium-avatar">🥈</div>
+                <div class="font-bold text-xs">Lemi_X</div>
+                <div class="text-[10px] text-green-400">24,500 ETB</div>
+            </div>
+            <div class="podium-item first">
+                <div class="podium-avatar">👑</div>
+                <div class="font-bold text-sm">DAWI_FIKADU</div>
+                <div class="text-[11px] text-yellow-400">245,000 ETB</div>
+            </div>
+            <div class="podium-item third">
+                <div class="podium-avatar">🥉</div>
+                <div class="font-bold text-xs">Abebe_K</div>
+                <div class="text-[10px] text-green-400">12,300 ETB</div>
+            </div>
+        </div>
+        
+        <!-- Tabs -->
+        <div class="flex gap-2 mb-4">
+            <button onclick="loadTopWinners('daily')" id="dailyTab" class="flex-1 py-2 rounded-xl text-xs font-bold bg-red-600">TODAY</button>
+            <button onclick="loadTopWinners('weekly')" id="weeklyTab" class="flex-1 py-2 rounded-xl text-xs font-bold bg-zinc-800">WEEKLY</button>
+            <button onclick="loadTopWinners('alltime')" id="alltimeTab" class="flex-1 py-2 rounded-xl text-xs font-bold bg-zinc-800">ALL TIME</button>
+        </div>
+        
+        <div id="winnersList" class="space-y-2"></div>
+    </section>
+
     <!-- Wallet Page -->
     <section id="walletPage" class="page">
         <div class="flex gap-3 mb-5">
@@ -308,7 +378,7 @@
         
         <div id="withdrawSection" class="glass p-5 space-y-4 hidden">
             <input type="text" id="withdrawAccount" placeholder="CBE Account Number" class="w-full bg-white/10 p-3 rounded-xl outline-none text-sm">
-            <input type="number" id="withdrawAmount" placeholder="Withdraw Amount" class="w-full bg-white/10 p-3 rounded-xl outline-none text-lg font-bold">
+            <input type="number" id="withdrawAmount" placeholder="Withdraw Amount (ETB)" class="w-full bg-white/10 p-3 rounded-xl outline-none text-lg font-bold">
             <button onclick="submitWithdraw()" class="w-full py-4 bg-green-600 rounded-2xl font-black text-black">CONFIRM WITHDRAW</button>
         </div>
         
@@ -334,6 +404,23 @@
             </div>
         </div>
         
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-2 gap-3 mb-5">
+            <div class="glass p-3 text-center">
+                <div class="text-[10px] opacity-60">Remaining Balance</div>
+                <div id="profileBalance" class="text-green-400 font-black text-xl">0 ETB</div>
+            </div>
+            <div class="glass p-3 text-center">
+                <div class="text-[10px] opacity-60">Total Games</div>
+                <div id="totalGames" class="font-black text-xl">0</div>
+            </div>
+            <div class="glass p-3 text-center">
+                <div class="text-[10px] opacity-60">Total Won</div>
+                <div id="totalWon" class="text-green-400 font-black text-xl">0 ETB</div>
+            </div>
+        </div>
+        
+        <!-- Referral -->
         <div class="glass p-4 mb-5">
             <div class="flex items-center gap-2 mb-3">
                 <i class="fa-solid fa-users text-blue-400"></i>
@@ -344,9 +431,10 @@
                 <input type="text" id="referralLinkInput" readonly class="flex-1 bg-white/10 p-3 rounded-xl text-xs font-mono">
                 <button onclick="copyReferralLink()" class="px-5 bg-blue-600 rounded-xl"><i class="fa-solid fa-copy"></i></button>
             </div>
+            <div class="mt-2 text-center text-xs opacity-60">Bot: @world_all_gamesbot</div>
         </div>
         
-        <!-- Admin Panel (only for authorized user) -->
+        <!-- Admin Panel -->
         <div id="adminPanel" class="admin-panel glass p-4 hidden">
             <div class="flex items-center gap-2 mb-4 border-b border-yellow-500/30 pb-2">
                 <i class="fa-solid fa-shield-haltered text-yellow-500"></i>
@@ -383,6 +471,7 @@
     <!-- Navigation -->
     <nav class="nav-bar">
         <div onclick="switchPage('homePage')" id="navHome" class="nav-item active"><i class="fa-solid fa-plane"></i></div>
+        <div onclick="switchPage('topPage')" id="navTop" class="nav-item"><i class="fa-solid fa-trophy"></i></div>
         <div onclick="switchPage('walletPage')" id="navWallet" class="nav-item"><i class="fa-solid fa-wallet"></i></div>
         <div onclick="switchPage('profilePage')" id="navProfile" class="nav-item"><i class="fa-solid fa-user"></i></div>
     </nav>
@@ -442,12 +531,10 @@
             document.getElementById('userName').innerHTML = '@' + user.username;
             document.getElementById('profileName').innerHTML = '@' + user.username;
             
-            // Load profile photo
             if (user.photoUrl) {
                 document.getElementById('avatarImg').src = user.photoUrl;
                 document.getElementById('avatarImg').style.display = 'block';
                 document.getElementById('avatarPlaceholder').style.display = 'none';
-                
                 document.getElementById('profileAvatarImg').src = user.photoUrl;
                 document.getElementById('profileAvatarImg').style.display = 'block';
                 document.getElementById('profileAvatarPlaceholder').style.display = 'none';
@@ -474,10 +561,9 @@
         }
         
         // Referral Link
-        const botUsername = 'world_gamesbot';
+        const botUsername = 'world_all_gamesbot';
         const referralLink = `https://t.me/${botUsername}?start=ref_${user.username}`;
         document.getElementById('referralLinkInput').value = referralLink;
-        document.getElementById('referralCount').innerText = user.referralCount;
         
         // ==================== GAME LOGIC ====================
         function startCountdown() {
@@ -632,6 +718,9 @@
         function updateBalanceDisplay() {
             const balance = isRealMode ? user.realBalance : user.demoBalance;
             document.getElementById('balanceDisplay').innerHTML = balance.toFixed(2) + ' ETB';
+            document.getElementById('profileBalance').innerHTML = balance.toFixed(2) + ' ETB';
+            document.getElementById('totalGames').innerHTML = user.totalGames;
+            document.getElementById('totalWon').innerHTML = user.totalWon.toFixed(0) + ' ETB';
         }
         
         function updateBetButton(slotId) {
@@ -670,19 +759,15 @@
             if (container.children.length > 8) container.removeChild(container.lastChild);
         }
         
-        // ==================== SETTERS with GREEN HIGHLIGHT ====================
+        // ==================== SETTERS ====================
         function setBetAmount(slotId, amount) {
             bets[slotId].amount = amount;
-            
-            // Remove green from all bet amount buttons for this slot
             for (let a of [10, 50, 100, 500]) {
                 const btn = document.getElementById(`betAmount${slotId}_${a}`);
                 if (btn) btn.classList.remove('green-active');
             }
-            // Add green to selected button
             const selectedBtn = document.getElementById(`betAmount${slotId}_${amount}`);
             if (selectedBtn) selectedBtn.classList.add('green-active');
-            
             showToast(`Bet: ${amount} ETB`);
         }
         
@@ -690,17 +775,13 @@
             bets[slotId].autoCash = multiplier;
             const displayText = multiplier > 0 ? `⚡ AUTO: ${multiplier}x` : '⚡ AUTO: OFF';
             document.getElementById(`autoCash${slotId}`).innerHTML = displayText;
-            
-            // Remove green from all auto cash buttons for this slot
             for (let m of [2, 4, 8, 0]) {
                 const btn = document.getElementById(`autoCash${slotId}_${m}`);
                 if (btn) btn.classList.remove('green-active');
             }
-            // Add green to selected button
             const btnId = multiplier === 0 ? `autoCash${slotId}_0` : `autoCash${slotId}_${multiplier}`;
             const selectedBtn = document.getElementById(btnId);
             if (selectedBtn) selectedBtn.classList.add('green-active');
-            
             showToast(multiplier > 0 ? `Auto cashout at ${multiplier}x set` : 'Auto cashout disabled');
         }
         
@@ -708,7 +789,6 @@
             isRealMode = real;
             const realBtn = document.getElementById('realModeBtn');
             const demoBtn = document.getElementById('demoModeBtn');
-            
             if (isRealMode) {
                 realBtn.classList.add('active');
                 demoBtn.classList.remove('active');
@@ -716,9 +796,41 @@
                 realBtn.classList.remove('active');
                 demoBtn.classList.add('active');
             }
-            
             updateBalanceDisplay();
             showToast(isRealMode ? 'REAL MODE ACTIVE' : 'DEMO MODE ACTIVE');
+        }
+        
+        // ==================== TOP WINNERS ====================
+        function loadTopWinners(type) {
+            const tabs = ['daily', 'weekly', 'alltime'];
+            tabs.forEach(t => {
+                document.getElementById(t + 'Tab').className = t === type ? 'flex-1 py-2 rounded-xl text-xs font-bold bg-red-600' : 'flex-1 py-2 rounded-xl text-xs font-bold bg-zinc-800';
+            });
+            
+            const winners = [
+                { name: 'Dawi_Fikadu', amount: type === 'daily' ? 12500 : (type === 'weekly' ? 45000 : 245000) },
+                { name: 'Lemi_X', amount: type === 'daily' ? 8700 : (type === 'weekly' ? 32000 : 124500) },
+                { name: 'Abebe_K', amount: type === 'daily' ? 5600 : (type === 'weekly' ? 21800 : 89300) },
+                { name: 'Hana_23', amount: type === 'daily' ? 4300 : (type === 'weekly' ? 16700 : 67200) },
+                { name: 'Samuel_T', amount: type === 'daily' ? 2900 : (type === 'weekly' ? 12400 : 45100) }
+            ];
+            
+            const container = document.getElementById('winnersList');
+            container.innerHTML = '';
+            winners.forEach((w, idx) => {
+                container.innerHTML += `
+                    <div class="glass p-3 flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm font-bold text-yellow-400">#${idx + 1}</span>
+                            <div class="flex items-center gap-1">
+                                <span class="font-bold text-sm">@${w.name}</span>
+                                <span class="verify-badge text-[8px]">✓</span>
+                            </div>
+                        </div>
+                        <div class="text-green-400 font-black">${w.amount.toLocaleString()} ETB</div>
+                    </div>
+                `;
+            });
         }
         
         // ==================== WALLET ====================
@@ -745,31 +857,16 @@
             const name = document.getElementById('depositName').value;
             const ft = document.getElementById('depositFt').value;
             const amount = parseFloat(document.getElementById('depositAmount').value);
+            if (!name || !ft || !amount) { showToast('Please fill all fields'); return; }
             
-            if (!name || !ft || !amount) {
-                showToast('Please fill all fields');
-                return;
-            }
-            
-            const transaction = {
-                id: Date.now(),
-                type: 'deposit',
-                name: name,
-                ft: ft,
-                amount: amount,
-                status: 'pending',
-                timestamp: new Date().toISOString()
-            };
-            
+            const transaction = { id: Date.now(), type: 'deposit', name, ft, amount, status: 'pending', timestamp: new Date().toISOString() };
             adminData.pendingTransactions.unshift(transaction);
             localStorage.setItem('admin_pending_tx', JSON.stringify(adminData.pendingTransactions));
             transactions.unshift(transaction);
             localStorage.setItem('user_transactions', JSON.stringify(transactions));
-            
             showToast('✅ Request sent! Will be approved soon');
             updateTransactionDisplay();
             if (isAdmin) updateAdminDisplay();
-            
             document.getElementById('depositName').value = '';
             document.getElementById('depositFt').value = '';
             document.getElementById('depositAmount').value = '';
@@ -779,34 +876,17 @@
             const account = document.getElementById('withdrawAccount').value;
             const amount = parseFloat(document.getElementById('withdrawAmount').value);
             const balance = isRealMode ? user.realBalance : user.demoBalance;
+            if (!account || !amount) { showToast('Please fill all fields'); return; }
+            if (amount > balance) { showToast('❌ Insufficient balance'); return; }
             
-            if (!account || !amount) {
-                showToast('Please fill all fields');
-                return;
-            }
-            if (amount > balance) {
-                showToast('❌ Insufficient balance');
-                return;
-            }
-            
-            const transaction = {
-                id: Date.now(),
-                type: 'withdraw',
-                account: account,
-                amount: amount,
-                status: 'pending',
-                timestamp: new Date().toISOString()
-            };
-            
+            const transaction = { id: Date.now(), type: 'withdraw', account, amount, status: 'pending', timestamp: new Date().toISOString() };
             adminData.pendingTransactions.unshift(transaction);
             localStorage.setItem('admin_pending_tx', JSON.stringify(adminData.pendingTransactions));
             transactions.unshift(transaction);
             localStorage.setItem('user_transactions', JSON.stringify(transactions));
-            
             showToast('✅ Withdrawal request sent!');
             updateTransactionDisplay();
             if (isAdmin) updateAdminDisplay();
-            
             document.getElementById('withdrawAccount').value = '';
             document.getElementById('withdrawAmount').value = '';
         }
@@ -817,17 +897,15 @@
             transactions.slice(0, 10).forEach(tx => {
                 const statusColor = tx.status === 'completed' ? 'text-green-400' : (tx.status === 'rejected' ? 'text-red-400' : 'text-yellow-400');
                 const icon = tx.type === 'deposit' ? '💰' : '💸';
-                container.innerHTML += `
-                    <div class="flex justify-between items-center text-xs p-2 rounded-xl bg-white/5">
-                        <div class="flex items-center gap-2"><span>${icon}</span><span>${tx.type === 'deposit' ? 'Deposit' : 'Withdraw'}</span></div>
-                        <span class="font-bold">${tx.amount} ETB</span>
-                        <span class="${statusColor}">${tx.status}</span>
-                    </div>
-                `;
+                container.innerHTML += `<div class="flex justify-between items-center text-xs p-2 rounded-xl bg-white/5">
+                    <div class="flex items-center gap-2"><span>${icon}</span><span>${tx.type === 'deposit' ? 'Deposit' : 'Withdraw'}</span></div>
+                    <span class="font-bold">${tx.amount} ETB</span>
+                    <span class="${statusColor}">${tx.status}</span>
+                </div>`;
             });
         }
         
-        // ==================== ADMIN FUNCTIONS (Only for authorized) ====================
+        // ==================== ADMIN FUNCTIONS ====================
         function updateAdminDisplay() {
             if (!isAdmin) return;
             document.getElementById('adminTotalDeposit').innerHTML = adminData.totalDeposit.toFixed(0) + ' ETB';
@@ -856,17 +934,11 @@
                 tx.status = 'completed';
                 if (tx.type === 'deposit') {
                     adminData.totalDeposit += tx.amount;
-                    if (isRealMode) {
-                        user.realBalance += tx.amount;
-                        localStorage.setItem('avia_real_balance', user.realBalance);
-                    }
+                    if (isRealMode) { user.realBalance += tx.amount; localStorage.setItem('avia_real_balance', user.realBalance); }
                     updateBalanceDisplay();
                 } else {
                     adminData.totalWithdraw += tx.amount;
-                    if (isRealMode) {
-                        user.realBalance -= tx.amount;
-                        localStorage.setItem('avia_real_balance', user.realBalance);
-                    }
+                    if (isRealMode) { user.realBalance -= tx.amount; localStorage.setItem('avia_real_balance', user.realBalance); }
                     updateBalanceDisplay();
                 }
                 const userTx = transactions.find(t => t.id === txId);
@@ -901,36 +973,19 @@
         function adminSetCrashPoint() {
             if (!isAdmin) return;
             const newCrash = prompt('Enter new crash point (1.1 - 50):', crashPoint.toFixed(2));
-            if (newCrash && !isNaN(parseFloat(newCrash))) {
-                crashPoint = parseFloat(newCrash);
-                showToast(`⚡ Crash point set to ${crashPoint}x`);
-            }
+            if (newCrash && !isNaN(parseFloat(newCrash))) { crashPoint = parseFloat(newCrash); showToast(`⚡ Crash point set to ${crashPoint}x`); }
         }
         
         function adminExportReport() {
             if (!isAdmin) return;
-            const report = {
-                date: new Date().toISOString(),
-                totalDeposit: adminData.totalDeposit,
-                totalWithdraw: adminData.totalWithdraw,
-                adminProfit: adminData.adminProfit,
-                totalGames: user.totalGames
-            };
+            const report = { date: new Date().toISOString(), totalDeposit: adminData.totalDeposit, totalWithdraw: adminData.totalWithdraw, adminProfit: adminData.adminProfit, totalGames: user.totalGames };
             console.log('ADMIN REPORT:', report);
             showToast('📊 Report generated! Check console');
         }
         
         // ==================== UTILITIES ====================
-        function copyText(text) {
-            navigator.clipboard.writeText(text);
-            showToast('📋 Copied!');
-        }
-        
-        function copyReferralLink() {
-            navigator.clipboard.writeText(referralLink);
-            showToast('📋 Referral link copied!');
-        }
-        
+        function copyText(text) { navigator.clipboard.writeText(text); showToast('📋 Copied!'); }
+        function copyReferralLink() { navigator.clipboard.writeText(referralLink); showToast('📋 Referral link copied!'); }
         function showToast(message) {
             const toast = document.createElement('div');
             toast.className = 'toast';
@@ -938,16 +993,13 @@
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 2000);
         }
-        
-        function vibrate(duration) {
-            if (window.navigator && window.navigator.vibrate) window.navigator.vibrate(duration);
-        }
+        function vibrate(duration) { if (window.navigator && window.navigator.vibrate) window.navigator.vibrate(duration); }
         
         function switchPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(pageId).classList.add('active-page');
-            const navMap = { homePage: 'navHome', walletPage: 'navWallet', profilePage: 'navProfile' };
+            const navMap = { homePage: 'navHome', topPage: 'navTop', walletPage: 'navWallet', profilePage: 'navProfile' };
             document.getElementById(navMap[pageId]).classList.add('active');
         }
         
@@ -956,7 +1008,8 @@
             updateBalanceDisplay();
             updateHistoryDisplay();
             updateTransactionDisplay();
-            setMode(true); // Default to REAL mode
+            loadTopWinners('daily');
+            setMode(true);
             startCountdown();
             
             setInterval(() => {
