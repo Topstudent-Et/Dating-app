@@ -1,559 +1,332 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="am">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Telegram Group Manager · Multi-Account Adder System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AVIA-MASTER V40 ULTIMATE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: system-ui, 'Segoe UI', 'Inter', 'Roboto', sans-serif;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;700;900&display=swap');
+        :root { --accent: #ff0044; --real-green: #00ff66; --demo-red: #ff3333; --gold: #ffd700; }
+        body { background: #000; color: white; font-family: 'Inter', sans-serif; overflow: hidden; margin: 0; }
+        .font-game { font-family: 'Orbitron', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        
+        /* Dynamic Modes */
+        .mode-real { --theme: var(--real-green); }
+        .mode-demo { --theme: var(--demo-red); }
 
-        body {
-            background: linear-gradient(145deg, #0a1f2c 0%, #07121c 100%);
-            min-height: 100vh;
-            padding: 2rem 1.5rem;
-        }
+        /* Game Screen */
+        .screen { background: radial-gradient(circle at bottom left, #1a0505 0%, #000 100%); height: 240px; position: relative; border-radius: 30px; overflow: hidden; border: 2px solid #111; }
+        #gamePath { stroke: var(--theme); stroke-width: 6; fill: none; filter: drop-shadow(0 0 15px var(--theme)); transition: 0.1s; }
+        .plane { position: absolute; bottom: 20px; left: 20px; font-size: 45px; z-index: 10; transform: rotate(-15deg); }
+        
+        /* Navigation */
+        .nav-top { position: fixed; top: 0; width: 100%; height: 75px; display: flex; justify-content: space-around; align-items: center; background: #050505; border-bottom: 1px solid #111; z-index: 1000; }
+        .nav-item { color: #444; font-size: 10px; font-weight: 900; text-align: center; }
+        .nav-item.active { color: var(--theme); }
 
-        .container {
-            max-width: 1300px;
-            margin: 0 auto;
-        }
-
-        /* main card */
-        .glass-panel {
-            background: rgba(15, 28, 40, 0.85);
-            backdrop-filter: blur(12px);
-            border-radius: 2rem;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 191, 255, 0.2);
-            overflow: hidden;
-        }
-
-        .header {
-            background: rgba(0, 40, 60, 0.7);
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid #2a577b;
-        }
-
-        .header h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #90e0ff, #3a86ff);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .badge-scale {
-            background: #0f3b4f;
-            padding: 6px 14px;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            color: #8fcbff;
-            font-weight: 500;
-        }
-
-        .sub {
-            color: #9bb7d4;
-            margin-top: 0.6rem;
-            font-size: 0.85rem;
-            border-left: 3px solid #3b82f6;
-            padding-left: 14px;
-        }
-
-        .input-area {
-            padding: 1.8rem 2rem;
-            background: rgba(8, 18, 28, 0.6);
-        }
-
-        .flex-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            align-items: flex-end;
-        }
-
-        .field {
-            flex: 2;
-            min-width: 200px;
-        }
-
-        .field label {
-            display: block;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #7ba9cc;
-            margin-bottom: 5px;
-        }
-
-        .field input {
-            width: 100%;
-            background: #0f1c28;
-            border: 1px solid #2c5778;
-            padding: 12px 18px;
-            border-radius: 2rem;
-            font-size: 1rem;
-            color: #f0f6ff;
-            outline: none;
-        }
-
-        .field input:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 2px rgba(59,130,246,0.4);
-        }
-
-        .btn-primary {
-            background: linear-gradient(100deg, #1e6ad0, #0f4c9e);
-            border: none;
-            padding: 12px 28px;
-            border-radius: 3rem;
-            font-weight: 600;
-            color: white;
-            cursor: pointer;
-            transition: 0.2s;
-            font-size: 0.95rem;
-        }
-
-        .btn-primary:hover {
-            transform: scale(0.97);
-            background: linear-gradient(100deg, #2f7ae0, #1a5ab0);
-        }
-
-        .btn-secondary {
-            background: rgba(40, 70, 95, 0.8);
-            border: 1px solid #3f6e8f;
-            padding: 8px 16px;
-            border-radius: 2rem;
-            color: #cde5ff;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .btn-warning {
-            background: rgba(160, 80, 40, 0.7);
-            border-color: #b97f4b;
-        }
-
-        .stats-bar {
-            display: flex;
-            justify-content: space-between;
-            margin: 1rem 2rem;
-            padding: 0.8rem 1.2rem;
-            background: #07141fd9;
-            border-radius: 3rem;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .member-grid-container {
-            padding: 0 2rem 2rem 2rem;
-        }
-
-        .member-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .member-list {
-            background: #051018e0;
-            border-radius: 1.5rem;
-            border: 1px solid #284b64;
-            max-height: 460px;
-            overflow-y: auto;
-        }
-
-        .member-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.9rem 1.5rem;
-            border-bottom: 1px solid #1e3f57;
-            transition: 0.1s;
-        }
-
-        .member-row:hover {
-            background: #0a1d2c;
-        }
-
-        .member-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .avatar {
-            background: #2c5a7a;
-            width: 40px;
-            height: 40px;
-            border-radius: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-
-        .id-badge {
-            font-family: monospace;
-            background: #0c1924;
-            padding: 4px 14px;
-            border-radius: 2rem;
-            color: #b9dcff;
-        }
-
-        .remove-btn {
-            background: none;
-            border: none;
-            font-size: 1.4rem;
-            cursor: pointer;
-            padding: 6px 12px;
-            border-radius: 2rem;
-            color: #e0a0b0;
-        }
-
-        .remove-btn:hover {
-            background: #361a22;
-            color: #ff8a9e;
-        }
-
-        .empty-msg {
-            text-align: center;
-            padding: 3rem;
-            color: #5e87a5;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #0a1e2cee;
-            backdrop-filter: blur(12px);
-            color: #c6ecff;
-            padding: 10px 26px;
-            border-radius: 60px;
-            font-size: 0.85rem;
-            border-left: 4px solid #3b82f6;
-            z-index: 1000;
-            transition: 0.2s;
-            pointer-events: none;
-        }
-
-        footer {
-            font-size: 0.7rem;
-            text-align: center;
-            padding: 1rem;
-            color: #436f8f;
-            border-top: 1px solid #173e55;
-        }
-
-        @media (max-width: 640px) {
-            .member-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-        }
+        /* Podium */
+        .podium { display: flex; justify-content: center; align-items: flex-end; gap: 8px; margin: 25px 0; }
+        .p-card { text-align: center; border-radius: 20px; background: rgba(255,255,255,0.02); border: 2px solid #222; position: relative; }
+        .p1 { height: 150px; width: 110px; border-color: var(--gold); order: 2; z-index: 5; transform: scale(1.1); }
+        .p2 { height: 120px; width: 95px; border-color: #c0c0c0; order: 1; }
+        .p3 { height: 100px; width: 95px; border-color: #cd7f32; order: 3; }
+        
+        .v-badge { color: #38bdf8; font-size: 10px; margin-left: 2px; }
+        .page { display: none; height: calc(100vh - 75px); margin-top: 75px; overflow-y: auto; padding: 15px; padding-bottom: 120px; }
+        .active-page { display: block; }
+        
+        .btn-speed { background: #111; border: 1px solid #222; padding: 6px; border-radius: 8px; font-size: 9px; font-weight: 900; }
+        .btn-speed.active { border-color: var(--theme); color: var(--theme); }
     </style>
 </head>
-<body>
-<div class="container">
-    <div class="glass-panel">
-        <div class="header">
-            <h1>👥 Telegram Group Manager <span class="badge-scale">Multi-ID · Bulk ready</span></h1>
-            <div class="sub">➕ Manage members by numeric Telegram ID | Auto-save | Simulated large-scale adder</div>
+<body class="mode-demo no-scrollbar">
+
+    <nav class="nav-top">
+        <div onclick="showP('home')" id="n-home" class="nav-item active"><i class="fa-solid fa-jet-fighter-up text-2xl mb-1"></i><br>PLAY</div>
+        <div onclick="showP('deposit')" id="n-deposit" class="nav-item"><i class="fa-solid fa-wallet text-2xl mb-1"></i><br>WALLET</div>
+        <div onclick="showP('leaderboard')" id="n-leaderboard" class="nav-item"><i class="fa-solid fa-trophy text-2xl mb-1"></i><br>TOP</div>
+        <div onclick="showP('profile')" id="n-profile" class="nav-item"><i class="fa-solid fa-user-gear text-2xl mb-1"></i><br>PROFILE</div>
+    </nav>
+
+    <section id="home" class="page active-page">
+        <div class="flex gap-2 mb-4">
+            <button onclick="setMode(true)" id="mBtnDemo" class="flex-1 py-4 bg-red-600 rounded-2xl font-black text-sm border-b-4 border-red-800 active:translate-y-1">DEMO MODE</button>
+            <button onclick="setMode(false)" id="mBtnReal" class="flex-1 py-4 bg-zinc-900 text-zinc-600 rounded-2xl font-black text-sm border-b-4 border-zinc-800 active:translate-y-1">REAL MODE</button>
         </div>
 
-        <div class="input-area">
-            <div class="flex-row">
-                <div class="field">
-                    <label>👤 TELEGRAM USER ID (numeric only)</label>
-                    <input type="text" id="userIdInput" placeholder="Example: 592817403" autocomplete="off">
+        <div class="screen flex items-center justify-center mb-4">
+            <svg width="100%" height="100%" style="position:absolute;"><path id="gamePath" d="M 0 240 Q 0 240 0 240" /></svg>
+            <div id="mTxt" class="font-game text-7xl italic text-white z-20">1.00x</div>
+            <div id="plane" class="plane">✈️</div>
+            <div id="waitMsg" class="absolute inset-0 bg-black/60 z-30 flex items-center justify-center hidden">
+                <p class="font-black italic text-yellow-500 text-xl">WAITING FOR NEXT ROUND...</p>
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <div class="glass p-4 rounded-[30px]">
+                <div class="flex gap-2 mb-3">
+                    <div class="flex-1 flex bg-black p-2 rounded-xl items-center">
+                        <button onclick="adj(1,-10)" class="px-3 font-black">-</button>
+                        <input id="bInp1" type="number" value="10" class="w-full bg-transparent text-center font-black outline-none">
+                        <button onclick="adj(1,10)" class="px-3 font-black">+</button>
+                    </div>
+                    <div class="flex gap-1">
+                        <button onclick="setB(1,100)" class="btn-speed">100</button>
+                        <button onclick="setB(1,1000)" class="btn-speed">1k</button>
+                    </div>
                 </div>
-                <button class="btn-primary" id="addMemberBtn">➕ Add member by ID</button>
+                <div class="flex gap-2 mb-3">
+                    <button id="auto2_1" onclick="setAuto(1,2)" class="btn-speed flex-1">AUTO 2x</button>
+                    <button id="auto4_1" onclick="setAuto(1,4)" class="btn-speed flex-1">AUTO 4x</button>
+                    <button id="auto10_1" onclick="setAuto(1,10)" class="btn-speed flex-1">AUTO 10x</button>
+                </div>
+                <button id="bBtn1" onclick="handleBet(1)" class="w-full py-5 rounded-2xl font-black italic text-2xl shadow-xl" style="background:var(--theme)">BET</button>
             </div>
-            <div style="font-size: 12px; margin-top: 14px; color:#5696bb;">
-                ⚡ Note: Real Telegram adding requires backend & API. This is a member management simulation with localStorage persistence.
+
+            <div class="glass p-4 rounded-[30px]">
+                <div class="flex gap-2 mb-3">
+                    <div class="flex-1 flex bg-black p-2 rounded-xl items-center">
+                        <button onclick="adj(2,-10)" class="px-3 font-black">-</button>
+                        <input id="bInp2" type="number" value="10" class="w-full bg-transparent text-center font-black outline-none">
+                        <button onclick="adj(2,10)" class="px-3 font-black">+</button>
+                    </div>
+                    <div class="flex gap-1">
+                        <button onclick="setB(2,100)" class="btn-speed">100</button>
+                        <button onclick="setB(2,1000)" class="btn-speed">1k</button>
+                    </div>
+                </div>
+                <div class="flex gap-2 mb-3">
+                    <button id="auto2_2" onclick="setAuto(2,2)" class="btn-speed flex-1">AUTO 2x</button>
+                    <button id="auto4_2" onclick="setAuto(2,4)" class="btn-speed flex-1">AUTO 4x</button>
+                    <button id="auto10_2" onclick="setAuto(2,10)" class="btn-speed flex-1">AUTO 10x</button>
+                </div>
+                <button id="bBtn2" onclick="handleBet(2)" class="w-full py-5 rounded-2xl font-black italic text-2xl shadow-xl" style="background:var(--theme)">BET</button>
             </div>
         </div>
 
-        <div class="stats-bar">
-            <span>👥 Total members: <strong id="memberCount">0</strong></span>
-            <span>✅ Valid numeric IDs: <strong id="validCount">0</strong></span>
-            <button class="btn-secondary" id="clearAllBtn">🗑️ Clear all members</button>
-            <button class="btn-secondary" id="bulkDemoBtn">📦 Load 1000+ demo IDs</button>
-            <button class="btn-secondary btn-warning" id="bulk50DemoBtn">⚡ Load 50 demo accounts</button>
-        </div>
+        <div id="liveList" class="mt-6 space-y-2 pb-10"></div>
+    </section>
 
-        <div class="member-grid-container">
-            <div class="member-header">
-                <h3 style="color:#cbe4fe;">📋 Member directory (User ID)</h3>
-                <span style="font-size:12px;">✨ Manage up to 10k members</span>
-            </div>
-            <div class="member-list" id="memberList">
-                <div class="empty-msg">✨ No members yet. Add IDs above or use demo loader.</div>
+    <section id="deposit" class="page">
+        <div class="glass p-6 rounded-[35px] mb-6">
+            <h3 class="text-xs font-black text-yellow-500 mb-4">CBE BANK TRANSFER</h3>
+            <div onclick="copyT('1000179571815')" class="flex justify-between items-center bg-black/40 p-5 rounded-2xl active:scale-95">
+                <span class="text-xl font-black">1000179571815</span><i class="fa-solid fa-copy"></i>
             </div>
         </div>
-        <footer>
-            ⚠️ Simulation interface — real Telegram API required for actual group invites. Daily limit per account ~50-100.
-        </footer>
+        <div class="glass p-8 rounded-[40px] text-center border-2 border-dashed border-zinc-800">
+            <input type="file" id="ssInp" class="hidden" onchange="previewImg(this)">
+            <button onclick="document.getElementById('ssInp').click()" class="w-full py-5 rounded-2xl font-black bg-white/5 border border-white/5 mb-4">SELECT RECEIPT PHOTO</button>
+            <div id="prevBox" class="hidden mb-6"><img id="ssPrev" class="rounded-2xl max-h-60 mx-auto"></div>
+            <button onclick="submitReceipt()" class="w-full py-5 rounded-2xl font-black italic shadow-2xl" style="background:var(--theme)">CONFIRM & SEND</button>
+        </div>
+    </section>
+
+    <section id="leaderboard" class="page">
+        <div class="podium">
+            <div class="p-card p2"><i class="fa-solid fa-medal text-zinc-400 text-2xl my-2"></i><p class="text-[10px] font-black">Aman_King</p><p class="text-[9px] text-green-500">45k ETB</p></div>
+            <div class="p-card p1"><i class="fa-solid fa-crown text-yellow-500 text-4xl my-2"></i><p class="text-[11px] font-black">Dai_Fikadu <i class="fa-solid fa-circle-check v-badge"></i></p><p class="text-[10px] text-green-500">120k ETB</p></div>
+            <div class="p-card p3"><i class="fa-solid fa-medal text-orange-700 text-2xl my-2"></i><p class="text-[10px] font-black">Sami_Pro</p><p class="text-[9px] text-green-500">28k ETB</p></div>
+        </div>
+        <div id="lList" class="space-y-2 pb-10"></div>
+    </section>
+
+    <section id="profile" class="page text-center">
+        <div id="pfpArea" class="w-32 h-32 rounded-[50px] bg-zinc-900 mx-auto mt-10 mb-6 flex items-center justify-center border-4 border-white/5 overflow-hidden"></div>
+        <h2 class="text-3xl font-black flex justify-center items-center">
+            <span id="uName">@User</span> <i class="fa-solid fa-circle-check v-badge text-2xl"></i>
+        </h2>
+        <p id="uBal" class="text-2xl font-black text-green-500 mt-2">0.00 ETB</p>
+
+        <div id="admBox" class="hidden mt-10 p-6 glass rounded-3xl border-2 border-red-600/30">
+            <p class="text-red-600 font-black mb-4 italic">ADMIN PANEL ACCESS</p>
+            <button onclick="openAdm()" class="w-full py-4 bg-red-600 rounded-xl font-black">MANAGE RECEIPTS</button>
+        </div>
+    </section>
+
+    <div id="admModal" class="fixed inset-0 bg-black z-[2000] hidden flex flex-col p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="font-black text-red-600">PENDING APPROVALS</h2>
+            <button onclick="closeAdm()" class="bg-zinc-800 px-4 py-2 rounded-lg font-black text-xs">CLOSE</button>
+        </div>
+        <div id="admList" class="space-y-4 overflow-y-auto no-scrollbar"></div>
     </div>
-</div>
-<div id="toastMsg" class="toast" style="opacity:0;">Ready</div>
 
-<script>
-    // ---------- STORAGE ----------
-    let members = [];   // each: { userId }
+    <audio id="sndFly" loop src="https://www.soundjay.com/transportation/sounds/jet-plane-fly-over-1.mp3"></audio>
+    <audio id="sndBoom" src="https://www.soundjay.com/button/sounds/button-10.mp3"></audio>
 
-    // helpers
-    function showToast(msg, isError = false) {
-        const toast = document.getElementById('toastMsg');
-        toast.textContent = msg;
-        toast.style.backgroundColor = isError ? '#441c28ee' : '#0a2a3cee';
-        toast.style.borderLeftColor = isError ? '#ff8888' : '#3b82f6';
-        toast.style.opacity = '1';
-        setTimeout(() => {
-            toast.style.opacity = '0';
-        }, 2600);
-    }
+    <script>
+        const tg = window.Telegram.WebApp; tg.expand();
+        const ADM_USER = "Dawit_Fikadu21";
+        let isDemo = true; let isFlying = false; let mult = 1.0;
+        let realBal = parseFloat(localStorage.getItem('v40_real')) || 0;
+        let demoBal = 1000.00;
+        let bets = { 1: { active: false, amt: 0, auto: 0 }, 2: { active: false, amt: 0, auto: 0 } };
 
-    function isValidId(id) {
-        if (!id || typeof id !== 'string') return false;
-        let trimmed = id.trim();
-        if (trimmed === "") return false;
-        if (!/^\d+$/.test(trimmed)) return false;
-        let num = Number(trimmed);
-        return Number.isInteger(num) && num > 0 && num <= 9999999999999;
-    }
-
-    function isDuplicate(userId) {
-        return members.some(m => m.userId === userId);
-    }
-
-    function addMemberById(rawId) {
-        if (!isValidId(rawId)) {
-            showToast(`❌ Invalid ID: "${rawId}". Use positive numeric ID.`, true);
-            return false;
+        function init() {
+            const user = tg.initDataUnsafe?.user;
+            const name = user?.username || "Guest_User";
+            document.getElementById('uName').innerText = "@" + name;
+            document.getElementById('pfpArea').innerHTML = user?.photo_url ? `<img src="${user.photo_url}" class="w-full h-full object-cover">` : `<span class="text-4xl font-black">${name[0]}</span>`;
+            if(name === ADM_USER) document.getElementById('admBox').classList.remove('hidden');
+            updateUI(); renderWinners(); gameLoop();
         }
-        const clean = rawId.trim();
-        if (isDuplicate(clean)) {
-            showToast(`⚠️ ID ${clean} already exists.`, true);
-            return false;
-        }
-        members.push({ userId: clean });
-        showToast(`✅ Member ${clean} added successfully.`);
-        renderList();
-        updateStats();
-        saveToLocal();
-        return true;
-    }
 
-    function removeMember(userId) {
-        const before = members.length;
-        members = members.filter(m => m.userId !== userId);
-        if (members.length < before) {
-            showToast(`🗑️ Removed ID ${userId}`);
-            renderList();
-            updateStats();
-            saveToLocal();
-        } else {
-            showToast(`ID not found`, true);
+        // --- CORE GAME LOOP (24/7 Sync Simulation) ---
+        function gameLoop() {
+            if(isFlying) return;
+            let count = 5;
+            document.getElementById('waitMsg').classList.add('hidden');
+            let t = setInterval(() => {
+                count--;
+                if(count <= 0) { clearInterval(t); launch(); }
+                genBots();
+            }, 1000);
         }
-    }
 
-    function clearAll() {
-        if (members.length === 0) {
-            showToast(`Group already empty`, true);
-            return;
-        }
-        members = [];
-        showToast(`🧹 All members cleared.`);
-        renderList();
-        updateStats();
-        saveToLocal();
-    }
+        function launch() {
+            isFlying = true; mult = 1.0;
+            document.getElementById('sndFly').play();
+            
+            // Logic: 10% Profit margin (Real mode only)
+            let crash = 1.1 + (Math.random() * 9.0);
+            if(!isDemo && (bets[1].active || bets[2].active)) crash = 1.1 + (Math.random() * 0.4);
 
-    // load exactly 50 demo IDs (for 50 accounts simulation)
-    function load50DemoAccounts() {
-        let demoIds = [];
-        // generate 50 unique demo IDs
-        for (let i = 1; i <= 50; i++) {
-            let fakeId = 500000000 + i;
-            demoIds.push(fakeId.toString());
+            let eng = setInterval(() => {
+                mult += 0.05;
+                document.getElementById('mTxt').innerText = mult.toFixed(2) + "x";
+                let x = mult * 25, y = mult * 20;
+                document.getElementById('plane').style.transform = `translate(${x}px, -${y}px) rotate(-15deg)`;
+                document.getElementById('gamePath').setAttribute('d', `M 0 240 Q ${x/2} ${240-y} ${x+20} ${240-y-20}`);
+                
+                // Auto Cash-out
+                [1,2].forEach(id => {
+                    if(bets[id].active && bets[id].auto > 0 && mult >= bets[id].auto) handleBet(id);
+                });
+
+                if(mult >= crash) { clearInterval(eng); boom(); }
+            }, 80);
         }
-        let addedCount = 0;
-        for (let id of demoIds) {
-            if (!isDuplicate(id)) {
-                members.push({ userId: id });
-                addedCount++;
+
+        function boom() {
+            isFlying = false;
+            document.getElementById('sndFly').pause(); document.getElementById('sndFly').currentTime = 0;
+            document.getElementById('sndBoom').play();
+            document.getElementById('mTxt').innerText = "FLEW AWAY!";
+            document.getElementById('mTxt').style.color = "#ff0044";
+            document.getElementById('waitMsg').classList.remove('hidden');
+            bets[1].active = bets[2].active = false; resetBUI(1); resetBUI(2);
+
+            setTimeout(() => {
+                document.getElementById('plane').style.transform = "translate(0,0) rotate(-15deg)";
+                document.getElementById('gamePath').setAttribute('d', 'M 0 240 Q 0 240 0 240');
+                document.getElementById('mTxt').style.color = "white";
+                gameLoop();
+            }, 4000);
+        }
+
+        function handleBet(id) {
+            if(isFlying) {
+                if(bets[id].active) {
+                    let win = bets[id].amt * mult;
+                    if(isDemo) demoBal += win; else { realBal += win; localStorage.setItem('v40_real', realBal); }
+                    bets[id].active = false; resetBUI(id); updateUI();
+                    tg.showAlert(`✅ WON ${win.toFixed(0)} ETB!`);
+                }
+                return;
+            }
+            let a = parseInt(document.getElementById('bInp'+id).value);
+            let cur = isDemo ? demoBal : realBal;
+            if(a > cur || a <= 0) return tg.showAlert("Insufficient Funds!");
+            
+            if(isDemo) demoBal -= a; else { realBal -= a; localStorage.setItem('v40_real', realBal); }
+            bets[id].active = true; bets[id].amt = a;
+            updateUI();
+            document.getElementById('bBtn'+id).innerText = "CASH OUT";
+            document.getElementById('bBtn'+id).style.background = "#ea580c";
+        }
+
+        // --- UTILS ---
+        function setMode(demo) {
+            isDemo = demo;
+            document.body.className = demo ? "mode-demo" : "mode-real";
+            document.getElementById('mBtnDemo').className = demo ? "flex-1 py-4 bg-red-600 rounded-2xl font-black text-sm border-b-4 border-red-800" : "flex-1 py-4 bg-zinc-900 text-zinc-600 rounded-2xl font-black text-sm";
+            document.getElementById('mBtnReal').className = !demo ? "flex-1 py-4 bg-green-600 rounded-2xl font-black text-sm border-b-4 border-green-800" : "flex-1 py-4 bg-zinc-900 text-zinc-600 rounded-2xl font-black text-sm";
+            updateUI();
+        }
+        function updateUI() { document.getElementById('uBal').innerText = (isDemo ? demoBal : realBal).toFixed(2) + " ETB"; }
+        function adj(id, v) { let i = document.getElementById('bInp'+id); i.value = Math.max(10, parseInt(i.value)+v); }
+        function setB(id, v) { document.getElementById('bInp'+id).value = v; }
+        function setAuto(id, v) { 
+            bets[id].auto = bets[id].auto === v ? 0 : v;
+            document.querySelectorAll(`#auto2_${id}, #auto4_${id}, #auto10_${id}`).forEach(b => b.classList.remove('active'));
+            if(bets[id].auto) document.getElementById(`auto${v}_${id}`).classList.add('active');
+        }
+        function resetBUI(id) { document.getElementById('bBtn'+id).innerText = "BET"; document.getElementById('bBtn'+id).style.background = "var(--theme)"; }
+        function showP(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('active-page');
+            document.getElementById('n-'+id).classList.add('active');
+        }
+
+        // --- BOTS & WINNERS ---
+        function genBots() {
+            const names = ["Yonas_Tech","Hana_M","Abdu_21","Sol_Ethio","Betty_V","Kaleb_X","Muller_J"];
+            const list = document.getElementById('liveList'); list.innerHTML = "";
+            for(let i=0; i<6; i++) {
+                list.innerHTML += `<div class="glass p-3 rounded-xl flex justify-between items-center"><span class="text-xs font-bold">${names[Math.floor(Math.random()*names.length)]} <i class="fa-solid fa-circle-check v-badge"></i></span><span class="text-[10px] opacity-50">Waiting...</span></div>`;
             }
         }
-        showToast(`📦 Loaded ${addedCount} demo member IDs (50 accounts simulation). Total: ${members.length}`);
-        renderList();
-        updateStats();
-        saveToLocal();
-    }
-
-    // load 1000+ demo IDs
-    function loadLargeDemo() {
-        let demoIds = [];
-        // generate 1100 demo IDs
-        for (let i = 1; i <= 1100; i++) {
-            let fakeId = 2000000000 + i;
-            demoIds.push(fakeId.toString());
-        }
-        let addedCount = 0;
-        for (let id of demoIds) {
-            if (!isDuplicate(id)) {
-                members.push({ userId: id });
-                addedCount++;
+        function renderWinners() {
+            const l = document.getElementById('lList');
+            const n = ["Dawit_Dev","Elias_Sol","Fifi_Love","Teddy_M","Bini_Boy","Sura_X"];
+            for(let i=0; i<20; i++) {
+                l.innerHTML += `<div class="glass p-4 rounded-2xl flex justify-between items-center"><span class="text-xs font-bold uppercase">${n[i%6]} <i class="fa-solid fa-circle-check v-badge"></i></span><span class="text-green-500 font-black">${(Math.random()*15000+200).toFixed(0)} ETB</span></div>`;
             }
         }
-        showToast(`📦 Loaded ${addedCount} demo member IDs (bulk). Total now: ${members.length}`);
-        renderList();
-        updateStats();
-        saveToLocal();
-    }
 
-    function renderList() {
-        const container = document.getElementById('memberList');
-        if (!container) return;
-        if (members.length === 0) {
-            container.innerHTML = `<div class="empty-msg">📭 No members yet. Use 'Load 50 demo accounts' or 'Load 1000+ demo IDs' to simulate.</div>`;
-            return;
+        // --- ADMIN & PHOTO ---
+        function previewImg(i) { if(i.files[0]) { let r = new FileReader(); r.onload = (e) => { document.getElementById('ssPrev').src = e.target.result; document.getElementById('prevBox').classList.remove('hidden'); }; r.readAsDataURL(i.files[0]); } }
+        function submitReceipt() {
+            const f = document.getElementById('ssInp').files[0];
+            if(!f) return tg.showAlert("Select photo!");
+            let r = new FileReader();
+            r.onload = () => {
+                let db = JSON.parse(localStorage.getItem('v40_db')) || [];
+                db.push({ u: tg.initDataUnsafe?.user?.username || "Guest", img: r.result, t: new Date().toLocaleTimeString() });
+                localStorage.setItem('v40_db', JSON.stringify(db));
+                tg.showAlert("✅ Sent to Admin!");
+                document.getElementById('prevBox').classList.add('hidden');
+            };
+            r.readAsDataURL(f);
         }
-        // sort by numeric ID
-        const sorted = [...members].sort((a,b) => parseInt(a.userId) - parseInt(b.userId));
-        let html = '';
-        for (let mem of sorted) {
-            const uid = mem.userId;
-            const avatarLetter = uid.charAt(0);
-            html += `
-                <div class="member-row" data-uid="${uid}">
-                    <div class="member-info">
-                        <div class="avatar">${avatarLetter}</div>
-                        <div>
-                            <div style="font-size:12px; color:#9bc2e0;">Telegram ID</div>
-                            <div class="id-badge">${uid}</div>
-                        </div>
-                    </div>
-                    <div class="member-actions">
-                        <button class="remove-btn" data-id="${uid}" title="remove">❌</button>
-                    </div>
-                </div>
-            `;
+        function openAdm() { document.getElementById('admModal').classList.remove('hidden'); loadAdm(); }
+        function closeAdm() { document.getElementById('admModal').classList.add('hidden'); }
+        function loadAdm() {
+            const db = JSON.parse(localStorage.getItem('v40_db')) || [];
+            document.getElementById('admList').innerHTML = db.map((it, i) => `
+                <div class="glass p-5 rounded-3xl"><p class="text-xs font-black mb-3">@${it.u} | ${it.t}</p><img src="${it.img}" class="rounded-xl mb-4"><div class="flex gap-2"><button onclick="approve(${i})" class="flex-1 bg-green-600 py-3 rounded-xl font-black">APPROVE</button><button onclick="reject(${i})" class="flex-1 bg-red-600 py-3 rounded-xl font-black">REJECT</button></div></div>
+            `).join('') || "<p class='text-center opacity-30 mt-20'>No receipts</p>";
         }
-        container.innerHTML = html;
-        const allRemove = document.querySelectorAll('.remove-btn');
-        allRemove.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const id = btn.getAttribute('data-id');
-                if (id) removeMember(id);
-            });
-        });
-    }
+        function approve(i) {
+            let db = JSON.parse(localStorage.getItem('v40_db'));
+            let amt = prompt("Amount?");
+            if(amt) {
+                if(db[i].u === (tg.initDataUnsafe?.user?.username || "Guest")) { realBal += parseFloat(amt); localStorage.setItem('v40_real', realBal); updateUI(); }
+                db.splice(i,1); localStorage.setItem('v40_db', JSON.stringify(db)); loadAdm();
+                tg.showAlert("Approved!");
+            }
+        }
+        function reject(i) { let db = JSON.parse(localStorage.getItem('v40_db')); db.splice(i,1); localStorage.setItem('v40_db', JSON.stringify(db)); loadAdm(); }
+        function copyT(t) { navigator.clipboard.writeText(t); tg.showAlert("Copied!"); }
 
-    function updateStats() {
-        const memberCountSpan = document.getElementById('memberCount');
-        const validSpan = document.getElementById('validCount');
-        if (memberCountSpan) memberCountSpan.innerText = members.length;
-        if (validSpan) {
-            const validNum = members.filter(m => /^\d+$/.test(m.userId)).length;
-            validSpan.innerText = validNum;
-        }
-    }
-
-    function saveToLocal() {
-        try {
-            localStorage.setItem('telegram_members_bulk', JSON.stringify(members));
-        } catch(e) { console.warn(e); }
-    }
-
-    function loadFromLocal() {
-        const stored = localStorage.getItem('telegram_members_bulk');
-        if (stored) {
-            try {
-                const parsed = JSON.parse(stored);
-                if (Array.isArray(parsed)) {
-                    members = parsed.filter(item => item && typeof item.userId === 'string' && isValidId(item.userId));
-                    renderList();
-                    updateStats();
-                }
-            } catch(e) {}
-        }
-    }
-
-    // DOM ready
-    document.addEventListener('DOMContentLoaded', () => {
-        loadFromLocal();
-        if (members.length === 0) {
-            renderList();
-            updateStats();
-        } else {
-            renderList();
-            updateStats();
-        }
-
-        const addBtn = document.getElementById('addMemberBtn');
-        const userIdInput = document.getElementById('userIdInput');
-        const clearBtn = document.getElementById('clearAllBtn');
-        const demoBtn = document.getElementById('bulkDemoBtn');
-        const demo50Btn = document.getElementById('bulk50DemoBtn');
-
-        if (addBtn) {
-            addBtn.addEventListener('click', () => {
-                const val = userIdInput.value;
-                if (!val.trim()) {
-                    showToast(`Please enter a numeric Telegram ID`, true);
-                    return;
-                }
-                const ok = addMemberById(val);
-                if (ok) {
-                    userIdInput.value = '';
-                    userIdInput.focus();
-                } else {
-                    userIdInput.select();
-                }
-            });
-        }
-        if (clearBtn) {
-            clearBtn.addEventListener('click', () => {
-                if (members.length > 0 && confirm('⚠️ Remove ALL members from list? This cannot be undone.')) {
-                    clearAll();
-                } else if (members.length === 0) {
-                    showToast('No members to clear', true);
-                }
-            });
-        }
-        if (demoBtn) {
-            demoBtn.addEventListener('click', () => {
-                loadLargeDemo();
-            });
-        }
-        if (demo50Btn) {
-            demo50Btn.addEventListener('click', () => {
-                load50DemoAccounts();
-            });
-        }
-        if (userIdInput) {
-            userIdInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') addBtn.click();
-            });
-        }
-    });
-</script>
+        init();
+    </script>
 </body>
 </html>
