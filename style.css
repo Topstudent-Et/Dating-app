@@ -1,4 +1,4 @@
-/* style.css - AVIA-MASTER ELITE with top navigation */
+/* style.css - AVIA-MASTER ELITE with top navigation (icons only) */
 * {
     margin: 0;
     padding: 0;
@@ -17,7 +17,7 @@ body {
     background: var(--dark-bg);
     color: white;
     overflow-x: hidden;
-    padding-top: 120px; /* space for fixed top nav + header */
+    padding-top: 115px; /* space for fixed top nav (55px) + header (60px) */
 }
 body.light-mode {
     background: #f0f2f5;
@@ -26,7 +26,7 @@ body.light-mode {
 .font-game {
     font-family: 'Orbitron', monospace;
 }
-/* Top Navigation Bar */
+/* Top Navigation Bar - icons only, horizontal */
 .top-nav {
     position: fixed;
     top: 0;
@@ -46,20 +46,12 @@ body.light-mode {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 .nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    font-size: 20px;
+    font-size: 26px;
     color: #666;
     transition: all 0.2s ease;
     cursor: pointer;
-    padding: 6px 12px;
+    padding: 8px 16px;
     border-radius: 30px;
-}
-.nav-item span {
-    font-size: 9px;
-    font-weight: bold;
 }
 .nav-item.active {
     color: var(--accent);
@@ -98,7 +90,7 @@ body.light-mode {
 .page {
     display: none;
     padding: 16px;
-    min-height: calc(100vh - 120px);
+    min-height: calc(100vh - 115px);
 }
 .page.active-page {
     display: block;
@@ -243,10 +235,8 @@ body.light-mode {
 }
 /* Responsive */
 @media (max-width: 480px) {
-    body { padding-top: 110px; }
+    body { padding-top: 105px; }
     .main-header { height: 55px; top: 50px; }
     .top-nav { height: 50px; }
-    .nav-item { font-size: 18px; padding: 4px 8px; }
-    .nav-item span { font-size: 8px; }
-    .mode-option { padding: 4px 12px; font-size: 10px; }
+    .nav-item { font-size: 22px; padding: 6px 12px; }
 }
