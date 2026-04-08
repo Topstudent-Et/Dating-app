@@ -10,32 +10,36 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* fallback inline styles if external fails */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
 </head>
 <body>
 
-<header class="fixed top-0 left-0 right-0 z-50 px-4 py-3 flex justify-between items-center border-b border-white/10 backdrop-blur-xl bg-black/50">
+<!-- Top Navigation Bar -->
+<nav class="top-nav">
+    <div onclick="switchPage('homePage')" id="navHome" class="nav-item active"><i class="fa-solid fa-plane"></i><span>Play</span></div>
+    <div onclick="switchPage('topPage')" id="navTop" class="nav-item"><i class="fa-solid fa-trophy"></i><span>Top</span></div>
+    <div onclick="switchPage('walletPage')" id="navWallet" class="nav-item"><i class="fa-solid fa-wallet"></i><span>Wallet</span></div>
+    <div onclick="switchPage('profilePage')" id="navProfile" class="nav-item"><i class="fa-solid fa-user"></i><span>Profile</span></div>
+</nav>
+
+<!-- Header with user info and mode toggle -->
+<header class="main-header">
     <div class="flex items-center gap-3">
-        <div id="userAvatar" class="w-11 h-11 rounded-full bg-gradient-to-r from-red-500 to-pink-500 flex items-center justify-center overflow-hidden text-xl">
+        <div id="userAvatar" class="w-10 h-10 rounded-full bg-gradient-to-r from-red-500 to-pink-500 flex items-center justify-center overflow-hidden text-lg">
             <img id="avatarImg" src="" style="display:none; width:100%; height:100%; object-fit:cover;">
             <span id="avatarPlaceholder">👤</span>
         </div>
         <div>
             <div class="flex items-center gap-2"><span id="userName" class="font-bold text-sm">@User</span></div>
-            <div class="flex items-center gap-2 mt-1"><span id="balanceDisplay" class="text-green-400 font-black text-xl">0 ETB</span></div>
+            <div class="flex items-center gap-2 mt-0.5"><span id="balanceDisplay" class="text-green-400 font-black text-base">0 ETB</span></div>
         </div>
     </div>
-    <div id="modeToggleContainer" class="mode-toggle" style="display: none;">
+    <div id="modeToggleContainer" class="mode-toggle">
         <div onclick="setMode(true)" id="realModeBtn" class="mode-option active">REAL</div>
         <div onclick="setMode(false)" id="demoModeBtn" class="mode-option">DEMO</div>
     </div>
 </header>
 
-<!-- Home Page -->
+<!-- Pages -->
 <section id="homePage" class="page active-page">
     <div id="historyList" class="flex gap-2 overflow-x-auto mb-4 pb-2 no-scrollbar"></div>
     <div class="game-container">
@@ -52,12 +56,9 @@
             </div>
         </div>
     </div>
-    <!-- Left Slot -->
+    <!-- Bet panels (same as before) -->
     <div class="glass p-4 mb-3">
-        <div class="flex justify-between items-center mb-3">
-            <span class="text-xs opacity-60"><i class="fa-solid fa-arrow-left"></i> LEFT SLOT</span>
-            <span id="autoCash1" class="text-[10px] text-yellow-500">⚡ AUTO: OFF</span>
-        </div>
+        <div class="flex justify-between items-center mb-3"><span class="text-xs opacity-60"><i class="fa-solid fa-arrow-left"></i> LEFT SLOT</span><span id="autoCash1" class="text-[10px] text-yellow-500">⚡ AUTO: OFF</span></div>
         <div class="flex gap-2">
             <div class="flex-1 grid grid-cols-4 gap-2">
                 <button onclick="setBetAmount(1, 10)" id="betAmount1_10" class="chip-btn">10</button>
@@ -74,12 +75,8 @@
             <button onclick="setAutoCash(1, 0)" id="autoCash1_0" class="chip-btn text-[10px]">OFF</button>
         </div>
     </div>
-    <!-- Right Slot -->
     <div class="glass p-4 mb-3">
-        <div class="flex justify-between items-center mb-3">
-            <span class="text-xs opacity-60"><i class="fa-solid fa-arrow-right"></i> RIGHT SLOT</span>
-            <span id="autoCash2" class="text-[10px] text-yellow-500">⚡ AUTO: OFF</span>
-        </div>
+        <div class="flex justify-between items-center mb-3"><span class="text-xs opacity-60"><i class="fa-solid fa-arrow-right"></i> RIGHT SLOT</span><span id="autoCash2" class="text-[10px] text-yellow-500">⚡ AUTO: OFF</span></div>
         <div class="flex gap-2">
             <div class="flex-1 grid grid-cols-4 gap-2">
                 <button onclick="setBetAmount(2, 10)" id="betAmount2_10" class="chip-btn">10</button>
@@ -96,14 +93,12 @@
             <button onclick="setAutoCash(2, 0)" id="autoCash2_0" class="chip-btn text-[10px]">OFF</button>
         </div>
     </div>
-    <!-- Live Feed -->
     <div class="glass p-3 mt-2">
         <div class="flex items-center gap-2 mb-2"><span class="text-xs font-bold"><i class="fa-solid fa-fire text-red-500"></i> LIVE WINNERS</span></div>
         <div id="liveFeedContainer" class="space-y-2 max-h-40 overflow-y-auto"></div>
     </div>
 </section>
 
-<!-- Top Winners Page -->
 <section id="topPage" class="page">
     <div class="podium">
         <div class="podium-item second"><div class="podium-avatar">🥈</div><div class="font-bold text-xs">Lemi_X</div><div class="text-[10px] text-green-400">24,500 ETB</div></div>
@@ -118,7 +113,6 @@
     <div id="winnersList" class="space-y-2"></div>
 </section>
 
-<!-- Wallet Page -->
 <section id="walletPage" class="page">
     <div class="flex gap-3 mb-5">
         <button onclick="showWalletSection('deposit')" id="depositTab" class="flex-1 py-4 rounded-2xl font-black bg-red-600">💰 DEPOSIT</button>
@@ -144,7 +138,6 @@
     </div>
 </section>
 
-<!-- Profile Page -->
 <section id="profilePage" class="page">
     <div class="glass p-6 text-center mb-5">
         <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-r from-red-500 to-pink-500 flex items-center justify-center overflow-hidden text-4xl mb-3">
@@ -175,13 +168,6 @@
         <div class="grid grid-cols-2 gap-2"><button onclick="adminSetCrashPoint()" class="py-2 bg-red-600 rounded-xl text-xs font-bold">🎮 Set Crash Point</button><button onclick="adminExportReport()" class="py-2 bg-blue-600 rounded-xl text-xs font-bold">📊 Export Report</button></div>
     </div>
 </section>
-
-<nav class="nav-bar">
-    <div onclick="switchPage('homePage')" id="navHome" class="nav-item active"><i class="fa-solid fa-plane"></i></div>
-    <div onclick="switchPage('topPage')" id="navTop" class="nav-item"><i class="fa-solid fa-trophy"></i></div>
-    <div onclick="switchPage('walletPage')" id="navWallet" class="nav-item"><i class="fa-solid fa-wallet"></i></div>
-    <div onclick="switchPage('profilePage')" id="navProfile" class="nav-item"><i class="fa-solid fa-user"></i></div>
-</nav>
 
 <script src="script.js"></script>
 </body>
