@@ -1,4 +1,4 @@
-/* style.css - AVIA-MASTER ELITE */
+/* style.css - AVIA-MASTER ELITE with top navigation */
 * {
     margin: 0;
     padding: 0;
@@ -17,6 +17,7 @@ body {
     background: var(--dark-bg);
     color: white;
     overflow-x: hidden;
+    padding-top: 120px; /* space for fixed top nav + header */
 }
 body.light-mode {
     background: #f0f2f5;
@@ -24,6 +25,65 @@ body.light-mode {
 }
 .font-game {
     font-family: 'Orbitron', monospace;
+}
+/* Top Navigation Bar */
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 55px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1001;
+}
+.light-mode .top-nav {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-size: 20px;
+    color: #666;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 30px;
+}
+.nav-item span {
+    font-size: 9px;
+    font-weight: bold;
+}
+.nav-item.active {
+    color: var(--accent);
+    background: rgba(255,0,68,0.1);
+}
+/* Main Header (user info + mode toggle) */
+.main-header {
+    position: fixed;
+    top: 55px;
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 1000;
+}
+.light-mode .main-header {
+    background: rgba(255, 255, 255, 0.9);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 .glass {
     background: rgba(255, 255, 255, 0.05);
@@ -35,39 +95,10 @@ body.light-mode {
     background: rgba(0, 0, 0, 0.03);
     border: 1px solid rgba(0, 0, 0, 0.1);
 }
-.nav-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 70px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background: rgba(10, 10, 10, 0.95);
-    backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    z-index: 1000;
-}
-.light-mode .nav-bar {
-    background: rgba(255, 255, 255, 0.95);
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-.nav-item {
-    font-size: 26px;
-    color: #666;
-    transition: all 0.2s ease;
-    cursor: pointer;
-    padding: 8px;
-}
-.nav-item.active {
-    color: var(--accent);
-    transform: translateY(-5px);
-}
 .page {
     display: none;
-    padding: 20px 16px 90px 16px;
-    min-height: 100vh;
+    padding: 16px;
+    min-height: calc(100vh - 120px);
 }
 .page.active-page {
     display: block;
@@ -130,7 +161,7 @@ body.light-mode {
 .bet-btn.cashout { background: #f97316; color: white; }
 .toast {
     position: fixed;
-    bottom: 90px;
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(0,0,0,0.9);
@@ -209,4 +240,13 @@ body.light-mode {
     font-weight: 900;
     font-family: 'Orbitron', monospace;
     text-shadow: 0 0 20px var(--blue-v);
+}
+/* Responsive */
+@media (max-width: 480px) {
+    body { padding-top: 110px; }
+    .main-header { height: 55px; top: 50px; }
+    .top-nav { height: 50px; }
+    .nav-item { font-size: 18px; padding: 4px 8px; }
+    .nav-item span { font-size: 8px; }
+    .mode-option { padding: 4px 12px; font-size: 10px; }
 }
