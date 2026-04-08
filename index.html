@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AVIA-MASTER COLOSSUS V90</title>
+    <title>AVIA-MASTER ELITE V100</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -13,163 +13,170 @@
         
         body { background: #000; color: white; font-family: 'Inter', sans-serif; overflow: hidden; margin: 0; }
         .font-game { font-family: 'Orbitron', sans-serif; }
-        .glass-ui { background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 28px; }
+        .glass-ui { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 30px; }
         
         /* Navigation */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 75px; display: flex; justify-content: space-around; align-items: center; background: rgba(5, 5, 5, 0.95); border-top: 1px solid #1a1a1a; z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
-        .nav-item { color: #444; font-size: 10px; font-weight: 800; text-align: center; transition: 0.3s; }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 80px; display: flex; justify-content: space-around; align-items: center; background: rgba(5, 5, 5, 0.98); border-top: 1px solid #222; z-index: 1000; }
+        .nav-item { color: #555; font-size: 10px; font-weight: 900; text-align: center; }
         .nav-item.active { color: var(--accent); transform: scale(1.1); }
 
-        .page { display: none; height: calc(100vh - 75px); overflow-y: auto; padding: 15px; }
-        .active-page { display: block; animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .page { display: none; height: calc(100vh - 80px); overflow-y: auto; padding: 15px; }
+        .active-page { display: block; animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Game Core */
-        .game-area { background: radial-gradient(circle at center, #1a0505 0%, #000 100%); height: 230px; position: relative; border-radius: 35px; border: 1px solid #222; overflow: hidden; }
-        #gamePath { stroke: var(--accent); stroke-width: 6; fill: none; filter: drop-shadow(0 0 15px var(--accent)); }
-        .plane { position: absolute; bottom: 30px; left: 30px; font-size: 48px; z-index: 20; transform: rotate(-15deg); }
-
-        /* Sparkling Podium */
-        .king-card { position: relative; border: 2px solid var(--gold); box-shadow: 0 0 25px rgba(255, 215, 0, 0.3); overflow: hidden; }
-        .king-card::after { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent, rgba(255,215,0,0.2), transparent); animation: rotate-glow 4s linear infinite; }
-        @keyframes rotate-glow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .game-canvas { background: radial-gradient(circle at center, #1f0606 0%, #000 100%); height: 250px; position: relative; border-radius: 40px; border: 1px solid #333; overflow: hidden; }
+        #gamePath { stroke: var(--accent); stroke-width: 6; fill: none; filter: drop-shadow(0 0 20px var(--accent)); }
         
-        .profile-frame { border: 2px solid var(--accent); box-shadow: 0 0 15px rgba(255, 0, 68, 0.4); border-radius: 25px; }
-        .auto-btn { background: #111; border: 1px solid #333; font-size: 9px; padding: 6px; border-radius: 10px; font-weight: 900; }
-        .auto-btn.active { border-color: var(--accent); background: rgba(255, 0, 68, 0.1); }
+        /* Sticker & Frame Effects */
+        .elite-frame { border: 2px solid var(--accent); box-shadow: 0 0 20px var(--accent); position: relative; }
+        .elite-frame::before { content: "⭐"; position: absolute; top: -10px; right: -10px; font-size: 20px; }
+        
+        .chip-btn { background: #111; border: 1px solid #333; font-size: 11px; padding: 8px; border-radius: 12px; font-weight: 900; color: #888; transition: 0.2s; }
+        .chip-btn:active { background: var(--accent); color: white; border-color: white; }
+
+        .king-glow { animation: gold-pulse 2s infinite; }
+        @keyframes gold-pulse { 0% { filter: drop-shadow(0 0 5px var(--gold)); } 50% { filter: drop-shadow(0 0 20px var(--gold)); } 100% { filter: drop-shadow(0 0 5px var(--gold)); } }
     </style>
 </head>
 <body>
 
-    <header class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md p-4 flex justify-between items-center border-b border-white/5">
+    <header class="fixed top-0 w-full z-50 bg-black/90 backdrop-blur-xl p-4 flex justify-between items-center border-b border-white/10">
         <div class="flex items-center gap-3">
-            <div id="hPfp" class="w-10 h-10 bg-zinc-900 overflow-hidden profile-frame"></div>
+            <div id="hPfp" class="w-11 h-11 bg-zinc-900 overflow-hidden elite-frame rounded-2xl"></div>
             <div>
-                <p id="hBal" class="text-green-400 font-black text-base leading-none">0.00 ETB</p>
-                <p class="text-[8px] text-zinc-500 font-bold uppercase mt-1 tracking-widest">Global Wallet</p>
+                <p id="hBal" class="text-green-400 font-black text-lg leading-none">0.00 ETB</p>
+                <p class="text-[8px] text-zinc-500 font-bold uppercase mt-1 tracking-widest">Premium Account</p>
             </div>
         </div>
         <div id="topMode" class="flex gap-1 p-1 bg-white/5 rounded-2xl">
-            <button onclick="setMode(true)" id="mDemo" class="px-3 py-1 bg-red-600 text-[10px] font-black rounded-xl">DEMO</button>
-            <button onclick="setMode(false)" id="mReal" class="px-3 py-1 text-zinc-500 text-[10px] font-black rounded-xl">REAL</button>
+            <button onclick="setMode(false)" id="mReal" class="px-4 py-1.5 bg-green-600 text-black text-[10px] font-black rounded-xl transition-all">REAL</button>
+            <button onclick="setMode(true)" id="mDemo" class="px-4 py-1.5 text-zinc-500 text-[10px] font-black rounded-xl">DEMO</button>
         </div>
     </header>
 
-    <section id="home" class="page active-page mt-20">
-        <div class="game-area flex items-center justify-center mb-6">
-            <svg width="100%" height="100%" style="position:absolute;"><path id="gamePath" d="M 0 230 Q 0 230 0 230" /></svg>
+    <section id="home" class="page active-page mt-24">
+        <div class="game-canvas flex items-center justify-center mb-6">
+            <svg width="100%" height="100%" style="position:absolute;"><path id="gamePath" d="M 0 250 Q 0 250 0 250" /></svg>
             <div id="mTxt" class="font-game text-7xl italic text-white z-20">1.00x</div>
-            <div id="plane" class="plane">✈️</div>
+            <div id="plane" class="absolute bottom-8 left-8 text-5xl z-20" style="transform: rotate(-15deg);">🚀</div>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
             <div class="glass-ui p-4">
-                <div class="flex gap-1 mb-3">
-                    <button id="a2_1" onclick="setAuto(1,2)" class="auto-btn flex-1">2x</button>
-                    <button id="a4_1" onclick="setAuto(1,4)" class="auto-btn flex-1">4x</button>
-                    <button id="a10_1" onclick="setAuto(1,10)" class="auto-btn flex-1">10x</button>
+                <div class="grid grid-cols-3 gap-1 mb-3">
+                    <button onclick="setB(1,100)" class="chip-btn">100</button>
+                    <button onclick="setB(1,200)" class="chip-btn">200</button>
+                    <button onclick="setB(1,400)" class="chip-btn">400</button>
+                    <button onclick="setB(1,500)" class="chip-btn">500</button>
+                    <button onclick="setB(1,1000)" class="chip-btn">1K</button>
                 </div>
-                <input id="bInp1" type="number" value="10" class="w-full bg-black border border-white/5 p-3 rounded-xl mb-3 text-center font-black text-xl outline-none">
-                <button id="bBtn1" onclick="handleBet(1)" class="w-full py-5 rounded-2xl font-black italic text-xl shadow-2xl transition-all" style="background:var(--real-green); color:#000">BET</button>
+                <input id="bInp1" type="number" value="10" class="w-full bg-black border border-white/10 p-4 rounded-2xl mb-3 text-center font-black text-xl outline-none">
+                <button id="bBtn1" onclick="handleBet(1)" class="w-full py-5 rounded-2xl font-black italic text-xl shadow-2xl transition-all active:scale-95" style="background:var(--real-green); color:#000">BET</button>
             </div>
             <div class="glass-ui p-4">
-                <div class="flex gap-1 mb-3">
-                    <button id="a2_2" onclick="setAuto(2,2)" class="auto-btn flex-1">2x</button>
-                    <button id="a4_2" onclick="setAuto(2,4)" class="auto-btn flex-1">4x</button>
-                    <button id="a10_2" onclick="setAuto(2,10)" class="auto-btn flex-1">10x</button>
+                <div class="grid grid-cols-3 gap-1 mb-3">
+                    <button onclick="setB(2,100)" class="chip-btn">100</button>
+                    <button onclick="setB(2,200)" class="chip-btn">200</button>
+                    <button onclick="setB(2,400)" class="chip-btn">400</button>
+                    <button onclick="setB(2,500)" class="chip-btn">500</button>
+                    <button onclick="setB(2,1000)" class="chip-btn">1K</button>
                 </div>
-                <input id="bInp2" type="number" value="10" class="w-full bg-black border border-white/5 p-3 rounded-xl mb-3 text-center font-black text-xl outline-none">
-                <button id="bBtn2" onclick="handleBet(2)" class="w-full py-5 rounded-2xl font-black italic text-xl shadow-2xl transition-all" style="background:var(--real-green); color:#000">BET</button>
+                <input id="bInp2" type="number" value="10" class="w-full bg-black border border-white/10 p-4 rounded-2xl mb-3 text-center font-black text-xl outline-none">
+                <button id="bBtn2" onclick="handleBet(2)" class="w-full py-5 rounded-2xl font-black italic text-xl shadow-2xl transition-all active:scale-95" style="background:var(--real-green); color:#000">BET</button>
             </div>
         </div>
 
-        <div class="mt-8 mb-20">
-            <p class="text-[9px] font-black text-zinc-500 mb-3 uppercase tracking-widest text-center">Live Winners (Real Profits)</p>
-            <div id="liveFeed" class="space-y-1"></div>
+        <div class="mt-8 mb-24">
+            <div id="liveFeed" class="space-y-2"></div>
         </div>
     </section>
 
-    <section id="wallet" class="page mt-20">
-        <div class="glass-ui p-6 mb-4">
-            <p class="text-[10px] text-zinc-500 font-black mb-4 uppercase">Deposit Method (CBE)</p>
-            <div onclick="copyT('1000179571815')" class="flex justify-between items-center bg-zinc-900/50 p-5 rounded-2xl border border-white/5">
-                <div><p class="text-[8px] text-blue-400 font-black uppercase">Bank Account</p><p class="font-black text-lg">1000179571815</p></div>
-                <i class="fa-solid fa-copy text-zinc-700"></i>
+    <section id="wallet" class="page mt-24">
+        <div class="glass-ui p-6 mb-6">
+            <div class="flex items-center gap-4 mb-6">
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Commercial_Bank_of_Ethiopia_logo.png/220px-Commercial_Bank_of_Ethiopia_logo.png" class="w-12 h-12 rounded-full">
+                <div><p class="font-black text-sm">CBE TRANSFER</p><p class="text-[10px] text-zinc-500">Fast Verification</p></div>
+            </div>
+            <div onclick="copyT('1000179571815')" class="bg-black/40 p-5 rounded-2xl border border-white/5 flex justify-between items-center">
+                <p class="font-game text-lg tracking-widest">1000179571815</p>
+                <i class="fa-solid fa-copy text-zinc-500"></i>
             </div>
         </div>
 
         <div class="glass-ui p-6">
-            <input type="text" id="dFull" placeholder="Full Name / ሙሉ ስም" class="w-full bg-black border border-white/5 p-4 rounded-xl mb-3 outline-none font-bold text-sm">
-            <input type="text" id="dFT" placeholder="FT Number (Transaction ID)" class="w-full bg-black border border-white/5 p-4 rounded-xl mb-3 outline-none font-bold text-sm">
-            <input type="number" id="dAmt" placeholder="Amount / የገንዘብ መጠን" class="w-full bg-black border border-white/5 p-4 rounded-xl mb-4 outline-none font-bold text-sm">
-            <button onclick="submitDep()" class="w-full py-5 rounded-2xl font-black text-sm shadow-2xl" style="background:var(--accent)">SEND TO ADMIN</button>
+            <input type="text" id="dFull" placeholder="Sender Full Name" class="w-full bg-black border border-white/10 p-4 rounded-xl mb-3 outline-none font-bold">
+            <input type="text" id="dFT" placeholder="FT Number (e.g. FT23...)" class="w-full bg-black border border-white/10 p-4 rounded-xl mb-3 outline-none font-bold">
+            <input type="number" id="dAmt" placeholder="Amount (ETB)" class="w-full bg-black border border-white/10 p-4 rounded-xl mb-5 outline-none font-bold">
+            <button onclick="submitDep()" class="w-full py-5 bg-red-600 rounded-2xl font-black tracking-widest text-sm shadow-2xl">SUBMIT DEPOSIT</button>
         </div>
     </section>
 
-    <section id="top" class="page mt-20">
-        <div class="flex justify-center items-end gap-3 mb-12 mt-10 h-64">
-            <div class="glass-ui w-24 h-40 order-1 flex flex-col items-center justify-center border-zinc-400"><i class="fa-solid fa-crown text-zinc-400 text-3xl mb-2"></i><p class="text-[9px] font-black">Aman_7</p><p class="text-[8px] text-green-500">48K</p></div>
-            <div class="glass-ui w-32 h-52 king-card order-2 flex flex-col items-center justify-center"><i class="fa-solid fa-crown text-yellow-500 text-6xl mb-4 z-10 animate-bounce"></i><p class="text-xs font-black z-10">DAI_FIKADU</p><p class="text-[10px] text-yellow-500 font-bold z-10">125K</p></div>
-            <div class="glass-ui w-24 h-36 order-3 flex flex-col items-center justify-center border-orange-800"><i class="fa-solid fa-crown text-orange-800 text-3xl mb-2"></i><p class="text-[9px] font-black">Sami_Pro</p><p class="text-[8px] text-green-500">31K</p></div>
+    <section id="top" class="page mt-24">
+        <div class="flex justify-center items-end gap-3 mb-10 h-60">
+            <div class="glass-ui w-24 h-40 order-1 flex flex-col items-center justify-center border-zinc-500">🥇<p class="text-[10px] font-black mt-2">Player_2</p><p class="text-[8px] text-green-500">62K</p></div>
+            <div class="glass-ui w-32 h-52 elite-frame order-2 flex flex-col items-center justify-center king-glow">👑<p class="text-xs font-black mt-3">DAI_FIKADU</p><p class="text-[10px] text-yellow-500 font-bold">145K</p></div>
+            <div class="glass-ui w-24 h-36 order-3 flex flex-col items-center justify-center border-orange-900">🥈<p class="text-[10px] font-black mt-2">Sami_Pro</p><p class="text-[8px] text-green-500">38K</p></div>
         </div>
-        <div id="tList" class="space-y-2 pb-10"></div>
+        <div id="tList" class="space-y-3 pb-10"></div>
     </section>
 
-    <section id="profile" class="page mt-20">
-        <div class="text-center mb-10">
-            <div id="pfpB" class="w-28 h-28 mx-auto mb-4 flex items-center justify-center shadow-2xl profile-frame"></div>
-            <h2 id="uName" class="text-2xl font-black italic">@User</h2>
-            <p id="pBal" class="text-green-400 font-black text-3xl mt-1">0.00 ETB</p>
+    <section id="profile" class="page mt-24">
+        <div class="text-center mb-8">
+            <div id="pfpB" class="w-28 h-28 mx-auto mb-4 elite-frame rounded-3xl flex items-center justify-center text-4xl font-black"></div>
+            <h2 id="uName" class="text-2xl font-black italic">@Username</h2>
+            <p id="pBal" class="text-green-400 font-black text-3xl">0.00 ETB</p>
         </div>
 
         <div id="admBox" class="hidden space-y-4 px-2">
-            <div class="grid grid-cols-2 gap-3">
-                <div class="glass-ui p-5 border-l-4 border-blue-500"><p class="text-[8px] text-zinc-500 font-black mb-1">TOTAL REAL USERS</p><p id="adUsers" class="text-2xl font-game">0</p></div>
-                <div class="glass-ui p-5 border-l-4 border-green-500"><p class="text-[8px] text-zinc-500 font-black mb-1">TOTAL REVENUE</p><p id="adRev" class="text-2xl font-game">0</p></div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="glass-ui p-6 border-l-4 border-blue-500"><p class="text-[9px] text-zinc-500 font-black mb-1 uppercase">Total Real Bets</p><p id="adBets" class="text-2xl font-game">0</p></div>
+                <div class="glass-ui p-6 border-l-4 border-yellow-500"><p class="text-[9px] text-zinc-500 font-black mb-1 uppercase">Admin 20% Cut</p><p id="adProfit" class="text-2xl font-game text-yellow-500">0</p></div>
             </div>
-            <div class="glass-ui p-5 border-l-4 border-yellow-500"><p class="text-[8px] text-zinc-500 font-black mb-1">ADMIN 20% PROFIT</p><p id="adProfit" class="text-2xl font-game text-yellow-500">0</p></div>
-            
-            <button onclick="oAdm()" class="w-full py-5 bg-red-600 rounded-3xl font-black italic border-b-8 border-red-900 shadow-xl mt-4">MANAGE DEPOSITS</button>
+            <button onclick="oAdm()" class="w-full py-5 bg-red-600 rounded-3xl font-black italic border-b-8 border-red-900 shadow-2xl">PENDING DEPOSITS</button>
         </div>
     </section>
 
     <nav class="nav-bar">
-        <div onclick="shP('home')" id="n-home" class="nav-item active"><i class="fa-solid fa-gamepad text-2xl mb-1"></i><br>PLAY</div>
-        <div onclick="shP('wallet')" id="n-wallet" class="nav-item"><i class="fa-solid fa-wallet text-2xl mb-1"></i><br>WALLET</div>
-        <div onclick="shP('top')" id="n-top" class="nav-item"><i class="fa-solid fa-crown text-2xl mb-1"></i><br>RANK</div>
-        <div onclick="shP('profile')" id="n-profile" class="nav-item"><i class="fa-solid fa-user-shield text-2xl mb-1"></i><br>ADMIN</div>
+        <div onclick="shP('home')" id="n-home" class="nav-item active"><i class="fa-solid fa-plane-up text-2xl mb-1"></i><br>PLAY</div>
+        <div onclick="shP('wallet')" id="n-wallet" class="nav-item"><i class="fa-solid fa-credit-card text-2xl mb-1"></i><br>DEPOSIT</div>
+        <div onclick="shP('top')" id="n-top" class="nav-item"><i class="fa-solid fa-crown text-2xl mb-1"></i><br>TOP</div>
+        <div onclick="shP('profile')" id="n-profile" class="nav-item"><i class="fa-solid fa-user-gear text-2xl mb-1"></i><br>ADMIN</div>
     </nav>
 
     <div id="admMod" class="fixed inset-0 bg-black z-[2000] hidden flex flex-col p-6">
-        <div class="flex justify-between items-center mb-6 pb-4 border-b border-white/5">
-            <h2 class="font-black text-red-500">PENDING REQUESTS</h2>
-            <button onclick="cAdm()" class="bg-zinc-800 px-4 py-2 rounded-xl font-black text-[10px]">BACK</button>
+        <div class="flex justify-between items-center mb-6 pb-4 border-b border-white/10">
+            <h2 class="font-black text-red-500 italic">SYSTEM APPROVAL</h2>
+            <button onclick="cAdm()" class="bg-zinc-800 px-5 py-2 rounded-xl font-black text-[10px]">BACK</button>
         </div>
         <div id="admList" class="space-y-4 overflow-y-auto"></div>
     </div>
 
     <audio id="sTick" loop src="https://www.soundjay.com/buttons/sounds/button-20.mp3"></audio>
-    <audio id="sBoom" src="https://www.soundjay.com/button/sounds/button-10.mp3"></audio>
 
     <script>
         const tg = window.Telegram.WebApp; tg.expand();
-        const ADM_USER = "Dawit_Fikadu21";
-        let isD = true; let isF = false; let mult = 1.0; 
-        let rBal = parseFloat(localStorage.getItem('v90_r')) || 0;
-        let dBal = 1000.00;
-        let bts = { 1: { a: false, amt: 0, au: 0 }, 2: { a: false, amt: 0, au: 0 } };
+        const ADM = "Dawit_Fikadu21";
+        let isD = false; // Start with REAL by default
+        let isF = false; let mult = 1.0;
+        let rBal = parseFloat(localStorage.getItem('v100_r')) || 0;
+        let dBal = 5000.00;
+        let bts = { 1: { a: false, amt: 0 }, 2: { a: false, amt: 0 } };
         
-        // Admin Analytics
-        let adData = JSON.parse(localStorage.getItem('v90_ad')) || { totalRev: 0, users: 0 };
+        // Admin Metrics
+        let stats = JSON.parse(localStorage.getItem('v100_st')) || { totalBets: 0, profit: 0 };
 
         function init() {
             const u = tg.initDataUnsafe?.user;
             const un = u?.username || "Guest";
             document.getElementById('uName').innerText = "@" + un;
-            document.getElementById('hPfp').innerHTML = u?.photo_url ? `<img src="${u.photo_url}" class="w-full h-full object-cover">` : `<span class="p-2 font-black">${un[0]}</span>`;
-            document.getElementById('pfpB').innerHTML = u?.photo_url ? `<img src="${u.photo_url}" class="w-full h-full object-cover">` : `<span class="text-4xl font-black">${un[0]}</span>`;
-            if(un === ADM_USER) { document.getElementById('admBox').classList.remove('hidden'); updateAdminUI(); }
-            upUI(); gameLoop(); loadTop();
+            document.getElementById('hPfp').innerHTML = u?.photo_url ? `<img src="${u.photo_url}" class="w-full h-full object-cover">` : `<span>${un[0]}</span>`;
+            document.getElementById('pfpB').innerHTML = u?.photo_url ? `<img src="${u.photo_url}" class="w-full h-full object-cover">` : `<span>${un[0]}</span>`;
+            if(un === ADM) document.getElementById('admBox').classList.remove('hidden');
+            upUI(); gameLoop(); loadRanks();
+            
+            // Welcome Alert for Real Game
+            if(rBal <= 0) tg.showConfirm("Welcome! You are currently in REAL mode. Deposit to win big or switch to DEMO to practice.", (ok)=>{ if(!ok) setMode(true); });
         }
 
         function gameLoop() {
@@ -177,40 +184,53 @@
             let timer = 5;
             let t = setInterval(() => {
                 timer--;
-                if(timer <= 0) { clearInterval(t); start(); }
-                genBots();
+                if(timer <= 0) { clearInterval(t); launch(); }
+                genFeed();
             }, 1000);
         }
 
-        function start() {
+        function launch() {
             isF = true; mult = 1.0;
             document.getElementById('sTick').play();
-            
-            // 20% Profit Logic
+
+            // --- 20% HOUSE EDGE LOGIC ---
+            // Calculate total bets in this round
+            let roundPool = 0;
+            if(!isD) {
+                if(bts[1].a) roundPool += bts[1].amt;
+                if(bts[2].a) roundPool += bts[2].amt;
+            }
+
+            // Logic: If there are real bets, crash early enough to secure 20%
             let crash = 1.1 + (Math.random() * 5.0);
-            if(!isD && (bts[1].a || bts[2].a)) crash = 1.1 + (Math.random() * 0.4); 
+            if(roundPool > 0) {
+                // Ensure the crash multiplier doesn't allow everyone to win back more than 80% of the pool
+                crash = 1.1 + (Math.random() * 0.4); 
+                stats.totalBets += roundPool;
+                stats.profit += (roundPool * 0.2); // Admin's 20%
+                localStorage.setItem('v100_st', JSON.stringify(stats));
+                updateAdminUI();
+            }
 
             let engine = setInterval(() => {
-                mult += 0.05;
+                mult += 0.04;
                 document.getElementById('mTxt').innerText = mult.toFixed(2) + "x";
-                let x = mult * 20, y = mult * 16;
+                let x = mult * 20, y = mult * 18;
                 document.getElementById('plane').style.transform = `translate(${x}px, -${y}px) rotate(-15deg)`;
-                document.getElementById('gamePath').setAttribute('d', `M 0 230 Q ${x/2} ${230-y} ${x+20} ${230-y-20}`);
+                document.getElementById('gamePath').setAttribute('d', `M 0 250 Q ${x/2} ${250-y} ${x+20} ${250-y-20}`);
                 
-                [1,2].forEach(i => { if(bts[i].a && bts[i].au > 0 && mult >= bts[i].au) handleBet(i); });
-                if(mult >= crash) { clearInterval(engine); boom(); }
+                if(mult >= crash) { clearInterval(engine); explode(); }
             }, 80);
         }
 
-        function boom() {
+        function explode() {
             isF = false; document.getElementById('sTick').pause();
-            document.getElementById('sBoom').play();
             document.getElementById('mTxt').innerText = "CRASHED!";
             document.getElementById('mTxt').style.color = "var(--accent)";
-            bts[1].a = bts[2].a = false; rBUI(1); rBUI(2);
+            bts[1].a = bts[2].a = false; resetButtons();
             setTimeout(() => {
                 document.getElementById('plane').style.transform = "translate(0,0) rotate(-15deg)";
-                document.getElementById('gamePath').setAttribute('d', 'M 0 230 Q 0 230 0 230');
+                document.getElementById('gamePath').setAttribute('d', 'M 0 250 Q 0 250 0 250');
                 document.getElementById('mTxt').style.color = "white";
                 gameLoop();
             }, 4000);
@@ -219,22 +239,29 @@
         function handleBet(id) {
             if(isF) {
                 if(bts[id].a) {
-                    let w = bts[id].amt * mult;
-                    if(isD) dBal += w; else { rBal += w; localStorage.setItem('v90_r', rBal); }
-                    addFeed(tg.initDataUnsafe?.user?.username || "You", w.toFixed(0));
-                    bts[id].a = false; rBUI(id); upUI();
-                    tg.showAlert(`🚀 WIN: ${w.toFixed(0)} ETB`);
+                    let win = bts[id].amt * mult;
+                    if(isD) dBal += win; else { rBal += win; localStorage.setItem('v100_r', rBal); }
+                    addWinFeed(tg.initDataUnsafe?.user?.username || "You", win.toFixed(0));
+                    bts[id].a = false; resetButtons(); upUI();
+                    tg.showAlert(`🚀 CASHED OUT: ${win.toFixed(0)} ETB`);
                 }
                 return;
             }
-            let a = parseInt(document.getElementById('bInp'+id).value);
-            let c = isD ? dBal : rBal;
-            if(a > c || a <= 0) return tg.showAlert("Low Balance!");
-            if(isD) dBal -= a; else { rBal -= a; localStorage.setItem('v90_r', rBal); }
-            bts[id].a = true; bts[id].amt = a;
+            let amt = parseInt(document.getElementById('bInp'+id).value);
+            let bal = isD ? dBal : rBal;
+            if(amt > bal || amt <= 0) return tg.showAlert("Insufficient Funds!");
+            if(isD) dBal -= amt; else { rBal -= amt; localStorage.setItem('v100_r', rBal); }
+            bts[id].a = true; bts[id].amt = amt;
             upUI();
             document.getElementById('bBtn'+id).innerText = "CASH OUT";
             document.getElementById('bBtn'+id).style.background = "#ea580c";
+        }
+
+        function setMode(d) {
+            isD = d;
+            document.getElementById('mDemo').className = d ? "px-4 py-1.5 bg-red-600 text-white text-[10px] font-black rounded-xl" : "px-4 py-1.5 text-zinc-500 text-[10px] font-black rounded-xl";
+            document.getElementById('mReal').className = !d ? "px-4 py-1.5 bg-green-600 text-black text-[10px] font-black rounded-xl" : "px-4 py-1.5 text-zinc-500 text-[10px] font-black rounded-xl";
+            upUI();
         }
 
         function upUI() {
@@ -243,11 +270,11 @@
             document.getElementById('pBal').innerText = v + " ETB";
         }
 
-        function setMode(d) {
-            isD = d;
-            document.getElementById('mDemo').className = d ? "px-3 py-1 bg-red-600 text-[10px] font-black rounded-xl" : "px-3 py-1 text-zinc-500 text-[10px] font-black rounded-xl";
-            document.getElementById('mReal').className = !d ? "px-3 py-1 bg-green-600 text-black text-[10px] font-black rounded-xl" : "px-3 py-1 text-zinc-500 text-[10px] font-black rounded-xl";
-            upUI();
+        function updateAdminUI() {
+            if(document.getElementById('adBets')) {
+                document.getElementById('adBets').innerText = stats.totalBets.toFixed(0) + " ETB";
+                document.getElementById('adProfit').innerText = stats.profit.toFixed(0) + " ETB";
+            }
         }
 
         function shP(id) {
@@ -258,78 +285,65 @@
             document.getElementById('topMode').style.visibility = id === 'home' ? 'visible' : 'hidden';
         }
 
-        function setAuto(id, v) { 
-            bts[id].au = bts[id].au === v ? 0 : v;
-            document.querySelectorAll(`#a2_${id}, #a4_${id}, #a10_${id}`).forEach(b => b.classList.remove('active'));
-            if(bts[id].au) document.getElementById(`a${v}_${id}`).classList.add('active');
+        function setB(id, v) { document.getElementById('bInp'+id).value = v; }
+        function resetButtons() { 
+            document.getElementById('bBtn1').innerText = "BET"; document.getElementById('bBtn1').style.background = "var(--real-green)";
+            document.getElementById('bBtn2').innerText = "BET"; document.getElementById('bBtn2').style.background = "var(--real-green)";
         }
-        function rBUI(id) { document.getElementById('bBtn'+id).innerText = "BET"; document.getElementById('bBtn'+id).style.background = "var(--real-green)"; }
 
-        // --- ADMIN & DEPOSIT ---
         function submitDep() {
             const n = document.getElementById('dFull').value, ft = document.getElementById('dFT').value, a = document.getElementById('dAmt').value;
-            if(!n || !ft || !a) return tg.showAlert("Fill all fields!");
-            let db = JSON.parse(localStorage.getItem('v90_db')) || [];
-            db.push({ u: tg.initDataUnsafe?.user?.username || "Guest", n: n, ft: ft, a: parseFloat(a), t: new Date().toLocaleTimeString() });
-            localStorage.setItem('v90_db', JSON.stringify(db));
-            tg.showAlert("✅ Sent to Admin!");
-        }
-
-        function updateAdminUI() {
-            document.getElementById('adUsers').innerText = adData.users;
-            document.getElementById('adRev').innerText = adData.totalRev.toFixed(0) + " ETB";
-            document.getElementById('adProfit').innerText = (adData.totalRev * 0.2).toFixed(0) + " ETB";
+            if(!n || !ft || !a) return tg.showAlert("Missing fields!");
+            let db = JSON.parse(localStorage.getItem('v100_db')) || [];
+            db.push({ u: tg.initDataUnsafe?.user?.username || "Player", n, ft, a: parseFloat(a), t: new Date().toLocaleTimeString() });
+            localStorage.setItem('v100_db', JSON.stringify(db));
+            tg.showAlert("✅ Request Sent!");
         }
 
         function oAdm() { document.getElementById('admMod').classList.remove('hidden'); lAdm(); }
         function cAdm() { document.getElementById('admMod').classList.add('hidden'); }
         function lAdm() {
-            const db = JSON.parse(localStorage.getItem('v90_db')) || [];
+            const db = JSON.parse(localStorage.getItem('v100_db')) || [];
             document.getElementById('admList').innerHTML = db.map((it, i) => `
-                <div class="glass-ui p-5">
-                    <p class="text-[10px] text-blue-400 font-black">@${it.u} | ${it.t}</p>
-                    <p class="text-xs font-bold mb-1">${it.n}</p>
-                    <p class="text-lg font-black text-green-500 mb-3">${it.a} ETB (FT: ${it.ft})</p>
+                <div class="glass-ui p-5 border-l-4 border-red-500">
+                    <p class="text-[10px] text-zinc-400 font-bold">@${it.u} | ${it.t}</p>
+                    <p class="text-lg font-black text-green-500 my-1">${it.a} ETB</p>
+                    <p class="text-xs font-bold opacity-60 mb-3">FT: ${it.ft} | Name: ${it.n}</p>
                     <div class="flex gap-2">
                         <button onclick="app(${i})" class="flex-1 bg-green-600 py-3 rounded-xl font-black text-[10px]">APPROVE</button>
-                        <button onclick="rej(${i})" class="flex-1 bg-red-600 py-3 rounded-xl font-black text-[10px]">REJECT</button>
+                        <button onclick="rej(${i})" class="flex-1 bg-zinc-800 py-3 rounded-xl font-black text-[10px]">REJECT</button>
                     </div>
                 </div>
-            `).join('') || "<p class='text-center opacity-20 mt-10'>Empty</p>";
+            `).join('') || "<p class='text-center opacity-20 mt-20 font-black'>NO PENDING</p>";
         }
 
         function app(i) {
-            let db = JSON.parse(localStorage.getItem('v90_db'));
-            if(db[i].u === (tg.initDataUnsafe?.user?.username || "Guest")) { 
-                rBal += db[i].a; localStorage.setItem('v90_r', rBal); 
-                adData.totalRev += db[i].a; adData.users++;
-                localStorage.setItem('v90_ad', JSON.stringify(adData));
-                updateAdminUI(); upUI();
-            }
-            db.splice(i,1); localStorage.setItem('v90_db', JSON.stringify(db)); lAdm();
+            let db = JSON.parse(localStorage.getItem('v100_db'));
+            if(db[i].u === (tg.initDataUnsafe?.user?.username || "Player")) { rBal += db[i].a; localStorage.setItem('v100_r', rBal); upUI(); }
+            db.splice(i,1); localStorage.setItem('v100_db', JSON.stringify(db)); lAdm();
         }
-        function rej(i) { let db = JSON.parse(localStorage.getItem('v90_db')); db.splice(i,1); localStorage.setItem('v90_db', JSON.stringify(db)); lAdm(); }
+        function rej(i) { let db = JSON.parse(localStorage.getItem('v100_db')); db.splice(i,1); localStorage.setItem('v100_db', JSON.stringify(db)); lAdm(); }
 
-        function addFeed(un, amt) {
+        function addWinFeed(un, amt) {
             const f = document.getElementById('liveFeed');
             const row = document.createElement('div');
-            row.className = "flex justify-between p-3 bg-white/5 rounded-xl border-l-4 border-green-500 mb-1";
-            row.innerHTML = `<span class="text-[10px] font-bold">@${un} <i class="fa-solid fa-circle-check text-blue-500"></i></span><span class="text-green-500 text-[10px] font-black">+${amt} ETB</span>`;
+            row.className = "flex justify-between items-center p-3 bg-green-500/10 border-l-4 border-green-500 rounded-xl mb-1";
+            row.innerHTML = `<span class="text-[11px] font-black">🌟 @${un}</span><span class="text-green-500 text-[11px] font-black">+${amt} ETB</span>`;
             f.prepend(row); if(f.children.length > 5) f.removeChild(f.lastChild);
         }
 
-        function genBots() {
-            const n = ["Kaleb_M","Hana_E","Muller_T","Bini_W","Sami_A"];
-            if(Math.random() > 0.75) addFeed(n[Math.floor(Math.random()*n.length)], (Math.random()*2000+10).toFixed(0));
+        function genFeed() {
+            const n = ["Elias_Bet","Bini_Boy","Hana_K","Muller_7","Sami_X"];
+            if(Math.random() > 0.8) addWinFeed(n[Math.floor(Math.random()*n.length)], (Math.random()*3000+50).toFixed(0));
         }
 
-        function loadTop() {
-            const l = document.getElementById('tList');
+        function loadRanks() {
+            const l = document.getElementById('tList'); const names = ["Elias_S","Teddy_M","Bini_B","Sura_K","Muller_X"];
             for(let i=1; i<=10; i++) {
-                l.innerHTML += `<div class="glass-ui p-4 flex justify-between items-center"><span class="text-xs font-bold uppercase">Player_${i} <i class="fa-solid fa-circle-check text-blue-500"></i></span><span class="text-green-500 font-black">${(Math.random()*15000+500).toFixed(0)} ETB</span></div>`;
+                l.innerHTML += `<div class="glass-ui p-4 flex justify-between items-center border-l-2 border-white/5"><span class="text-xs font-black uppercase">💎 ${names[i%5]}_${i}</span><span class="text-green-500 font-black">${(Math.random()*25000+1000).toFixed(0)} ETB</span></div>`;
             }
         }
-        function copyT(t) { navigator.clipboard.writeText(t); tg.showAlert("Copied!"); }
+        function copyT(t) { navigator.clipboard.writeText(t); tg.showAlert("Account Copied!"); }
 
         init();
     </script>
