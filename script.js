@@ -1,4 +1,4 @@
-// ==================== SOUND EFFECTS (local files) ====================
+// ==================== SOUND EFFECTS ====================
 function playSound(type) {
     try {
         let audio = new Audio(`sounds/${type}.mp3`);
@@ -17,7 +17,6 @@ let userId = tgUser ? tgUser.id : 'guest_' + Date.now();
 let username = tgUser ? (tgUser.username || tgUser.first_name || 'User') : 'Guest';
 let photoUrl = tgUser?.photo_url || null;
 
-// Storage keys per user
 const storageKeys = {
     realBalance: `avia_real_balance_${userId}`,
     demoBalance: `avia_demo_balance_${userId}`,
@@ -39,7 +38,6 @@ let user = {
     referralCount: parseInt(localStorage.getItem(storageKeys.referralCount)) || 0
 };
 
-// Admin data (shared)
 const AUTHORIZED_ADMIN = "Dawit_Fikadu21";
 let adminData = {
     totalDeposit: parseFloat(localStorage.getItem('admin_total_deposit')) || 0,
@@ -127,7 +125,6 @@ function startGame() {
     path.classList.remove('trail-real', 'trail-demo');
     path.classList.add(isRealMode ? 'trail-real' : 'trail-demo');
 
-    // Admin profit 20% from real bets
     if (isRealMode) {
         let totalRealBet = 0;
         if (bets[1].active) totalRealBet += bets[1].amount;
@@ -349,7 +346,7 @@ function loadTopWinners(type) {
     });
 }
 
-// ==================== WALLET (User-specific) ====================
+// ==================== WALLET ====================
 function showWalletSection(section) {
     const depositSec = document.getElementById('depositSection');
     const withdrawSec = document.getElementById('withdrawSection');
@@ -414,7 +411,7 @@ function updateTransactionDisplay() {
     });
 }
 
-// ==================== ADMIN FUNCTIONS ====================
+// ==================== ADMIN ====================
 function updateAdminDisplay() {
     if (!isAdmin) return;
     document.getElementById('adminTotalDeposit').innerHTML = adminData.totalDeposit.toFixed(0) + ' ETB';
@@ -460,69 +457,4 @@ function rejectTransaction(txId) {
     if (tx) {
         tx.status = 'rejected';
         const userTx = transactions.find(t => t.id === txId);
-        if (userTx) userTx.status = 'rejected';
-        localStorage.setItem(storageKeys.transactions, JSON.stringify(transactions));
-        adminData.pendingTransactions = adminData.pendingTransactions.filter(t => t.id !== txId);
-        localStorage.setItem('admin_pending_tx', JSON.stringify(adminData.pendingTransactions));
-        updateAdminDisplay();
-        updateTransactionDisplay();
-        showToast(`❌ ${tx.amount} ETB request rejected`);
-    }
-}
-
-function adminSetCrashPoint() {
-    if (!isAdmin) return;
-    const newCrash = prompt('Enter new crash point (1.1 - 50):', crashPoint.toFixed(2));
-    if (newCrash && !isNaN(parseFloat(newCrash))) { crashPoint = parseFloat(newCrash); showToast(`⚡ Crash point set to ${crashPoint}x`); }
-}
-
-function adminExportReport() {
-    if (!isAdmin) return;
-    const report = { date: new Date().toISOString(), totalDeposit: adminData.totalDeposit, totalWithdraw: adminData.totalWithdraw, adminProfit: adminData.adminProfit, totalGames: user.totalGames };
-    console.log('ADMIN REPORT:', report);
-    showToast('📊 Report generated! Check console');
-}
-
-// ==================== PAGE NAVIGATION ====================
-function switchPage(pageId) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById(pageId).classList.add('active-page');
-    const navMap = { homePage: 'navHome', topPage: 'navTop', walletPage: 'navWallet', profilePage: 'navProfile' };
-    document.getElementById(navMap[pageId]).classList.add('active');
-    const modeToggle = document.getElementById('modeToggleContainer');
-    if (pageId === 'homePage') {
-        modeToggle.style.display = 'flex';
-    } else {
-        modeToggle.style.display = 'none';
-    }
-}
-
-// ==================== UTILITIES ====================
-function copyText(text) { navigator.clipboard.writeText(text); showToast('📋 Copied!'); }
-function copyReferralLink() { navigator.clipboard.writeText(referralLink); showToast('📋 Referral link copied!'); }
-function showToast(message) {
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.innerHTML = message;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 2000);
-}
-function vibrate(duration) { if (window.navigator && window.navigator.vibrate) window.navigator.vibrate(duration); }
-
-// ==================== INIT ====================
-function init() {
-    updateBalanceDisplay();
-    updateHistoryDisplay();
-    updateTransactionDisplay();
-    loadTopWinners('daily');
-    setMode(true);
-    startCountdown();
-    setInterval(() => {
-        const fakeWinners = ['Abebe_K', 'Lemi_X', 'Hana_23', 'Samuel_T'];
-        const randomWinner = fakeWinners[Math.floor(Math.random() * fakeWinners.length)];
-        const randomAmount = Math.floor(Math.random() * 3000) + 500;
-        addLiveFeed(randomWinner, randomAmount);
-    }, 15000);
-}
-init();
+        if (user
