@@ -13,20 +13,27 @@
         :root { --accent: #ff0044; --real-green: #00ff66; --blue-v: #38bdf8; --dark-bg: #000000; }
         body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: white; overflow-x: hidden; padding-top: 115px; }
         .font-game { font-family: 'Orbitron', monospace; }
-        .top-nav { position: fixed; top: 0; left: 0; right: 0; height: 55px; display: flex; justify-content: space-around; align-items: center; background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); z-index: 1001; }
-        .nav-item { font-size: 26px; color: #666; transition: 0.2s; cursor: pointer; padding: 8px 16px; border-radius: 30px; }
-        .nav-item.active { color: var(--accent); background: rgba(255,0,68,0.1); }
-        .main-header { position: fixed; top: 55px; left: 0; right: 0; height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05); z-index: 1000; }
+        
+        /* Top Navigation - larger buttons */
+        .top-nav { position: fixed; top: 0; left: 0; right: 0; height: 60px; display: flex; justify-content: space-around; align-items: center; background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); z-index: 1001; }
+        .nav-item { font-size: 32px; color: #666; transition: 0.2s; cursor: pointer; padding: 10px 20px; border-radius: 40px; }
+        .nav-item.active { color: var(--accent); background: rgba(255,0,68,0.15); }
+        
+        .main-header { position: fixed; top: 60px; left: 0; right: 0; height: 55px; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05); z-index: 1000; }
         .glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; }
         .page { display: none; padding: 16px; min-height: calc(100vh - 115px); }
         .page.active-page { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .game-container { background: #000; border-radius: 32px; padding: 20px; margin-bottom: 20px; border: 2px solid var(--blue-v); box-shadow: 0 0 15px rgba(56,189,248,0.3); }
-        .game-canvas { height: 280px; position: relative; }
+        
+        /* Game container - rectangular (wider, shorter) */
+        .game-container { background: #000; border-radius: 28px; padding: 16px; margin-bottom: 20px; border: 2px solid var(--blue-v); box-shadow: 0 0 15px rgba(56,189,248,0.3); }
+        .game-canvas { height: 200px; position: relative; }
         #gamePath { stroke-width: 5; fill: none; filter: drop-shadow(0 0 8px currentColor); transition: stroke 0.1s; }
         .trail-real { stroke: var(--real-green); }
         .trail-demo { stroke: #ff4444; }
-        #plane { transition: transform 0.02s linear; filter: drop-shadow(0 0 10px rgba(255,0,68,0.5)); position: absolute; bottom: 20px; left: 20px; font-size: 48px; transform: rotate(-20deg); }
+        #plane { transition: transform 0.02s linear, opacity 0.2s; filter: drop-shadow(0 0 10px rgba(255,0,68,0.5)); position: absolute; bottom: 15px; left: 15px; font-size: 44px; transform: rotate(-20deg); opacity: 1; }
+        .plane-hidden { opacity: 0 !important; }
+        
         .chip-btn { background: rgba(255,255,255,0.1); border: none; padding: 10px 12px; border-radius: 14px; font-weight: 900; font-size: 13px; color: white; cursor: pointer; transition: 0.1s; }
         .chip-btn:active { transform: scale(0.95); }
         .chip-btn.green-active { background: var(--real-green); color: black; }
@@ -46,8 +53,8 @@
         .podium-item.third { animation: wobble 2s infinite ease-in-out 0.6s; }
         .podium-avatar { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #ffd700, #ff8c00); display: flex; align-items: center; justify-content: center; font-size: 30px; margin: 0 auto 8px; }
         .podium-item.first .podium-avatar { width: 80px; height: 80px; font-size: 40px; background: linear-gradient(135deg, #ffd700, #ff6b00); }
-        .countdown-number { font-size: 80px; font-weight: 900; font-family: 'Orbitron', monospace; text-shadow: 0 0 20px var(--blue-v); }
-        @media (max-width: 480px) { body { padding-top: 105px; } .main-header { height: 55px; top: 50px; } .top-nav { height: 50px; } .nav-item { font-size: 22px; padding: 6px 12px; } }
+        .countdown-number { font-size: 70px; font-weight: 900; font-family: 'Orbitron', monospace; text-shadow: 0 0 20px var(--blue-v); }
+        @media (max-width: 480px) { body { padding-top: 110px; } .main-header { height: 50px; top: 55px; } .top-nav { height: 55px; } .nav-item { font-size: 28px; padding: 8px 16px; } .game-canvas { height: 180px; } #plane { font-size: 38px; } }
     </style>
 </head>
 <body>
@@ -70,22 +77,22 @@
             <div class="flex items-center gap-2 mt-0.5"><span id="balanceDisplay" class="text-green-400 font-black text-base">0 ETB</span></div>
         </div>
     </div>
-    <div id="modeToggleContainer" class="mode-toggle">
+    <div id="modeToggleContainer" class="mode-toggle" style="display: flex;">
         <div onclick="setMode(true)" id="realModeBtn" class="mode-option active">REAL</div>
         <div onclick="setMode(false)" id="demoModeBtn" class="mode-option">DEMO</div>
     </div>
 </header>
 
-<!-- Home Page -->
+<!-- Home Page (Play) -->
 <section id="homePage" class="page active-page">
     <div id="historyList" class="flex gap-2 overflow-x-auto mb-4 pb-2"></div>
     <div class="game-container">
         <div class="game-canvas">
             <svg width="100%" height="100%" style="position: absolute; top: 0; left: 0;">
-                <path id="gamePath" d="M 0 250 Q 0 250 0 250" />
+                <path id="gamePath" d="M 0 180 Q 0 180 0 180" />
             </svg>
             <div id="multiplierText" class="absolute inset-0 flex items-center justify-center">
-                <span class="font-game text-7xl font-black italic drop-shadow-lg">1.00x</span>
+                <span class="font-game text-6xl font-black italic drop-shadow-lg">1.00x</span>
             </div>
             <div id="plane">✈️</div>
             <div id="countdownOverlay" class="absolute inset-0 flex items-center justify-center bg-black/70 rounded-3xl hidden">
@@ -203,48 +210,26 @@
 </section>
 
 <script>
-    // ==================== SOUND GENERATOR (Web Audio API, no external files) ====================
+    // ==================== SOUND GENERATOR ====================
     let audioCtx = null;
-    function initAudio() {
-        if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
+    function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    function playBeep(freq, duration, vol=0.2) {
+        try { initAudio(); const now = audioCtx.currentTime; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.connect(gain); gain.connect(audioCtx.destination); osc.frequency.value = freq; gain.gain.setValueAtTime(vol, now); gain.gain.exponentialRampToValueAtTime(0.0001, now + duration); osc.start(); osc.stop(now + duration); } catch(e) {}
     }
-    function playBeep(frequency, duration, volume = 0.2) {
-        try {
-            initAudio();
-            const now = audioCtx.currentTime;
-            const oscillator = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            oscillator.connect(gain);
-            gain.connect(audioCtx.destination);
-            oscillator.frequency.value = frequency;
-            gain.gain.setValueAtTime(volume, now);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-            oscillator.start();
-            oscillator.stop(now + duration);
-        } catch(e) { console.log('Audio error:', e); }
-    }
-    function playWinSound() { playBeep(880, 0.3, 0.3); setTimeout(() => playBeep(1320, 0.5, 0.3), 200); }
-    function playCrashSound() { playBeep(220, 0.8, 0.4); }
-    function playBetSound() { playBeep(660, 0.1, 0.2); }
-    function playCashoutSound() { playBeep(1046, 0.2, 0.25); }
+    function playWinSound() { playBeep(880,0.3,0.3); setTimeout(()=>playBeep(1320,0.5,0.3),200); }
+    function playCrashSound() { playBeep(220,0.6,0.4); }
+    function playBetSound() { playBeep(660,0.1,0.2); }
 
-    // ==================== TELEGRAM USER DATA ====================
+    // ==================== TELEGRAM USER ====================
     const tg = window.Telegram.WebApp;
     tg.expand();
     tg.enableClosingConfirmation();
-    
     let tgUser = null;
-    try {
-        tgUser = tg.initDataUnsafe?.user;
-    } catch(e) { console.log('Telegram init error:', e); }
-    
+    try { tgUser = tg.initDataUnsafe?.user; } catch(e) {}
     const userId = tgUser ? tgUser.id : 'guest_' + Date.now();
     const username = tgUser ? (tgUser.username || tgUser.first_name || 'User') : 'Guest';
     const photoUrl = tgUser?.photo_url || null;
     
-    // Storage keys per user
     const storageKeys = {
         realBalance: `avia_real_balance_${userId}`,
         demoBalance: `avia_demo_balance_${userId}`,
@@ -255,16 +240,13 @@
     };
     
     let user = {
-        id: userId,
-        username: username,
-        photoUrl: photoUrl,
+        id: userId, username: username, photoUrl: photoUrl,
         realBalance: parseFloat(localStorage.getItem(storageKeys.realBalance)) || 100,
         demoBalance: parseFloat(localStorage.getItem(storageKeys.demoBalance)) || 1000,
         totalWon: parseFloat(localStorage.getItem(storageKeys.totalWon)) || 0,
         totalGames: parseInt(localStorage.getItem(storageKeys.totalGames)) || 0
     };
     
-    // Admin data
     const AUTHORIZED_ADMIN = "Dawit_Fikadu21";
     let adminData = {
         totalDeposit: parseFloat(localStorage.getItem('admin_total_deposit')) || 0,
@@ -276,34 +258,24 @@
     let gameHistory = JSON.parse(localStorage.getItem(storageKeys.gameHistory)) || [];
     let transactions = JSON.parse(localStorage.getItem(storageKeys.transactions)) || [];
     
-    // UI update
     document.getElementById('userName').innerHTML = '@' + user.username;
     document.getElementById('profileName').innerHTML = '@' + user.username;
     if (photoUrl) {
-        document.getElementById('avatarImg').src = photoUrl;
-        document.getElementById('avatarImg').style.display = 'block';
+        document.getElementById('avatarImg').src = photoUrl; document.getElementById('avatarImg').style.display = 'block';
         document.getElementById('avatarPlaceholder').style.display = 'none';
-        document.getElementById('profileAvatarImg').src = photoUrl;
-        document.getElementById('profileAvatarImg').style.display = 'block';
+        document.getElementById('profileAvatarImg').src = photoUrl; document.getElementById('profileAvatarImg').style.display = 'block';
         document.getElementById('profileAvatarPlaceholder').style.display = 'none';
     }
     
     const isAdmin = (user.username === AUTHORIZED_ADMIN);
-    if (isAdmin) {
-        document.getElementById('adminPanel').classList.remove('hidden');
-        updateAdminDisplay();
-    }
+    if (isAdmin) { document.getElementById('adminPanel').classList.remove('hidden'); updateAdminDisplay(); }
     
     // Referral
     const urlParams = new URLSearchParams(window.location.search);
     const referrer = urlParams.get('ref');
     if (referrer && !localStorage.getItem(`referred_${userId}`)) {
         localStorage.setItem(`referred_${userId}`, 'true');
-        if (isRealMode) {
-            user.realBalance += 5;
-            localStorage.setItem(storageKeys.realBalance, user.realBalance);
-            showToast(`🎉 Invited by ${referrer}! +5 ETB bonus`);
-        }
+        if (isRealMode) { user.realBalance += 5; localStorage.setItem(storageKeys.realBalance, user.realBalance); showToast(`🎉 Invited by ${referrer}! +5 ETB bonus`); }
     }
     const botUsername = 'world_all_gamesbot';
     const referralLink = `https://t.me/${botUsername}?start=ref_${user.username}`;
@@ -329,19 +301,14 @@
     
     function updateBetButton(slotId) {
         const btn = document.getElementById(`betBtn${slotId}`);
-        if (bets[slotId].active) {
-            btn.innerHTML = 'CASH OUT';
-            btn.className = 'bet-btn cashout px-6';
-        } else {
-            btn.innerHTML = 'BET';
-            btn.className = 'bet-btn px-6';
-        }
+        if (bets[slotId].active) { btn.innerHTML = 'CASH OUT'; btn.className = 'bet-btn cashout px-6'; }
+        else { btn.innerHTML = 'BET'; btn.className = 'bet-btn px-6'; }
     }
     
     function updateHistoryDisplay() {
         const container = document.getElementById('historyList');
         container.innerHTML = '';
-        gameHistory.slice(0, 12).forEach(h => {
+        gameHistory.slice(0,12).forEach(h => {
             const isHigh = parseFloat(h.multiplier) > 3;
             container.innerHTML += `<div class="px-3 py-1.5 rounded-full text-[10px] font-bold ${isHigh ? 'bg-purple-600' : 'bg-zinc-800'}">${h.multiplier}x</div>`;
         });
@@ -353,43 +320,34 @@
         item.className = 'flex justify-between items-center p-2 rounded-xl bg-white/5';
         item.innerHTML = `<div class="flex items-center gap-2"><i class="fa-solid fa-trophy text-yellow-500 text-xs"></i><span class="text-xs font-bold">@${uname}</span></div><div class="text-green-400 font-bold text-sm">+${amount.toFixed(0)} ETB</div>`;
         container.prepend(item);
-        if (container.children.length > 8) container.removeChild(container.lastChild);
+        if (container.children.length > 10) container.removeChild(container.lastChild);
     }
     
     function setBetAmount(slotId, amount) {
         bets[slotId].amount = amount;
-        for (let a of [10,50,100,500]) {
-            const btn = document.getElementById(`betAmount${slotId}_${a}`);
-            if (btn) btn.classList.remove('green-active');
-        }
-        const selectedBtn = document.getElementById(`betAmount${slotId}_${amount}`);
-        if (selectedBtn) selectedBtn.classList.add('green-active');
+        for (let a of [10,50,100,500]) document.getElementById(`betAmount${slotId}_${a}`)?.classList.remove('green-active');
+        document.getElementById(`betAmount${slotId}_${amount}`)?.classList.add('green-active');
         showToast(`Bet: ${amount} ETB`);
     }
     
     function setAutoCash(slotId, multiplier) {
         bets[slotId].autoCash = multiplier;
         document.getElementById(`autoCash${slotId}`).innerHTML = multiplier > 0 ? `⚡ AUTO: ${multiplier}x` : '⚡ AUTO: OFF';
-        for (let m of [2,4,8,0]) {
-            const btn = document.getElementById(`autoCash${slotId}_${m}`);
-            if (btn) btn.classList.remove('green-active');
-        }
+        for (let m of [2,4,8,0]) document.getElementById(`autoCash${slotId}_${m}`)?.classList.remove('green-active');
         const btnId = multiplier === 0 ? `autoCash${slotId}_0` : `autoCash${slotId}_${multiplier}`;
-        const selectedBtn = document.getElementById(btnId);
-        if (selectedBtn) selectedBtn.classList.add('green-active');
+        document.getElementById(btnId)?.classList.add('green-active');
         showToast(multiplier > 0 ? `Auto cashout at ${multiplier}x set` : 'Auto cashout disabled');
     }
     
     function setMode(real) {
         isRealMode = real;
-        const realBtn = document.getElementById('realModeBtn');
-        const demoBtn = document.getElementById('demoModeBtn');
+        const realBtn = document.getElementById('realModeBtn'), demoBtn = document.getElementById('demoModeBtn');
         if (isRealMode) { realBtn.classList.add('active'); demoBtn.classList.remove('active'); }
         else { realBtn.classList.remove('active'); demoBtn.classList.add('active'); }
         updateBalanceDisplay();
         showToast(isRealMode ? 'REAL MODE ACTIVE' : 'DEMO MODE ACTIVE');
         const path = document.getElementById('gamePath');
-        path.classList.remove('trail-real', 'trail-demo');
+        path.classList.remove('trail-real','trail-demo');
         path.classList.add(isRealMode ? 'trail-real' : 'trail-demo');
     }
     
@@ -408,9 +366,7 @@
                 overlay.classList.add('hidden');
                 isCountdownActive = false;
                 startGame();
-            } else {
-                timeLeft--;
-            }
+            } else { timeLeft--; }
         };
         update();
         countdownInterval = setInterval(update, 1000);
@@ -422,9 +378,10 @@
         crashPoint = 1.1 + (Math.random() * 10);
         if (crashPoint > 50) crashPoint = 50;
         const path = document.getElementById('gamePath');
-        path.classList.remove('trail-real', 'trail-demo');
+        path.classList.remove('trail-real','trail-demo');
         path.classList.add(isRealMode ? 'trail-real' : 'trail-demo');
-        // Admin profit 20% from real bets
+        // Show plane
+        document.getElementById('plane').classList.remove('plane-hidden');
         if (isRealMode) {
             let totalRealBet = 0;
             if (bets[1].active) totalRealBet += bets[1].amount;
@@ -443,25 +400,23 @@
             updateMultiplierDisplay();
             animatePlane();
             for (let i=1;i<=2;i++) {
-                if (bets[i].active && bets[i].autoCash > 0 && currentMultiplier >= bets[i].autoCash) {
-                    cashOut(i);
-                }
+                if (bets[i].active && bets[i].autoCash > 0 && currentMultiplier >= bets[i].autoCash) cashOut(i);
             }
             if (currentMultiplier >= crashPoint) crash();
         }, 50);
     }
     
     function updateMultiplierDisplay() {
-        document.getElementById('multiplierText').innerHTML = `<span class="font-game text-7xl font-black italic drop-shadow-lg">${currentMultiplier.toFixed(2)}x</span>`;
+        document.getElementById('multiplierText').innerHTML = `<span class="font-game text-6xl font-black italic drop-shadow-lg">${currentMultiplier.toFixed(2)}x</span>`;
     }
     
     function animatePlane() {
         const progress = Math.min(currentMultiplier / crashPoint, 1);
         const x = progress * 280;
-        const y = progress * 200;
+        const y = progress * 150;
         const plane = document.getElementById('plane');
         plane.style.transform = `translate(${x}px, -${y}px) rotate(-20deg)`;
-        document.getElementById('gamePath').setAttribute('d', `M 0 250 Q ${x/2} ${250-y} ${x+15} ${250-y-15}`);
+        document.getElementById('gamePath').setAttribute('d', `M 0 180 Q ${x/2} ${180-y} ${x+15} ${180-y-15}`);
     }
     
     function cashOut(slotId) {
@@ -490,7 +445,11 @@
     function crash() {
         gameActive = false;
         clearInterval(gameInterval);
-        document.getElementById('multiplierText').innerHTML = `<span class="font-game text-5xl font-black text-red-500">💥 CRASHED</span>`;
+        // Hide plane (disappear)
+        const plane = document.getElementById('plane');
+        plane.classList.add('plane-hidden');
+        // Remove multiplier text temporarily
+        document.getElementById('multiplierText').innerHTML = `<span class="font-game text-3xl font-black text-red-500">✈️ DISAPPEARED</span>`;
         for (let i=1;i<=2;i++) {
             if (bets[i].active) {
                 bets[i].active = false;
@@ -510,22 +469,19 @@
     }
     
     function resetGame() {
-        document.getElementById('plane').style.transform = 'translate(0px, 0px) rotate(-20deg)';
-        document.getElementById('gamePath').setAttribute('d', 'M 0 250 Q 0 250 0 250');
+        const plane = document.getElementById('plane');
+        plane.style.transform = 'translate(0px, 0px) rotate(-20deg)';
+        plane.classList.remove('plane-hidden');
+        document.getElementById('gamePath').setAttribute('d', 'M 0 180 Q 0 180 0 180');
         currentMultiplier = 1.00;
+        document.getElementById('multiplierText').innerHTML = `<span class="font-game text-6xl font-black italic drop-shadow-lg">1.00x</span>`;
         gameActive = false;
     }
     
     function handleBet(slotId) {
-        if (gameActive) {
-            cashOut(slotId);
-            return;
-        }
+        if (gameActive) { cashOut(slotId); return; }
         const balance = isRealMode ? user.realBalance : user.demoBalance;
-        if (bets[slotId].amount > balance) {
-            showToast('❌ Insufficient balance!');
-            return;
-        }
+        if (bets[slotId].amount > balance) { showToast('❌ Insufficient balance!'); return; }
         if (isRealMode) {
             user.realBalance -= bets[slotId].amount;
             localStorage.setItem(storageKeys.realBalance, user.realBalance);
@@ -567,27 +523,21 @@
     
     // ==================== WALLET ====================
     function showWalletSection(section) {
-        const depositSec = document.getElementById('depositSection');
-        const withdrawSec = document.getElementById('withdrawSection');
-        const depositTab = document.getElementById('depositTab');
-        const withdrawTab = document.getElementById('withdrawTab');
+        const depositSec = document.getElementById('depositSection'), withdrawSec = document.getElementById('withdrawSection');
+        const depositTab = document.getElementById('depositTab'), withdrawTab = document.getElementById('withdrawTab');
         if (section === 'deposit') {
-            depositSec.classList.remove('hidden');
-            withdrawSec.classList.add('hidden');
+            depositSec.classList.remove('hidden'); withdrawSec.classList.add('hidden');
             depositTab.className = 'flex-1 py-4 rounded-2xl font-black bg-red-600';
             withdrawTab.className = 'flex-1 py-4 rounded-2xl font-black bg-zinc-800';
         } else {
-            depositSec.classList.add('hidden');
-            withdrawSec.classList.remove('hidden');
+            depositSec.classList.add('hidden'); withdrawSec.classList.remove('hidden');
             depositTab.className = 'flex-1 py-4 rounded-2xl font-black bg-zinc-800';
             withdrawTab.className = 'flex-1 py-4 rounded-2xl font-black bg-green-600';
         }
     }
     
     function submitDeposit() {
-        const name = document.getElementById('depositName').value;
-        const ft = document.getElementById('depositFt').value;
-        const amount = parseFloat(document.getElementById('depositAmount').value);
+        const name = document.getElementById('depositName').value, ft = document.getElementById('depositFt').value, amount = parseFloat(document.getElementById('depositAmount').value);
         if (!name || !ft || !amount) { showToast('Please fill all fields'); return; }
         const transaction = { id: Date.now(), type: 'deposit', name, ft, amount, status: 'pending', timestamp: new Date().toISOString() };
         adminData.pendingTransactions.unshift(transaction);
@@ -597,14 +547,11 @@
         showToast('✅ Request sent! Will be approved soon');
         updateTransactionDisplay();
         if (isAdmin) updateAdminDisplay();
-        document.getElementById('depositName').value = '';
-        document.getElementById('depositFt').value = '';
-        document.getElementById('depositAmount').value = '';
+        document.getElementById('depositName').value = ''; document.getElementById('depositFt').value = ''; document.getElementById('depositAmount').value = '';
     }
     
     function submitWithdraw() {
-        const account = document.getElementById('withdrawAccount').value;
-        const amount = parseFloat(document.getElementById('withdrawAmount').value);
+        const account = document.getElementById('withdrawAccount').value, amount = parseFloat(document.getElementById('withdrawAmount').value);
         const balance = isRealMode ? user.realBalance : user.demoBalance;
         if (!account || !amount) { showToast('Please fill all fields'); return; }
         if (amount > balance) { showToast('❌ Insufficient balance'); return; }
@@ -616,8 +563,7 @@
         showToast('✅ Withdrawal request sent!');
         updateTransactionDisplay();
         if (isAdmin) updateAdminDisplay();
-        document.getElementById('withdrawAccount').value = '';
-        document.getElementById('withdrawAmount').value = '';
+        document.getElementById('withdrawAccount').value = ''; document.getElementById('withdrawAmount').value = '';
     }
     
     function updateTransactionDisplay() {
@@ -633,9 +579,9 @@
     // ==================== ADMIN ====================
     function updateAdminDisplay() {
         if (!isAdmin) return;
-        document.getElementById('adminTotalDeposit').innerHTML = adminData.totalDeposit.toFixed(0) + ' ETB';
-        document.getElementById('adminTotalWithdraw').innerHTML = adminData.totalWithdraw.toFixed(0) + ' ETB';
-        document.getElementById('adminProfit').innerHTML = adminData.adminProfit.toFixed(0) + ' ETB';
+        document.getElementById('adminTotalDeposit').innerHTML = adminData.totalDeposit.toFixed(0)+' ETB';
+        document.getElementById('adminTotalWithdraw').innerHTML = adminData.totalWithdraw.toFixed(0)+' ETB';
+        document.getElementById('adminProfit').innerHTML = adminData.adminProfit.toFixed(0)+' ETB';
         const pendingContainer = document.getElementById('pendingTransactions');
         pendingContainer.innerHTML = '';
         adminData.pendingTransactions.forEach(tx => {
@@ -706,6 +652,9 @@
         document.getElementById(pageId).classList.add('active-page');
         const navMap = { homePage:'navHome', topPage:'navTop', walletPage:'navWallet', profilePage:'navProfile' };
         document.getElementById(navMap[pageId]).classList.add('active');
+        // Show/hide mode toggle only on home page
+        const modeToggle = document.getElementById('modeToggleContainer');
+        modeToggle.style.display = pageId === 'homePage' ? 'flex' : 'none';
     }
     
     function copyText(text) { navigator.clipboard.writeText(text); showToast('📋 Copied!'); }
@@ -717,7 +666,7 @@
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 2000);
     }
-    function vibrate(duration) { if (window.navigator?.vibrate) window.navigator.vibrate(duration); }
+    function vibrate(d) { if (window.navigator?.vibrate) window.navigator.vibrate(d); }
     
     // ==================== INIT ====================
     function init() {
@@ -727,12 +676,13 @@
         loadTopWinners('daily');
         setMode(true);
         startCountdown();
+        // Simulate many real players winning
+        const realNames = ['Dawi_Fikadu', 'Lemi_X', 'Abebe_K', 'Hana_23', 'Samuel_T', 'Ruth_B', 'Gebre_M', 'Meron_A', 'Yonas_D', 'Helen_T'];
         setInterval(() => {
-            const fake = ['Abebe_K','Lemi_X','Hana_23'];
-            const randomWinner = fake[Math.floor(Math.random()*fake.length)];
-            const randomAmount = Math.floor(Math.random()*3000)+500;
+            const randomWinner = realNames[Math.floor(Math.random() * realNames.length)];
+            const randomAmount = Math.floor(Math.random() * 5000) + 500;
             addLiveFeed(randomWinner, randomAmount);
-        }, 15000);
+        }, 5000);
     }
     init();
 </script>
