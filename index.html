@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AVIA-MASTER ELITE ©2026</title>
+    <title>AVIATOR ELITE V-2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,301 +11,248 @@
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;700;900&display=swap');
         
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
-        :root { --real-green: #00ff66; --demo-red: #ff4444; --bg-dark: #050505; }
+        :root { --real-green: #00ff66; --demo-red: #ff4444; --bg: #050505; }
         
-        body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: white; overflow-x: hidden; padding-top: 120px; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: white; overflow: hidden; height: 100vh; }
         .font-game { font-family: 'Orbitron', sans-serif; }
-
-        /* --- THEME COLORS LOGIC --- */
-        body.is-real { --theme-color: var(--real-green); }
-        body.is-demo { --theme-color: var(--demo-red); }
-
-        .theme-text { color: var(--theme-color); transition: 0.3s; }
-        .theme-bg { background-color: var(--theme-color); transition: 0.3s; }
-        .theme-border { border-color: var(--theme-color); transition: 0.3s; }
-
-        /* UI Components */
-        .top-nav { position: fixed; top: 0; width: 100%; height: 65px; display: flex; justify-content: space-around; align-items: center; background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); z-index: 1001; }
-        .main-header { position: fixed; top: 65px; width: 100%; height: 55px; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; background: rgba(0,0,0,0.8); z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.05); }
-
-        .slot-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 12px; margin-bottom: 10px; display: flex; gap: 10px; }
-        .bet-inputs { flex: 1; display: grid; grid-template-rows: 1fr 1fr; gap: 8px; }
         
-        /* Massive Action Button */
-        .bet-btn-main { width: 110px; border-radius: 18px; font-weight: 900; font-style: italic; font-size: 18px; color: black; display: flex; align-items: center; justify-content: center; border: none; transition: 0.2s; }
-        .bet-btn-main:active { transform: scale(0.95); }
+        /* Theme Toggle Logic */
+        body.is-real { --active: var(--real-green); }
+        body.is-demo { --active: var(--demo-red); }
 
-        /* Plane & Path */
-        #gamePath { stroke: var(--theme-color); stroke-width: 6; fill: none; filter: drop-shadow(0 0 10px var(--theme-color)); }
-        #plane { position: absolute; font-size: 45px; transition: transform 0.05s linear; z-index: 10; }
+        /* Navigation */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 75px; display: flex; justify-content: space-around; align-items: center; background: rgba(10,10,10,0.98); border-top: 1px solid rgba(255,255,255,0.05); z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #555; transition: 0.3s; cursor: pointer; }
+        .nav-item.active { color: var(--active); }
+        .nav-item i { font-size: 20px; }
+        .nav-item span { font-size: 10px; font-weight: 800; text-transform: uppercase; }
 
-        /* Animations */
+        /* Game Canvas */
+        .game-area { background: #000; border-radius: 28px; border: 2px solid #1a1a1a; position: relative; height: 230px; overflow: hidden; box-shadow: inset 0 0 50px rgba(0,0,0,1); }
+        #gamePath { stroke: var(--active); stroke-width: 6; fill: none; filter: drop-shadow(0 0 8px var(--active)); }
+        #plane { position: absolute; font-size: 45px; z-index: 10; transition: transform 0.05s linear; }
+        .multiplier { font-family: 'Orbitron', sans-serif; font-size: 4rem; font-weight: 900; color: var(--active); text-shadow: 0 0 30px var(--active); z-index: 5; }
+
+        /* Pages */
+        .page { display: none; padding: 16px; height: calc(100vh - 75px); overflow-y: auto; padding-top: 80px; }
+        .active-page { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Buttons & Inputs */
+        .slot-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 12px; margin-bottom: 12px; display: flex; gap: 10px; }
+        .bet-btn { width: 110px; border-radius: 20px; background: var(--active); color: black; font-weight: 900; font-style: italic; font-size: 18px; transition: 0.2s; }
+        .bet-btn:active { transform: scale(0.92); }
+
+        /* Top Winners Animation */
         @keyframes wobble { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-10px) rotate(2deg); } }
-        .animate-wobble { animation: wobble 2s infinite ease-in-out; }
-
-        .verify-badge { color: #38bdf8; font-size: 11px; margin-left: 3px; }
-        .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--real-green); box-shadow: 0 0 8px var(--real-green); animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-        
-        .page { display: none; padding: 15px; padding-bottom: 100px; }
-        .active-page { display: block; }
+        .animate-wobble { animation: wobble 2.5s infinite ease-in-out; }
+        .verify-badge { color: #38bdf8; font-size: 11px; margin-left: 4px; }
     </style>
 </head>
 <body class="is-real">
 
-    <nav class="top-nav">
-        <div onclick="switchPage('home')" id="n-home" class="theme-text text-2xl active"><i class="fa-solid fa-plane"></i></div>
-        <div onclick="switchPage('top')" id="n-top" class="text-zinc-600 text-2xl"><i class="fa-solid fa-trophy"></i></div>
-        <div onclick="switchPage('wallet')" id="n-wallet" class="text-zinc-600 text-2xl"><i class="fa-solid fa-wallet"></i></div>
-        <div onclick="switchPage('profile')" id="n-profile" class="text-zinc-600 text-2xl"><i class="fa-solid fa-user"></i></div>
-    </nav>
-
-    <header class="main-header">
+    <header class="fixed top-0 w-full p-4 flex justify-between items-center z-[1100] bg-black/50 backdrop-blur-lg">
         <div class="flex items-center gap-3">
-            <div id="uAvatar" class="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center text-xl overflow-hidden border border-white/10">👤</div>
+            <div id="pfp" class="w-10 h-10 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-xl overflow-hidden">👤</div>
             <div>
-                <p id="uBal" class="theme-text font-black text-lg">100.00 ETB</p>
-                <div class="flex items-center gap-1.5"><div class="live-dot"></div><span class="text-[9px] font-bold opacity-60 uppercase">2,548 Players Online</span></div>
+                <p id="balance" class="font-black text-lg" style="color: var(--active)">0.00 ETB</p>
+                <p class="text-[9px] font-bold opacity-50 uppercase tracking-widest">2,481 Players Online</p>
             </div>
         </div>
-        <div class="flex gap-1 p-1 bg-white/5 rounded-full border border-white/10">
-            <button onclick="setMode(true)" id="mReal" class="px-5 py-1.5 theme-bg text-black text-[10px] font-black rounded-full transition-all">REAL</button>
-            <button onclick="setMode(false)" id="mDemo" class="px-5 py-1.5 text-zinc-500 text-[10px] font-black rounded-full transition-all">DEMO</button>
+        <div id="modeSwitch" class="flex bg-white/5 p-1 rounded-full border border-white/10">
+            <button onclick="setMode(true)" id="rBtn" class="px-5 py-1.5 bg-green-500 text-black text-[10px] font-black rounded-full transition-all">REAL</button>
+            <button onclick="setMode(false)" id="dBtn" class="px-5 py-1.5 text-zinc-500 text-[10px] font-black rounded-full transition-all">DEMO</button>
         </div>
     </header>
 
-    <section id="home" class="page active-page">
-        <div id="historyBar" class="flex gap-2 overflow-x-auto mb-4 no-scrollbar"></div>
-        
-        <div class="relative bg-black rounded-[32px] border-2 theme-border h-56 overflow-hidden mb-5 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
-            <svg width="100%" height="100%" class="absolute top-0 left-0">
-                <path id="gamePath" d="M 0 220 Q 0 220 0 220" />
-            </svg>
-            <div id="multText" class="font-game text-6xl italic absolute inset-0 flex items-center justify-center theme-text drop-shadow-2xl">1.00x</div>
-            <div id="plane" class="bottom-4 left-4">✈️</div>
+    <section id="play" class="page active-page">
+        <div class="game-area mb-5">
+            <svg width="100%" height="100%" class="absolute"><path id="gamePath" d="M 0 230 Q 0 230 0 230" /></svg>
+            <div id="mText" class="multiplier absolute inset-0 flex items-center justify-center italic">1.00x</div>
+            <div id="plane" class="bottom-6 left-6">✈️</div>
         </div>
 
         <div class="slot-card">
-            <div class="bet-inputs">
-                <div class="grid grid-cols-4 gap-1.5">
-                    <button onclick="setAmt(1,10)" class="bg-white/10 py-3 rounded-xl text-[11px] font-black border border-white/5">10</button>
-                    <button onclick="setAmt(1,50)" class="bg-white/10 py-3 rounded-xl text-[11px] font-black border border-white/5">50</button>
-                    <button onclick="setAmt(1,100)" class="bg-white/10 py-3 rounded-xl text-[11px] font-black border border-white/5">100</button>
-                    <button onclick="setAmt(1,500)" class="bg-white/10 py-3 rounded-xl text-[11px] font-black border border-white/5">500</button>
-                </div>
-                <div class="flex justify-between items-center bg-black/40 px-3 rounded-xl border border-white/5">
-                    <span class="text-[10px] font-bold opacity-50 uppercase tracking-widest">Auto Cashout</span>
-                    <select id="auto1" class="bg-transparent text-xs font-black theme-text outline-none">
-                        <option value="0">OFF</option><option value="2">2.0x</option><option value="5">5.0x</option><option value="10">10x</option>
-                    </select>
-                </div>
+            <div class="flex-1 grid grid-cols-2 gap-2">
+                <button onclick="setB(1,50)" class="bg-white/5 py-3 rounded-xl text-xs font-black">50</button>
+                <button onclick="setB(1,100)" class="bg-white/5 py-3 rounded-xl text-xs font-black">100</button>
+                <button onclick="setB(1,500)" class="bg-white/5 py-3 rounded-xl text-xs font-black">500</button>
+                <button onclick="setB(1,1000)" class="bg-white/5 py-3 rounded-xl text-xs font-black">1000</button>
             </div>
-            <button id="btnBet1" onclick="handleBet(1)" class="bet-btn-main theme-bg">BET</button>
+            <button id="betBtn1" onclick="doBet(1)" class="bet-btn">BET</button>
         </div>
 
         <div class="slot-card">
-            <div class="bet-inputs">
-                <div class="grid grid-cols-4 gap-1.5">
-                    <button onclick="setAmt(2,10)" class="bg-white/10 py-3 rounded-xl text-[11px] font-black border border-white/5">10</button>
-                    <button onclick="setAmt(2,50)" class="bg-white/10 py-3 rounded-xl text-[11px] font-black border border-white/5">50</button>
-                    <button onclick="setAmt(2,100)" class="bg-white/10 py-3 rounded-xl text-[11px] font-black border border-white/5">100</button>
-                    <button onclick="setAmt(2,500)" class="bg-white/10 py-3 rounded-xl text-[11px] font-black border border-white/5">500</button>
-                </div>
-                <div class="flex justify-between items-center bg-black/40 px-3 rounded-xl border border-white/5">
-                    <span class="text-[10px] font-bold opacity-50 uppercase tracking-widest">Auto Cashout</span>
-                    <select id="auto2" class="bg-transparent text-xs font-black theme-text outline-none">
-                        <option value="0">OFF</option><option value="1.5">1.5x</option><option value="2">2.0x</option><option value="5">5.0x</option>
-                    </select>
-                </div>
+            <div class="flex-1 grid grid-cols-2 gap-2">
+                <button onclick="setB(2,50)" class="bg-white/5 py-3 rounded-xl text-xs font-black">50</button>
+                <button onclick="setB(2,100)" class="bg-white/5 py-3 rounded-xl text-xs font-black">100</button>
+                <button onclick="setB(2,500)" class="bg-white/5 py-3 rounded-xl text-xs font-black">500</button>
+                <button onclick="setB(2,1000)" class="bg-white/5 py-3 rounded-xl text-xs font-black">1000</button>
             </div>
-            <button id="btnBet2" onclick="handleBet(2)" class="bet-btn-main theme-bg">BET</button>
+            <button id="betBtn2" onclick="doBet(2)" class="bet-btn">BET</button>
         </div>
-
-        <div id="liveFeed" class="mt-5 space-y-2"></div>
     </section>
 
     <section id="top" class="page">
-        <div class="flex justify-center items-end gap-5 h-60 mb-8 mt-5">
-            <div class="animate-wobble flex flex-col items-center" style="animation-delay: 0.2s">
-                <div class="w-20 h-20 rounded-full bg-zinc-900 border-2 border-zinc-400 flex items-center justify-center text-3xl">🥈</div>
-                <p class="text-[10px] font-black mt-2">Lemi_X <i class="fa-solid fa-circle-check verify-badge"></i></p>
-                <div class="h-24 w-16 bg-zinc-800/40 rounded-t-2xl mt-2 border-t border-white/10"></div>
-            </div>
+        <div class="flex justify-center items-end gap-4 h-56 mb-10">
             <div class="animate-wobble flex flex-col items-center">
-                <span class="text-3xl mb-1 drop-shadow-lg">👑</span>
-                <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-yellow-600 to-yellow-300 border-4 border-yellow-200 flex items-center justify-center text-4xl shadow-xl">🥇</div>
-                <p class="text-xs font-black mt-2 uppercase">Dawit_Fikadu21 <i class="fa-solid fa-circle-check verify-badge"></i></p>
-                <div class="h-32 w-20 bg-yellow-500/10 rounded-t-2xl mt-2 border-t-2 border-yellow-500"></div>
+                <div class="w-16 h-16 rounded-full bg-zinc-800 border-2 border-zinc-500 flex items-center justify-center text-2xl">🥈</div>
+                <p class="text-[10px] font-bold mt-2">Lemi_X <i class="fa-solid fa-circle-check verify-badge"></i></p>
+                <div class="h-20 w-14 bg-zinc-800/40 rounded-t-xl mt-2"></div>
             </div>
-            <div class="animate-wobble flex flex-col items-center" style="animation-delay: 0.5s">
-                <div class="w-16 h-16 rounded-full bg-zinc-900 border-2 border-orange-800 flex items-center justify-center text-2xl">🥉</div>
-                <p class="text-[10px] font-black mt-2">Samuel_K <i class="fa-solid fa-circle-check verify-badge"></i></p>
-                <div class="h-16 w-14 bg-orange-900/10 rounded-t-2xl mt-2 border-t border-orange-900"></div>
+            <div class="animate-wobble flex flex-col items-center" style="animation-delay: 0.3s">
+                <span class="text-3xl mb-1">👑</span>
+                <div class="w-20 h-20 rounded-full bg-yellow-500 border-4 border-yellow-300 flex items-center justify-center text-3xl shadow-lg">🥇</div>
+                <p class="text-xs font-black mt-2">DAI_FIKADU <i class="fa-solid fa-circle-check verify-badge"></i></p>
+                <div class="h-28 w-16 bg-yellow-500/20 rounded-t-xl mt-2 border-t-2 border-yellow-500"></div>
+            </div>
+            <div class="animate-wobble flex flex-col items-center" style="animation-delay: 0.6s">
+                <div class="w-14 h-14 rounded-full bg-orange-900 border-2 border-orange-700 flex items-center justify-center text-xl">🥉</div>
+                <p class="text-[10px] font-bold mt-2">Hana_B <i class="fa-solid fa-circle-check verify-badge"></i></p>
+                <div class="h-14 w-12 bg-orange-900/20 rounded-t-xl mt-2"></div>
             </div>
         </div>
-        <div id="leaderboard" class="space-y-2"></div>
+        <div id="winnersList" class="space-y-2 pb-10"></div>
     </section>
 
     <section id="wallet" class="page">
-        <div class="flex gap-2 mb-6">
-            <button onclick="toggleWallet('d')" id="tabD" class="flex-1 py-4 theme-bg text-black rounded-2xl font-black shadow-lg">DEPOSIT</button>
-            <button onclick="toggleWallet('w')" id="tabW" class="flex-1 py-4 bg-zinc-800 rounded-2xl font-black">WITHDRAW</button>
-        </div>
-        <div id="walletBox" class="bg-zinc-900/50 p-6 rounded-[30px] border border-white/10 space-y-4">
-            <div onclick="copyText('1000179571815')" class="bg-black/60 p-5 rounded-2xl border-2 border-dashed border-white/10 flex justify-between items-center">
-                <div><p class="text-[10px] opacity-50 font-bold mb-1">CBE ACCOUNT</p><p class="font-game text-xl theme-text">1000179571815</p></div>
-                <i class="fa-solid fa-copy text-xl opacity-40"></i>
+        <div class="space-y-4">
+            <div class="bg-zinc-900 p-6 rounded-[30px] border border-white/5">
+                <p class="text-[10px] opacity-40 font-black mb-3">DEPOSIT VIA CBE / TELEBIRR</p>
+                <div onclick="copy('1000179571815')" class="bg-black/60 p-4 rounded-2xl mb-3 flex justify-between items-center border border-dashed border-white/10">
+                    <span class="font-game text-lg tracking-tighter text-green-400">1000179571815</span>
+                    <i class="fa-solid fa-copy opacity-30"></i>
+                </div>
+                <div onclick="copy('0906067696')" class="bg-black/60 p-4 rounded-2xl flex justify-between items-center border border-dashed border-white/10">
+                    <span class="font-game text-lg tracking-tighter text-green-400">0906067696</span>
+                    <i class="fa-solid fa-copy opacity-30"></i>
+                </div>
             </div>
-            <div onclick="copyText('0906067696')" class="bg-black/60 p-5 rounded-2xl border-2 border-dashed border-white/10 flex justify-between items-center">
-                <div><p class="text-[10px] opacity-50 font-bold mb-1">TELEBIRR / MPESA</p><p class="font-game text-xl theme-text">0906067696</p></div>
-                <i class="fa-solid fa-copy text-xl opacity-40"></i>
-            </div>
-            <input type="text" placeholder="TRANSACTION FT-NUMBER" class="w-full bg-black/40 p-4 rounded-xl border border-white/10 outline-none focus:theme-border transition-all">
-            <button class="w-full py-5 theme-bg text-black rounded-2xl font-black text-lg">SUBMIT PAYMENT</button>
+            <button class="w-full py-5 bg-zinc-800 rounded-2xl font-black text-sm uppercase tracking-widest">Withdraw Funds</button>
         </div>
     </section>
 
-    <footer class="fixed bottom-0 w-full p-4 text-center text-[10px] opacity-30 font-bold">
-        ©2026 AVIA-MASTER ELITE - PROFESSIONAL GAMING
-    </footer>
+    <section id="profile" class="page">
+        <div class="bg-zinc-900/50 rounded-[35px] p-8 text-center border border-white/5">
+            <div class="w-24 h-24 mx-auto bg-zinc-800 rounded-full mb-4 flex items-center justify-center text-4xl border-2 border-white/10">👤</div>
+            <h2 id="userName" class="text-2xl font-black tracking-tight">@User <i class="fa-solid fa-circle-check verify-badge"></i></h2>
+            <div class="grid grid-cols-2 gap-3 mt-8">
+                <div class="bg-black/40 p-4 rounded-2xl"><p class="text-[9px] opacity-40 font-bold">TOTAL WINS</p><p class="font-game text-lg">482</p></div>
+                <div class="bg-black/40 p-4 rounded-2xl"><p class="text-[9px] opacity-40 font-bold">RANK</p><p class="font-game text-lg text-yellow-500">ELITE</p></div>
+            </div>
+            <button onclick="tWebApp.close()" class="mt-8 w-full py-4 bg-red-600/10 text-red-500 rounded-2xl font-black text-xs uppercase tracking-widest border border-red-500/20">Exit Game</button>
+        </div>
+        <p class="text-center mt-10 text-[10px] opacity-20 font-bold tracking-[5px]">©2026 AVIATOR ELITE</p>
+    </section>
+
+    <nav class="nav-bar">
+        <div onclick="nav('play')" id="n-play" class="nav-item active"><i class="fa-solid fa-plane"></i><span>Play</span></div>
+        <div onclick="nav('top')" id="n-top" class="nav-item"><i class="fa-solid fa-trophy"></i><span>Top</span></div>
+        <div onclick="nav('wallet')" id="n-wallet" class="nav-item"><i class="fa-solid fa-wallet"></i><span>Wallet</span></div>
+        <div onclick="nav('profile')" id="n-profile" class="nav-item"><i class="fa-solid fa-user"></i><span>Profile</span></div>
+    </nav>
 
     <script>
-        const tg = window.Telegram.WebApp; tg.expand();
-        let isReal = true, gameActive = false, multiplier = 1.00;
-        let realBal = 500.00, demoBal = 10000.00;
-        let activeBets = { 1: { active: false, amt: 10 }, 2: { active: false, amt: 10 } };
-        
-        // --- SOUNDS ---
-        const playSnd = (f) => { try { let ctx = new AudioContext(); let osc = ctx.createOscillator(); let g = ctx.createGain(); osc.connect(g); g.connect(ctx.destination); osc.frequency.value = f; g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+0.5); osc.start(); osc.stop(ctx.currentTime+0.5); } catch(e){} };
+        const tWebApp = window.Telegram.WebApp; tWebApp.expand();
+        let isReal = true, gameActive = false, m = 1.00;
+        let rBal = 0.00, dBal = 50.00;
+        let bets = { 1: { on: false, amt: 50 }, 2: { on: false, amt: 50 } };
 
         function init() {
-            const u = tg.initDataUnsafe?.user;
-            if(u?.photo_url) document.getElementById('uAvatar').innerHTML = `<img src="${u.photo_url}" class="w-full h-full object-cover">`;
-            updateUI(); 
-            genLeaderboard();
-            gameLoop();
-        }
-
-        function gameLoop() {
-            if(gameActive) return;
-            setTimeout(() => { startRound(); }, 4000);
-        }
-
-        function startRound() {
-            gameActive = true; multiplier = 1.00;
-            
-            // --- PROFIT LOGIC (The 20% Rule) ---
-            let totalStaked = (activeBets[1].active ? activeBets[1].amt : 0) + (activeBets[2].active ? activeBets[2].amt : 0);
-            let crashPoint;
-            
-            if (totalStaked > 0 && isReal) {
-                // If people are playing real money, 20% must stay in the house
-                // We crash before people take out 80% of the pool
-                crashPoint = 1.1 + (Math.random() * 2.5); 
-            } else {
-                crashPoint = 1.1 + (Math.random() * 10); // Standard random for Demo
+            const u = tWebApp.initDataUnsafe?.user;
+            if(u) {
+                document.getElementById('userName').innerHTML = `@${u.username || 'Dai'} <i class="fa-solid fa-circle-check verify-badge"></i>`;
+                if(u.photo_url) document.getElementById('pfp').innerHTML = `<img src="${u.photo_url}" class="w-full h-full object-cover">`;
             }
+            updateUI(); genWinners(); loop();
+        }
 
-            let interval = setInterval(() => {
-                multiplier += 0.04;
-                document.getElementById('multText').innerText = multiplier.toFixed(2) + "x";
-                
-                let x = multiplier * 25, y = multiplier * 18;
-                document.getElementById('plane').style.transform = `translate(${x}px, -${y}px) rotate(-20deg)`;
-                document.getElementById('gamePath').setAttribute('d', `M 0 220 Q ${x/2} ${220-y} ${x} ${220-y}`);
-                
-                // Auto Cashout
-                [1,2].forEach(i => {
-                    let autoVal = parseFloat(document.getElementById('auto'+i).value);
-                    if(activeBets[i].active && autoVal > 0 && multiplier >= autoVal) handleBet(i);
-                });
+        function loop() { if(!gameActive) setTimeout(start, 4000); }
 
-                if(multiplier >= crashPoint) {
-                    clearInterval(interval);
-                    onCrash();
+        function start() {
+            gameActive = true; m = 1.00;
+            // 20% Admin Profit Logic
+            let totalReal = (bets[1].on ? bets[1].amt : 0) + (bets[2].on ? bets[2].amt : 0);
+            let crash = (isReal && totalReal > 0) ? 1.05 + (Math.random() * 1.5) : 1.1 + (Math.random() * 8);
+
+            let tick = setInterval(() => {
+                m += 0.04;
+                document.getElementById('mText').innerText = m.toFixed(2) + "x";
+                let x = m * 22, y = m * 16;
+                document.getElementById('plane').style.transform = `translate(${x}px, -${y}px) rotate(-15deg)`;
+                document.getElementById('gamePath').setAttribute('d', `M 0 230 Q ${x/2} ${230-y} ${x} ${230-y}`);
+
+                if(m >= crash) {
+                    clearInterval(tick);
+                    document.getElementById('mText').innerText = "FLEW AWAY!";
+                    document.getElementById('mText').style.color = "var(--demo-red)";
+                    gameActive = false;
+                    [1,2].forEach(i => bets[i].on = false);
+                    setTimeout(() => {
+                        document.getElementById('plane').style.transform = "translate(0,0)";
+                        document.getElementById('gamePath').setAttribute('d', "M 0 230 Q 0 230 0 230");
+                        document.getElementById('mText').style.color = "var(--active)";
+                        updateUI(); loop();
+                    }, 3500);
                 }
-            }, 65);
+            }, 70);
         }
 
-        function onCrash() {
-            gameActive = false;
-            document.getElementById('multText').innerText = "FLEW AWAY!";
-            document.getElementById('multText').style.color = "var(--demo-red)";
-            playSnd(150);
-            [1,2].forEach(i => { activeBets[i].active = false; resetBtn(i); });
-            setTimeout(() => {
-                document.getElementById('plane').style.transform = "translate(0,0) rotate(-20deg)";
-                document.getElementById('gamePath').setAttribute('d', "M 0 220 Q 0 220 0 220");
-                document.getElementById('multText').style.color = "var(--theme-color)";
-                gameLoop();
-            }, 3000);
-        }
-
-        function handleBet(i) {
+        function doBet(i) {
             if(gameActive) {
-                if(activeBets[i].active) {
-                    let win = activeBets[i].amt * multiplier;
-                    if(isReal) realBal += win; else demoBal += win;
-                    activeBets[i].active = false;
-                    updateUI(); resetBtn(i);
-                    playSnd(800);
-                    showToast(`WON ${win.toFixed(0)} ETB!`);
+                if(bets[i].on) {
+                    let win = bets[i].amt * m;
+                    if(isReal) rBal += win; else dBal += win;
+                    bets[i].on = false; updateUI();
+                    tWebApp.showAlert(`YOU WON ${win.toFixed(2)} ETB!`);
                 }
                 return;
             }
-            let bal = isReal ? realBal : demoBal;
-            if(activeBets[i].amt > bal) return showToast("Insufficient Balance!");
-            
-            if(isReal) realBal -= activeBets[i].amt; else demoBal -= activeBets[i].amt;
-            activeBets[i].active = true;
-            updateUI();
-            document.getElementById('btnBet'+i).innerText = "CASH OUT";
-            document.getElementById('btnBet'+i).style.backgroundColor = "#f97316";
-            playSnd(400);
+            let cur = isReal ? rBal : dBal;
+            if(bets[i].amt > cur) return tWebApp.showAlert("Insufficient Balance!");
+            if(isReal) rBal -= bets[i].amt; else dBal -= bets[i].amt;
+            bets[i].on = true; updateUI();
+            document.getElementById('betBtn'+i).innerText = "CASH OUT";
+            document.getElementById('betBtn'+i).style.background = "#f97316";
         }
 
-        function setMode(real) {
-            isReal = real;
-            document.body.className = real ? 'is-real' : 'is-demo';
-            document.getElementById('mReal').className = real ? "px-5 py-1.5 theme-bg text-black text-[10px] font-black rounded-full" : "px-5 py-1.5 text-zinc-500 text-[10px] font-black rounded-full";
-            document.getElementById('mDemo').className = !real ? "px-5 py-1.5 theme-bg text-black text-[10px] font-black rounded-full" : "px-5 py-1.5 text-zinc-500 text-[10px] font-black rounded-full";
+        function setMode(r) {
+            isReal = r;
+            document.body.className = r ? 'is-real' : 'is-demo';
+            document.getElementById('rBtn').className = r ? "px-5 py-1.5 bg-green-500 text-black text-[10px] font-black rounded-full" : "px-5 py-1.5 text-zinc-500 text-[10px] font-black rounded-full";
+            document.getElementById('dBtn').className = !r ? "px-5 py-1.5 bg-red-600 text-white text-[10px] font-black rounded-full" : "px-5 py-1.5 text-zinc-500 text-[10px] font-black rounded-full";
             updateUI();
         }
 
-        function updateUI() {
-            document.getElementById('uBal').innerText = (isReal ? realBal : demoBal).toFixed(2) + " ETB";
-            [1,2].forEach(i => { if(!activeBets[i].active) resetBtn(i); });
-        }
-
-        function resetBtn(i) {
-            const btn = document.getElementById('btnBet'+i);
-            btn.innerText = "BET";
-            btn.style.backgroundColor = "var(--theme-color)";
-        }
-
-        function setAmt(i, v) { activeBets[i].amt = v; playSnd(600); }
-
-        function switchPage(id) {
+        function nav(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(id).classList.add('active-page');
-            document.querySelectorAll('.top-nav div').forEach(d => d.className = "text-zinc-600 text-2xl");
-            document.getElementById('n-'+id).className = "theme-text text-2xl active";
+            document.getElementById('n-'+id).classList.add('active');
+            document.getElementById('modeSwitch').style.display = (id === 'play') ? 'flex' : 'none';
         }
 
-        function genLeaderboard() {
-            const names = ["@Hana_T", "@Samuel_Ethio", "@Lemi_King", "@Alex_Crypto", "@Mesi_Bet", "@Dawit_Fikadu21", "@John_D", "@Abebe_K"];
-            const list = document.getElementById('leaderboard');
-            for(let i=0; i<50; i++) {
-                list.innerHTML += `<div class="bg-white/5 flex justify-between items-center p-4 rounded-2xl border border-white/5">
+        function updateUI() {
+            document.getElementById('balance').innerText = (isReal ? rBal : dBal).toFixed(2) + " ETB";
+            [1,2].forEach(i => { if(!bets[i].on) {
+                let b = document.getElementById('betBtn'+i);
+                b.innerText = "BET"; b.style.background = "var(--active)";
+            }});
+        }
+
+        function genWinners() {
+            const names = ["@Hana_T", "@Samuel_K", "@Lemi_Master", "@Abebe_B", "@Mesi_Crypto", "@Dawit_F", "@Alex_Eth"];
+            const list = document.getElementById('winnersList');
+            for(let i=0; i<30; i++) {
+                list.innerHTML += `<div class="bg-white/5 p-4 rounded-2xl flex justify-between items-center border border-white/5">
                     <span class="text-sm font-bold">${names[i%names.length]} <i class="fa-solid fa-circle-check verify-badge"></i></span>
-                    <span class="theme-text font-black">${(Math.random()*8000 + 200).toFixed(0)} ETB</span>
+                    <span class="text-green-400 font-black">${(Math.random()*5000 + 200).toFixed(0)} ETB</span>
                 </div>`;
             }
         }
 
-        function showToast(m) { tg.showScanQrPopup({ text: m }); setTimeout(()=>tg.closeScanQrPopup(), 2000); }
-        function copyText(t) { navigator.clipboard.writeText(t); showToast("Copied!"); }
+        function setB(i, a) { bets[i].amt = a; }
+        function copy(t) { navigator.clipboard.writeText(t); tWebApp.showAlert("Copied: " + t); }
 
         init();
     </script>
