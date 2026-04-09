@@ -13,19 +13,14 @@
         :root { --accent: #ff0044; --real-green: #00ff66; --blue-v: #38bdf8; --dark-bg: #000000; }
         body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: white; overflow-x: hidden; padding-top: 115px; }
         .font-game { font-family: 'Orbitron', monospace; }
-        
-        /* Top Navigation - larger buttons */
         .top-nav { position: fixed; top: 0; left: 0; right: 0; height: 60px; display: flex; justify-content: space-around; align-items: center; background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); z-index: 1001; }
         .nav-item { font-size: 32px; color: #666; transition: 0.2s; cursor: pointer; padding: 10px 20px; border-radius: 40px; }
         .nav-item.active { color: var(--accent); background: rgba(255,0,68,0.15); }
-        
-        .main-header { position: fixed; top: 60px; left: 0; right: 0; height: 55px; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05); z-index: 1000; }
+        .main-header { position: fixed; top: 60px; left: 0; right: 0; height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05); z-index: 1000; }
         .glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; }
-        .page { display: none; padding: 16px; min-height: calc(100vh - 115px); }
+        .page { display: none; padding: 16px; min-height: calc(100vh - 120px); }
         .page.active-page { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* Game container - rectangular (wider, shorter) */
         .game-container { background: #000; border-radius: 28px; padding: 16px; margin-bottom: 20px; border: 2px solid var(--blue-v); box-shadow: 0 0 15px rgba(56,189,248,0.3); }
         .game-canvas { height: 200px; position: relative; }
         #gamePath { stroke-width: 5; fill: none; filter: drop-shadow(0 0 8px currentColor); transition: stroke 0.1s; }
@@ -33,7 +28,6 @@
         .trail-demo { stroke: #ff4444; }
         #plane { transition: transform 0.02s linear, opacity 0.2s; filter: drop-shadow(0 0 10px rgba(255,0,68,0.5)); position: absolute; bottom: 15px; left: 15px; font-size: 44px; transform: rotate(-20deg); opacity: 1; }
         .plane-hidden { opacity: 0 !important; }
-        
         .chip-btn { background: rgba(255,255,255,0.1); border: none; padding: 10px 12px; border-radius: 14px; font-weight: 900; font-size: 13px; color: white; cursor: pointer; transition: 0.1s; }
         .chip-btn:active { transform: scale(0.95); }
         .chip-btn.green-active { background: var(--real-green); color: black; }
@@ -54,7 +48,9 @@
         .podium-avatar { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #ffd700, #ff8c00); display: flex; align-items: center; justify-content: center; font-size: 30px; margin: 0 auto 8px; }
         .podium-item.first .podium-avatar { width: 80px; height: 80px; font-size: 40px; background: linear-gradient(135deg, #ffd700, #ff6b00); }
         .countdown-number { font-size: 70px; font-weight: 900; font-family: 'Orbitron', monospace; text-shadow: 0 0 20px var(--blue-v); }
-        @media (max-width: 480px) { body { padding-top: 110px; } .main-header { height: 50px; top: 55px; } .top-nav { height: 55px; } .nav-item { font-size: 28px; padding: 8px 16px; } .game-canvas { height: 180px; } #plane { font-size: 38px; } }
+        .bank-card { background: rgba(0,0,0,0.4); border-radius: 20px; padding: 12px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; border: 1px solid rgba(255,215,0,0.3); }
+        .bank-icon { font-size: 32px; margin-right: 12px; }
+        @media (max-width: 480px) { body { padding-top: 110px; } .main-header { height: 55px; top: 55px; } .top-nav { height: 55px; } .nav-item { font-size: 28px; padding: 8px 16px; } .game-canvas { height: 180px; } #plane { font-size: 38px; } }
     </style>
 </head>
 <body>
@@ -83,7 +79,7 @@
     </div>
 </header>
 
-<!-- Home Page (Play) -->
+<!-- Home Page -->
 <section id="homePage" class="page active-page">
     <div id="historyList" class="flex gap-2 overflow-x-auto mb-4 pb-2"></div>
     <div class="game-container">
@@ -144,19 +140,19 @@
     </div>
 </section>
 
-<!-- Top Winners Page -->
+<!-- Top Winners Page (100 players) -->
 <section id="topPage" class="page">
     <div class="podium">
-        <div class="podium-item second"><div class="podium-avatar">🥈</div><div class="font-bold text-xs">Lemi_X</div><div class="text-[10px] text-green-400">24,500 ETB</div></div>
-        <div class="podium-item first"><div class="podium-avatar">👑</div><div class="font-bold text-sm">DAWI_FIKADU</div><div class="text-[11px] text-yellow-400">245,000 ETB</div></div>
-        <div class="podium-item third"><div class="podium-avatar">🥉</div><div class="font-bold text-xs">Abebe_K</div><div class="text-[10px] text-green-400">12,300 ETB</div></div>
+        <div class="podium-item second"><div class="podium-avatar">🥈</div><div class="font-bold text-xs" id="secondName">Lemi_X</div><div id="secondAmount" class="text-[10px] text-green-400">24,500 ETB</div></div>
+        <div class="podium-item first"><div class="podium-avatar">👑</div><div class="font-bold text-sm" id="firstName">DAWI_FIKADU</div><div id="firstAmount" class="text-[11px] text-yellow-400">245,000 ETB</div></div>
+        <div class="podium-item third"><div class="podium-avatar">🥉</div><div class="font-bold text-xs" id="thirdName">Abebe_K</div><div id="thirdAmount" class="text-[10px] text-green-400">12,300 ETB</div></div>
     </div>
     <div class="flex gap-2 mb-4">
         <button onclick="loadTopWinners('daily')" id="dailyTab" class="flex-1 py-2 rounded-xl text-xs font-bold bg-red-600">TODAY</button>
         <button onclick="loadTopWinners('weekly')" id="weeklyTab" class="flex-1 py-2 rounded-xl text-xs font-bold bg-zinc-800">WEEKLY</button>
         <button onclick="loadTopWinners('alltime')" id="alltimeTab" class="flex-1 py-2 rounded-xl text-xs font-bold bg-zinc-800">ALL TIME</button>
     </div>
-    <div id="winnersList" class="space-y-2"></div>
+    <div id="winnersList" class="space-y-2 max-h-[400px] overflow-y-auto"></div>
 </section>
 
 <!-- Wallet Page -->
@@ -166,14 +162,23 @@
         <button onclick="showWalletSection('withdraw')" id="withdrawTab" class="flex-1 py-4 rounded-2xl font-black bg-zinc-800">💸 WITHDRAW</button>
     </div>
     <div id="depositSection" class="glass p-5 space-y-4">
-        <div onclick="copyText('1000179571815')" class="bg-black/30 p-4 rounded-2xl flex justify-between items-center cursor-pointer"><span class="font-mono text-green-400 text-sm">1000179571815</span><i class="fa-solid fa-copy text-gray-400"></i></div>
+        <!-- CBE Bank Card -->
+        <div onclick="copyText('1000179571815')" class="bank-card">
+            <div class="flex items-center"><i class="fa-solid fa-building-columns bank-icon" style="color:#0047AB;"></i><div><div class="font-bold">CBE - Commercial Bank</div><div class="text-xs opacity-70">DAWIT FIKADU</div><div class="font-mono text-green-400 text-sm">1000179571815</div></div></div>
+            <i class="fa-solid fa-copy text-gray-400"></i>
+        </div>
+        <!-- Telebirr Card -->
+        <div onclick="copyText('0906067696')" class="bank-card">
+            <div class="flex items-center"><i class="fa-solid fa-mobile-alt bank-icon" style="color:#00a859;"></i><div><div class="font-bold">Telebirr</div><div class="text-xs opacity-70">DAWIT FIKADU</div><div class="font-mono text-green-400 text-sm">0906067696</div></div></div>
+            <i class="fa-solid fa-copy text-gray-400"></i>
+        </div>
         <input type="text" id="depositName" placeholder="Full Name" class="w-full bg-white/10 p-3 rounded-xl outline-none text-sm">
-        <input type="text" id="depositFt" placeholder="FT Number" class="w-full bg-white/10 p-3 rounded-xl outline-none text-sm">
+        <input type="text" id="depositFt" placeholder="Transaction Reference / FT Number" class="w-full bg-white/10 p-3 rounded-xl outline-none text-sm">
         <input type="number" id="depositAmount" placeholder="Amount (ETB)" class="w-full bg-white/10 p-3 rounded-xl outline-none text-lg font-bold">
         <button onclick="submitDeposit()" class="w-full py-4 bg-red-600 rounded-2xl font-black">SUBMIT DEPOSIT</button>
     </div>
     <div id="withdrawSection" class="glass p-5 space-y-4 hidden">
-        <input type="text" id="withdrawAccount" placeholder="CBE Account Number" class="w-full bg-white/10 p-3 rounded-xl outline-none text-sm">
+        <input type="text" id="withdrawAccount" placeholder="CBE / Telebirr Account Number" class="w-full bg-white/10 p-3 rounded-xl outline-none text-sm">
         <input type="number" id="withdrawAmount" placeholder="Withdraw Amount (ETB)" class="w-full bg-white/10 p-3 rounded-xl outline-none text-lg font-bold">
         <button onclick="submitWithdraw()" class="w-full py-4 bg-green-600 rounded-2xl font-black text-black">CONFIRM WITHDRAW</button>
     </div>
@@ -183,7 +188,10 @@
 <!-- Profile Page -->
 <section id="profilePage" class="page">
     <div class="glass p-6 text-center mb-5">
-        <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-r from-red-500 to-pink-500 flex items-center justify-center overflow-hidden text-4xl mb-3"><img id="profileAvatarImg" src="" style="display:none; width:100%; height:100%; object-fit:cover;"><span id="profileAvatarPlaceholder">👤</span></div>
+        <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-r from-red-500 to-pink-500 flex items-center justify-center overflow-hidden text-4xl mb-3">
+            <img id="profileAvatarImg" src="" style="display:none; width:100%; height:100%; object-fit:cover;">
+            <span id="profileAvatarPlaceholder">👤</span>
+        </div>
         <h3 id="profileName" class="text-xl font-black">@User</h3>
         <div class="flex justify-center gap-1 mt-1"><span class="verify-badge"><i class="fa-solid fa-circle-check"></i> VERIFIED</span></div>
     </div>
@@ -202,7 +210,7 @@
         <div class="grid grid-cols-2 gap-3 mb-4">
             <div class="bg-yellow-500/10 p-3 rounded-xl text-center"><div class="text-[10px] opacity-60">Total Deposit</div><div id="adminTotalDeposit" class="text-yellow-400 font-black">0 ETB</div></div>
             <div class="bg-yellow-500/10 p-3 rounded-xl text-center"><div class="text-[10px] opacity-60">Total Withdraw</div><div id="adminTotalWithdraw" class="text-red-400 font-black">0 ETB</div></div>
-            <div class="bg-yellow-500/10 p-3 rounded-xl text-center"><div class="text-[10px] opacity-60">Admin Profit (20%)</div><div id="adminProfit" class="text-green-400 font-black">0 ETB</div></div>
+            <div class="bg-yellow-500/10 p-3 rounded-xl text-center"><div class="text-[10px] opacity-60">Admin Profit (20% of real bets)</div><div id="adminProfit" class="text-green-400 font-black">0 ETB</div></div>
         </div>
         <div class="mb-4"><div class="flex items-center gap-2 mb-2"><i class="fa-solid fa-clock text-yellow-500"></i><span class="text-xs font-bold">Pending Requests</span></div><div id="pendingTransactions" class="space-y-2 max-h-40 overflow-y-auto"></div></div>
         <div class="grid grid-cols-2 gap-2"><button onclick="adminSetCrashPoint()" class="py-2 bg-red-600 rounded-xl text-xs font-bold">🎮 Set Crash Point</button><button onclick="adminExportReport()" class="py-2 bg-blue-600 rounded-xl text-xs font-bold">📊 Export Report</button></div>
@@ -213,9 +221,7 @@
     // ==================== SOUND GENERATOR ====================
     let audioCtx = null;
     function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-    function playBeep(freq, duration, vol=0.2) {
-        try { initAudio(); const now = audioCtx.currentTime; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.connect(gain); gain.connect(audioCtx.destination); osc.frequency.value = freq; gain.gain.setValueAtTime(vol, now); gain.gain.exponentialRampToValueAtTime(0.0001, now + duration); osc.start(); osc.stop(now + duration); } catch(e) {}
-    }
+    function playBeep(freq, duration, vol=0.2) { try { initAudio(); const now = audioCtx.currentTime; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.connect(gain); gain.connect(audioCtx.destination); osc.frequency.value = freq; gain.gain.setValueAtTime(vol, now); gain.gain.exponentialRampToValueAtTime(0.0001, now + duration); osc.start(); osc.stop(now + duration); } catch(e) {} }
     function playWinSound() { playBeep(880,0.3,0.3); setTimeout(()=>playBeep(1320,0.5,0.3),200); }
     function playCrashSound() { playBeep(220,0.6,0.4); }
     function playBetSound() { playBeep(660,0.1,0.2); }
@@ -230,6 +236,7 @@
     const username = tgUser ? (tgUser.username || tgUser.first_name || 'User') : 'Guest';
     const photoUrl = tgUser?.photo_url || null;
     
+    // Storage keys per user
     const storageKeys = {
         realBalance: `avia_real_balance_${userId}`,
         demoBalance: `avia_demo_balance_${userId}`,
@@ -258,6 +265,7 @@
     let gameHistory = JSON.parse(localStorage.getItem(storageKeys.gameHistory)) || [];
     let transactions = JSON.parse(localStorage.getItem(storageKeys.transactions)) || [];
     
+    // UI updates
     document.getElementById('userName').innerHTML = '@' + user.username;
     document.getElementById('profileName').innerHTML = '@' + user.username;
     if (photoUrl) {
@@ -291,6 +299,52 @@
     let isCountdownActive = false;
     let bets = { 1: { active: false, amount: 10, autoCash: 0 }, 2: { active: false, amount: 10, autoCash: 0 } };
     
+    // Top winners storage (global, not per user) - simulate 100 real winners
+    let topWinners = [];
+    function generateTopWinners() {
+        const names = ['Dawi_Fikadu', 'Lemi_X', 'Abebe_K', 'Hana_23', 'Samuel_T', 'Ruth_B', 'Gebre_M', 'Meron_A', 'Yonas_D', 'Helen_T', 'Biruk_S', 'Eden_Z', 'Nahom_W', 'Selam_M', 'Kidus_T', 'Betty_A', 'Mikiyas_B', 'Lydia_C', 'Henok_D', 'Tigist_E', 'Addis_F', 'Bontu_G', 'Chaltu_H', 'Dagem_I', 'Elshaday_J', 'Fikru_K', 'Genet_L', 'Habtamu_M', 'Ibsa_N', 'Jemal_O', 'Kalkidan_P', 'Lemlem_Q', 'Mahlet_R', 'Natnael_S', 'Obsa_T', 'Peniel_U', 'Qetema_V', 'Rediet_W', 'Semira_X', 'Temesgen_Y', 'Urania_Z', 'Vivian_A', 'Winta_B', 'Xavier_C', 'Yodit_D', 'Zelalem_E', 'Abdi_F', 'Bilen_G', 'Cherinet_H', 'Desta_I'];
+        for (let i=0; i<100; i++) {
+            let name = names[i % names.length] + (i>50?i:'');
+            let amount = 50000 - i * 400 + Math.floor(Math.random()*2000);
+            if (amount < 500) amount = 500 + i*10;
+            topWinners.push({ name, amount, type: 'alltime' });
+        }
+        topWinners.sort((a,b)=>b.amount - a.amount);
+    }
+    generateTopWinners();
+    
+    function updateLivePodium() {
+        if (topWinners.length >= 3) {
+            document.getElementById('firstName').innerText = topWinners[0].name;
+            document.getElementById('firstAmount').innerHTML = topWinners[0].amount.toLocaleString() + ' ETB';
+            document.getElementById('secondName').innerText = topWinners[1].name;
+            document.getElementById('secondAmount').innerHTML = topWinners[1].amount.toLocaleString() + ' ETB';
+            document.getElementById('thirdName').innerText = topWinners[2].name;
+            document.getElementById('thirdAmount').innerHTML = topWinners[2].amount.toLocaleString() + ' ETB';
+        }
+    }
+    updateLivePodium();
+    
+    function loadTopWinners(type) {
+        ['daily','weekly','alltime'].forEach(t => {
+            document.getElementById(t+'Tab').className = t===type ? 'flex-1 py-2 rounded-xl text-xs font-bold bg-red-600' : 'flex-1 py-2 rounded-xl text-xs font-bold bg-zinc-800';
+        });
+        let filtered = topWinners.map(w => ({ ...w, amount: w.amount * (type==='daily'?0.2 : type==='weekly'?0.6 : 1) }));
+        filtered.sort((a,b)=>b.amount - a.amount);
+        const container = document.getElementById('winnersList');
+        container.innerHTML = '';
+        filtered.slice(0,100).forEach((w,idx) => {
+            container.innerHTML += `<div class="glass p-2 flex justify-between items-center text-sm"><div class="flex items-center gap-2"><span class="text-yellow-400 font-bold">#${idx+1}</span><span class="font-bold">@${w.name}</span><span class="verify-badge text-[8px]">✓</span></div><div class="text-green-400 font-black">${w.amount.toLocaleString()} ETB</div></div>`;
+        });
+    }
+    
+    function addWinnerToTop(username, amount) {
+        topWinners.push({ name: username, amount: amount, type: 'alltime' });
+        topWinners.sort((a,b)=>b.amount - a.amount);
+        if (topWinners.length > 100) topWinners.pop();
+        updateLivePodium();
+    }
+    
     function updateBalanceDisplay() {
         const balance = isRealMode ? user.realBalance : user.demoBalance;
         document.getElementById('balanceDisplay').innerHTML = balance.toFixed(2) + ' ETB';
@@ -318,7 +372,7 @@
         const container = document.getElementById('liveFeedContainer');
         const item = document.createElement('div');
         item.className = 'flex justify-between items-center p-2 rounded-xl bg-white/5';
-        item.innerHTML = `<div class="flex items-center gap-2"><i class="fa-solid fa-trophy text-yellow-500 text-xs"></i><span class="text-xs font-bold">@${uname}</span></div><div class="text-green-400 font-bold text-sm">+${amount.toFixed(0)} ETB</div>`;
+        item.innerHTML = `<div class="flex items-center gap-2"><i class="fa-solid fa-trophy text-yellow-500 text-xs"></i><span class="text-xs font-bold">@${uname}</span><span class="verify-badge text-[8px]">✓</span></div><div class="text-green-400 font-bold text-sm">+${amount.toFixed(0)} ETB</div>`;
         container.prepend(item);
         if (container.children.length > 10) container.removeChild(container.lastChild);
     }
@@ -380,8 +434,8 @@
         const path = document.getElementById('gamePath');
         path.classList.remove('trail-real','trail-demo');
         path.classList.add(isRealMode ? 'trail-real' : 'trail-demo');
-        // Show plane
         document.getElementById('plane').classList.remove('plane-hidden');
+        // Admin profit 20% from real bets
         if (isRealMode) {
             let totalRealBet = 0;
             if (bets[1].active) totalRealBet += bets[1].amount;
@@ -427,6 +481,7 @@
             user.totalWon += winAmount;
             localStorage.setItem(storageKeys.realBalance, user.realBalance);
             localStorage.setItem(storageKeys.totalWon, user.totalWon);
+            addWinnerToTop(user.username, user.totalWon);
         } else {
             user.demoBalance += winAmount;
             localStorage.setItem(storageKeys.demoBalance, user.demoBalance);
@@ -445,10 +500,8 @@
     function crash() {
         gameActive = false;
         clearInterval(gameInterval);
-        // Hide plane (disappear)
         const plane = document.getElementById('plane');
         plane.classList.add('plane-hidden');
-        // Remove multiplier text temporarily
         document.getElementById('multiplierText').innerHTML = `<span class="font-game text-3xl font-black text-red-500">✈️ DISAPPEARED</span>`;
         for (let i=1;i<=2;i++) {
             if (bets[i].active) {
@@ -495,30 +548,6 @@
         showToast(`✅ ${bets[slotId].amount} ETB bet placed`);
         playBetSound();
         vibrate(50);
-    }
-    
-    // ==================== TOP WINNERS ====================
-    function loadTopWinners(type) {
-        ['daily','weekly','alltime'].forEach(t => {
-            document.getElementById(t+'Tab').className = t===type ? 'flex-1 py-2 rounded-xl text-xs font-bold bg-red-600' : 'flex-1 py-2 rounded-xl text-xs font-bold bg-zinc-800';
-        });
-        const realUsers = [
-            { name: 'Dawi_Fikadu', amount: type==='daily'?12500:(type==='weekly'?45000:245000) },
-            { name: 'Lemi_X', amount: type==='daily'?8700:(type==='weekly'?32000:124500) },
-            { name: 'Abebe_K', amount: type==='daily'?5600:(type==='weekly'?21800:89300) }
-        ];
-        const fakeUsers = [
-            { name: 'Fake_Player1', amount: type==='daily'?3400:(type==='weekly'?9800:45200) },
-            { name: 'Fake_Player2', amount: type==='daily'?2100:(type==='weekly'?7600:32100) }
-        ];
-        let allUsers = [...realUsers, ...fakeUsers];
-        allUsers.sort((a,b)=>b.amount-a.amount);
-        const container = document.getElementById('winnersList');
-        container.innerHTML = '';
-        allUsers.forEach((w,idx) => {
-            const isReal = realUsers.some(r=>r.name===w.name);
-            container.innerHTML += `<div class="glass p-3 flex justify-between items-center"><div class="flex items-center gap-3"><span class="text-sm font-bold text-yellow-400">#${idx+1}</span><div class="flex items-center gap-1"><span class="font-bold text-sm">@${w.name}</span>${isReal ? '<span class="verify-badge text-[8px]">✓ REAL</span>' : '<span class="text-[8px] opacity-50">🤖 FAKE</span>'}</div></div><div class="text-green-400 font-black">${w.amount.toLocaleString()} ETB</div></div>`;
-        });
     }
     
     // ==================== WALLET ====================
@@ -652,7 +681,6 @@
         document.getElementById(pageId).classList.add('active-page');
         const navMap = { homePage:'navHome', topPage:'navTop', walletPage:'navWallet', profilePage:'navProfile' };
         document.getElementById(navMap[pageId]).classList.add('active');
-        // Show/hide mode toggle only on home page
         const modeToggle = document.getElementById('modeToggleContainer');
         modeToggle.style.display = pageId === 'homePage' ? 'flex' : 'none';
     }
@@ -673,16 +701,16 @@
         updateBalanceDisplay();
         updateHistoryDisplay();
         updateTransactionDisplay();
-        loadTopWinners('daily');
+        loadTopWinners('alltime');
         setMode(true);
         startCountdown();
-        // Simulate many real players winning
-        const realNames = ['Dawi_Fikadu', 'Lemi_X', 'Abebe_K', 'Hana_23', 'Samuel_T', 'Ruth_B', 'Gebre_M', 'Meron_A', 'Yonas_D', 'Helen_T'];
+        // Simulate live feed winners
+        const realNames = ['Dawi_Fikadu', 'Lemi_X', 'Abebe_K', 'Hana_23', 'Samuel_T', 'Ruth_B', 'Gebre_M'];
         setInterval(() => {
             const randomWinner = realNames[Math.floor(Math.random() * realNames.length)];
-            const randomAmount = Math.floor(Math.random() * 5000) + 500;
+            const randomAmount = Math.floor(Math.random() * 3000) + 500;
             addLiveFeed(randomWinner, randomAmount);
-        }, 5000);
+        }, 8000);
     }
     init();
 </script>
