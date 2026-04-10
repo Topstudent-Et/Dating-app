@@ -2,155 +2,593 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MegaPlay | All-in-One Gaming</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Aviator Casino – Lucky Games</title>
     <style>
-        body { background-color: #050811; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .neon-border { border: 1px solid #fbbf24; box-shadow: 0 0 10px #fbbf2433; }
-        .game-btn:active { transform: scale(0.95); }
-        @keyframes plane-fly { 0% { transform: translate(0,0); } 100% { transform: translate(300px, -150px); } }
-        .fly-anim { animation: plane-fly 5s infinite linear; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0a0f1e 0%, #0c1222 100%);
+            font-family: 'Segoe UI', 'Poppins', 'Orbitron', monospace;
+            color: #f0f3fa;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* main dashboard grid */
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            align-items: start;
+        }
+
+        /* cards */
+        .card {
+            background: rgba(15, 25, 45, 0.75);
+            backdrop-filter: blur(10px);
+            border-radius: 32px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(255, 200, 50, 0.5);
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.6);
+        }
+
+        .full-width {
+            grid-column: span 4;
+        }
+
+        .game-area {
+            grid-column: span 2;
+        }
+
+        /* game specific */
+        .multiplier-box {
+            background: #000000aa;
+            border-radius: 48px;
+            text-align: center;
+            padding: 30px 15px;
+            margin-bottom: 25px;
+            border: 1px solid gold;
+        }
+
+        .multiplier {
+            font-size: 5.2rem;
+            font-weight: 800;
+            font-family: 'Orbitron', monospace;
+            color: #ffd966;
+            text-shadow: 0 0 12px #ffaa33;
+            letter-spacing: 4px;
+        }
+
+        .crash-tag {
+            font-size: 1.2rem;
+            color: #ff8866;
+            margin-top: 8px;
+        }
+
+        .bet-controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        input, button {
+            background: #1e2a3a;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 60px;
+            font-weight: bold;
+            font-size: 1rem;
+            color: white;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+
+        input {
+            background: #0f1722;
+            border: 1px solid #ffd96655;
+            width: 140px;
+            text-align: center;
+        }
+
+        button {
+            background: linear-gradient(95deg, #f0b429, #ff8c42);
+            color: #0a0f1e;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            transform: none;
+            cursor: not-allowed;
+            filter: grayscale(0.2);
+        }
+
+        .btn-cashout {
+            background: linear-gradient(95deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .btn-crash {
+            background: #3a2a2a;
+            color: #ffaaaa;
+        }
+
+        .wallet-balance {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #f5c542;
+            margin: 15px 0;
+        }
+
+        .winner-list {
+            list-style: none;
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .winner-list li {
+            background: #0f1825;
+            margin: 8px 0;
+            padding: 8px 12px;
+            border-radius: 40px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            border-left: 3px solid gold;
+        }
+
+        .profile-pic {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #2c3e55;
+            margin: 12px auto;
+            border: 2px solid gold;
+            display: block;
+        }
+
+        .telegram-field {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .camera-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .small-btn {
+            background: #2c3e66;
+            color: white;
+            font-size: 0.8rem;
+            padding: 6px 12px;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 24px;
+            margin-top: 10px;
+            border: 1px solid gold;
+        }
+
+        h3 {
+            margin-bottom: 15px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border-left: 4px solid #ffb347;
+            padding-left: 12px;
+        }
+
+        hr {
+            border-color: #ffd96633;
+            margin: 15px 0;
+        }
+
+        @media (max-width: 1000px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            .game-area, .full-width {
+                grid-column: span 1;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <audio id="clickSound" src="https://www.soundjay.com/buttons/button-16.mp3"></audio>
-    <audio id="winSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
-
-    <header class="p-4 glass sticky top-0 z-50 flex justify-between items-center px-8">
-        <div class="flex items-center gap-4">
-            <h1 class="text-2xl font-black text-yellow-500 italic">MEGAPLAY</h1>
+<div class="dashboard">
+    <!-- GAME PANEL (AVIATOR) -->
+    <div class="card game-area">
+        <h3>✈️ AVIATOR • CRASH GAME</h3>
+        <div class="multiplier-box">
+            <div class="multiplier" id="multiplierDisplay">1.00x</div>
+            <div class="crash-tag" id="crashStatus">⚡ waiting for bet</div>
         </div>
-        
-        <div id="userProfile" class="flex items-center gap-3 bg-slate-900 p-1 pr-4 rounded-full border border-slate-700">
-            <img id="userPhoto" src="https://via.placeholder.com/40" class="w-10 h-10 rounded-full border-2 border-yellow-500">
-            <div>
-                <p id="userName" class="text-xs font-bold">@Telegram_User</p>
-                <p class="text-[10px] text-green-400">Online</p>
-            </div>
+        <div class="bet-controls">
+            <input type="number" id="betAmount" value="10" step="5" min="1" placeholder="Bet amount">
+            <button id="placeBetBtn">🚀 PLACE BET</button>
+            <button id="cashOutBtn" class="btn-cashout" disabled>💰 CASH OUT</button>
         </div>
-    </header>
-
-    <div class="container mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 p-6">
-        
-        <aside class="lg:col-span-2 space-y-2">
-            <button onclick="playSound()" class="w-full text-left p-3 rounded-lg bg-yellow-500 text-black font-bold mb-4"><i class="fas fa-grid-2"></i> Dashboard</button>
-            <div class="space-y-1 text-sm text-gray-400">
-                <div class="p-2 hover:bg-slate-800 rounded cursor-pointer transition"><i class="fas fa-plane mr-2 text-red-500"></i> Aviator</div>
-                <div class="p-2 hover:bg-slate-800 rounded cursor-pointer transition"><i class="fas fa-dice mr-2 text-purple-500"></i> Casino</div>
-                <div class="p-2 hover:bg-slate-800 rounded cursor-pointer transition"><i class="fas fa-star mr-2 text-yellow-500"></i> Lucky Win</div>
-                <div class="p-2 hover:bg-slate-800 rounded cursor-pointer transition"><i class="fas fa-font mr-2 text-blue-500"></i> Crossword</div>
-            </div>
-        </aside>
-
-        <main class="lg:col-span-7 space-y-6">
-            
-            <div class="grid grid-cols-3 gap-4">
-                <div class="glass p-4 rounded-2xl border-t-4 border-yellow-500">
-                    <p class="text-[10px] text-gray-400 uppercase">Balance</p>
-                    <h3 id="balance" class="text-xl font-black">2,500.00 ETB</h3>
-                </div>
-                <div class="glass p-4 rounded-2xl border-t-4 border-green-500">
-                    <p class="text-[10px] text-gray-400 uppercase">Total Profit (20%)</p>
-                    <h3 class="text-xl font-black text-green-400">+500.00</h3>
-                </div>
-                <div class="glass p-4 rounded-2xl border-t-4 border-blue-500">
-                    <p class="text-[10px] text-gray-400 uppercase">Total Played</p>
-                    <h3 class="text-xl font-black">12 Games</h3>
-                </div>
-            </div>
-
-            <section class="bg-slate-900 rounded-3xl p-6 relative overflow-hidden border border-red-900/30">
-                <div class="flex justify-between items-center mb-8">
-                    <h2 class="text-red-500 font-black italic"><i class="fas fa-plane"></i> AVIATOR LIVE</h2>
-                    <span class="bg-black/50 px-3 py-1 rounded text-yellow-500 font-mono text-xl">1.85x</span>
-                </div>
-                <div class="h-48 border-l border-b border-slate-700 relative">
-                    <i class="fas fa-plane text-4xl text-red-600 absolute bottom-4 left-4 fly-anim"></i>
-                </div>
-                <div class="flex gap-4 mt-4">
-                    <input type="number" id="betAmount" value="100" class="w-1/2 bg-black border border-slate-700 rounded-xl p-4 text-center text-xl font-bold outline-none">
-                    <button onclick="placeBet()" class="w-1/2 bg-green-600 hover:bg-green-500 p-4 rounded-xl font-black text-xl game-btn">BET / CASH OUT</button>
-                </div>
-            </section>
-
-            <div class="grid grid-cols-2 gap-4">
-                <div class="glass p-6 rounded-2xl hover:neon-border transition cursor-pointer">
-                    <i class="fas fa-puzzle-piece text-3xl text-blue-400 mb-3"></i>
-                    <h3 class="font-bold">Daily Crossword</h3>
-                    <p class="text-xs text-gray-500">Solve & Win 50 ETB</p>
-                </div>
-                <div class="glass p-6 rounded-2xl hover:neon-border transition cursor-pointer">
-                    <i class="fas fa-clover text-3xl text-green-400 mb-3"></i>
-                    <h3 class="font-bold">Lucky Number</h3>
-                    <p class="text-xs text-gray-400">Pick 1 and Win 10x</p>
-                </div>
-            </div>
-        </main>
-
-        <aside class="lg:col-span-3 space-y-4">
-            <div class="glass rounded-2xl p-4">
-                <h3 class="text-sm font-bold border-b border-slate-800 pb-2 mb-4 italic">TOP WINNERS LIVE</h3>
-                <div class="space-y-4">
-                    <div class="flex justify-between items-center text-xs">
-                        <span class="text-gray-400">@Nahom_G</span>
-                        <span class="text-green-400 font-bold">+1,200 ETB</span>
-                    </div>
-                    <div class="flex justify-between items-center text-xs">
-                        <span class="text-gray-400">@Abel_Tech</span>
-                        <span class="text-green-400 font-bold">+450 ETB</span>
-                    </div>
-                    <div class="flex justify-between items-center text-xs">
-                        <span class="text-gray-400">@Sara_K</span>
-                        <span class="text-green-400 font-bold">+3,000 ETB</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="glass rounded-2xl p-4 bg-gradient-to-br from-slate-900 to-black">
-                <h3 class="text-center font-bold text-yellow-500 mb-4 uppercase text-xs">Quick Wallet</h3>
-                <button class="w-full bg-slate-800 p-3 rounded-lg text-sm font-bold mb-2">DEPOSIT <i class="fas fa-plus-circle ml-2"></i></button>
-                <button class="w-full border border-slate-700 p-3 rounded-lg text-sm font-bold">WITHDRAW <i class="fas fa-wallet ml-2"></i></button>
-            </div>
-        </aside>
+        <div style="font-size: 0.8rem; text-align: center; opacity: 0.7;">
+            🎲 multiplier grows → cash out before crash! (random crash 1.2x - 15x)
+        </div>
     </div>
 
-    <script>
-        let currentBalance = 2500;
+    <!-- WALLET PANEL -->
+    <div class="card">
+        <h3>👛 MY WALLET</h3>
+        <div class="wallet-balance" id="balanceDisplay">$ 1000</div>
+        <button id="addFundsBtn">➕ ADD $100</button>
+        <hr>
+        <div><span>🎰 last win: </span><span id="lastWinMsg">—</span></div>
+        <div><span>💸 last crash: </span><span id="lastCrashMsg">—</span></div>
+    </div>
 
-        function playSound() {
-            document.getElementById('clickSound').play();
+    <!-- TOP WINNERS PANEL -->
+    <div class="card">
+        <h3>🏆 TOP WINNERS</h3>
+        <ul class="winner-list" id="topWinnersList">
+            <li>✨ LUCKYSTAR <span>+$450</span></li>
+            <li>✨ JETWINNER <span>+$320</span></li>
+            <li>✨ CRASHKING <span>+$290</span></li>
+        </ul>
+        <div style="font-size: 12px; margin-top: 8px;">⭐ big wins appear here</div>
+    </div>
+
+    <!-- PROFILE + TELEGRAM + PHOTO -->
+    <div class="card">
+        <h3>📸 MY PROFILE</h3>
+        <img id="profilePhoto" class="profile-pic" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23334455'/%3E%3Ctext x='50' y='67' text-anchor='middle' fill='%23ffcc66' font-size='40' dy='.3em'%3E📷%3C/text%3E%3C/svg%3E" alt="profile">
+        
+        <div class="telegram-field">
+            <input type="text" id="telegramUsername" placeholder="@telegram_username" value="@aviator_lucky">
+            <button id="saveTelegramBtn" class="small-btn">💾 SAVE NAME</button>
+        </div>
+        
+        <div class="camera-actions">
+            <button id="openCameraBtn" class="small-btn">📷 OPEN CAMERA</button>
+            <button id="capturePhotoBtn" class="small-btn" disabled>📸 CAPTURE PHOTO</button>
+            <button id="closeCameraBtn" class="small-btn" style="background:#aa2e2e;">❌ CLOSE</button>
+        </div>
+        <video id="videoPreview" autoplay playsinline style="display: none;"></video>
+        <canvas id="photoCanvas" style="display: none;"></canvas>
+        <div style="font-size: 11px; margin-top: 10px; text-align: center;">⭐ Telegram username + selfie saved in profile</div>
+    </div>
+</div>
+
+<script>
+    // ---------- GAME STATE ----------
+    let balance = 1000;
+    let currentBet = 0;
+    let currentMultiplier = 1.00;
+    let roundActive = false;
+    let crashPoint = 0;
+    let gameInterval = null;
+    let betPlaced = false;
+
+    // DOM elements
+    const balanceDisplay = document.getElementById('balanceDisplay');
+    const multiplierDisplay = document.getElementById('multiplierDisplay');
+    const crashStatus = document.getElementById('crashStatus');
+    const betAmountInput = document.getElementById('betAmount');
+    const placeBetBtn = document.getElementById('placeBetBtn');
+    const cashOutBtn = document.getElementById('cashOutBtn');
+    const addFundsBtn = document.getElementById('addFundsBtn');
+    const lastWinSpan = document.getElementById('lastWinMsg');
+    const lastCrashSpan = document.getElementById('lastCrashMsg');
+
+    // Top winners array (max 8)
+    let topWinners = [
+        { name: "LUCKYSTAR", amount: 450 },
+        { name: "JETWINNER", amount: 320 },
+        { name: "CRASHKING", amount: 290 }
+    ];
+
+    // ---------- Helper: update balance UI ----------
+    function updateBalanceUI() {
+        balanceDisplay.innerText = `$ ${Math.floor(balance)}`;
+    }
+
+    // ---------- Add win to top winners (dynamic) ----------
+    function addWinnerToTop(username, winAmount) {
+        if (winAmount < 50) return; // only impressive wins
+        let winnerName = username && username.trim() !== "" ? username : "anonymous";
+        // remove @ if present for cleaner look
+        if (winnerName.startsWith('@')) winnerName = winnerName.slice(1);
+        winnerName = winnerName.substring(0, 14);
+        topWinners.push({ name: winnerName.toUpperCase(), amount: Math.floor(winAmount) });
+        // sort descending
+        topWinners.sort((a,b) => b.amount - a.amount);
+        if (topWinners.length > 8) topWinners = topWinners.slice(0,8);
+        renderTopWinners();
+    }
+
+    function renderTopWinners() {
+        const listEl = document.getElementById('topWinnersList');
+        listEl.innerHTML = '';
+        topWinners.forEach(winner => {
+            const li = document.createElement('li');
+            li.innerHTML = `<span>✈️ ${winner.name}</span><span>+$${winner.amount}</span>`;
+            listEl.appendChild(li);
+        });
+    }
+
+    // initial render
+    renderTopWinners();
+
+    // ---------- GAME MECHANICS ----------
+    function getRandomCrashMultiplier() {
+        // crash between 1.15x and 12.5x with higher chance on low multipliers
+        let r = Math.random();
+        if (r < 0.45) return +(1.15 + Math.random() * 1.5).toFixed(2);   // 1.15 - 2.65
+        if (r < 0.75) return +(2.7 + Math.random() * 2.5).toFixed(2);    // 2.7 - 5.2
+        if (r < 0.92) return +(5.3 + Math.random() * 4.0).toFixed(2);    // 5.3 - 9.3
+        return +(9.5 + Math.random() * 5.5).toFixed(2);                   // 9.5 - 15.0
+    }
+
+    function stopGameRound(crashed = true, cashoutMultiplier = null) {
+        if (gameInterval) {
+            clearInterval(gameInterval);
+            gameInterval = null;
         }
-
-        function placeBet() {
-            let amount = document.getElementById('betAmount').value;
-            if(amount > currentBalance) {
-                alert("Insufficient Balance!");
-                return;
+        if (roundActive) {
+            if (crashed) {
+                // lose bet
+                let lostAmount = currentBet;
+                balance -= lostAmount;
+                if (balance < 0) balance = 0;
+                updateBalanceUI();
+                crashStatus.innerText = `💥 CRASHED at ${currentMultiplier.toFixed(2)}x! Lost $${lostAmount.toFixed(2)}`;
+                lastCrashSpan.innerText = `${currentMultiplier.toFixed(2)}x (loss $${lostAmount})`;
+                // no winner addition for loss
+            } else if (cashoutMultiplier !== null) {
+                // successful cashout
+                let winAmount = currentBet * cashoutMultiplier;
+                let profit = winAmount - currentBet;
+                balance += profit;
+                updateBalanceUI();
+                crashStatus.innerText = `🎉 CASH OUT! ${cashoutMultiplier.toFixed(2)}x → +$${winAmount.toFixed(2)}`;
+                lastWinSpan.innerText = `+$${profit.toFixed(2)} (${cashoutMultiplier.toFixed(2)}x)`;
+                // get current telegram username for top winners
+                let tgName = document.getElementById('telegramUsername').value;
+                if (tgName === "") tgName = "PLAYER";
+                addWinnerToTop(tgName, profit);
             }
-            
-            playSound();
-            currentBalance -= amount;
-            document.getElementById('balance').innerText = currentBalance.toFixed(2) + " ETB";
-            
-            // Simulating a Win with 20% Profit Logic
-            setTimeout(() => {
-                let win = amount * 1.20; // 20% Profit
-                currentBalance += win;
-                document.getElementById('balance').innerText = currentBalance.toFixed(2) + " ETB";
-                document.getElementById('winSound').play();
-                alert("Congrats! You won " + win + " ETB (20% Profit Included)");
-            }, 3000);
+            roundActive = false;
+            betPlaced = false;
+            placeBetBtn.disabled = false;
+            cashOutBtn.disabled = true;
+            betAmountInput.disabled = false;
+            currentMultiplier = 1.00;
+            multiplierDisplay.innerText = "1.00x";
+            currentBet = 0;
         }
+    }
 
-        // Simulating Telegram Data Fetch
-        window.onload = function() {
-            // In a real app, you'd use Telegram WebApp API here
-            console.log("Reading Telegram Profile...");
+    function startRound(betValue) {
+        if (roundActive) return;
+        if (betValue <= 0) {
+            crashStatus.innerText = "⚠️ Invalid bet amount!";
+            return;
         }
-    </script>
+        if (betValue > balance) {
+            crashStatus.innerText = "❌ Insufficient balance!";
+            return;
+        }
+        // deduct bet immediately
+        balance -= betValue;
+        updateBalanceUI();
+        currentBet = betValue;
+        currentMultiplier = 1.00;
+        multiplierDisplay.innerText = "1.00x";
+        roundActive = true;
+        betPlaced = true;
+        crashPoint = getRandomCrashMultiplier();
+        crashStatus.innerText = `✈️ FLYING! Crash at ${crashPoint.toFixed(2)}x. Cash out before!`;
+        placeBetBtn.disabled = true;
+        cashOutBtn.disabled = false;
+        betAmountInput.disabled = true;
+
+        // start multiplier increase
+        let lastTimestamp = performance.now();
+        let lastMultiplier = 1.00;
+        if (gameInterval) clearInterval(gameInterval);
+        gameInterval = setInterval(() => {
+            if (!roundActive) return;
+            // increase multiplier smoothly: exponential-ish feeling
+            let increment = 0.015 + Math.random() * 0.025;
+            let newMultiplier = currentMultiplier + increment;
+            if (newMultiplier >= crashPoint) {
+                // CRASH!
+                currentMultiplier = crashPoint;
+                multiplierDisplay.innerText = currentMultiplier.toFixed(2) + "x";
+                stopGameRound(true, null);
+            } else {
+                currentMultiplier = newMultiplier;
+                multiplierDisplay.innerText = currentMultiplier.toFixed(2) + "x";
+            }
+        }, 110);
+    }
+
+    function cashOut() {
+        if (!roundActive) return;
+        let multiplierAtCashout = currentMultiplier;
+        stopGameRound(false, multiplierAtCashout);
+    }
+
+    // ---------- EVENT LISTENERS ----------
+    placeBetBtn.addEventListener('click', () => {
+        let rawBet = parseFloat(betAmountInput.value);
+        if (isNaN(rawBet)) rawBet = 10;
+        rawBet = Math.max(1, rawBet);
+        if (rawBet > balance) {
+            crashStatus.innerText = "Not enough balance! Add funds or lower bet.";
+            return;
+        }
+        startRound(rawBet);
+    });
+
+    cashOutBtn.addEventListener('click', () => {
+        if (roundActive) cashOut();
+    });
+
+    addFundsBtn.addEventListener('click', () => {
+        balance += 100;
+        updateBalanceUI();
+        crashStatus.innerText = `💰 +$100 added to wallet!`;
+        if (!roundActive) {
+            betAmountInput.disabled = false;
+        }
+    });
+
+    // ---------- PROFILE: TELEGRAM + CAMERA ----------
+    const telegramInput = document.getElementById('telegramUsername');
+    const saveTelegramBtn = document.getElementById('saveTelegramBtn');
+    const openCameraBtn = document.getElementById('openCameraBtn');
+    const capturePhotoBtn = document.getElementById('capturePhotoBtn');
+    const closeCameraBtn = document.getElementById('closeCameraBtn');
+    const videoElem = document.getElementById('videoPreview');
+    const canvasElem = document.getElementById('photoCanvas');
+    const profileImg = document.getElementById('profilePhoto');
+    
+    let streamActive = false;
+    let mediaStream = null;
+
+    saveTelegramBtn.addEventListener('click', () => {
+        let username = telegramInput.value.trim();
+        if (username === "") username = "aviator_fan";
+        if (!username.startsWith('@')) username = '@' + username;
+        telegramInput.value = username;
+        crashStatus.innerText = `✅ Telegram saved: ${username}`;
+        setTimeout(() => {
+            if (!roundActive) crashStatus.innerText = "⚡ waiting for bet";
+        }, 1800);
+    });
+
+    async function startCamera() {
+        if (streamActive) return;
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            videoElem.srcObject = stream;
+            mediaStream = stream;
+            videoElem.style.display = "block";
+            streamActive = true;
+            capturePhotoBtn.disabled = false;
+            openCameraBtn.disabled = true;
+            closeCameraBtn.disabled = false;
+            crashStatus.innerText = "📸 Camera ON – click CAPTURE to take profile photo";
+        } catch (err) {
+            console.error("Camera error:", err);
+            crashStatus.innerText = "⚠️ Camera access denied or not available. Use file upload?";
+            // fallback: create file upload input alternative
+            createFileUploadFallback();
+        }
+    }
+
+    function createFileUploadFallback() {
+        if (document.getElementById('fallbackUpload')) return;
+        const uploadInput = document.createElement('input');
+        uploadInput.type = 'file';
+        uploadInput.accept = 'image/*';
+        uploadInput.id = 'fallbackUpload';
+        uploadInput.style.marginTop = '10px';
+        uploadInput.style.display = 'block';
+        uploadInput.style.background = '#1e2a3a';
+        uploadInput.style.borderRadius = '30px';
+        uploadInput.style.padding = '6px';
+        uploadInput.style.color = 'white';
+        const cameraDiv = document.querySelector('.camera-actions');
+        cameraDiv.insertAdjacentElement('afterend', uploadInput);
+        uploadInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    profileImg.src = ev.target.result;
+                    crashStatus.innerText = "✅ Profile photo updated via upload!";
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        crashStatus.innerText = "📁 Camera not available, use file upload instead.";
+    }
+
+    function stopCamera() {
+        if (mediaStream) {
+            mediaStream.getTracks().forEach(track => track.stop());
+            mediaStream = null;
+        }
+        videoElem.style.display = "none";
+        videoElem.srcObject = null;
+        streamActive = false;
+        capturePhotoBtn.disabled = true;
+        openCameraBtn.disabled = false;
+        closeCameraBtn.disabled = true;
+    }
+
+    function capturePhoto() {
+        if (!streamActive || !videoElem.videoWidth) {
+            crashStatus.innerText = "❌ No active camera stream. Open camera first!";
+            return;
+        }
+        const context = canvasElem.getContext('2d');
+        canvasElem.width = videoElem.videoWidth;
+        canvasElem.height = videoElem.videoHeight;
+        context.drawImage(videoElem, 0, 0, canvasElem.width, canvasElem.height);
+        const photoData = canvasElem.toDataURL('image/png');
+        profileImg.src = photoData;
+        crashStatus.innerText = "📸 Profile photo captured!";
+        // optional: save to localStorage?
+        stopCamera();  // automatically close camera after capture for better UX
+        crashStatus.innerText = "📸 Photo saved! Camera closed.";
+    }
+
+    openCameraBtn.addEventListener('click', startCamera);
+    capturePhotoBtn.addEventListener('click', capturePhoto);
+    closeCameraBtn.addEventListener('click', stopCamera);
+    
+    // prefill telegram username display
+    telegramInput.value = "@aviator_lucky";
+
+    // Final init: ensure no game interval leftover, fresh state
+    updateBalanceUI();
+    crashStatus.innerText = "🎲 Place bet & fly high!";
+    
+    // auto reload safety
+    window.addEventListener('beforeunload', () => {
+        if (mediaStream) {
+            mediaStream.getTracks().forEach(t => t.stop());
+        }
+        if (gameInterval) clearInterval(gameInterval);
+    });
+</script>
 </body>
 </html>
