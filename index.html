@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#ff0044">
-    <title>AVIA-MASTER ELITE | 20% House Edge Crash Game</title>
+    <title>AVIA-MASTER ELITE | 24/7 Global Crash Game – 20% House Edge</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -148,7 +148,7 @@
     </div>
 </div>
 
-<!-- TOP WINNERS PAGE (100 unique names) -->
+<!-- TOP WINNERS PAGE (100 unique Ethiopian names) -->
 <div id="topPage" class="page">
     <div class="podium">
         <div class="podium-item second"><div class="podium-avatar">🥈</div><div class="font-bold text-sm">Lemi_X</div><div class="text-xs text-green-400">24,500 ETB</div></div>
@@ -227,7 +227,7 @@
 </div>
 
 <script>
-    // ========================  GLOBAL STATE  ==========================
+    // ========================  GLOBAL STATE & SOUND ==========================
     const tg = window.Telegram.WebApp;
     tg.expand();
     tg.enableClosingConfirmation();
@@ -291,7 +291,7 @@
     let referralBonus = parseFloat(localStorage.getItem(STORAGE.refBonus)) || 0;
     let totalPlayedGames = parseInt(localStorage.getItem(STORAGE.totalPlayed)) || 0;
     
-    // Admin data
+    // Admin data (global)
     let adminTotalDeposit = parseFloat(localStorage.getItem('admin_deposit')) || 0;
     let adminTotalWithdraw = parseFloat(localStorage.getItem('admin_withdraw')) || 0;
     let adminProfitPool = parseFloat(localStorage.getItem('admin_profit')) || 0;
@@ -327,7 +327,7 @@
         2: { active: false, amount: 10, autoCash: 0 }
     };
     
-    // ========== 20% HOUSE EDGE LOGIC (Simulated Pool) ==========
+    // ========== 20% HOUSE EDGE LOGIC (with virtual players to simulate multiplayer) ==========
     // Virtual players that bet and cash out randomly – ensures total payout never exceeds 80% of total pool
     let virtualPlayers = [
         { name: "PlayerA", bet: 20, cashed: false, cashMult: 0 },
@@ -385,7 +385,7 @@
         return false;
     }
     
-    // ========== GLOBAL SYNCHRONIZATION (24/7) ==========
+    // ========== GLOBAL SYNCHRONIZATION (24/7/365 using UTC rounds) ==========
     function getCurrentRound() { return Math.floor(Date.now() / 30000); }
     function getRoundStartTime(round) { return round * 30000; }
     function getRoundPhase() {
@@ -647,7 +647,6 @@
         "Eyerusalem", "Fikir", "Girum", "Hiwot", "Israel", "Jember", "Kiya", "Lidet", "Mekdes", "Nardos",
         "Oliyad", "Petros", "Ruth", "Sami", "Tsehay", "Ubax", "Veron", "Wegayehu", "Yonas", "Zerihun"
     ];
-    // Ensure we have 100 by repeating if necessary
     while(ethiopianNames.length < 100) ethiopianNames.push("Player" + (ethiopianNames.length+1));
     
     function buildTopList(type) {
