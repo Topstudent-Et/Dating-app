@@ -2,259 +2,167 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AVIATOR ELITE V-2026</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UltimateBet | All-in-One Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;700;900&display=swap');
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
-        :root { --real-green: #00ff66; --demo-red: #ff4444; --bg: #050505; }
-        
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: white; overflow: hidden; height: 100vh; }
-        .font-game { font-family: 'Orbitron', sans-serif; }
-        
-        /* Theme Toggle Logic */
-        body.is-real { --active: var(--real-green); }
-        body.is-demo { --active: var(--demo-red); }
-
-        /* Navigation */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 75px; display: flex; justify-content: space-around; align-items: center; background: rgba(10,10,10,0.98); border-top: 1px solid rgba(255,255,255,0.05); z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #555; transition: 0.3s; cursor: pointer; }
-        .nav-item.active { color: var(--active); }
-        .nav-item i { font-size: 20px; }
-        .nav-item span { font-size: 10px; font-weight: 800; text-transform: uppercase; }
-
-        /* Game Canvas */
-        .game-area { background: #000; border-radius: 28px; border: 2px solid #1a1a1a; position: relative; height: 230px; overflow: hidden; box-shadow: inset 0 0 50px rgba(0,0,0,1); }
-        #gamePath { stroke: var(--active); stroke-width: 6; fill: none; filter: drop-shadow(0 0 8px var(--active)); }
-        #plane { position: absolute; font-size: 45px; z-index: 10; transition: transform 0.05s linear; }
-        .multiplier { font-family: 'Orbitron', sans-serif; font-size: 4rem; font-weight: 900; color: var(--active); text-shadow: 0 0 30px var(--active); z-index: 5; }
-
-        /* Pages */
-        .page { display: none; padding: 16px; height: calc(100vh - 75px); overflow-y: auto; padding-top: 80px; }
-        .active-page { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* Buttons & Inputs */
-        .slot-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 12px; margin-bottom: 12px; display: flex; gap: 10px; }
-        .bet-btn { width: 110px; border-radius: 20px; background: var(--active); color: black; font-weight: 900; font-style: italic; font-size: 18px; transition: 0.2s; }
-        .bet-btn:active { transform: scale(0.92); }
-
-        /* Top Winners Animation */
-        @keyframes wobble { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-10px) rotate(2deg); } }
-        .animate-wobble { animation: wobble 2.5s infinite ease-in-out; }
-        .verify-badge { color: #38bdf8; font-size: 11px; margin-left: 4px; }
+        body { background-color: #0b0f1a; color: #e2e8f0; font-family: 'Segoe UI', sans-serif; }
+        .game-card:hover { transform: translateY(-5px); transition: 0.3s; border-color: #fbbf24; }
+        .nav-active { border-bottom: 3px solid #fbbf24; color: #fbbf24; }
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #1e293b; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #fbbf24; border-radius: 10px; }
     </style>
 </head>
-<body class="is-real">
+<body>
 
-    <header class="fixed top-0 w-full p-4 flex justify-between items-center z-[1100] bg-black/50 backdrop-blur-lg">
-        <div class="flex items-center gap-3">
-            <div id="pfp" class="w-10 h-10 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-xl overflow-hidden">👤</div>
-            <div>
-                <p id="balance" class="font-black text-lg" style="color: var(--active)">0.00 ETB</p>
-                <p class="text-[9px] font-bold opacity-50 uppercase tracking-widest">2,481 Players Online</p>
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center p-4">
+            <div class="flex items-center gap-8">
+                <h1 class="text-3xl font-black text-yellow-500 tracking-tighter">ULTIMATE<span class="text-white">BET</span></h1>
+                <nav class="hidden lg:flex space-x-6 text-sm font-bold uppercase tracking-wide">
+                    <a href="#" class="nav-active pb-1">Sports</a>
+                    <a href="#" class="hover:text-yellow-500 pb-1">Live Betting</a>
+                    <a href="#" class="hover:text-yellow-500 pb-1">Casino</a>
+                    <a href="#" class="hover:text-yellow-500 pb-1 text-red-500"><i class="fas fa-fire"></i> Aviator</a>
+                    <a href="#" class="hover:text-yellow-500 pb-1">Virtuals</a>
+                </nav>
             </div>
-        </div>
-        <div id="modeSwitch" class="flex bg-white/5 p-1 rounded-full border border-white/10">
-            <button onclick="setMode(true)" id="rBtn" class="px-5 py-1.5 bg-green-500 text-black text-[10px] font-black rounded-full transition-all">REAL</button>
-            <button onclick="setMode(false)" id="dBtn" class="px-5 py-1.5 text-zinc-500 text-[10px] font-black rounded-full transition-all">DEMO</button>
+            <div class="flex gap-4">
+                <button class="text-sm font-bold hover:text-yellow-500">LOGIN</button>
+                <button class="bg-yellow-500 text-black px-6 py-2 rounded-full font-bold text-sm hover:bg-yellow-400">JOIN NOW</button>
+            </div>
         </div>
     </header>
 
-    <section id="play" class="page active-page">
-        <div class="game-area mb-5">
-            <svg width="100%" height="100%" class="absolute"><path id="gamePath" d="M 0 230 Q 0 230 0 230" /></svg>
-            <div id="mText" class="multiplier absolute inset-0 flex items-center justify-center italic">1.00x</div>
-            <div id="plane" class="bottom-6 left-6">✈️</div>
-        </div>
+    <div class="container mx-auto flex flex-col lg:flex-row gap-6 mt-6 px-4">
+        
+        <aside class="w-full lg:w-1/5 space-y-4">
+            <div class="bg-slate-900 rounded-xl p-4 border border-slate-800">
+                <h3 class="text-gray-400 text-xs font-bold uppercase mb-4">All Sports</h3>
+                <ul class="space-y-4 text-sm font-medium">
+                    <li class="flex items-center justify-between cursor-pointer hover:text-yellow-500">
+                        <span><i class="fas fa-futbol w-6"></i> Soccer</span>
+                        <span class="bg-slate-800 px-2 py-0.5 rounded text-xs">1,240</span>
+                    </li>
+                    <li class="flex items-center justify-between cursor-pointer hover:text-yellow-500">
+                        <span><i class="fas fa-basketball-ball w-6"></i> Basketball</span>
+                        <span class="bg-slate-800 px-2 py-0.5 rounded text-xs">312</span>
+                    </li>
+                    <li class="flex items-center justify-between cursor-pointer hover:text-yellow-500">
+                        <span><i class="fas fa-volleyball-ball w-6"></i> Tennis</span>
+                        <span class="bg-slate-800 px-2 py-0.5 rounded text-xs">84</span>
+                    </li>
+                    <li class="flex items-center justify-between cursor-pointer hover:text-yellow-500 text-yellow-500">
+                        <span><i class="fas fa-bolt w-6"></i> E-Sports</span>
+                        <span class="bg-yellow-500 text-black px-2 py-0.5 rounded text-xs">NEW</span>
+                    </li>
+                </ul>
+            </div>
+        </aside>
 
-        <div class="slot-card">
-            <div class="flex-1 grid grid-cols-2 gap-2">
-                <button onclick="setB(1,50)" class="bg-white/5 py-3 rounded-xl text-xs font-black">50</button>
-                <button onclick="setB(1,100)" class="bg-white/5 py-3 rounded-xl text-xs font-black">100</button>
-                <button onclick="setB(1,500)" class="bg-white/5 py-3 rounded-xl text-xs font-black">500</button>
-                <button onclick="setB(1,1000)" class="bg-white/5 py-3 rounded-xl text-xs font-black">1000</button>
-            </div>
-            <button id="betBtn1" onclick="doBet(1)" class="bet-btn">BET</button>
-        </div>
-
-        <div class="slot-card">
-            <div class="flex-1 grid grid-cols-2 gap-2">
-                <button onclick="setB(2,50)" class="bg-white/5 py-3 rounded-xl text-xs font-black">50</button>
-                <button onclick="setB(2,100)" class="bg-white/5 py-3 rounded-xl text-xs font-black">100</button>
-                <button onclick="setB(2,500)" class="bg-white/5 py-3 rounded-xl text-xs font-black">500</button>
-                <button onclick="setB(2,1000)" class="bg-white/5 py-3 rounded-xl text-xs font-black">1000</button>
-            </div>
-            <button id="betBtn2" onclick="doBet(2)" class="bet-btn">BET</button>
-        </div>
-    </section>
-
-    <section id="top" class="page">
-        <div class="flex justify-center items-end gap-4 h-56 mb-10">
-            <div class="animate-wobble flex flex-col items-center">
-                <div class="w-16 h-16 rounded-full bg-zinc-800 border-2 border-zinc-500 flex items-center justify-center text-2xl">🥈</div>
-                <p class="text-[10px] font-bold mt-2">Lemi_X <i class="fa-solid fa-circle-check verify-badge"></i></p>
-                <div class="h-20 w-14 bg-zinc-800/40 rounded-t-xl mt-2"></div>
-            </div>
-            <div class="animate-wobble flex flex-col items-center" style="animation-delay: 0.3s">
-                <span class="text-3xl mb-1">👑</span>
-                <div class="w-20 h-20 rounded-full bg-yellow-500 border-4 border-yellow-300 flex items-center justify-center text-3xl shadow-lg">🥇</div>
-                <p class="text-xs font-black mt-2">DAI_FIKADU <i class="fa-solid fa-circle-check verify-badge"></i></p>
-                <div class="h-28 w-16 bg-yellow-500/20 rounded-t-xl mt-2 border-t-2 border-yellow-500"></div>
-            </div>
-            <div class="animate-wobble flex flex-col items-center" style="animation-delay: 0.6s">
-                <div class="w-14 h-14 rounded-full bg-orange-900 border-2 border-orange-700 flex items-center justify-center text-xl">🥉</div>
-                <p class="text-[10px] font-bold mt-2">Hana_B <i class="fa-solid fa-circle-check verify-badge"></i></p>
-                <div class="h-14 w-12 bg-orange-900/20 rounded-t-xl mt-2"></div>
-            </div>
-        </div>
-        <div id="winnersList" class="space-y-2 pb-10"></div>
-    </section>
-
-    <section id="wallet" class="page">
-        <div class="space-y-4">
-            <div class="bg-zinc-900 p-6 rounded-[30px] border border-white/5">
-                <p class="text-[10px] opacity-40 font-black mb-3">DEPOSIT VIA CBE / TELEBIRR</p>
-                <div onclick="copy('1000179571815')" class="bg-black/60 p-4 rounded-2xl mb-3 flex justify-between items-center border border-dashed border-white/10">
-                    <span class="font-game text-lg tracking-tighter text-green-400">1000179571815</span>
-                    <i class="fa-solid fa-copy opacity-30"></i>
+        <main class="w-full lg:w-3/5 space-y-6">
+            
+            <div class="relative bg-gradient-to-r from-red-900 to-red-600 rounded-2xl p-6 overflow-hidden h-40 flex items-center justify-between border border-red-400/30">
+                <div>
+                    <h2 class="text-3xl font-black italic">AVIATOR</h2>
+                    <p class="text-red-100 mb-4">Win up to 100x your stake instantly!</p>
+                    <button class="bg-white text-red-600 px-6 py-2 rounded-lg font-bold hover:bg-red-50">PLAY NOW</button>
                 </div>
-                <div onclick="copy('0906067696')" class="bg-black/60 p-4 rounded-2xl flex justify-between items-center border border-dashed border-white/10">
-                    <span class="font-game text-lg tracking-tighter text-green-400">0906067696</span>
-                    <i class="fa-solid fa-copy opacity-30"></i>
+                <i class="fas fa-plane text-8xl opacity-20 -rotate-12"></i>
+            </div>
+
+            <section>
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold italic"><span class="text-red-500">●</span> LIVE NOW</h2>
+                    <button class="text-xs text-yellow-500 font-bold">VIEW ALL</button>
+                </div>
+                
+                <div class="space-y-3">
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div class="w-full md:w-1/3 text-center md:text-left">
+                            <span class="text-[10px] text-gray-500 uppercase tracking-widest">Premier League</span>
+                            <div class="font-bold text-sm">Arsenal vs Chelsea</div>
+                            <div class="text-green-500 text-xs font-mono mt-1">62:14 | 1 - 0</div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="bg-slate-800 hover:bg-yellow-500 hover:text-black p-3 rounded-lg w-20 transition text-center">
+                                <p class="text-[10px] opacity-60">1</p>
+                                <p class="font-bold">1.82</p>
+                            </button>
+                            <button class="bg-slate-800 hover:bg-yellow-500 hover:text-black p-3 rounded-lg w-20 transition text-center">
+                                <p class="text-[10px] opacity-60">X</p>
+                                <p class="font-bold">3.45</p>
+                            </button>
+                            <button class="bg-slate-800 hover:bg-yellow-500 hover:text-black p-3 rounded-lg w-20 transition text-center">
+                                <p class="text-[10px] opacity-60">2</p>
+                                <p class="font-bold">4.20</p>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl game-card cursor-pointer">
+                    <i class="fas fa-dog text-yellow-500 text-2xl mb-2"></i>
+                    <h3 class="font-bold">Virtual Greyhounds</h3>
+                    <p class="text-xs text-gray-400">Races every 2 minutes.</p>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl game-card cursor-pointer">
+                    <i class="fas fa-dice text-yellow-500 text-2xl mb-2"></i>
+                    <h3 class="font-bold">Live Casino</h3>
+                    <p class="text-xs text-gray-400">Real dealers, 24/7 tables.</p>
+                </div>
+            </section>
+        </main>
+
+        <aside class="w-full lg:w-1/5">
+            <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 sticky top-24">
+                <div class="bg-yellow-500 p-3 text-black font-black flex justify-between items-center">
+                    <span>BET SLIP</span>
+                    <span class="bg-black text-white text-[10px] px-2 py-1 rounded-full">1</span>
+                </div>
+                
+                <div class="p-4 space-y-4">
+                    <div class="bg-slate-800/50 p-3 rounded-lg border-l-4 border-yellow-500">
+                        <div class="flex justify-between items-start">
+                            <span class="text-xs font-bold">Arsenal</span>
+                            <button class="text-gray-500 hover:text-red-500"><i class="fas fa-times"></i></button>
+                        </div>
+                        <p class="text-[10px] text-gray-400">Match Winner (1x2)</p>
+                        <p class="text-sm font-bold text-yellow-500 mt-1">1.82</p>
+                    </div>
+
+                    <div class="space-y-2 border-t border-slate-800 pt-4">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-400">Stake</span>
+                            <input type="number" value="100" class="bg-slate-800 border-none rounded w-16 text-right px-2 text-yellow-500 font-bold focus:ring-0">
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-400">Total Odds</span>
+                            <span class="font-bold">1.82</span>
+                        </div>
+                        <div class="flex justify-between text-lg font-bold text-green-500 pt-2 border-t border-slate-800">
+                            <span>To Win</span>
+                            <span>182.00 ETB</span>
+                        </div>
+                        <button class="w-full bg-yellow-500 text-black py-3 rounded-xl font-black mt-2 hover:bg-yellow-400 shadow-lg shadow-yellow-500/10">PLACE BET</button>
+                    </div>
                 </div>
             </div>
-            <button class="w-full py-5 bg-zinc-800 rounded-2xl font-black text-sm uppercase tracking-widest">Withdraw Funds</button>
+        </aside>
+    </div>
+
+    <footer class="mt-12 bg-slate-950 p-10 text-center border-t border-slate-800 text-gray-600">
+        <div class="flex justify-center gap-6 mb-4 text-xl">
+            <i class="fab fa-cc-visa"></i>
+            <i class="fab fa-cc-mastercard"></i>
+            <i class="fas fa-wallet text-yellow-500"></i>
         </div>
-    </section>
+        <p class="text-xs">Must be 18+ to play. Gaming can be addictive. Please gamble responsibly.</p>
+    </footer>
 
-    <section id="profile" class="page">
-        <div class="bg-zinc-900/50 rounded-[35px] p-8 text-center border border-white/5">
-            <div class="w-24 h-24 mx-auto bg-zinc-800 rounded-full mb-4 flex items-center justify-center text-4xl border-2 border-white/10">👤</div>
-            <h2 id="userName" class="text-2xl font-black tracking-tight">@User <i class="fa-solid fa-circle-check verify-badge"></i></h2>
-            <div class="grid grid-cols-2 gap-3 mt-8">
-                <div class="bg-black/40 p-4 rounded-2xl"><p class="text-[9px] opacity-40 font-bold">TOTAL WINS</p><p class="font-game text-lg">482</p></div>
-                <div class="bg-black/40 p-4 rounded-2xl"><p class="text-[9px] opacity-40 font-bold">RANK</p><p class="font-game text-lg text-yellow-500">ELITE</p></div>
-            </div>
-            <button onclick="tWebApp.close()" class="mt-8 w-full py-4 bg-red-600/10 text-red-500 rounded-2xl font-black text-xs uppercase tracking-widest border border-red-500/20">Exit Game</button>
-        </div>
-        <p class="text-center mt-10 text-[10px] opacity-20 font-bold tracking-[5px]">©2026 AVIATOR ELITE</p>
-    </section>
-
-    <nav class="nav-bar">
-        <div onclick="nav('play')" id="n-play" class="nav-item active"><i class="fa-solid fa-plane"></i><span>Play</span></div>
-        <div onclick="nav('top')" id="n-top" class="nav-item"><i class="fa-solid fa-trophy"></i><span>Top</span></div>
-        <div onclick="nav('wallet')" id="n-wallet" class="nav-item"><i class="fa-solid fa-wallet"></i><span>Wallet</span></div>
-        <div onclick="nav('profile')" id="n-profile" class="nav-item"><i class="fa-solid fa-user"></i><span>Profile</span></div>
-    </nav>
-
-    <script>
-        const tWebApp = window.Telegram.WebApp; tWebApp.expand();
-        let isReal = true, gameActive = false, m = 1.00;
-        let rBal = 0.00, dBal = 50.00;
-        let bets = { 1: { on: false, amt: 50 }, 2: { on: false, amt: 50 } };
-
-        function init() {
-            const u = tWebApp.initDataUnsafe?.user;
-            if(u) {
-                document.getElementById('userName').innerHTML = `@${u.username || 'Dai'} <i class="fa-solid fa-circle-check verify-badge"></i>`;
-                if(u.photo_url) document.getElementById('pfp').innerHTML = `<img src="${u.photo_url}" class="w-full h-full object-cover">`;
-            }
-            updateUI(); genWinners(); loop();
-        }
-
-        function loop() { if(!gameActive) setTimeout(start, 4000); }
-
-        function start() {
-            gameActive = true; m = 1.00;
-            // 20% Admin Profit Logic
-            let totalReal = (bets[1].on ? bets[1].amt : 0) + (bets[2].on ? bets[2].amt : 0);
-            let crash = (isReal && totalReal > 0) ? 1.05 + (Math.random() * 1.5) : 1.1 + (Math.random() * 8);
-
-            let tick = setInterval(() => {
-                m += 0.04;
-                document.getElementById('mText').innerText = m.toFixed(2) + "x";
-                let x = m * 22, y = m * 16;
-                document.getElementById('plane').style.transform = `translate(${x}px, -${y}px) rotate(-15deg)`;
-                document.getElementById('gamePath').setAttribute('d', `M 0 230 Q ${x/2} ${230-y} ${x} ${230-y}`);
-
-                if(m >= crash) {
-                    clearInterval(tick);
-                    document.getElementById('mText').innerText = "FLEW AWAY!";
-                    document.getElementById('mText').style.color = "var(--demo-red)";
-                    gameActive = false;
-                    [1,2].forEach(i => bets[i].on = false);
-                    setTimeout(() => {
-                        document.getElementById('plane').style.transform = "translate(0,0)";
-                        document.getElementById('gamePath').setAttribute('d', "M 0 230 Q 0 230 0 230");
-                        document.getElementById('mText').style.color = "var(--active)";
-                        updateUI(); loop();
-                    }, 3500);
-                }
-            }, 70);
-        }
-
-        function doBet(i) {
-            if(gameActive) {
-                if(bets[i].on) {
-                    let win = bets[i].amt * m;
-                    if(isReal) rBal += win; else dBal += win;
-                    bets[i].on = false; updateUI();
-                    tWebApp.showAlert(`YOU WON ${win.toFixed(2)} ETB!`);
-                }
-                return;
-            }
-            let cur = isReal ? rBal : dBal;
-            if(bets[i].amt > cur) return tWebApp.showAlert("Insufficient Balance!");
-            if(isReal) rBal -= bets[i].amt; else dBal -= bets[i].amt;
-            bets[i].on = true; updateUI();
-            document.getElementById('betBtn'+i).innerText = "CASH OUT";
-            document.getElementById('betBtn'+i).style.background = "#f97316";
-        }
-
-        function setMode(r) {
-            isReal = r;
-            document.body.className = r ? 'is-real' : 'is-demo';
-            document.getElementById('rBtn').className = r ? "px-5 py-1.5 bg-green-500 text-black text-[10px] font-black rounded-full" : "px-5 py-1.5 text-zinc-500 text-[10px] font-black rounded-full";
-            document.getElementById('dBtn').className = !r ? "px-5 py-1.5 bg-red-600 text-white text-[10px] font-black rounded-full" : "px-5 py-1.5 text-zinc-500 text-[10px] font-black rounded-full";
-            updateUI();
-        }
-
-        function nav(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(id).classList.add('active-page');
-            document.getElementById('n-'+id).classList.add('active');
-            document.getElementById('modeSwitch').style.display = (id === 'play') ? 'flex' : 'none';
-        }
-
-        function updateUI() {
-            document.getElementById('balance').innerText = (isReal ? rBal : dBal).toFixed(2) + " ETB";
-            [1,2].forEach(i => { if(!bets[i].on) {
-                let b = document.getElementById('betBtn'+i);
-                b.innerText = "BET"; b.style.background = "var(--active)";
-            }});
-        }
-
-        function genWinners() {
-            const names = ["@Hana_T", "@Samuel_K", "@Lemi_Master", "@Abebe_B", "@Mesi_Crypto", "@Dawit_F", "@Alex_Eth"];
-            const list = document.getElementById('winnersList');
-            for(let i=0; i<30; i++) {
-                list.innerHTML += `<div class="bg-white/5 p-4 rounded-2xl flex justify-between items-center border border-white/5">
-                    <span class="text-sm font-bold">${names[i%names.length]} <i class="fa-solid fa-circle-check verify-badge"></i></span>
-                    <span class="text-green-400 font-black">${(Math.random()*5000 + 200).toFixed(0)} ETB</span>
-                </div>`;
-            }
-        }
-
-        function setB(i, a) { bets[i].amt = a; }
-        function copy(t) { navigator.clipboard.writeText(t); tWebApp.showAlert("Copied: " + t); }
-
-        init();
-    </script>
 </body>
 </html>
