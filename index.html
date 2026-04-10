@@ -3,166 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UltimateBet | All-in-One Platform</title>
+    <title>MegaPlay | All-in-One Gaming</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #0b0f1a; color: #e2e8f0; font-family: 'Segoe UI', sans-serif; }
-        .game-card:hover { transform: translateY(-5px); transition: 0.3s; border-color: #fbbf24; }
-        .nav-active { border-bottom: 3px solid #fbbf24; color: #fbbf24; }
-        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #1e293b; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #fbbf24; border-radius: 10px; }
+        body { background-color: #050811; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .neon-border { border: 1px solid #fbbf24; box-shadow: 0 0 10px #fbbf2433; }
+        .game-btn:active { transform: scale(0.95); }
+        @keyframes plane-fly { 0% { transform: translate(0,0); } 100% { transform: translate(300px, -150px); } }
+        .fly-anim { animation: plane-fly 5s infinite linear; }
     </style>
 </head>
 <body>
 
-    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center p-4">
-            <div class="flex items-center gap-8">
-                <h1 class="text-3xl font-black text-yellow-500 tracking-tighter">ULTIMATE<span class="text-white">BET</span></h1>
-                <nav class="hidden lg:flex space-x-6 text-sm font-bold uppercase tracking-wide">
-                    <a href="#" class="nav-active pb-1">Sports</a>
-                    <a href="#" class="hover:text-yellow-500 pb-1">Live Betting</a>
-                    <a href="#" class="hover:text-yellow-500 pb-1">Casino</a>
-                    <a href="#" class="hover:text-yellow-500 pb-1 text-red-500"><i class="fas fa-fire"></i> Aviator</a>
-                    <a href="#" class="hover:text-yellow-500 pb-1">Virtuals</a>
-                </nav>
-            </div>
-            <div class="flex gap-4">
-                <button class="text-sm font-bold hover:text-yellow-500">LOGIN</button>
-                <button class="bg-yellow-500 text-black px-6 py-2 rounded-full font-bold text-sm hover:bg-yellow-400">JOIN NOW</button>
+    <audio id="clickSound" src="https://www.soundjay.com/buttons/button-16.mp3"></audio>
+    <audio id="winSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+
+    <header class="p-4 glass sticky top-0 z-50 flex justify-between items-center px-8">
+        <div class="flex items-center gap-4">
+            <h1 class="text-2xl font-black text-yellow-500 italic">MEGAPLAY</h1>
+        </div>
+        
+        <div id="userProfile" class="flex items-center gap-3 bg-slate-900 p-1 pr-4 rounded-full border border-slate-700">
+            <img id="userPhoto" src="https://via.placeholder.com/40" class="w-10 h-10 rounded-full border-2 border-yellow-500">
+            <div>
+                <p id="userName" class="text-xs font-bold">@Telegram_User</p>
+                <p class="text-[10px] text-green-400">Online</p>
             </div>
         </div>
     </header>
 
-    <div class="container mx-auto flex flex-col lg:flex-row gap-6 mt-6 px-4">
+    <div class="container mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 p-6">
         
-        <aside class="w-full lg:w-1/5 space-y-4">
-            <div class="bg-slate-900 rounded-xl p-4 border border-slate-800">
-                <h3 class="text-gray-400 text-xs font-bold uppercase mb-4">All Sports</h3>
-                <ul class="space-y-4 text-sm font-medium">
-                    <li class="flex items-center justify-between cursor-pointer hover:text-yellow-500">
-                        <span><i class="fas fa-futbol w-6"></i> Soccer</span>
-                        <span class="bg-slate-800 px-2 py-0.5 rounded text-xs">1,240</span>
-                    </li>
-                    <li class="flex items-center justify-between cursor-pointer hover:text-yellow-500">
-                        <span><i class="fas fa-basketball-ball w-6"></i> Basketball</span>
-                        <span class="bg-slate-800 px-2 py-0.5 rounded text-xs">312</span>
-                    </li>
-                    <li class="flex items-center justify-between cursor-pointer hover:text-yellow-500">
-                        <span><i class="fas fa-volleyball-ball w-6"></i> Tennis</span>
-                        <span class="bg-slate-800 px-2 py-0.5 rounded text-xs">84</span>
-                    </li>
-                    <li class="flex items-center justify-between cursor-pointer hover:text-yellow-500 text-yellow-500">
-                        <span><i class="fas fa-bolt w-6"></i> E-Sports</span>
-                        <span class="bg-yellow-500 text-black px-2 py-0.5 rounded text-xs">NEW</span>
-                    </li>
-                </ul>
+        <aside class="lg:col-span-2 space-y-2">
+            <button onclick="playSound()" class="w-full text-left p-3 rounded-lg bg-yellow-500 text-black font-bold mb-4"><i class="fas fa-grid-2"></i> Dashboard</button>
+            <div class="space-y-1 text-sm text-gray-400">
+                <div class="p-2 hover:bg-slate-800 rounded cursor-pointer transition"><i class="fas fa-plane mr-2 text-red-500"></i> Aviator</div>
+                <div class="p-2 hover:bg-slate-800 rounded cursor-pointer transition"><i class="fas fa-dice mr-2 text-purple-500"></i> Casino</div>
+                <div class="p-2 hover:bg-slate-800 rounded cursor-pointer transition"><i class="fas fa-star mr-2 text-yellow-500"></i> Lucky Win</div>
+                <div class="p-2 hover:bg-slate-800 rounded cursor-pointer transition"><i class="fas fa-font mr-2 text-blue-500"></i> Crossword</div>
             </div>
         </aside>
 
-        <main class="w-full lg:w-3/5 space-y-6">
+        <main class="lg:col-span-7 space-y-6">
             
-            <div class="relative bg-gradient-to-r from-red-900 to-red-600 rounded-2xl p-6 overflow-hidden h-40 flex items-center justify-between border border-red-400/30">
-                <div>
-                    <h2 class="text-3xl font-black italic">AVIATOR</h2>
-                    <p class="text-red-100 mb-4">Win up to 100x your stake instantly!</p>
-                    <button class="bg-white text-red-600 px-6 py-2 rounded-lg font-bold hover:bg-red-50">PLAY NOW</button>
+            <div class="grid grid-cols-3 gap-4">
+                <div class="glass p-4 rounded-2xl border-t-4 border-yellow-500">
+                    <p class="text-[10px] text-gray-400 uppercase">Balance</p>
+                    <h3 id="balance" class="text-xl font-black">2,500.00 ETB</h3>
                 </div>
-                <i class="fas fa-plane text-8xl opacity-20 -rotate-12"></i>
+                <div class="glass p-4 rounded-2xl border-t-4 border-green-500">
+                    <p class="text-[10px] text-gray-400 uppercase">Total Profit (20%)</p>
+                    <h3 class="text-xl font-black text-green-400">+500.00</h3>
+                </div>
+                <div class="glass p-4 rounded-2xl border-t-4 border-blue-500">
+                    <p class="text-[10px] text-gray-400 uppercase">Total Played</p>
+                    <h3 class="text-xl font-black">12 Games</h3>
+                </div>
             </div>
 
-            <section>
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xl font-bold italic"><span class="text-red-500">●</span> LIVE NOW</h2>
-                    <button class="text-xs text-yellow-500 font-bold">VIEW ALL</button>
+            <section class="bg-slate-900 rounded-3xl p-6 relative overflow-hidden border border-red-900/30">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-red-500 font-black italic"><i class="fas fa-plane"></i> AVIATOR LIVE</h2>
+                    <span class="bg-black/50 px-3 py-1 rounded text-yellow-500 font-mono text-xl">1.85x</span>
                 </div>
-                
-                <div class="space-y-3">
-                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
-                        <div class="w-full md:w-1/3 text-center md:text-left">
-                            <span class="text-[10px] text-gray-500 uppercase tracking-widest">Premier League</span>
-                            <div class="font-bold text-sm">Arsenal vs Chelsea</div>
-                            <div class="text-green-500 text-xs font-mono mt-1">62:14 | 1 - 0</div>
-                        </div>
-                        <div class="flex gap-2">
-                            <button class="bg-slate-800 hover:bg-yellow-500 hover:text-black p-3 rounded-lg w-20 transition text-center">
-                                <p class="text-[10px] opacity-60">1</p>
-                                <p class="font-bold">1.82</p>
-                            </button>
-                            <button class="bg-slate-800 hover:bg-yellow-500 hover:text-black p-3 rounded-lg w-20 transition text-center">
-                                <p class="text-[10px] opacity-60">X</p>
-                                <p class="font-bold">3.45</p>
-                            </button>
-                            <button class="bg-slate-800 hover:bg-yellow-500 hover:text-black p-3 rounded-lg w-20 transition text-center">
-                                <p class="text-[10px] opacity-60">2</p>
-                                <p class="font-bold">4.20</p>
-                            </button>
-                        </div>
-                    </div>
+                <div class="h-48 border-l border-b border-slate-700 relative">
+                    <i class="fas fa-plane text-4xl text-red-600 absolute bottom-4 left-4 fly-anim"></i>
+                </div>
+                <div class="flex gap-4 mt-4">
+                    <input type="number" id="betAmount" value="100" class="w-1/2 bg-black border border-slate-700 rounded-xl p-4 text-center text-xl font-bold outline-none">
+                    <button onclick="placeBet()" class="w-1/2 bg-green-600 hover:bg-green-500 p-4 rounded-xl font-black text-xl game-btn">BET / CASH OUT</button>
                 </div>
             </section>
 
-            <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl game-card cursor-pointer">
-                    <i class="fas fa-dog text-yellow-500 text-2xl mb-2"></i>
-                    <h3 class="font-bold">Virtual Greyhounds</h3>
-                    <p class="text-xs text-gray-400">Races every 2 minutes.</p>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="glass p-6 rounded-2xl hover:neon-border transition cursor-pointer">
+                    <i class="fas fa-puzzle-piece text-3xl text-blue-400 mb-3"></i>
+                    <h3 class="font-bold">Daily Crossword</h3>
+                    <p class="text-xs text-gray-500">Solve & Win 50 ETB</p>
                 </div>
-                <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl game-card cursor-pointer">
-                    <i class="fas fa-dice text-yellow-500 text-2xl mb-2"></i>
-                    <h3 class="font-bold">Live Casino</h3>
-                    <p class="text-xs text-gray-400">Real dealers, 24/7 tables.</p>
+                <div class="glass p-6 rounded-2xl hover:neon-border transition cursor-pointer">
+                    <i class="fas fa-clover text-3xl text-green-400 mb-3"></i>
+                    <h3 class="font-bold">Lucky Number</h3>
+                    <p class="text-xs text-gray-400">Pick 1 and Win 10x</p>
                 </div>
-            </section>
+            </div>
         </main>
 
-        <aside class="w-full lg:w-1/5">
-            <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 sticky top-24">
-                <div class="bg-yellow-500 p-3 text-black font-black flex justify-between items-center">
-                    <span>BET SLIP</span>
-                    <span class="bg-black text-white text-[10px] px-2 py-1 rounded-full">1</span>
-                </div>
-                
-                <div class="p-4 space-y-4">
-                    <div class="bg-slate-800/50 p-3 rounded-lg border-l-4 border-yellow-500">
-                        <div class="flex justify-between items-start">
-                            <span class="text-xs font-bold">Arsenal</span>
-                            <button class="text-gray-500 hover:text-red-500"><i class="fas fa-times"></i></button>
-                        </div>
-                        <p class="text-[10px] text-gray-400">Match Winner (1x2)</p>
-                        <p class="text-sm font-bold text-yellow-500 mt-1">1.82</p>
+        <aside class="lg:col-span-3 space-y-4">
+            <div class="glass rounded-2xl p-4">
+                <h3 class="text-sm font-bold border-b border-slate-800 pb-2 mb-4 italic">TOP WINNERS LIVE</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-gray-400">@Nahom_G</span>
+                        <span class="text-green-400 font-bold">+1,200 ETB</span>
                     </div>
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-gray-400">@Abel_Tech</span>
+                        <span class="text-green-400 font-bold">+450 ETB</span>
+                    </div>
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-gray-400">@Sara_K</span>
+                        <span class="text-green-400 font-bold">+3,000 ETB</span>
+                    </div>
+                </div>
+            </div>
 
-                    <div class="space-y-2 border-t border-slate-800 pt-4">
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-400">Stake</span>
-                            <input type="number" value="100" class="bg-slate-800 border-none rounded w-16 text-right px-2 text-yellow-500 font-bold focus:ring-0">
-                        </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-400">Total Odds</span>
-                            <span class="font-bold">1.82</span>
-                        </div>
-                        <div class="flex justify-between text-lg font-bold text-green-500 pt-2 border-t border-slate-800">
-                            <span>To Win</span>
-                            <span>182.00 ETB</span>
-                        </div>
-                        <button class="w-full bg-yellow-500 text-black py-3 rounded-xl font-black mt-2 hover:bg-yellow-400 shadow-lg shadow-yellow-500/10">PLACE BET</button>
-                    </div>
-                </div>
+            <div class="glass rounded-2xl p-4 bg-gradient-to-br from-slate-900 to-black">
+                <h3 class="text-center font-bold text-yellow-500 mb-4 uppercase text-xs">Quick Wallet</h3>
+                <button class="w-full bg-slate-800 p-3 rounded-lg text-sm font-bold mb-2">DEPOSIT <i class="fas fa-plus-circle ml-2"></i></button>
+                <button class="w-full border border-slate-700 p-3 rounded-lg text-sm font-bold">WITHDRAW <i class="fas fa-wallet ml-2"></i></button>
             </div>
         </aside>
     </div>
 
-    <footer class="mt-12 bg-slate-950 p-10 text-center border-t border-slate-800 text-gray-600">
-        <div class="flex justify-center gap-6 mb-4 text-xl">
-            <i class="fab fa-cc-visa"></i>
-            <i class="fab fa-cc-mastercard"></i>
-            <i class="fas fa-wallet text-yellow-500"></i>
-        </div>
-        <p class="text-xs">Must be 18+ to play. Gaming can be addictive. Please gamble responsibly.</p>
-    </footer>
+    <script>
+        let currentBalance = 2500;
 
+        function playSound() {
+            document.getElementById('clickSound').play();
+        }
+
+        function placeBet() {
+            let amount = document.getElementById('betAmount').value;
+            if(amount > currentBalance) {
+                alert("Insufficient Balance!");
+                return;
+            }
+            
+            playSound();
+            currentBalance -= amount;
+            document.getElementById('balance').innerText = currentBalance.toFixed(2) + " ETB";
+            
+            // Simulating a Win with 20% Profit Logic
+            setTimeout(() => {
+                let win = amount * 1.20; // 20% Profit
+                currentBalance += win;
+                document.getElementById('balance').innerText = currentBalance.toFixed(2) + " ETB";
+                document.getElementById('winSound').play();
+                alert("Congrats! You won " + win + " ETB (20% Profit Included)");
+            }, 3000);
+        }
+
+        // Simulating Telegram Data Fetch
+        window.onload = function() {
+            // In a real app, you'd use Telegram WebApp API here
+            console.log("Reading Telegram Profile...");
+        }
+    </script>
 </body>
 </html>
