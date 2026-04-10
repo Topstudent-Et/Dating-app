@@ -4,264 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#ff0044">
-    <title>AVIA-MASTER ELITE | 24/7 Global Crash Game</title>
+    <title>AVIA-MASTER ELITE | 20% House Edge Crash Game</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-        body {
-            background: #0a0a0a;
-            font-family: 'Inter', sans-serif;
-            color: white;
-            overflow-x: hidden;
-            padding-top: 110px;
-        }
-        .font-crash {
-            font-family: 'Orbitron', monospace;
-            letter-spacing: 2px;
-        }
-        .glass {
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 28px;
-        }
-        /* Top Navigation */
-        .top-nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            background: rgba(10,10,10,0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            z-index: 1001;
-        }
-        .nav-item {
-            font-size: 28px;
-            color: #666;
-            transition: 0.2s;
-            cursor: pointer;
-            padding: 8px 18px;
-            border-radius: 40px;
-        }
-        .nav-item.active {
-            color: #ff0044;
-            background: rgba(255,0,68,0.15);
-        }
-        /* Header */
-        .main-header {
-            position: fixed;
-            top: 60px;
-            left: 0;
-            right: 0;
-            height: 55px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 16px;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            z-index: 1000;
-        }
-        .page {
-            display: none;
-            padding: 16px;
-            min-height: calc(100vh - 115px);
-        }
-        .page.active-page {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        /* Game container */
-        .game-container {
-            background: #000;
-            border-radius: 32px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 2px solid #38bdf8;
-            box-shadow: 0 0 20px rgba(56,189,248,0.3);
-        }
-        .game-canvas {
-            height: 200px;
-            position: relative;
-        }
-        #gamePath {
-            stroke-width: 6;
-            fill: none;
-            filter: drop-shadow(0 0 6px currentColor);
-            transition: stroke 0.1s;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+        body { background: #0a0a0a; font-family: 'Inter', sans-serif; color: white; overflow-x: hidden; padding-top: 110px; }
+        .font-crash { font-family: 'Orbitron', monospace; letter-spacing: 2px; }
+        .glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 28px; }
+        .top-nav { position: fixed; top: 0; left: 0; right: 0; height: 60px; display: flex; justify-content: space-around; align-items: center; background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); z-index: 1001; }
+        .nav-item { font-size: 28px; color: #666; transition: 0.2s; cursor: pointer; padding: 8px 18px; border-radius: 40px; }
+        .nav-item.active { color: #ff0044; background: rgba(255,0,68,0.15); }
+        .main-header { position: fixed; top: 60px; left: 0; right: 0; height: 55px; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05); z-index: 1000; }
+        .page { display: none; padding: 16px; min-height: calc(100vh - 115px); }
+        .page.active-page { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .game-container { background: #000; border-radius: 32px; padding: 20px; margin-bottom: 20px; border: 2px solid #38bdf8; box-shadow: 0 0 20px rgba(56,189,248,0.3); }
+        .game-canvas { height: 200px; position: relative; }
+        #gamePath { stroke-width: 6; fill: none; filter: drop-shadow(0 0 6px currentColor); transition: stroke 0.1s; }
         .trail-real { stroke: #00ff66; }
         .trail-demo { stroke: #ff4444; }
-        .rocket {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            font-size: 46px;
-            transition: transform 0.02s linear, opacity 0.2s;
-            filter: drop-shadow(0 0 8px #ff0044);
-            opacity: 1;
-        }
+        .rocket { position: absolute; bottom: 20px; left: 20px; font-size: 46px; transition: transform 0.02s linear, opacity 0.2s; filter: drop-shadow(0 0 8px #ff0044); opacity: 1; }
         .rocket-hidden { opacity: 0; }
-        /* Buttons */
-        .chip-btn {
-            background: rgba(255,255,255,0.1);
-            border: none;
-            padding: 10px;
-            border-radius: 16px;
-            font-weight: 700;
-            font-size: 14px;
-            color: white;
-            cursor: pointer;
-            transition: 0.1s;
-        }
+        .chip-btn { background: rgba(255,255,255,0.1); border: none; padding: 10px; border-radius: 16px; font-weight: 700; font-size: 14px; color: white; cursor: pointer; transition: 0.1s; }
         .chip-btn:active { transform: scale(0.96); }
         .chip-btn.active-green { background: #00ff66; color: black; }
-        .bet-btn {
-            background: #00ff66;
-            border: none;
-            padding: 14px 24px;
-            border-radius: 20px;
-            font-weight: 900;
-            font-size: 28px;
-            color: black;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 160px;
-            text-align: center;
-        }
-        .bet-btn.cashout {
-            background: #f97316;
-            color: white;
-        }
-        /* Podium wobble */
-        .podium {
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            gap: 20px;
-            margin: 30px 0;
-        }
-        @keyframes wobble {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            25% { transform: translateY(-6px) rotate(1deg); }
-            75% { transform: translateY(-3px) rotate(-1deg); }
-        }
-        .podium-item {
-            text-align: center;
-            animation: wobble 2.2s infinite ease-in-out;
-        }
+        .bet-btn { background: #00ff66; border: none; padding: 14px 24px; border-radius: 20px; font-weight: 900; font-size: 28px; color: black; cursor: pointer; transition: 0.2s; width: 160px; text-align: center; }
+        .bet-btn.cashout { background: #f97316; color: white; }
+        .podium { display: flex; justify-content: center; align-items: flex-end; gap: 20px; margin: 30px 0; }
+        @keyframes wobble { 0%,100% { transform: translateY(0) rotate(0deg); } 25% { transform: translateY(-6px) rotate(1deg); } 75% { transform: translateY(-3px) rotate(-1deg); } }
+        .podium-item { text-align: center; animation: wobble 2.2s infinite ease-in-out; }
         .podium-item.first { animation-duration: 2s; }
         .podium-item.second { animation-duration: 2.4s; }
         .podium-item.third { animation-duration: 2.6s; }
-        .podium-avatar {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ffd700, #ff8c00);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 34px;
-            margin: 0 auto 8px;
-        }
+        .podium-avatar { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, #ffd700, #ff8c00); display: flex; align-items: center; justify-content: center; font-size: 34px; margin: 0 auto 8px; }
         .first .podium-avatar { width: 90px; height: 90px; font-size: 48px; background: linear-gradient(135deg, #ffd700, #ff6b00); }
         .second .podium-avatar { width: 75px; height: 75px; background: linear-gradient(135deg, #c0c0c0, #808080); }
         .third .podium-avatar { width: 65px; height: 65px; background: linear-gradient(135deg, #cd7f32, #8b4513); }
-        .toast {
-            position: fixed;
-            bottom: 90px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.95);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 60px;
-            z-index: 2000;
-            font-weight: bold;
-            font-size: 14px;
-            animation: fadeUp 0.2s ease;
-        }
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-        .verify-badge {
-            background: linear-gradient(135deg, #38bdf8, #2dd4bf);
-            padding: 2px 10px;
-            border-radius: 30px;
-            font-size: 9px;
-            font-weight: bold;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .bank-card {
-            background: rgba(0,0,0,0.5);
-            border-radius: 20px;
-            padding: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            border: 1px solid rgba(255,215,0,0.3);
-        }
-        .bank-number {
-            font-weight: bold;
-            color: #00ff66;
-            letter-spacing: 0.5px;
-            font-size: 1rem;
-        }
-        .mode-toggle {
-            background: rgba(255,255,255,0.1);
-            border-radius: 40px;
-            padding: 4px;
-            display: inline-flex;
-        }
-        .mode-opt {
-            padding: 6px 18px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+        .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.95); color: white; padding: 12px 24px; border-radius: 60px; z-index: 2000; font-weight: bold; font-size: 14px; animation: fadeUp 0.2s ease; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+        .verify-badge { background: linear-gradient(135deg, #38bdf8, #2dd4bf); padding: 2px 10px; border-radius: 30px; font-size: 9px; font-weight: bold; display: inline-flex; align-items: center; gap: 4px; }
+        .bank-card { background: rgba(0,0,0,0.5); border-radius: 20px; padding: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid rgba(255,215,0,0.3); }
+        .bank-number { font-weight: bold; color: #00ff66; letter-spacing: 0.5px; font-size: 1rem; }
+        .mode-toggle { background: rgba(255,255,255,0.1); border-radius: 40px; padding: 4px; display: inline-flex; }
+        .mode-opt { padding: 6px 18px; border-radius: 30px; font-size: 12px; font-weight: bold; cursor: pointer; }
         .mode-opt.active { background: #00ff66; color: black; }
-        .live-item {
-            background: rgba(255,255,255,0.03);
-            border-radius: 16px;
-            padding: 8px 12px;
-            margin-bottom: 6px;
-            display: flex;
-            justify-content: space-between;
-            animation: slideIn 0.2s ease;
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        @media (max-width: 500px) {
-            .bet-btn { width: 140px; font-size: 24px; }
-            .chip-btn { padding: 8px; font-size: 12px; }
-            .bank-number { font-size: 0.9rem; }
-        }
+        .live-item { background: rgba(255,255,255,0.03); border-radius: 16px; padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; animation: slideIn 0.2s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+        @media (max-width: 500px) { .bet-btn { width: 140px; font-size: 24px; } .chip-btn { padding: 8px; font-size: 12px; } .bank-number { font-size: 0.9rem; } }
     </style>
 </head>
 <body>
@@ -356,7 +148,7 @@
     </div>
 </div>
 
-<!-- TOP WINNERS PAGE -->
+<!-- TOP WINNERS PAGE (100 unique names) -->
 <div id="topPage" class="page">
     <div class="podium">
         <div class="podium-item second"><div class="podium-avatar">🥈</div><div class="font-bold text-sm">Lemi_X</div><div class="text-xs text-green-400">24,500 ETB</div></div>
@@ -415,7 +207,6 @@
         <div class="glass p-3 text-center"><div class="text-xs opacity-60">Total Games</div><div id="totalGames" class="font-black text-xl">0</div></div>
         <div class="glass p-3 text-center"><div class="text-xs opacity-60">Total Won</div><div id="totalWon" class="text-green-400 font-black text-xl">0 ETB</div></div>
     </div>
-    <!-- Referral Section -->
     <div class="glass p-4 mt-4">
         <div class="flex items-center gap-2"><i class="fas fa-users text-blue-400"></i><span class="font-bold">Invite Friends</span><span class="text-xs text-green-400 ml-2">+5 ETB each (max 100)</span></div>
         <div class="flex gap-2 mt-2"><input type="text" id="refLink" readonly class="flex-1 bg-white/10 p-2 rounded-xl text-xs"><button id="copyRef" class="bg-blue-600 px-4 rounded-xl"><i class="fas fa-copy"></i></button></div>
@@ -498,7 +289,7 @@
     let transactions = JSON.parse(localStorage.getItem(STORAGE.tx)) || [];
     let referralCount = parseInt(localStorage.getItem(STORAGE.refCount)) || 0;
     let referralBonus = parseFloat(localStorage.getItem(STORAGE.refBonus)) || 0;
-    let totalPlayedGames = parseInt(localStorage.getItem(STORAGE.totalPlayed)) || 0; // for withdrawal condition
+    let totalPlayedGames = parseInt(localStorage.getItem(STORAGE.totalPlayed)) || 0;
     
     // Admin data
     let adminTotalDeposit = parseFloat(localStorage.getItem('admin_deposit')) || 0;
@@ -536,18 +327,71 @@
         2: { active: false, amount: 10, autoCash: 0 }
     };
     
-    // ========== GLOBAL SYNCHRONIZATION (No Backend) ==========
-    function getCurrentRound() {
-        return Math.floor(Date.now() / 30000);
+    // ========== 20% HOUSE EDGE LOGIC (Simulated Pool) ==========
+    // Virtual players that bet and cash out randomly – ensures total payout never exceeds 80% of total pool
+    let virtualPlayers = [
+        { name: "PlayerA", bet: 20, cashed: false, cashMult: 0 },
+        { name: "PlayerB", bet: 35, cashed: false, cashMult: 0 },
+        { name: "PlayerC", bet: 15, cashed: false, cashMult: 0 },
+        { name: "PlayerD", bet: 50, cashed: false, cashMult: 0 },
+        { name: "PlayerE", bet: 10, cashed: false, cashMult: 0 },
+        { name: "PlayerF", bet: 25, cashed: false, cashMult: 0 }
+    ];
+    let totalPool = 0;
+    let totalPayout = 0;
+    let realPlayerBet = 0;
+    
+    function resetPool() {
+        totalPool = 0;
+        totalPayout = 0;
+        realPlayerBet = 0;
+        virtualPlayers.forEach(p => { p.cashed = false; p.cashMult = 0; });
+        // Add real player bet if any
+        let realBet = 0;
+        if(bets[1].active) realBet += bets[1].amount;
+        if(bets[2].active) realBet += bets[2].amount;
+        if(realBet > 0 && isRealMode) {
+            realPlayerBet = realBet;
+            totalPool += realBet;
+        }
+        // Add virtual bets
+        virtualPlayers.forEach(p => { totalPool += p.bet; });
+        // Admin profit target: 20% of pool → max payout = totalPool * 0.8
     }
-    function getRoundStartTime(round) {
-        return round * 30000;
+    
+    function simulateVirtualCashouts() {
+        if(!gameActive) return;
+        virtualPlayers.forEach(p => {
+            if(!p.cashed && Math.random() < 0.04) { // chance to cash each frame
+                let cashMulti = (Math.random() * (crashPoint - 1.2) + 1.2).toFixed(2);
+                cashMulti = Math.min(cashMulti, crashPoint - 0.01);
+                if(currentMultiplier >= cashMulti) {
+                    let win = p.bet * cashMulti;
+                    totalPayout += win;
+                    p.cashed = true;
+                    p.cashMult = cashMulti;
+                    addLiveFeed(p.name, win);
+                }
+            }
+        });
     }
+    
+    function checkHouseEdgeCrash() {
+        if(totalPool <= 0) return false;
+        let maxPayout = totalPool * 0.8;
+        if(totalPayout >= maxPayout) {
+            return true;
+        }
+        return false;
+    }
+    
+    // ========== GLOBAL SYNCHRONIZATION (24/7) ==========
+    function getCurrentRound() { return Math.floor(Date.now() / 30000); }
+    function getRoundStartTime(round) { return round * 30000; }
     function getRoundPhase() {
         let now = Date.now();
         let round = getCurrentRound();
-        let roundStart = getRoundStartTime(round);
-        let elapsed = now - roundStart;
+        let elapsed = now - getRoundStartTime(round);
         if (elapsed < 5000) return 'countdown';
         else if (elapsed < 30000) return 'flying';
         else return 'waiting';
@@ -555,16 +399,16 @@
     function getCountdownSeconds() {
         let now = Date.now();
         let round = getCurrentRound();
-        let roundStart = getRoundStartTime(round);
-        let elapsed = now - roundStart;
+        let elapsed = now - getRoundStartTime(round);
         if (elapsed < 5000) return 5 - Math.floor(elapsed/1000);
         else return 0;
     }
     function getCrashPointForRound(round) {
+        // Deterministic but with randomness per round, still ensures house edge via pool
         let hash = round * 123456789;
         let r = ((hash % 100000) / 100000) * 0.9 + 0.1;
-        let crash = 1.1 + r * 20;
-        if (crash > 50) crash = 50;
+        let crash = 1.2 + r * 25;
+        if (crash > 45) crash = 45;
         return parseFloat(crash.toFixed(2));
     }
     
@@ -619,18 +463,24 @@
         gamePath.classList.add(isRealMode ? 'trail-real' : 'trail-demo');
         rocket.classList.remove('rocket-hidden');
         updateMultiplierDisplay();
+        // Reset pool for this round
+        resetPool();
         
         gameLoop = setInterval(() => {
             if(!gameActive) return;
             currentMultiplier += 0.02;
             updateMultiplierDisplay();
             animateRocket();
+            // Auto cashout for player
             for(let i=1;i<=2;i++) {
                 if(bets[i].active && bets[i].autoCash > 0 && currentMultiplier >= bets[i].autoCash) {
                     cashOut(i);
                 }
             }
-            if(currentMultiplier >= crashPoint) {
+            // Simulate virtual players cashing out
+            simulateVirtualCashouts();
+            // Check house edge crash (20% profit protection)
+            if(checkHouseEdgeCrash() || currentMultiplier >= crashPoint) {
                 crashGame(false);
             }
         }, 45);
@@ -651,6 +501,8 @@
     function cashOut(slotId) {
         if(!bets[slotId].active || !gameActive) return;
         const winAmount = bets[slotId].amount * currentMultiplier;
+        // Add to total payout (for house edge)
+        totalPayout += winAmount;
         if(isRealMode) {
             realBalance += winAmount;
             totalWon += winAmount;
@@ -677,10 +529,12 @@
         clearInterval(gameLoop);
         rocket.classList.add('rocket-hidden');
         multiplierSpan.innerHTML = `<span class="font-crash text-3xl text-red-500 font-black">💥 CRASHED</span>`;
+        // Admin profit: 20% of total real bets (already ensured by house edge logic)
         if(isRealMode && !forced) {
-            let totalBet = (bets[1].active ? bets[1].amount : 0) + (bets[2].active ? bets[2].amount : 0);
-            if(totalBet > 0) {
-                adminProfitPool += totalBet * 0.2;
+            let totalRealBet = (bets[1].active ? bets[1].amount : 0) + (bets[2].active ? bets[2].amount : 0);
+            if(totalRealBet > 0) {
+                let profit = totalRealBet * 0.2;
+                adminProfitPool += profit;
                 localStorage.setItem('admin_profit', adminProfitPool);
                 if(isAdmin) updateAdminUI();
             }
@@ -728,19 +582,16 @@
     }
     
     // ========== REFERRAL SYSTEM ==========
-    // When user visits via ref link, we add bonus if under 100 referrals
     const urlParams = new URLSearchParams(window.location.search);
     const referrer = urlParams.get('ref');
     if (referrer && referrer !== username && !localStorage.getItem(`referred_${userId}`)) {
         localStorage.setItem(`referred_${userId}`, 'true');
-        // Add to referrer's referral count and bonus (only if under 100)
         let refCount = parseInt(localStorage.getItem(`ref_count_${referrer}`)) || 0;
         if (refCount < 100) {
             refCount++;
             let newBonus = refCount * 5;
             localStorage.setItem(`ref_count_${referrer}`, refCount);
             localStorage.setItem(`ref_bonus_${referrer}`, newBonus);
-            // If current user is the referrer, update local variables
             if (username === referrer) {
                 referralCount = refCount;
                 referralBonus = newBonus;
@@ -756,10 +607,6 @@
         document.getElementById('refCount').innerText = referralCount;
         document.getElementById('refBonus').innerText = referralBonus;
     }
-    
-    // Withdraw condition: must have played at least 10 games to withdraw referral bonus
-    // Withdraw function will check totalPlayedGames >= 10 for referral bonus withdrawal
-    // For normal balance, no restriction.
     
     // ========== UI HELPERS ==========
     function updateBalanceUI() {
@@ -790,7 +637,34 @@
         });
     }
     
-    const winnerNames = ["Abebe", "Kebe", "Alemu", "Melat", "Fevu", "Alem", "Davied", "John"];
+    // 100 unique Ethiopian names for top winners
+    const ethiopianNames = [
+        "Abebe", "Kebede", "Alemu", "Melat", "Fevu", "Alem", "Davied", "John", "Tigist", "Selam",
+        "Biruk", "Eden", "Nahom", "Meron", "Kidus", "Betty", "Mikiyas", "Lydia", "Henok", "Tigist",
+        "Addis", "Bontu", "Chaltu", "Dagem", "Elshaday", "Fikru", "Genet", "Habtamu", "Ibsa", "Jemal",
+        "Kalkidan", "Lemlem", "Mahlet", "Natnael", "Obsa", "Peniel", "Qetema", "Rediet", "Semira", "Temesgen",
+        "Urania", "Vivian", "Winta", "Xavier", "Yodit", "Zelalem", "Abdi", "Bilen", "Cherinet", "Desta",
+        "Eyerusalem", "Fikir", "Girum", "Hiwot", "Israel", "Jember", "Kiya", "Lidet", "Mekdes", "Nardos",
+        "Oliyad", "Petros", "Ruth", "Sami", "Tsehay", "Ubax", "Veron", "Wegayehu", "Yonas", "Zerihun"
+    ];
+    // Ensure we have 100 by repeating if necessary
+    while(ethiopianNames.length < 100) ethiopianNames.push("Player" + (ethiopianNames.length+1));
+    
+    function buildTopList(type) {
+        let winners = [];
+        for(let i=0;i<100;i++) {
+            let name = ethiopianNames[i % ethiopianNames.length];
+            let amount = Math.floor(Math.random() * 80000) + 1000;
+            winners.push({ name, amount });
+        }
+        winners.sort((a,b)=>b.amount - a.amount);
+        let container = document.getElementById('topList');
+        container.innerHTML = '';
+        winners.slice(0,100).forEach((w,idx) => {
+            container.innerHTML += `<div class="glass p-2 flex justify-between items-center"><div><span class="text-yellow-400 font-bold">#${idx+1}</span> <span class="font-bold">${w.name}</span> <span class="verify-badge text-[8px]"><i class="fas fa-check-circle"></i> VERIFIED</span></div><div class="text-green-400 font-black">${w.amount.toLocaleString()} ETB</div></div>`;
+        });
+    }
+    
     function addLiveFeed(name, amount) {
         let item = document.createElement('div');
         item.className = 'live-item';
@@ -889,13 +763,9 @@
         let balance = isRealMode ? realBalance : demoBalance;
         if(!acc || !amount) { showToast('Fill all fields'); return; }
         if(amount > balance) { showToast('Insufficient balance'); return; }
-        // Check if withdrawal includes referral bonus and if user has played at least 10 games
-        if (amount > (balance - referralBonus)) {
-            // trying to withdraw referral bonus
-            if (totalPlayedGames < 10) {
-                showToast('❌ You must play at least 10 games before withdrawing referral bonus!');
-                return;
-            }
+        if (amount > (balance - referralBonus) && totalPlayedGames < 10) {
+            showToast('❌ You must play at least 10 games before withdrawing referral bonus!');
+            return;
         }
         let tx = { id: Date.now(), type: 'withdraw', amount, status: 'pending', account: acc };
         pendingTx.unshift(tx);
@@ -964,22 +834,6 @@
         showToast('📊 Report in console');
     });
     
-    // Top winners (100 entries with given names)
-    const topNames = ["Abebe", "Kebe", "Alemu", "Melat", "Fevu", "Alem", "Davied", "John", "Dawit", "Lemi"];
-    function buildTopList(type) {
-        let winners = [];
-        for(let i=1;i<=100;i++) {
-            let name = topNames[i % topNames.length] + (i>10 ? i : '');
-            let amount = Math.floor(Math.random() * 80000) + 1000;
-            winners.push({ name, amount });
-        }
-        winners.sort((a,b)=>b.amount - a.amount);
-        let container = document.getElementById('topList');
-        container.innerHTML = '';
-        winners.slice(0,100).forEach((w,idx) => {
-            container.innerHTML += `<div class="glass p-2 flex justify-between items-center"><div><span class="text-yellow-400 font-bold">#${idx+1}</span> <span class="font-bold">${w.name}</span> <span class="verify-badge text-[8px]"><i class="fas fa-check-circle"></i> VERIFIED</span></div><div class="text-green-400 font-black">${w.amount.toLocaleString()} ETB</div></div>`;
-        });
-    }
     document.querySelectorAll('[data-top]').forEach(btn => {
         btn.addEventListener('click', () => buildTopList(btn.dataset.top));
     });
@@ -1012,10 +866,10 @@
     startSync();
     startCountdown();
     
-    // Simulate live feed with real names
+    // Simulate live feed with Ethiopian names
     setInterval(() => {
         if(Math.random() > 0.6) {
-            let randomName = winnerNames[Math.floor(Math.random() * winnerNames.length)];
+            let randomName = ethiopianNames[Math.floor(Math.random() * ethiopianNames.length)];
             let randomAmount = Math.floor(Math.random() * 3000) + 200;
             addLiveFeed(randomName, randomAmount);
         }
