@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#ffd700">
-    <title>AVIA-MASTER ELITE | Aviator Crash Game</title>
+    <title>AVIA-MASTER ELITE | 24/7 Real Crash Game</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -18,9 +18,8 @@
         .gold-border { border: 1px solid rgba(255,215,0,0.5); box-shadow: 0 0 20px rgba(255,215,0,0.2); }
         .game-container { background: rgba(0,0,0,0.5); border-radius: 32px; padding: 20px; margin-bottom: 20px; border: 2px solid #ffd700; box-shadow: 0 0 25px rgba(255,215,0,0.3); }
         .game-canvas { height: 200px; position: relative; }
-        #gamePath { stroke-width: 6; fill: none; filter: drop-shadow(0 0 6px currentColor); }
+        #gamePath { stroke-width: 6; fill: none; filter: drop-shadow(0 0 6px #00ff66); }
         .trail-real { stroke: #00ff66; }
-        .trail-demo { stroke: #ff4444; }
         .rocket { position: absolute; bottom: 20px; left: 20px; font-size: 48px; transition: transform 0.02s linear, opacity 0.2s; opacity: 1; }
         .rocket-hidden { opacity: 0; }
         .chip-btn { background: rgba(255,255,255,0.12); border: none; padding: 10px; border-radius: 16px; font-weight: 700; font-size: 14px; color: white; cursor: pointer; transition: 0.1s; }
@@ -34,9 +33,6 @@
         .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.95); padding: 10px 20px; border-radius: 60px; z-index: 2000; font-size: 13px; animation: fadeUp 0.2s ease; }
         @keyframes fadeUp { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
         .verify-badge { background: linear-gradient(135deg, #38bdf8, #2dd4bf); padding: 2px 12px; border-radius: 30px; font-size: 9px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
-        .mode-toggle { background: rgba(255,255,255,0.12); border-radius: 40px; padding: 4px; display: inline-flex; }
-        .mode-opt { padding: 6px 18px; border-radius: 30px; font-size: 12px; font-weight: bold; cursor: pointer; }
-        .mode-opt.active { background: #00ff66; color: black; }
         .admin-input { background: rgba(0,0,0,0.6); border: 1px solid #ffd700; border-radius: 12px; padding: 8px; color: white; width: 100%; margin-top: 5px; }
         .history-chip { display: inline-block; padding: 4px 12px; border-radius: 40px; font-weight: 600; font-size: 0.85rem; margin-right: 8px; margin-bottom: 8px; }
         .history-high { background: #00aa33; color: white; border-left: 3px solid #ffd700; }
@@ -63,7 +59,7 @@
 </head>
 <body>
 
-<!-- Header -->
+<!-- Header (No Demo Toggle) -->
 <div class="fixed top-0 left-0 right-0 z-50 px-4 py-3 flex justify-between items-center border-b border-white/10 backdrop-blur-xl bg-black/40">
     <div class="flex items-center gap-3">
         <div id="userAvatar" class="w-10 h-10 rounded-full bg-gradient-to-r from-red-500 to-pink-500 flex items-center justify-center text-xl overflow-hidden">
@@ -75,20 +71,14 @@
             <div><span id="balanceDisplay" class="text-green-400 font-black text-lg">0 ETB</span></div>
         </div>
     </div>
-    <div class="flex items-center gap-2">
-        <button id="soundToggle" class="text-xl"><i class="fas fa-volume-up"></i></button>
-        <div class="mode-toggle" id="modeToggle">
-            <div class="mode-opt active" data-mode="real">REAL</div>
-            <div class="mode-opt" data-mode="demo">DEMO</div>
-        </div>
-    </div>
+    <button id="soundToggle" class="text-xl"><i class="fas fa-volume-up"></i></button>
 </div>
 
 <!-- HOME PAGE -->
 <div id="homePage" class="page active-page" style="padding: 80px 16px 90px 16px;">
     <div class="safety-banner" style="background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,100,0,0.15)); border:1px solid rgba(255,215,0,0.3); border-radius:60px; padding:12px 20px; text-align:center; margin-bottom:24px;">
         <div class="font-bold text-lg gold-text">🏆 UP TO 50,000 ETB WIN PER DAY!</div>
-        <div class="text-sm opacity-90">PLAY & WIN REAL MONEY</div>
+        <div class="text-sm opacity-90">REAL MONEY – PLAY 24/7</div>
         <div class="text-xs opacity-70 mt-1">Live Players: <span id="livePlayerCount">2,000+</span> active now</div>
     </div>
 
@@ -122,31 +112,31 @@
     <div class="glass-card p-3"><div class="flex items-center gap-2 mb-2"><i class="fas fa-fire text-red-500"></i><span class="text-sm font-bold">LIVE WINNERS</span></div><div id="liveFeed" class="space-y-1 max-h-32 overflow-y-auto"></div></div>
 </div>
 
-<!-- TOP WINNERS PAGE with Podium (1st center, 2nd left, 3rd right) and 50 real names -->
+<!-- TOP WINNERS PAGE -->
 <div id="topPage" class="page" style="padding: 80px 16px 90px 16px; display: none;">
     <div class="glass-card p-4 text-center mb-4 gold-border"><div class="text-xl font-bold gold-text">🏆 TOP WINNERS 🏅</div><div class="text-xs opacity-70">Celebrating the best players</div></div>
     <div class="podium" id="podiumContainer"></div>
     <div class="mt-6"><div class="flex items-center gap-2 mb-3"><i class="fas fa-list-ol text-yellow-400"></i><span class="font-bold">Other Winners (4th – 50th)</span></div><div id="topList" class="space-y-2 max-h-[400px] overflow-y-auto"></div></div>
 </div>
 
-<!-- WALLET PAGE with elegant descriptions -->
+<!-- WALLET PAGE -->
 <div id="walletPage" class="page" style="padding: 80px 16px 90px 16px; display: none;">
     <div class="flex gap-3 mb-4"><button id="depositTab" class="flex-1 py-3 rounded-2xl font-black bg-red-600">💰 DEPOSIT</button><button id="withdrawTab" class="flex-1 py-3 rounded-2xl font-black bg-zinc-800">💸 WITHDRAW</button></div>
     <div id="depositSection">
         <div class="bg-yellow-500/20 p-2 rounded-xl text-center text-xs mb-3">⚠️ Minimum deposit: 50 ETB</div>
         <div id="bankAccountsList" class="space-y-2 mb-3"></div>
         <input type="text" id="depositName" placeholder="Full Name" class="w-full bg-white/10 p-3 rounded-xl outline-none">
-        <input type="text" id="depositRef" placeholder="Transaction Reference (e.g., Telebirr/CBE ref)" class="w-full bg-white/10 p-3 rounded-xl mt-2 outline-none">
+        <input type="text" id="depositRef" placeholder="Transaction Reference" class="w-full bg-white/10 p-3 rounded-xl mt-2 outline-none">
         <input type="number" id="depositAmount" placeholder="Amount (ETB) min 50" class="w-full bg-white/10 p-3 rounded-xl mt-2 outline-none">
-        <button id="submitDeposit" class="w-full mt-4 py-3 bg-red-600 rounded-2xl font-black">SUBMIT DEPOSIT REQUEST</button>
-        <div class="text-xs text-center text-gray-400 mt-2">After sending money to one of the accounts above, fill in your details and submit. Our admin will verify and add funds to your balance.</div>
+        <button id="submitDeposit" class="w-full mt-4 py-3 bg-red-600 rounded-2xl font-black">SUBMIT DEPOSIT</button>
+        <div class="text-xs text-center text-gray-400 mt-2">After sending money to the account, fill in your details. Admin will verify and add funds.</div>
     </div>
     <div id="withdrawSection" class="hidden">
-        <input type="text" id="withdrawAccount" placeholder="Your CBE / Telebirr Account Number" class="w-full bg-white/10 p-3 rounded-xl outline-none">
-        <input type="number" id="withdrawAmount" placeholder="Amount (ETB)" class="w-full bg-white/10 p-3 rounded-xl mt-2 outline-none">
+        <input type="text" id="withdrawAccount" placeholder="Your CBE / Telebirr Account" class="w-full bg-white/10 p-3 rounded-xl outline-none">
+        <input type="number" id="withdrawAmount" placeholder="Amount (ETB) min 100" class="w-full bg-white/10 p-3 rounded-xl mt-2 outline-none">
         <div id="withdrawBalanceInfo" class="text-xs text-center mt-2"></div>
         <button id="submitWithdraw" class="w-full mt-4 py-3 bg-green-600 rounded-2xl font-black text-black">REQUEST WITHDRAWAL</button>
-        <div class="text-xs text-center text-gray-400 mt-2">Withdrawals are processed within 24 hours. Minimum withdrawal 100 ETB.</div>
+        <div class="text-xs text-center text-gray-400 mt-2">Withdrawals processed within 24 hours. Minimum 100 ETB.</div>
     </div>
     <div class="glass-card p-3 mt-4"><div class="flex items-center gap-2 mb-2"><i class="fas fa-clock text-blue-400"></i><span class="text-xs font-bold">Recent Transactions</span></div><div id="txList" class="space-y-1 max-h-48 overflow-y-auto"></div></div>
 </div>
@@ -178,12 +168,11 @@
     const photoUrl = tgUser?.photo_url || null;
 
     const STORAGE = {
-        realBal: `real_bal_${userId}`, demoBal: `demo_bal_${userId}`, totalWon: `total_won_${userId}`,
+        realBal: `real_bal_${userId}`, totalWon: `total_won_${userId}`,
         totalGames: `total_games_${userId}`, history: `history_${userId}`, tx: `tx_${userId}`,
         refCount: `ref_count_${userId}`, refBonus: `ref_bonus_${userId}`, totalPlayed: `total_played_${userId}`
     };
     let realBalance = parseFloat(localStorage.getItem(STORAGE.realBal)) || 100;
-    let demoBalance = parseFloat(localStorage.getItem(STORAGE.demoBal)) || 1000;
     let totalWon = parseFloat(localStorage.getItem(STORAGE.totalWon)) || 0;
     let totalGames = parseInt(localStorage.getItem(STORAGE.totalGames)) || 0;
     let gameHistory = JSON.parse(localStorage.getItem(STORAGE.history)) || [];
@@ -227,7 +216,6 @@
     const gamePath = document.getElementById('gamePath');
     const countdownOverlay = document.getElementById('countdownOverlay');
     const countdownNumber = document.getElementById('countdownNumber');
-    let isRealMode = true;
     let gameActive = false;
     let currentMultiplier = 1.00;
     let crashPoint = customCrashPoint || 1.2;
@@ -236,7 +224,7 @@
     let virtualPlayers = [];
     for(let i=0;i<40;i++) virtualPlayers.push({ name: `Player${i}`, bet: Math.floor(Math.random()*60)+10, cashed: false });
     let totalPool = 0, totalPayout = 0;
-    function resetPool() { totalPool = 0; totalPayout = 0; virtualPlayers.forEach(p => p.cashed = false); let realBet = (bets[1].active?bets[1].amount:0)+(bets[2].active?bets[2].amount:0); if(realBet>0 && isRealMode) totalPool += realBet; virtualPlayers.forEach(p => totalPool += p.bet); }
+    function resetPool() { totalPool = 0; totalPayout = 0; virtualPlayers.forEach(p => p.cashed = false); let realBet = (bets[1].active?bets[1].amount:0)+(bets[2].active?bets[2].amount:0); if(realBet>0) totalPool += realBet; virtualPlayers.forEach(p => totalPool += p.bet); }
     function simulateVirtualCashouts() { if(!gameActive) return; virtualPlayers.forEach(p => { if(!p.cashed && Math.random()<0.03 && currentMultiplier>=1.2) { let win = p.bet * currentMultiplier; totalPayout += win; p.cashed = true; addLiveFeed(p.name, win); } }); }
     function checkHouseEdgeCrash() { return totalPool>0 && totalPayout >= totalPool*0.8; }
 
@@ -249,25 +237,25 @@
     function startSync() { setInterval(() => { let newRound = getCurrentRound(); if(newRound !== currentRound) { currentRound = newRound; currentCrash = getCrashPointForRound(currentRound); if(gameActive) crashGame(true); resetGameVisual(); if(countdownLoop) clearInterval(countdownLoop); startCountdown(); } else if(!gameActive && !countdownActive && getCountdownSeconds()>0) startCountdown(); document.getElementById('livePlayerCount').innerText = (2000+Math.floor(Math.random()*500)).toLocaleString(); }, 500); }
 
     function startCountdown() { if(countdownActive) return; countdownActive=true; let timer=getCountdownSeconds(); if(timer<=0) timer=5; countdownOverlay.classList.remove('hidden'); const interval=setInterval(()=>{ timer--; countdownNumber.innerText=timer; if(timer<=0){ clearInterval(interval); countdownOverlay.classList.add('hidden'); countdownActive=false; startGame(); } },1000); countdownLoop=interval; }
-    function startGame() { gameActive=true; currentMultiplier=1.00; crashPoint=currentCrash; gamePath.classList.remove('trail-real','trail-demo'); gamePath.classList.add(isRealMode?'trail-real':'trail-demo'); rocket.classList.remove('rocket-hidden'); resetPool(); updateMultiplierDisplay(); gameLoop=setInterval(()=>{ if(!gameActive) return; currentMultiplier+=0.02; updateMultiplierDisplay(); animateRocket(); for(let i=1;i<=2;i++) if(bets[i].active && bets[i].autoCash>0 && currentMultiplier>=bets[i].autoCash) cashOut(i); simulateVirtualCashouts(); if(checkHouseEdgeCrash() || currentMultiplier>=crashPoint) crashGame(false); },45); }
+    function startGame() { gameActive=true; currentMultiplier=1.00; crashPoint=currentCrash; gamePath.classList.add('trail-real'); rocket.classList.remove('rocket-hidden'); resetPool(); updateMultiplierDisplay(); gameLoop=setInterval(()=>{ if(!gameActive) return; currentMultiplier+=0.02; updateMultiplierDisplay(); animateRocket(); for(let i=1;i<=2;i++) if(bets[i].active && bets[i].autoCash>0 && currentMultiplier>=bets[i].autoCash) cashOut(i); simulateVirtualCashouts(); if(checkHouseEdgeCrash() || currentMultiplier>=crashPoint) crashGame(false); },45); }
     function updateMultiplierDisplay() { multiplierSpan.innerHTML=`<span class="font-crash text-5xl font-black drop-shadow-lg gold-text">${currentMultiplier.toFixed(2)}x</span>`; }
     function animateRocket() { let progress=Math.min(currentMultiplier/crashPoint,1); let x=progress*280, y=progress*150; rocket.style.transform=`translate(${x}px, -${y}px) rotate(-20deg)`; gamePath.setAttribute('d',`M 0 180 Q ${x/2} ${180-y} ${x+15} ${180-y-15}`); }
-    function cashOut(slotId) { if(!bets[slotId].active || !gameActive) return; let win = bets[slotId].amount * currentMultiplier; totalPayout += win; if(isRealMode) { realBalance += win; totalWon += win; localStorage.setItem(STORAGE.realBal, realBalance); localStorage.setItem(STORAGE.totalWon, totalWon); } else { demoBalance += win; localStorage.setItem(STORAGE.demoBal, demoBalance); } totalGames++; totalPlayedGames++; localStorage.setItem(STORAGE.totalGames, totalGames); localStorage.setItem(STORAGE.totalPlayed, totalPlayedGames); bets[slotId].active = false; updateBalanceUI(); updateBetButton(slotId); addLiveFeed(username, win); showToast(`🎉 Won ${win.toFixed(0)} ETB at ${currentMultiplier.toFixed(2)}x`); playWin(); if(win >= 300) addToTopWinners(username, win, currentMultiplier); }
-    function crashGame(forced) { gameActive=false; clearInterval(gameLoop); rocket.classList.add('rocket-hidden'); multiplierSpan.innerHTML=`<span class="font-crash text-2xl text-red-500">💥 CRASHED</span>`; if(isRealMode && !forced) { let totalRealBet=(bets[1].active?bets[1].amount:0)+(bets[2].active?bets[2].amount:0); if(totalRealBet>0){ adminProfitPool += totalRealBet*0.2; localStorage.setItem('admin_profit', adminProfitPool); if(isAdmin) updateAdminUI(); } } gameHistory.unshift({ multiplier: currentMultiplier.toFixed(2) }); if(gameHistory.length>20) gameHistory.pop(); localStorage.setItem(STORAGE.history, JSON.stringify(gameHistory)); updateHistoryUI(); playCrash(); setTimeout(()=>{ resetGameVisual(); },2000); }
+    function cashOut(slotId) { if(!bets[slotId].active || !gameActive) return; let win = bets[slotId].amount * currentMultiplier; totalPayout += win; realBalance += win; totalWon += win; localStorage.setItem(STORAGE.realBal, realBalance); localStorage.setItem(STORAGE.totalWon, totalWon); totalGames++; totalPlayedGames++; localStorage.setItem(STORAGE.totalGames, totalGames); localStorage.setItem(STORAGE.totalPlayed, totalPlayedGames); bets[slotId].active = false; updateBalanceUI(); updateBetButton(slotId); addLiveFeed(username, win); showToast(`🎉 Won ${win.toFixed(0)} ETB at ${currentMultiplier.toFixed(2)}x`); playWin(); if(win >= 300) addToTopWinners(username, win, currentMultiplier); }
+    function crashGame(forced) { gameActive=false; clearInterval(gameLoop); rocket.classList.add('rocket-hidden'); multiplierSpan.innerHTML=`<span class="font-crash text-2xl text-red-500">💥 CRASHED</span>`; if(!forced) { let totalRealBet=(bets[1].active?bets[1].amount:0)+(bets[2].active?bets[2].amount:0); if(totalRealBet>0){ adminProfitPool += totalRealBet*0.2; localStorage.setItem('admin_profit', adminProfitPool); if(isAdmin) updateAdminUI(); } } gameHistory.unshift({ multiplier: currentMultiplier.toFixed(2) }); if(gameHistory.length>20) gameHistory.pop(); localStorage.setItem(STORAGE.history, JSON.stringify(gameHistory)); updateHistoryUI(); playCrash(); setTimeout(()=>{ resetGameVisual(); },2000); }
     function resetGameVisual() { rocket.style.transform='translate(0px,0px) rotate(-20deg)'; rocket.classList.remove('rocket-hidden'); gamePath.setAttribute('d','M 0 180 Q 0 180 0 180'); currentMultiplier=1.00; multiplierSpan.innerHTML=`<span class="font-crash text-5xl font-black drop-shadow-lg gold-text">1.00x</span>`; if(!gameActive && !countdownActive) startCountdown(); }
-    function handleBet(slotId) { if(gameActive) { cashOut(slotId); return; } let balance = isRealMode ? realBalance : demoBalance; if(bets[slotId].amount > balance) { showToast('❌ Insufficient balance!'); return; } if(isRealMode) { realBalance -= bets[slotId].amount; localStorage.setItem(STORAGE.realBal, realBalance); } else { demoBalance -= bets[slotId].amount; localStorage.setItem(STORAGE.demoBal, demoBalance); } bets[slotId].active = true; updateBalanceUI(); updateBetButton(slotId); showToast(`✅ ${bets[slotId].amount} ETB bet placed`); playBet(); }
+    function handleBet(slotId) { if(gameActive) { cashOut(slotId); return; } if(bets[slotId].amount > realBalance) { showToast('❌ Insufficient balance!'); return; } realBalance -= bets[slotId].amount; localStorage.setItem(STORAGE.realBal, realBalance); bets[slotId].active = true; updateBalanceUI(); updateBetButton(slotId); showToast(`✅ ${bets[slotId].amount} ETB bet placed`); playBet(); }
 
-    function updateBalanceUI() { let bal = isRealMode ? realBalance : demoBalance; balanceSpan.innerText = bal.toFixed(2)+' ETB'; profileBalance.innerText = bal.toFixed(2)+' ETB'; totalGamesSpan.innerText = totalGames; totalWonSpan.innerText = totalWon.toFixed(0)+' ETB'; document.getElementById('refCount').innerText = referralCount; document.getElementById('refBonus').innerText = referralBonus; document.getElementById('withdrawBalanceInfo').innerHTML = `Your balance: ${bal.toFixed(2)} ETB`; }
+    function updateBalanceUI() { balanceSpan.innerText = realBalance.toFixed(2)+' ETB'; profileBalance.innerText = realBalance.toFixed(2)+' ETB'; totalGamesSpan.innerText = totalGames; totalWonSpan.innerText = totalWon.toFixed(0)+' ETB'; document.getElementById('refCount').innerText = referralCount; document.getElementById('refBonus').innerText = referralBonus; document.getElementById('withdrawBalanceInfo').innerHTML = `Your balance: ${realBalance.toFixed(2)} ETB`; }
     function updateBetButton(slot) { let btn = document.getElementById(`betBtn${slot}`); if(bets[slot].active) { btn.innerText = 'CASH OUT'; btn.classList.add('cashout'); } else { btn.innerText = 'BET'; btn.classList.remove('cashout'); } }
     function updateHistoryUI() { let container = document.getElementById('historyContainer'); container.innerHTML = ''; gameHistory.forEach(m => { let val = parseFloat(m.multiplier); let cls = val >= 3 ? 'history-high' : (val >= 1.8 ? 'history-mid' : 'history-low'); container.innerHTML += `<div class="history-chip ${cls}">${val.toFixed(2)}x</div>`; }); }
     const ethiopianNames = ["Abebe", "Kebede", "Alemu", "Melat", "Fevu", "Alem", "Davied", "John", "Tigist", "Selam", "Biruk", "Eden", "Nahom", "Meron", "Kidus", "Betty", "Mikiyas", "Lydia", "Henok", "Hana", "Samuel", "Ruth", "Gebre", "Yonas", "Helen", "Marta", "Tekle", "Wossen", "Zeritu", "Mulu", "Girum", "Tsion", "Bekele", "Mekdes", "Solomon", "Kidist", "Dawit", "Selamawit", "Esubalew", "Meseret", "Tigabu", "Birtukan", "Yared", "Mekonnen", "Azeb", "Tadesse", "Wondimu", "Genet", "Fikadu"];
     function addLiveFeed(name, amount) { let item = document.createElement('div'); item.className = 'flex justify-between items-center p-2 rounded-xl bg-white/5'; item.innerHTML = `<div><i class="fas fa-trophy text-yellow-500 mr-1"></i><span class="font-bold">${name}</span><span class="verify-badge ml-2 text-[8px]"><i class="fas fa-check-circle"></i> VERIFIED</span></div><div class="text-green-400 font-black">+${amount.toFixed(0)} ETB</div>`; liveFeedDiv.prepend(item); if(liveFeedDiv.children.length>12) liveFeedDiv.removeChild(liveFeedDiv.lastChild); }
     function showToast(msg) { let t=document.createElement('div'); t.className='toast'; t.innerText=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),2000); }
 
-    // ----------------------------- TOP WINNERS (50 real Ethiopian names, sorted) -------------------------
+    // ----------------------------- TOP WINNERS (50 real names) -------------------------
     let topWinners = JSON.parse(localStorage.getItem('top_winners')) || [];
     function addToTopWinners(name, amount, multiplier) { topWinners.push({ name, amount, multiplier, timestamp: Date.now() }); topWinners.sort((a,b)=>b.amount - a.amount); if(topWinners.length>50) topWinners.pop(); localStorage.setItem('top_winners', JSON.stringify(topWinners)); renderPodiumAndList(); }
-    function renderPodiumAndList() { if(!document.getElementById('podiumContainer')) return; const podiumDiv=document.getElementById('podiumContainer'); const listDiv=document.getElementById('topList'); const top3=topWinners.slice(0,3); podiumDiv.innerHTML=''; // order: second (left), first (center), third (right) – we use CSS order, but we need to create divs accordingly.
+    function renderPodiumAndList() { if(!document.getElementById('podiumContainer')) return; const podiumDiv=document.getElementById('podiumContainer'); const listDiv=document.getElementById('topList'); const top3=topWinners.slice(0,3); podiumDiv.innerHTML='';
         let second = top3[1] || null;
         let first = top3[0] || null;
         let third = top3[2] || null;
@@ -283,10 +271,10 @@
     function renderBankAccounts() { let container=document.getElementById('bankAccountsList'); container.innerHTML=''; bankAccounts.forEach(acc=>{ container.innerHTML+=`<div class="bank-card" data-copy="${acc.number}"><div><i class="fas fa-${acc.icon} text-2xl mr-2"></i><span class="font-bold">${acc.name}</span><div class="text-green-400 font-bold">${acc.number}</div></div><i class="fas fa-copy text-gray-400"></i></div>`; }); document.querySelectorAll('[data-copy]').forEach(el=>{ el.addEventListener('click',()=>{ navigator.clipboard.writeText(el.dataset.copy); showToast('📋 Account number copied!'); }); }); }
     function updateTransactionUI() { let container=document.getElementById('txList'); container.innerHTML=''; transactions.slice(0,8).forEach(tx=>{ let statusColor=tx.status==='completed'?'text-green-400':(tx.status==='rejected'?'text-red-400':'text-yellow-400'); container.innerHTML+=`<div class="flex justify-between text-xs p-2 bg-white/5 rounded"><span>${tx.type==='deposit'?'💰 Deposit':'💸 Withdraw'}</span><span>${tx.amount} ETB</span><span class="${statusColor}">${tx.status}</span></div>`; }); }
     document.getElementById('submitDeposit').addEventListener('click',()=>{ let name=document.getElementById('depositName').value, ref=document.getElementById('depositRef').value, amount=parseFloat(document.getElementById('depositAmount').value); if(!name||!ref||!amount) { showToast('Please fill all fields'); return; } if(amount<50){ showToast('Minimum deposit is 50 ETB'); return; } let tx={ id:Date.now(), type:'deposit', amount, status:'pending', name, ref }; pendingTx.unshift(tx); transactions.unshift(tx); localStorage.setItem('pending_tx',JSON.stringify(pendingTx)); localStorage.setItem(STORAGE.tx,JSON.stringify(transactions)); showToast('✅ Deposit request sent to admin'); updateTransactionUI(); if(isAdmin) updateAdminUI(); document.getElementById('depositName').value=''; document.getElementById('depositRef').value=''; document.getElementById('depositAmount').value=''; });
-    document.getElementById('submitWithdraw').addEventListener('click',()=>{ let acc=document.getElementById('withdrawAccount').value, amount=parseFloat(document.getElementById('withdrawAmount').value); let bal=isRealMode?realBalance:demoBalance; if(!acc||!amount){ showToast('Please fill all fields'); return; } if(amount<100){ showToast('Minimum withdrawal is 100 ETB'); return; } if(amount>bal){ showToast(`Insufficient balance! Your balance: ${bal.toFixed(2)} ETB`); return; } if(amount>(bal-referralBonus) && totalPlayedGames<10){ showToast('You need to play at least 10 games before withdrawing referral bonus'); return; } let tx={ id:Date.now(), type:'withdraw', amount, status:'pending', account:acc }; pendingTx.unshift(tx); transactions.unshift(tx); localStorage.setItem('pending_tx',JSON.stringify(pendingTx)); localStorage.setItem(STORAGE.tx,JSON.stringify(transactions)); showToast('✅ Withdrawal request sent to admin'); updateTransactionUI(); if(isAdmin) updateAdminUI(); document.getElementById('withdrawAccount').value=''; document.getElementById('withdrawAmount').value=''; });
+    document.getElementById('submitWithdraw').addEventListener('click',()=>{ let acc=document.getElementById('withdrawAccount').value, amount=parseFloat(document.getElementById('withdrawAmount').value); if(!acc||!amount){ showToast('Please fill all fields'); return; } if(amount<100){ showToast('Minimum withdrawal is 100 ETB'); return; } if(amount>realBalance){ showToast(`Insufficient balance! Your balance: ${realBalance.toFixed(2)} ETB`); return; } if(amount>(realBalance-referralBonus) && totalPlayedGames<10){ showToast('You need to play at least 10 games before withdrawing referral bonus'); return; } let tx={ id:Date.now(), type:'withdraw', amount, status:'pending', account:acc }; pendingTx.unshift(tx); transactions.unshift(tx); localStorage.setItem('pending_tx',JSON.stringify(pendingTx)); localStorage.setItem(STORAGE.tx,JSON.stringify(transactions)); showToast('✅ Withdrawal request sent to admin'); updateTransactionUI(); if(isAdmin) updateAdminUI(); document.getElementById('withdrawAccount').value=''; document.getElementById('withdrawAmount').value=''; });
 
     // ----------------------------- ADMIN FUNCTIONS -------------------------
-    function updateAdminUI() { if(!isAdmin) return; document.getElementById('adminDeposit').innerText=adminTotalDeposit.toFixed(0); document.getElementById('adminWithdraw').innerText=adminTotalWithdraw.toFixed(0); document.getElementById('adminProfit').innerText=adminProfitPool.toFixed(0); document.getElementById('adminCrashPoint').value=customCrashPoint||1.2; document.getElementById('bankAccountsInput').value=JSON.stringify(bankAccounts,null,2); let pendingDiv=document.getElementById('pendingRequests'); pendingDiv.innerHTML=''; pendingTx.forEach(tx=>{ pendingDiv.innerHTML+=`<div class="flex justify-between items-center text-xs p-2 bg-white/5 rounded"><div><b>${tx.type}</b> ${tx.amount} ETB<br><span class="opacity-50">${tx.name||tx.account}</span></div><div><button data-id="${tx.id}" class="approveTx bg-green-600 px-2 py-1 rounded">✓</button><button data-id="${tx.id}" class="rejectTx bg-red-600 px-2 py-1 rounded">✗</button></div></div>`; }); document.querySelectorAll('.approveTx').forEach(btn=>{ btn.addEventListener('click',()=>{ let id=parseInt(btn.dataset.id); let tx=pendingTx.find(t=>t.id===id); if(tx){ tx.status='completed'; if(tx.type==='deposit'){ adminTotalDeposit+=tx.amount; if(isRealMode){ realBalance+=tx.amount; localStorage.setItem(STORAGE.realBal,realBalance); } } else { adminTotalWithdraw+=tx.amount; if(isRealMode){ realBalance-=tx.amount; localStorage.setItem(STORAGE.realBal,realBalance); } } updateBalanceUI(); pendingTx=pendingTx.filter(t=>t.id!==id); localStorage.setItem('pending_tx',JSON.stringify(pendingTx)); localStorage.setItem('admin_deposit',adminTotalDeposit); localStorage.setItem('admin_withdraw',adminTotalWithdraw); updateAdminUI(); updateTransactionUI(); showToast(`✅ ${tx.amount} ETB ${tx.type} approved`); } }); }); document.querySelectorAll('.rejectTx').forEach(btn=>{ btn.addEventListener('click',()=>{ let id=parseInt(btn.dataset.id); pendingTx=pendingTx.filter(t=>t.id!==id); localStorage.setItem('pending_tx',JSON.stringify(pendingTx)); updateAdminUI(); updateTransactionUI(); showToast('❌ Request rejected'); }); }); }
+    function updateAdminUI() { if(!isAdmin) return; document.getElementById('adminDeposit').innerText=adminTotalDeposit.toFixed(0); document.getElementById('adminWithdraw').innerText=adminTotalWithdraw.toFixed(0); document.getElementById('adminProfit').innerText=adminProfitPool.toFixed(0); document.getElementById('adminCrashPoint').value=customCrashPoint||1.2; document.getElementById('bankAccountsInput').value=JSON.stringify(bankAccounts,null,2); let pendingDiv=document.getElementById('pendingRequests'); pendingDiv.innerHTML=''; pendingTx.forEach(tx=>{ pendingDiv.innerHTML+=`<div class="flex justify-between items-center text-xs p-2 bg-white/5 rounded"><div><b>${tx.type}</b> ${tx.amount} ETB<br><span class="opacity-50">${tx.name||tx.account}</span></div><div><button data-id="${tx.id}" class="approveTx bg-green-600 px-2 py-1 rounded">✓</button><button data-id="${tx.id}" class="rejectTx bg-red-600 px-2 py-1 rounded">✗</button></div></div>`; }); document.querySelectorAll('.approveTx').forEach(btn=>{ btn.addEventListener('click',()=>{ let id=parseInt(btn.dataset.id); let tx=pendingTx.find(t=>t.id===id); if(tx){ tx.status='completed'; if(tx.type==='deposit'){ adminTotalDeposit+=tx.amount; realBalance+=tx.amount; localStorage.setItem(STORAGE.realBal, realBalance); } else { adminTotalWithdraw+=tx.amount; realBalance-=tx.amount; localStorage.setItem(STORAGE.realBal, realBalance); } updateBalanceUI(); pendingTx=pendingTx.filter(t=>t.id!==id); localStorage.setItem('pending_tx',JSON.stringify(pendingTx)); localStorage.setItem('admin_deposit',adminTotalDeposit); localStorage.setItem('admin_withdraw',adminTotalWithdraw); updateAdminUI(); updateTransactionUI(); showToast(`✅ ${tx.amount} ETB ${tx.type} approved`); } }); }); document.querySelectorAll('.rejectTx').forEach(btn=>{ btn.addEventListener('click',()=>{ let id=parseInt(btn.dataset.id); pendingTx=pendingTx.filter(t=>t.id!==id); localStorage.setItem('pending_tx',JSON.stringify(pendingTx)); updateAdminUI(); updateTransactionUI(); showToast('❌ Request rejected'); }); }); }
     document.getElementById('setCrashBtn')?.addEventListener('click',()=>{ let val=parseFloat(document.getElementById('adminCrashPoint').value); if(val>=1.2 && val<=20){ customCrashPoint=val; localStorage.setItem('custom_crash_point',customCrashPoint); currentCrash=customCrashPoint; showToast(`Crash point set to ${customCrashPoint}x`); } else showToast('Invalid crash point (1.2 - 20)'); });
     document.getElementById('saveBankAccounts')?.addEventListener('click',()=>{ try{ let newAcc=JSON.parse(document.getElementById('bankAccountsInput').value); bankAccounts=newAcc; localStorage.setItem('bank_accounts',JSON.stringify(bankAccounts)); renderBankAccounts(); showToast('Bank accounts saved'); } catch(e){ showToast('Invalid JSON'); } });
     document.getElementById('toggleReferralStop')?.addEventListener('click',()=>{ referralStopped=!referralStopped; localStorage.setItem('referral_stopped',referralStopped); document.getElementById('toggleReferralStop').innerText=referralStopped?'START':'STOP'; showToast(referralStopped?'Referral counting STOPPED':'Referral counting ACTIVE'); });
@@ -308,7 +296,6 @@
     document.querySelectorAll('.bet-amount').forEach(btn => { btn.addEventListener('click', () => { let slot = parseInt(btn.dataset.slot), amount = parseInt(btn.dataset.amount); bets[slot].amount = amount; document.querySelectorAll(`.bet-amount[data-slot='${slot}']`).forEach(b => b.classList.remove('active-green')); btn.classList.add('active-green'); showToast(`Bet set to ${amount} ETB`); }); });
     document.querySelectorAll('.auto-cash').forEach(btn => { btn.addEventListener('click', () => { let slot = parseInt(btn.dataset.slot), auto = parseInt(btn.dataset.auto); bets[slot].autoCash = auto; document.getElementById(`autoCashLabel${slot===1?'':'2'}`).innerText = auto>0 ? `⚡ AUTO: ${auto}x` : '⚡ AUTO: OFF'; document.querySelectorAll(`.auto-cash[data-slot='${slot}']`).forEach(b => b.classList.remove('active-green')); btn.classList.add('active-green'); showToast(auto>0 ? `Auto cashout at ${auto}x` : 'Auto cashout OFF'); }); });
     document.getElementById('betBtn1').addEventListener('click', () => handleBet(1)); document.getElementById('betBtn2').addEventListener('click', () => handleBet(2));
-    document.querySelectorAll('.mode-opt').forEach(opt => { opt.addEventListener('click', () => { isRealMode = opt.dataset.mode === 'real'; document.querySelectorAll('.mode-opt').forEach(o => o.classList.remove('active')); opt.classList.add('active'); updateBalanceUI(); showToast(isRealMode ? 'REAL MODE ACTIVE' : 'DEMO MODE ACTIVE'); gamePath.classList.remove('trail-real','trail-demo'); gamePath.classList.add(isRealMode ? 'trail-real' : 'trail-demo'); }); });
     document.getElementById('depositTab').addEventListener('click',()=>{ document.getElementById('depositSection').classList.remove('hidden'); document.getElementById('withdrawSection').classList.add('hidden'); document.getElementById('depositTab').className='flex-1 py-3 rounded-2xl font-black bg-red-600'; document.getElementById('withdrawTab').className='flex-1 py-3 rounded-2xl font-black bg-zinc-800'; });
     document.getElementById('withdrawTab').addEventListener('click',()=>{ document.getElementById('depositSection').classList.add('hidden'); document.getElementById('withdrawSection').classList.remove('hidden'); document.getElementById('depositTab').className='flex-1 py-3 rounded-2xl font-black bg-zinc-800'; document.getElementById('withdrawTab').className='flex-1 py-3 rounded-2xl font-black bg-green-600'; });
 
