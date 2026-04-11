@@ -11,31 +11,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
-        body {
-            background: radial-gradient(circle at 20% 30%, #0a0a2a, #03050b);
-            font-family: 'Inter', sans-serif;
-            color: white;
-            overflow-x: hidden;
-            padding-top: 80px;
-        }
+        body { background: radial-gradient(circle at 20% 30%, #0a0a2a, #03050b); font-family: 'Inter', sans-serif; color: white; overflow-x: hidden; padding-top: 80px; }
         .font-crash { font-family: 'Orbitron', monospace; letter-spacing: 2px; }
-        .glass-card {
-            background: rgba(255,255,255,0.06);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,215,0,0.25);
-            border-radius: 32px;
-            transition: all 0.2s;
-        }
+        .glass-card { background: rgba(255,255,255,0.06); backdrop-filter: blur(12px); border: 1px solid rgba(255,215,0,0.25); border-radius: 32px; transition: 0.2s; }
         .gold-text { background: linear-gradient(135deg, #ffd700, #ff8c00); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 0 8px rgba(255,215,0,0.3); }
         .gold-border { border: 1px solid rgba(255,215,0,0.5); box-shadow: 0 0 20px rgba(255,215,0,0.2); }
-        .game-container {
-            background: rgba(0,0,0,0.5);
-            border-radius: 32px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 2px solid #ffd700;
-            box-shadow: 0 0 25px rgba(255,215,0,0.3);
-        }
+        .game-container { background: rgba(0,0,0,0.5); border-radius: 32px; padding: 20px; margin-bottom: 20px; border: 2px solid #ffd700; box-shadow: 0 0 25px rgba(255,215,0,0.3); }
         .game-canvas { height: 200px; position: relative; }
         #gamePath { stroke-width: 6; fill: none; filter: drop-shadow(0 0 6px currentColor); }
         .trail-real { stroke: #00ff66; }
@@ -46,35 +27,11 @@
         .chip-btn.active-green { background: #00ff66; color: black; }
         .bet-btn { background: #00ff66; border: none; padding: 14px 20px; border-radius: 28px; font-weight: 900; font-size: 24px; color: black; cursor: pointer; width: 150px; text-align: center; }
         .bet-btn.cashout { background: #f97316; color: white; }
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 70px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            background: rgba(10,10,20,0.95);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255,215,0,0.3);
-            z-index: 1000;
-        }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 70px; display: flex; justify-content: space-around; align-items: center; background: rgba(10,10,20,0.95); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,215,0,0.3); z-index: 1000; }
         .nav-item { font-size: 26px; color: #aaa; transition: 0.2s; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
         .nav-item span { font-size: 10px; font-weight: bold; }
         .nav-item.active { color: #ffd700; transform: translateY(-3px); }
-        .toast {
-            position: fixed;
-            bottom: 90px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.95);
-            padding: 10px 20px;
-            border-radius: 60px;
-            z-index: 2000;
-            font-size: 13px;
-            animation: fadeUp 0.2s ease;
-        }
+        .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.95); padding: 10px 20px; border-radius: 60px; z-index: 2000; font-size: 13px; animation: fadeUp 0.2s ease; }
         @keyframes fadeUp { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
         .verify-badge { background: linear-gradient(135deg, #38bdf8, #2dd4bf); padding: 2px 12px; border-radius: 30px; font-size: 9px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
         .mode-toggle { background: rgba(255,255,255,0.12); border-radius: 40px; padding: 4px; display: inline-flex; }
@@ -82,21 +39,8 @@
         .mode-opt.active { background: #00ff66; color: black; }
         .admin-input { background: rgba(0,0,0,0.6); border: 1px solid #ffd700; border-radius: 12px; padding: 8px; color: white; width: 100%; margin-top: 5px; }
         .history-chip { background: rgba(0,0,0,0.6); border-left: 3px solid #ffd700; padding: 4px 12px; border-radius: 40px; font-weight: 600; font-size: 0.85rem; display: inline-block; margin-right: 8px; margin-bottom: 8px; }
-        .podium {
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            gap: 20px;
-            margin: 30px 0 40px;
-            flex-wrap: wrap;
-        }
-        .podium-card {
-            text-align: center;
-            padding: 20px 12px;
-            border-radius: 48px;
-            width: 150px;
-            transition: 0.3s;
-        }
+        .podium { display: flex; justify-content: center; align-items: flex-end; gap: 20px; margin: 30px 0 40px; flex-wrap: wrap; }
+        .podium-card { text-align: center; padding: 20px 12px; border-radius: 48px; width: 150px; transition: 0.3s; }
         .podium-card.first { background: linear-gradient(145deg, #ffd700, #b8860b); box-shadow: 0 20px 35px -10px rgba(255,215,0,0.5); transform: scale(1.05); }
         .podium-card.second { background: linear-gradient(145deg, #c0c0c0, #808080); }
         .podium-card.third { background: linear-gradient(145deg, #cd7f32, #8b4513); }
@@ -110,12 +54,7 @@
         .third.wobble { animation-duration: 2.8s; }
         @keyframes wobble { 0%,100% { transform: translateY(0) rotate(0deg); } 25% { transform: translateY(-6px) rotate(1deg); } 75% { transform: translateY(-3px) rotate(-1deg); } }
         .winner-list-item { background: rgba(255,255,255,0.05); border-radius: 60px; padding: 8px 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-        @media (max-width: 550px) {
-            .podium-card { width: 110px; padding: 12px 6px; }
-            .podium-avatar { width: 55px; height: 55px; font-size: 32px; }
-            .first .podium-avatar { width: 70px; height: 70px; font-size: 44px; }
-            .bet-btn { width: 130px; font-size: 20px; }
-        }
+        @media (max-width: 550px) { .podium-card { width: 110px; padding: 12px 6px; } .podium-avatar { width: 55px; height: 55px; font-size: 32px; } .first .podium-avatar { width: 70px; height: 70px; font-size: 44px; } .bet-btn { width: 130px; font-size: 20px; } }
     </style>
 </head>
 <body>
