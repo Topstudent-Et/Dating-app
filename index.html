@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#ffd700">
-    <title>AVIA-MASTER ELITE | 24/7 Global Crash Game</title>
+    <title>AVIA-MASTER ELITE | Aviator Crash Game</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -38,12 +38,15 @@
         .mode-opt { padding: 6px 18px; border-radius: 30px; font-size: 12px; font-weight: bold; cursor: pointer; }
         .mode-opt.active { background: #00ff66; color: black; }
         .admin-input { background: rgba(0,0,0,0.6); border: 1px solid #ffd700; border-radius: 12px; padding: 8px; color: white; width: 100%; margin-top: 5px; }
-        .history-chip { background: rgba(0,0,0,0.6); border-left: 3px solid #ffd700; padding: 4px 12px; border-radius: 40px; font-weight: 600; font-size: 0.85rem; display: inline-block; margin-right: 8px; margin-bottom: 8px; }
+        .history-chip { display: inline-block; padding: 4px 12px; border-radius: 40px; font-weight: 600; font-size: 0.85rem; margin-right: 8px; margin-bottom: 8px; }
+        .history-high { background: #00aa33; color: white; border-left: 3px solid #ffd700; }
+        .history-mid { background: #ff9900; color: black; border-left: 3px solid #ffd700; }
+        .history-low { background: #aa2222; color: white; border-left: 3px solid #ffd700; }
         .podium { display: flex; justify-content: center; align-items: flex-end; gap: 20px; margin: 30px 0 40px; flex-wrap: wrap; }
         .podium-card { text-align: center; padding: 20px 12px; border-radius: 48px; width: 150px; transition: 0.3s; }
-        .podium-card.first { background: linear-gradient(145deg, #ffd700, #b8860b); box-shadow: 0 20px 35px -10px rgba(255,215,0,0.5); transform: scale(1.05); }
-        .podium-card.second { background: linear-gradient(145deg, #c0c0c0, #808080); }
-        .podium-card.third { background: linear-gradient(145deg, #cd7f32, #8b4513); }
+        .podium-card.first { background: linear-gradient(145deg, #ffd700, #b8860b); box-shadow: 0 20px 35px -10px rgba(255,215,0,0.5); transform: scale(1.05); order: 2; }
+        .podium-card.second { background: linear-gradient(145deg, #c0c0c0, #808080); order: 1; }
+        .podium-card.third { background: linear-gradient(145deg, #cd7f32, #8b4513); order: 3; }
         .podium-avatar { width: 75px; height: 75px; margin: 0 auto 10px; background: rgba(0,0,0,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 42px; border: 2px solid rgba(255,255,255,0.5); }
         .first .podium-avatar { width: 95px; height: 95px; font-size: 58px; }
         .podium-name { font-weight: 800; font-size: 1rem; margin-top: 6px; }
@@ -54,6 +57,7 @@
         .third.wobble { animation-duration: 2.8s; }
         @keyframes wobble { 0%,100% { transform: translateY(0) rotate(0deg); } 25% { transform: translateY(-6px) rotate(1deg); } 75% { transform: translateY(-3px) rotate(-1deg); } }
         .winner-list-item { background: rgba(255,255,255,0.05); border-radius: 60px; padding: 8px 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .bank-card { background: rgba(0,0,0,0.5); border-radius: 20px; padding: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid rgba(255,215,0,0.3); margin-bottom: 12px; }
         @media (max-width: 550px) { .podium-card { width: 110px; padding: 12px 6px; } .podium-avatar { width: 55px; height: 55px; font-size: 32px; } .first .podium-avatar { width: 70px; height: 70px; font-size: 44px; } .bet-btn { width: 130px; font-size: 20px; } }
     </style>
 </head>
@@ -88,6 +92,7 @@
         <div class="text-xs opacity-70 mt-1">Live Players: <span id="livePlayerCount">2,000+</span> active now</div>
     </div>
 
+    <!-- Crash History with colors -->
     <div class="glass-card p-3 mb-4">
         <div class="flex items-center gap-2 mb-2"><i class="fas fa-chart-line text-yellow-400"></i><span class="font-bold text-sm">LAST ROUNDS</span></div>
         <div id="historyContainer" class="flex flex-wrap gap-2 max-h-20 overflow-y-auto"></div>
@@ -103,6 +108,7 @@
         </div>
     </div>
 
+    <!-- Bet Panels -->
     <div class="glass-card p-4 mb-3">
         <div class="flex justify-between items-center mb-3"><span class="text-sm"><i class="fas fa-arrow-left"></i> LEFT SLOT</span><span id="autoCashLabel" class="text-xs text-yellow-400">⚡ AUTO: OFF</span></div>
         <div class="flex gap-3"><div class="flex-1 grid grid-cols-4 gap-2"><button data-slot="1" data-amount="10" class="chip-btn bet-amount">10</button><button data-slot="1" data-amount="50" class="chip-btn bet-amount">50</button><button data-slot="1" data-amount="100" class="chip-btn bet-amount">100</button><button data-slot="1" data-amount="500" class="chip-btn bet-amount">500</button></div><button id="betBtn1" class="bet-btn">BET</button></div>
@@ -116,18 +122,32 @@
     <div class="glass-card p-3"><div class="flex items-center gap-2 mb-2"><i class="fas fa-fire text-red-500"></i><span class="text-sm font-bold">LIVE WINNERS</span></div><div id="liveFeed" class="space-y-1 max-h-32 overflow-y-auto"></div></div>
 </div>
 
-<!-- TOP WINNERS PAGE -->
+<!-- TOP WINNERS PAGE with Podium (1st center, 2nd left, 3rd right) and 50 real names -->
 <div id="topPage" class="page" style="padding: 80px 16px 90px 16px; display: none;">
     <div class="glass-card p-4 text-center mb-4 gold-border"><div class="text-xl font-bold gold-text">🏆 TOP WINNERS 🏅</div><div class="text-xs opacity-70">Celebrating the best players</div></div>
     <div class="podium" id="podiumContainer"></div>
-    <div class="mt-6"><div class="flex items-center gap-2 mb-3"><i class="fas fa-list-ol text-yellow-400"></i><span class="font-bold">Other Winners</span></div><div id="topList" class="space-y-2 max-h-[400px] overflow-y-auto"></div></div>
+    <div class="mt-6"><div class="flex items-center gap-2 mb-3"><i class="fas fa-list-ol text-yellow-400"></i><span class="font-bold">Other Winners (4th – 50th)</span></div><div id="topList" class="space-y-2 max-h-[400px] overflow-y-auto"></div></div>
 </div>
 
-<!-- WALLET PAGE -->
+<!-- WALLET PAGE with elegant descriptions -->
 <div id="walletPage" class="page" style="padding: 80px 16px 90px 16px; display: none;">
     <div class="flex gap-3 mb-4"><button id="depositTab" class="flex-1 py-3 rounded-2xl font-black bg-red-600">💰 DEPOSIT</button><button id="withdrawTab" class="flex-1 py-3 rounded-2xl font-black bg-zinc-800">💸 WITHDRAW</button></div>
-    <div id="depositSection"><div class="bg-yellow-500/20 p-2 rounded-xl text-center text-xs mb-3">⚠️ Minimum deposit: 50 ETB</div><div id="bankAccountsList" class="space-y-2 mb-3"></div><input type="text" id="depositName" placeholder="Full Name" class="w-full bg-white/10 p-3 rounded-xl outline-none"><input type="text" id="depositRef" placeholder="Transaction Reference" class="w-full bg-white/10 p-3 rounded-xl mt-2 outline-none"><input type="number" id="depositAmount" placeholder="Amount (ETB) min 50" class="w-full bg-white/10 p-3 rounded-xl mt-2 outline-none"><button id="submitDeposit" class="w-full mt-4 py-3 bg-red-600 rounded-2xl font-black">SUBMIT DEPOSIT</button></div>
-    <div id="withdrawSection" class="hidden"><input type="text" id="withdrawAccount" placeholder="CBE / Telebirr Account" class="w-full bg-white/10 p-3 rounded-xl outline-none"><input type="number" id="withdrawAmount" placeholder="Amount (ETB)" class="w-full bg-white/10 p-3 rounded-xl mt-2 outline-none"><div id="withdrawBalanceInfo" class="text-xs text-center mt-2"></div><button id="submitWithdraw" class="w-full mt-4 py-3 bg-green-600 rounded-2xl font-black text-black">CONFIRM WITHDRAW</button></div>
+    <div id="depositSection">
+        <div class="bg-yellow-500/20 p-2 rounded-xl text-center text-xs mb-3">⚠️ Minimum deposit: 50 ETB</div>
+        <div id="bankAccountsList" class="space-y-2 mb-3"></div>
+        <input type="text" id="depositName" placeholder="Full Name" class="w-full bg-white/10 p-3 rounded-xl outline-none">
+        <input type="text" id="depositRef" placeholder="Transaction Reference (e.g., Telebirr/CBE ref)" class="w-full bg-white/10 p-3 rounded-xl mt-2 outline-none">
+        <input type="number" id="depositAmount" placeholder="Amount (ETB) min 50" class="w-full bg-white/10 p-3 rounded-xl mt-2 outline-none">
+        <button id="submitDeposit" class="w-full mt-4 py-3 bg-red-600 rounded-2xl font-black">SUBMIT DEPOSIT REQUEST</button>
+        <div class="text-xs text-center text-gray-400 mt-2">After sending money to one of the accounts above, fill in your details and submit. Our admin will verify and add funds to your balance.</div>
+    </div>
+    <div id="withdrawSection" class="hidden">
+        <input type="text" id="withdrawAccount" placeholder="Your CBE / Telebirr Account Number" class="w-full bg-white/10 p-3 rounded-xl outline-none">
+        <input type="number" id="withdrawAmount" placeholder="Amount (ETB)" class="w-full bg-white/10 p-3 rounded-xl mt-2 outline-none">
+        <div id="withdrawBalanceInfo" class="text-xs text-center mt-2"></div>
+        <button id="submitWithdraw" class="w-full mt-4 py-3 bg-green-600 rounded-2xl font-black text-black">REQUEST WITHDRAWAL</button>
+        <div class="text-xs text-center text-gray-400 mt-2">Withdrawals are processed within 24 hours. Minimum withdrawal 100 ETB.</div>
+    </div>
     <div class="glass-card p-3 mt-4"><div class="flex items-center gap-2 mb-2"><i class="fas fa-clock text-blue-400"></i><span class="text-xs font-bold">Recent Transactions</span></div><div id="txList" class="space-y-1 max-h-48 overflow-y-auto"></div></div>
 </div>
 
@@ -239,23 +259,31 @@
 
     function updateBalanceUI() { let bal = isRealMode ? realBalance : demoBalance; balanceSpan.innerText = bal.toFixed(2)+' ETB'; profileBalance.innerText = bal.toFixed(2)+' ETB'; totalGamesSpan.innerText = totalGames; totalWonSpan.innerText = totalWon.toFixed(0)+' ETB'; document.getElementById('refCount').innerText = referralCount; document.getElementById('refBonus').innerText = referralBonus; document.getElementById('withdrawBalanceInfo').innerHTML = `Your balance: ${bal.toFixed(2)} ETB`; }
     function updateBetButton(slot) { let btn = document.getElementById(`betBtn${slot}`); if(bets[slot].active) { btn.innerText = 'CASH OUT'; btn.classList.add('cashout'); } else { btn.innerText = 'BET'; btn.classList.remove('cashout'); } }
-    function updateHistoryUI() { let container = document.getElementById('historyContainer'); container.innerHTML = ''; gameHistory.slice(0,12).forEach(h => { container.innerHTML += `<div class="history-chip">${h.multiplier}x</div>`; }); }
-    const ethiopianNames = ["Abebe","Kebede","Alemu","Melat","Fevu","Alem","Davied","John","Tigist","Selam","Biruk","Eden","Nahom","Meron","Kidus","Betty","Mikiyas","Lydia","Henok","Hana","Samuel","Ruth","Gebre","Yonas","Helen"];
+    function updateHistoryUI() { let container = document.getElementById('historyContainer'); container.innerHTML = ''; gameHistory.forEach(m => { let val = parseFloat(m.multiplier); let cls = val >= 3 ? 'history-high' : (val >= 1.8 ? 'history-mid' : 'history-low'); container.innerHTML += `<div class="history-chip ${cls}">${val.toFixed(2)}x</div>`; }); }
+    const ethiopianNames = ["Abebe", "Kebede", "Alemu", "Melat", "Fevu", "Alem", "Davied", "John", "Tigist", "Selam", "Biruk", "Eden", "Nahom", "Meron", "Kidus", "Betty", "Mikiyas", "Lydia", "Henok", "Hana", "Samuel", "Ruth", "Gebre", "Yonas", "Helen", "Marta", "Tekle", "Wossen", "Zeritu", "Mulu", "Girum", "Tsion", "Bekele", "Mekdes", "Solomon", "Kidist", "Dawit", "Selamawit", "Esubalew", "Meseret", "Tigabu", "Birtukan", "Yared", "Mekonnen", "Azeb", "Tadesse", "Wondimu", "Genet", "Fikadu"];
     function addLiveFeed(name, amount) { let item = document.createElement('div'); item.className = 'flex justify-between items-center p-2 rounded-xl bg-white/5'; item.innerHTML = `<div><i class="fas fa-trophy text-yellow-500 mr-1"></i><span class="font-bold">${name}</span><span class="verify-badge ml-2 text-[8px]"><i class="fas fa-check-circle"></i> VERIFIED</span></div><div class="text-green-400 font-black">+${amount.toFixed(0)} ETB</div>`; liveFeedDiv.prepend(item); if(liveFeedDiv.children.length>12) liveFeedDiv.removeChild(liveFeedDiv.lastChild); }
     function showToast(msg) { let t=document.createElement('div'); t.className='toast'; t.innerText=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),2000); }
 
-    // ----------------------------- TOP WINNERS PODIUM -------------------------
+    // ----------------------------- TOP WINNERS (50 real Ethiopian names, sorted) -------------------------
     let topWinners = JSON.parse(localStorage.getItem('top_winners')) || [];
     function addToTopWinners(name, amount, multiplier) { topWinners.push({ name, amount, multiplier, timestamp: Date.now() }); topWinners.sort((a,b)=>b.amount - a.amount); if(topWinners.length>50) topWinners.pop(); localStorage.setItem('top_winners', JSON.stringify(topWinners)); renderPodiumAndList(); }
-    function renderPodiumAndList() { if(!document.getElementById('podiumContainer')) return; const podiumDiv=document.getElementById('podiumContainer'); const listDiv=document.getElementById('topList'); const top3=topWinners.slice(0,3); podiumDiv.innerHTML=''; const order=[1,0,2]; const classes=['second','first','third']; const icons=['🥈','👑','🥉']; for(let i=0;i<3;i++){ let winner=top3[order[i]]; if(winner){ podiumDiv.innerHTML+=`<div class="podium-card ${classes[order[i]]} wobble"><div class="podium-avatar">${icons[order[i]]}</div><div class="podium-name">${winner.name}</div><div class="podium-amount">${winner.amount.toLocaleString()} ETB</div><div class="text-[10px] opacity-80">${winner.multiplier}x</div></div>`; } else { podiumDiv.innerHTML+=`<div class="podium-card ${classes[order[i]]} wobble"><div class="podium-avatar">❓</div><div class="podium-name">---</div><div class="podium-amount">0 ETB</div></div>`; } }
+    function renderPodiumAndList() { if(!document.getElementById('podiumContainer')) return; const podiumDiv=document.getElementById('podiumContainer'); const listDiv=document.getElementById('topList'); const top3=topWinners.slice(0,3); podiumDiv.innerHTML=''; // order: second (left), first (center), third (right) – we use CSS order, but we need to create divs accordingly.
+        let second = top3[1] || null;
+        let first = top3[0] || null;
+        let third = top3[2] || null;
+        const renderCard = (winner, placeClass, icon) => {
+            if(winner) return `<div class="podium-card ${placeClass} wobble"><div class="podium-avatar">${icon}</div><div class="podium-name">${winner.name}</div><div class="podium-amount">${winner.amount.toLocaleString()} ETB</div><div class="text-[10px] opacity-80">${winner.multiplier}x</div></div>`;
+            else return `<div class="podium-card ${placeClass} wobble"><div class="podium-avatar">❓</div><div class="podium-name">---</div><div class="podium-amount">0 ETB</div></div>`;
+        };
+        podiumDiv.innerHTML = renderCard(second, 'second', '🥈') + renderCard(first, 'first', '👑') + renderCard(third, 'third', '🥉');
         const rest=topWinners.slice(3); listDiv.innerHTML=''; rest.forEach((w,idx)=>{ listDiv.innerHTML+=`<div class="winner-list-item"><div class="flex items-center gap-2"><span class="text-yellow-400 font-bold">#${idx+4}</span><span class="font-bold">${w.name}</span><span class="verify-badge text-[8px]"><i class="fas fa-check-circle"></i> VERIFIED</span></div><div class="text-green-400 font-black">${w.amount.toLocaleString()} ETB</div><div class="text-[10px]">${w.multiplier}x</div></div>`; }); if(rest.length===0) listDiv.innerHTML='<div class="text-center text-gray-400">More winners will appear soon</div>'; }
-    function loadTopWinnersFromStorage() { let stored=localStorage.getItem('top_winners'); if(stored) topWinners=JSON.parse(stored); else { topWinners=[{name:"DAWI_FIKADU",amount:245000,multiplier:12.4},{name:"Lemi_X",amount:124500,multiplier:8.2},{name:"Abebe_K",amount:89300,multiplier:6.7},{name:"Hana_23",amount:67200,multiplier:5.9}]; localStorage.setItem('top_winners',JSON.stringify(topWinners)); } renderPodiumAndList(); }
+    function loadTopWinnersFromStorage() { let stored=localStorage.getItem('top_winners'); if(stored) topWinners=JSON.parse(stored); else { topWinners = ethiopianNames.slice(0,30).map((n,i)=> ({ name: n, amount: 50000 - i*800, multiplier: (10 - i*0.2).toFixed(1) })); topWinners.sort((a,b)=>b.amount - a.amount); localStorage.setItem('top_winners',JSON.stringify(topWinners)); } renderPodiumAndList(); }
 
     // ----------------------------- BANK ACCOUNTS & WALLET -------------------------
-    function renderBankAccounts() { let container=document.getElementById('bankAccountsList'); container.innerHTML=''; bankAccounts.forEach(acc=>{ container.innerHTML+=`<div class="glass-card p-2 flex justify-between items-center cursor-pointer" data-copy="${acc.number}"><div><i class="fas fa-${acc.icon} text-2xl mr-2"></i><span class="font-bold">${acc.name}</span><div class="text-green-400 font-bold">${acc.number}</div></div><i class="fas fa-copy text-gray-400"></i></div>`; }); document.querySelectorAll('[data-copy]').forEach(el=>{ el.addEventListener('click',()=>{ navigator.clipboard.writeText(el.dataset.copy); showToast('📋 Copied!'); }); }); }
+    function renderBankAccounts() { let container=document.getElementById('bankAccountsList'); container.innerHTML=''; bankAccounts.forEach(acc=>{ container.innerHTML+=`<div class="bank-card" data-copy="${acc.number}"><div><i class="fas fa-${acc.icon} text-2xl mr-2"></i><span class="font-bold">${acc.name}</span><div class="text-green-400 font-bold">${acc.number}</div></div><i class="fas fa-copy text-gray-400"></i></div>`; }); document.querySelectorAll('[data-copy]').forEach(el=>{ el.addEventListener('click',()=>{ navigator.clipboard.writeText(el.dataset.copy); showToast('📋 Account number copied!'); }); }); }
     function updateTransactionUI() { let container=document.getElementById('txList'); container.innerHTML=''; transactions.slice(0,8).forEach(tx=>{ let statusColor=tx.status==='completed'?'text-green-400':(tx.status==='rejected'?'text-red-400':'text-yellow-400'); container.innerHTML+=`<div class="flex justify-between text-xs p-2 bg-white/5 rounded"><span>${tx.type==='deposit'?'💰 Deposit':'💸 Withdraw'}</span><span>${tx.amount} ETB</span><span class="${statusColor}">${tx.status}</span></div>`; }); }
-    document.getElementById('submitDeposit').addEventListener('click',()=>{ let name=document.getElementById('depositName').value, ref=document.getElementById('depositRef').value, amount=parseFloat(document.getElementById('depositAmount').value); if(!name||!ref||!amount) { showToast('Fill all fields'); return; } if(amount<50){ showToast('Minimum 50 ETB'); return; } let tx={ id:Date.now(), type:'deposit', amount, status:'pending', name, ref }; pendingTx.unshift(tx); transactions.unshift(tx); localStorage.setItem('pending_tx',JSON.stringify(pendingTx)); localStorage.setItem(STORAGE.tx,JSON.stringify(transactions)); showToast('✅ Deposit request sent to admin'); updateTransactionUI(); if(isAdmin) updateAdminUI(); document.getElementById('depositName').value=''; document.getElementById('depositRef').value=''; document.getElementById('depositAmount').value=''; });
-    document.getElementById('submitWithdraw').addEventListener('click',()=>{ let acc=document.getElementById('withdrawAccount').value, amount=parseFloat(document.getElementById('withdrawAmount').value); let bal=isRealMode?realBalance:demoBalance; if(!acc||!amount){ showToast('Fill all fields'); return; } if(amount>bal){ showToast(`Insufficient balance! Your balance: ${bal.toFixed(2)} ETB`); return; } if(amount>(bal-referralBonus) && totalPlayedGames<10){ showToast('Play 10 games first to withdraw referral bonus'); return; } let tx={ id:Date.now(), type:'withdraw', amount, status:'pending', account:acc }; pendingTx.unshift(tx); transactions.unshift(tx); localStorage.setItem('pending_tx',JSON.stringify(pendingTx)); localStorage.setItem(STORAGE.tx,JSON.stringify(transactions)); showToast('✅ Withdraw request sent to admin'); updateTransactionUI(); if(isAdmin) updateAdminUI(); document.getElementById('withdrawAccount').value=''; document.getElementById('withdrawAmount').value=''; });
+    document.getElementById('submitDeposit').addEventListener('click',()=>{ let name=document.getElementById('depositName').value, ref=document.getElementById('depositRef').value, amount=parseFloat(document.getElementById('depositAmount').value); if(!name||!ref||!amount) { showToast('Please fill all fields'); return; } if(amount<50){ showToast('Minimum deposit is 50 ETB'); return; } let tx={ id:Date.now(), type:'deposit', amount, status:'pending', name, ref }; pendingTx.unshift(tx); transactions.unshift(tx); localStorage.setItem('pending_tx',JSON.stringify(pendingTx)); localStorage.setItem(STORAGE.tx,JSON.stringify(transactions)); showToast('✅ Deposit request sent to admin'); updateTransactionUI(); if(isAdmin) updateAdminUI(); document.getElementById('depositName').value=''; document.getElementById('depositRef').value=''; document.getElementById('depositAmount').value=''; });
+    document.getElementById('submitWithdraw').addEventListener('click',()=>{ let acc=document.getElementById('withdrawAccount').value, amount=parseFloat(document.getElementById('withdrawAmount').value); let bal=isRealMode?realBalance:demoBalance; if(!acc||!amount){ showToast('Please fill all fields'); return; } if(amount<100){ showToast('Minimum withdrawal is 100 ETB'); return; } if(amount>bal){ showToast(`Insufficient balance! Your balance: ${bal.toFixed(2)} ETB`); return; } if(amount>(bal-referralBonus) && totalPlayedGames<10){ showToast('You need to play at least 10 games before withdrawing referral bonus'); return; } let tx={ id:Date.now(), type:'withdraw', amount, status:'pending', account:acc }; pendingTx.unshift(tx); transactions.unshift(tx); localStorage.setItem('pending_tx',JSON.stringify(pendingTx)); localStorage.setItem(STORAGE.tx,JSON.stringify(transactions)); showToast('✅ Withdrawal request sent to admin'); updateTransactionUI(); if(isAdmin) updateAdminUI(); document.getElementById('withdrawAccount').value=''; document.getElementById('withdrawAmount').value=''; });
 
     // ----------------------------- ADMIN FUNCTIONS -------------------------
     function updateAdminUI() { if(!isAdmin) return; document.getElementById('adminDeposit').innerText=adminTotalDeposit.toFixed(0); document.getElementById('adminWithdraw').innerText=adminTotalWithdraw.toFixed(0); document.getElementById('adminProfit').innerText=adminProfitPool.toFixed(0); document.getElementById('adminCrashPoint').value=customCrashPoint||1.2; document.getElementById('bankAccountsInput').value=JSON.stringify(bankAccounts,null,2); let pendingDiv=document.getElementById('pendingRequests'); pendingDiv.innerHTML=''; pendingTx.forEach(tx=>{ pendingDiv.innerHTML+=`<div class="flex justify-between items-center text-xs p-2 bg-white/5 rounded"><div><b>${tx.type}</b> ${tx.amount} ETB<br><span class="opacity-50">${tx.name||tx.account}</span></div><div><button data-id="${tx.id}" class="approveTx bg-green-600 px-2 py-1 rounded">✓</button><button data-id="${tx.id}" class="rejectTx bg-red-600 px-2 py-1 rounded">✗</button></div></div>`; }); document.querySelectorAll('.approveTx').forEach(btn=>{ btn.addEventListener('click',()=>{ let id=parseInt(btn.dataset.id); let tx=pendingTx.find(t=>t.id===id); if(tx){ tx.status='completed'; if(tx.type==='deposit'){ adminTotalDeposit+=tx.amount; if(isRealMode){ realBalance+=tx.amount; localStorage.setItem(STORAGE.realBal,realBalance); } } else { adminTotalWithdraw+=tx.amount; if(isRealMode){ realBalance-=tx.amount; localStorage.setItem(STORAGE.realBal,realBalance); } } updateBalanceUI(); pendingTx=pendingTx.filter(t=>t.id!==id); localStorage.setItem('pending_tx',JSON.stringify(pendingTx)); localStorage.setItem('admin_deposit',adminTotalDeposit); localStorage.setItem('admin_withdraw',adminTotalWithdraw); updateAdminUI(); updateTransactionUI(); showToast(`✅ ${tx.amount} ETB ${tx.type} approved`); } }); }); document.querySelectorAll('.rejectTx').forEach(btn=>{ btn.addEventListener('click',()=>{ let id=parseInt(btn.dataset.id); pendingTx=pendingTx.filter(t=>t.id!==id); localStorage.setItem('pending_tx',JSON.stringify(pendingTx)); updateAdminUI(); updateTransactionUI(); showToast('❌ Request rejected'); }); }); }
@@ -273,7 +301,7 @@
         if(rc<100){ rc++; let nb = rc*5; localStorage.setItem(`ref_count_${referrer}`, rc); localStorage.setItem(`ref_bonus_${referrer}`, nb); if(username === referrer){ referralCount=rc; referralBonus=nb; localStorage.setItem(STORAGE.refCount, referralCount); localStorage.setItem(STORAGE.refBonus, referralBonus); updateBalanceUI(); } showToast(`🎉 Invited by ${referrer}! +5 ETB bonus`); }
     }
     document.getElementById('refLink').value = `https://t.me/world_all_gamesbot?start=ref_${username}`;
-    document.getElementById('copyRef').addEventListener('click', () => { navigator.clipboard.writeText(document.getElementById('refLink').value); showToast('📋 Link copied'); });
+    document.getElementById('copyRef').addEventListener('click', () => { navigator.clipboard.writeText(document.getElementById('refLink').value); showToast('📋 Referral link copied'); });
 
     // ----------------------------- NAVIGATION & EVENT BINDINGS -------------------------
     document.querySelectorAll('.nav-item').forEach(el => { el.addEventListener('click', () => { let page = el.dataset.page; document.querySelectorAll('.page').forEach(p => p.style.display = 'none'); document.getElementById(page + 'Page').style.display = 'block'; document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); if(page === 'top') renderPodiumAndList(); if(page === 'profile' && isAdmin) updateAdminUI(); }); });
