@@ -1,303 +1,296 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="am">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AVIATOR MASTER GOLD ©2026</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BETWIN Tips - የቤቲንግ ትንበያ | Daily Predictions</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
         
-        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        :root { --gold: #FFD700; --gold-dark: #B8860B; --bg: #050505; --text: #ffffff; --card: rgba(255,255,255,0.05); --btn-green: #22c55e; }
-        body.light-mode { --bg: #f8f9fa; --text: #1a1a1a; --card: #ffffff; --btn-green: #16a34a; }
-
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; }
-        .font-game { font-family: 'Orbitron', sans-serif; }
+        :root {
+            --primary: #00b894;
+            --dark: #1e1e2f;
+            --light: #f8f9fa;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #1e1e2f, #2d2d44);
+            color: #fff;
+            line-height: 1.6;
+        }
+        header {
+            background: rgba(0,0,0,0.8);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--primary); }
         
-        /* Shimmer Animation */
-        .shimmer { background: linear-gradient(90deg, transparent, rgba(255,215,0,0.2), transparent); background-size: 200% 100%; animation: shimmer 2s infinite; }
-        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://source.unsplash.com/random/1920x1080/?football') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            text-align: center;
+        }
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+        }
+        .btn {
+            background: var(--primary);
+            color: #fff;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn:hover {
+            background: #00a07a;
+            transform: scale(1.05);
+        }
 
-        /* Navigation */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 75px; display: flex; justify-content: space-around; align-items: center; background: var(--card); border-top: 2px solid var(--gold); z-index: 1000; backdrop-blur: 10px; }
-        .nav-item { color: #888; display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: 800; text-transform: uppercase; }
-        .nav-item.active { color: var(--gold); transform: translateY(-5px); }
+        section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--primary);
+        }
 
-        /* Game Area */
-        .game-area { background: #000; border-radius: 35px; position: relative; height: 260px; overflow: hidden; border: 3px solid var(--gold); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-        #gamePath { stroke: var(--gold); stroke-width: 8; fill: none; filter: drop-shadow(0 0 15px var(--gold)); }
-        
-        /* Buttons */
-        .bet-btn { background: var(--btn-green); color: white; font-weight: 900; font-size: 24px; border-radius: 20px; box-shadow: 0 8px 0 #15803d; transition: 0.1s; }
-        .bet-btn:active { transform: translateY(4px); box-shadow: 0 4px 0 #15803d; }
+        /* Tips Section */
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+        .tip-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+        }
+        .tip-card:hover {
+            transform: translateY(-10px);
+            background: rgba(0,184,148,0.2);
+        }
+        .match {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .odds {
+            color: #ffd700;
+            font-size: 1.1rem;
+        }
+        .prediction {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+        }
 
-        .page { display: none; padding: 20px; height: calc(100vh - 75px); overflow-y: auto; padding-top: 90px; }
-        .active-page { display: block; animation: slideUp 0.4s ease-out; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        /* Live Odds */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.05);
+        }
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        th {
+            background: var(--primary);
+            color: #000;
+        }
 
-        /* Podium */
-        .podium-box { display: flex; justify-content: center; align-items: flex-end; gap: 10px; margin-top: 40px; margin-bottom: 20px; }
-        .crown { position: absolute; top: -25px; font-size: 30px; animation: bounce 2s infinite; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        /* Footer */
+        footer {
+            background: #111;
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-top: 3rem;
+        }
 
-        /* Bank Logos */
-        .bank-logo { width: 40px; height: 40px; border-radius: 8px; object-fit: contain; }
-        .tab-btn { flex: 1; padding: 12px; font-weight: 900; border-radius: 12px; border: 1px solid var(--gold); }
-        .tab-active { background: var(--gold); color: black; }
-
-        .verify-badge { color: #38bdf8; font-size: 12px; margin-left: 4px; }
+        .dark-mode {
+            background: #0f0f1e;
+        }
     </style>
 </head>
-<body class="dark-mode">
-
-    <header class="fixed top-0 w-full p-4 flex justify-between items-center z-[1100] backdrop-blur-md border-b border-gold/20">
-        <div class="flex items-center gap-3">
-            <div id="uPfp" class="w-11 h-11 rounded-full bg-zinc-800 border-2 border-gold overflow-hidden">👤</div>
-            <div>
-                <p id="uBal" class="text-xl font-black text-green-500">0.00 ETB</p>
-                <p class="text-[9px] font-bold opacity-60">WIN UP TO 50k ETB DAILY!</p>
+<body>
+    <header>
+        <nav>
+            <div class="logo">BETWIN <span style="color:#fff;">Tips</span></div>
+            <div class="nav-links">
+                <a href="#home">መነሻ</a>
+                <a href="#tips">ትንበያዎች</a>
+                <a href="#odds">Odds</a>
+                <a href="#about">ስለ እኛ</a>
+                <a href="#contact">አግኙን</a>
             </div>
-        </div>
-        <div class="flex gap-2">
-            <button onclick="toggleTheme()" class="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center"><i class="fa-solid fa-moon"></i></button>
-            <button onclick="refresh()" class="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center"><i class="fa-solid fa-rotate"></i></button>
-        </div>
+        </nav>
     </header>
 
-    <section id="play" class="page active-page">
-        <div class="game-area mb-6">
-            <div class="absolute top-4 left-4 z-20 flex items-center gap-2 bg-black/60 px-3 py-1 rounded-full border border-white/10">
-                <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                <span class="text-[10px] font-black text-white"><span id="live">2,842</span> PLAYERS</span>
-            </div>
-            <svg width="100%" height="100%" class="absolute"><path id="gamePath" d="M 0 260 Q 0 260 0 260" /></svg>
-            <div id="mult" class="font-game text-7xl italic absolute inset-0 flex items-center justify-center" style="color: var(--gold); text-shadow: 0 0 30px var(--gold);">1.00x</div>
-            <div id="plane" class="bottom-6 left-6 absolute text-5xl">✈️</div>
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>የቀን ምርጥ ትንበያዎች</h1>
+            <p>በየቀኑ ከፕሪሚየር ሊግ፣ ቻምፒዮንስ ሊግና የኢትዮጵያ ሊግ ምርጥ ትንበያዎችን እናቀርባለን።</p>
+            <button class="btn" onclick="document.getElementById('tips').scrollIntoView({behavior: 'smooth'})">
+                ትንበያዎችን ይመልከቱ
+            </button>
         </div>
+    </section>
 
-        <div class="space-y-4">
-            <div class="bg-zinc-900/40 p-4 rounded-[25px] border border-white/5 flex gap-4">
-                <div class="flex-1 grid grid-cols-2 gap-2">
-                    <button onclick="setB(1,100)" class="bg-zinc-800/80 p-3 rounded-xl font-bold border border-gold/20">100</button>
-                    <button onclick="setB(1,1000)" class="bg-zinc-800/80 p-3 rounded-xl font-bold border border-gold/20">1k</button>
+    <section id="tips">
+        <h2>የዛሬ ምርጥ ትንበያዎች (April 11, 2026)</h2>
+        <div class="tips-grid">
+            <div class="tip-card">
+                <div class="match">አርሰናል vs ማን ሲቲ</div>
+                <p>ጊዜ፡ 17:30 | ሊግ፡ Premier League</p>
+                <div class="odds">1X2 Odds: 2.10 - 3.40 - 3.20</div>
+                <div class="prediction">
+                    <strong>ትንበያ፡</strong> አርሰናል ያሸንፋል (Over 2.5 Goals)<br>
+                    <strong>መቶኛ መቶኛ፡</strong> 68%
                 </div>
-                <button id="btn1" onclick="doBet(1)" class="bet-btn flex-1 shimmer">BET</button>
             </div>
             
-            <div class="mt-4">
-                <p class="text-[10px] font-black opacity-40 mb-2">LIVE BETS</p>
-                <div id="liveBets" class="space-y-2 h-40 overflow-hidden"></div>
-            </div>
-        </div>
-    </section>
-
-    <section id="wallet" class="page">
-        <div class="flex gap-2 mb-6">
-            <button id="depTab" onclick="switchW(true)" class="tab-btn tab-active">DEPOSIT</button>
-            <button id="wdTab" onclick="switchW(false)" class="tab-btn">WITHDRAW</button>
-        </div>
-
-        <div id="depView" class="space-y-4">
-            <div class="p-5 rounded-3xl bg-zinc-900/50 border border-gold/20">
-                <div class="flex items-center gap-4 mb-4">
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Commercial_Bank_of_Ethiopia_logo.png/220px-Commercial_Bank_of_Ethiopia_logo.png" class="bank-logo">
-                    <div><p class="text-xs font-black">CBE Account</p><p id="cbeAcc" class="gold-text font-game text-lg">1000179571815</p></div>
-                </div>
-                <div class="flex items-center gap-4">
-                    <img src="https://play-lh.googleusercontent.com/9v6N-M7L6D_XpB8A7A0A9-6y9hB0y9y9y9y9y9y9y9y9y9y9y9y9y9y9y9y9y9y9y9y" class="bank-logo">
-                    <div><p class="text-xs font-black">Telebirr</p><p id="teleAcc" class="gold-text font-game text-lg">0906067696</p></div>
+            <div class="tip-card">
+                <div class="match">ባየር ሙኒክ vs ቦርሲያ ዶርትሙንድ</div>
+                <p>ጊዜ፡ 19:30 | ሊግ፡ Bundesliga</p>
+                <div class="odds">1X2 Odds: 1.45 - 4.80 - 6.00</div>
+                <div class="prediction">
+                    <strong>ትንበያ፡</strong> ባየር ያሸንፋል + BTTS<br>
+                    <strong>መቶኛ መቶኛ፡</strong> 74%
                 </div>
             </div>
-            <div class="space-y-3">
-                <input id="dName" placeholder="Full Name / ስም" class="w-full p-4 bg-zinc-900/50 rounded-xl border border-gold/20 outline-none">
-                <input id="dEft" placeholder="EFT / Transaction ID" class="w-full p-4 bg-zinc-900/50 rounded-xl border border-gold/20 outline-none">
-                <input id="dAmt" type="number" placeholder="Amount / መጠን" class="w-full p-4 bg-zinc-900/50 rounded-xl border border-gold/20 outline-none">
-                <button onclick="sendDep()" class="w-full py-4 gold-btn gold-gradient text-black font-black rounded-xl">SUBMIT DEPOSIT</button>
-            </div>
-        </div>
-
-        <div id="wdView" class="hidden space-y-4">
-            <div class="p-6 bg-yellow-500/10 border border-gold/30 rounded-3xl text-center">
-                <p class="text-xs opacity-60 uppercase font-black">Available for Withdrawal</p>
-                <h2 id="wdBal" class="text-3xl font-black gold-text">0.00 ETB</h2>
-            </div>
-            <input id="wAcc" placeholder="Your Bank Account Number" class="w-full p-4 bg-zinc-900/50 rounded-xl border border-gold/20 outline-none">
-            <input id="wAmt" type="number" placeholder="Withdrawal Amount" class="w-full p-4 bg-zinc-900/50 rounded-xl border border-gold/20 outline-none">
-            <button onclick="sendWD()" class="w-full py-4 bg-zinc-800 rounded-xl font-black">CONFIRM WITHDRAWAL</button>
-        </div>
-    </section>
-
-    <section id="top" class="page">
-        <div class="podium-box">
-            <div class="flex flex-col items-center">
-                <div class="w-16 h-16 rounded-full border-4 border-zinc-400 overflow-hidden mb-2">👤</div>
-                <div class="h-20 w-16 bg-zinc-400/20 gold-border rounded-t-xl flex items-center justify-center font-black text-2xl">🥈</div>
-            </div>
-            <div class="flex flex-col items-center relative">
-                <span class="crown">👑</span>
-                <div class="w-20 h-20 rounded-full border-4 border-gold overflow-hidden mb-2 shadow-[0_0_30px_#FFD700]">👤</div>
-                <div class="h-32 w-20 bg-gold/20 gold-border rounded-t-xl flex items-center justify-center font-black text-4xl">🥇</div>
-            </div>
-            <div class="flex flex-col items-center">
-                <div class="w-14 h-14 rounded-full border-4 border-orange-800 overflow-hidden mb-2">👤</div>
-                <div class="h-14 w-14 bg-orange-900/20 gold-border rounded-t-xl flex items-center justify-center font-black text-xl">🥉</div>
-            </div>
-        </div>
-        <div id="winnersList" class="space-y-2 pb-10"></div>
-    </section>
-
-    <section id="profile" class="page">
-        <div class="bg-zinc-900/50 rounded-[35px] p-8 border border-gold/20 text-center">
-            <div id="profPfp" class="w-24 h-24 mx-auto rounded-full border-4 border-gold mb-4 overflow-hidden">👤</div>
-            <h2 id="profName" class="text-2xl font-black mb-1">DAI_USER <i class="fa-solid fa-circle-check verify-badge"></i></h2>
-            <div class="grid grid-cols-2 gap-3 mt-8">
-                <div class="bg-black/40 p-4 rounded-2xl border border-white/5"><p class="text-[9px] opacity-40">TOTAL WINS</p><p id="pWins" class="text-lg font-black gold-text">0</p></div>
-                <div class="bg-black/40 p-4 rounded-2xl border border-white/5"><p class="text-[9px] opacity-40">BALANCE</p><p id="pBal" class="text-lg font-black text-green-500">0.00</p></div>
-            </div>
-            <div class="mt-8 p-4 bg-white/5 rounded-2xl">
-                <p class="text-xs font-black mb-2">REFERRAL LINK (5 ETB / User)</p>
-                <div onclick="copyRef()" class="p-3 bg-black rounded-lg border border-dashed border-gold/40 text-[10px] truncate">https://t.me/AviatorGold_Bot?start=ref_12345</div>
-                <p class="text-[9px] mt-2 opacity-40">Max: 100 Referrals</p>
+            
+            <div class="tip-card">
+                <div class="match">ኢትዮጵያ ቡና vs ስታድ አስትሪክ</div>
+                <p>ጊዜ፡ 16:00 | ሊግ፡ ኢትዮጵያ ፕሪሚየር ሊግ</p>
+                <div class="odds">1X2 Odds: 1.85 - 3.30 - 4.10</div>
+                <div class="prediction">
+                    <strong>ትንበያ፡</strong> ኢትዮጵያ ቡና ያሸንፋል<br>
+                    <strong>መቶኛ መቶኛ፡</strong> 62%
+                </div>
             </div>
         </div>
     </section>
 
-    <section id="admin" class="page">
-        <div class="p-6 bg-red-600/10 border border-red-600 rounded-3xl space-y-4">
-            <h2 class="text-red-500 font-black">ADMIN PANEL</h2>
-            <button onclick="forceCrash()" class="w-full py-4 bg-red-600 rounded-xl font-black">CRASH NOW</button>
-            <div class="bg-black p-4 rounded-xl text-[10px] font-mono h-40 overflow-y-auto text-green-500" id="admLogs">Awaiting system...</div>
-            <button onclick="toggleRef(false)" class="w-full py-2 bg-zinc-800 rounded-lg text-xs font-bold">REF SYSTEM: OFF</button>
+    <section id="odds" style="background:#111;">
+        <h2>የቀጥታ Odds ማነጻጸር</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ጨዋታ</th>
+                    <th>1</th>
+                    <th>X</th>
+                    <th>2</th>
+                    <th>Over 2.5</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>አርሰናል - ማን ሲቲ</td>
+                    <td>2.10</td>
+                    <td>3.40</td>
+                    <td>3.20</td>
+                    <td>1.75</td>
+                </tr>
+                <tr>
+                    <td>ባየር - ዶርትሙንድ</td>
+                    <td>1.45</td>
+                    <td>4.80</td>
+                    <td>6.00</td>
+                    <td>1.55</td>
+                </tr>
+                <tr>
+                    <td>ሊቨርፑል - ቼልሲ</td>
+                    <td>1.65</td>
+                    <td>3.90</td>
+                    <td>4.50</td>
+                    <td>1.68</td>
+                </tr>
+            </tbody>
+        </table>
+        <p style="text-align:center; margin-top:2rem; color:#aaa;">* እነዚህ ምሳሌዎች ናቸው። እውነተኛ ኦድስ ከተለያዩ ሳይቶች ይመልከቱ።</p>
+    </section>
+
+    <section id="about">
+        <h2>ስለ BETWIN Tips</h2>
+        <p style="max-width:800px; margin:0 auto; text-align:center; font-size:1.2rem;">
+            BETWIN Tips ለኢትዮጵያውያን አድናቂዎች የተዘጋጀ የትንበያ መድረክ ነው። 
+            በየቀኑ ትክክለኛ ትንበያዎች፣ ስታቲስቲክስ እና ትንታኔ እናቀርባለን። 
+            ይህ ሳይት ለመዝናኛ እና ለትምህርት ብቻ ነው። በቤቲንግ ሲጫወቱ ተጠንቀቁ።
+        </p>
+    </section>
+
+    <section id="contact" style="background:#1e1e2f;">
+        <h2>አግኙን</h2>
+        <div style="max-width:600px; margin:0 auto;">
+            <form style="display:flex; flex-direction:column; gap:1rem;">
+                <input type="text" placeholder="ስምዎ" style="padding:1rem; border-radius:8px; border:none;">
+                <input type="email" placeholder="ኢሜይል" style="padding:1rem; border-radius:8px; border:none;">
+                <textarea placeholder="መልእክትዎ" rows="5" style="padding:1rem; border-radius:8px; border:none;"></textarea>
+                <button type="button" class="btn" onclick="alert('መልእክትዎ ተልኳል! (ምሳሌ)')">ላክ</button>
+            </form>
         </div>
     </section>
 
-    <nav class="nav-bar">
-        <div onclick="nav('play')" class="nav-item active" id="n-play"><i class="fa-solid fa-plane-up"></i><span>PLAY</span></div>
-        <div onclick="nav('wallet')" class="nav-item" id="n-wallet"><i class="fa-solid fa-wallet"></i><span>WALLET</span></div>
-        <div onclick="nav('top')" class="nav-item" id="n-top"><i class="fa-solid fa-trophy"></i><span>TOP</span></div>
-        <div onclick="nav('profile')" class="nav-item" id="n-profile"><i class="fa-solid fa-user"></i><span>PROFILE</span></div>
-    </nav>
+    <footer>
+        <p>&copy; 2026 BETWIN Tips - ሁሉም መብቶች የተጠበቁ ናቸው።</p>
+        <p style="margin-top:1rem; font-size:0.9rem; color:#888;">
+            ይህ ድረ-ገጽ ለትምህርት እና መዝናኛ ብቻ ነው። በቤቲንግ ሲጫወቱ ተጠንቀቁ። 18+ 
+        </p>
+    </footer>
 
     <script>
-        const tg = window.Telegram.WebApp; tg.expand();
-        let bal = 0.00, gameOn = false, m = 1.00, wins = 0;
-        let bets = { 1: { on: false, amt: 100 } };
-        let fCrash = false;
-
-        function init() {
-            const u = tg.initDataUnsafe?.user;
-            if(u) {
-                document.getElementById('profName').innerText = u.username || "User";
-                if(u.photo_url) document.querySelectorAll('div[id*="Pfp"], .podium-box div div').forEach(el => el.innerHTML = `<img src="${u.photo_url}" class="w-full h-full object-cover">`);
-                if(u.username !== "Dawit_Fikadu21") document.getElementById('n-admin')?.remove();
-            }
-            update(); genTop(); loop();
-        }
-
-        function loop() { if(!gameOn) setTimeout(start, 4000); }
-
-        function start() {
-            gameOn = true; m = 1.00; fCrash = false;
-            // 20% Profit Logic
-            let cP = bets[1].on ? 1.05 + (Math.random()*1.4) : 1.1 + (Math.random()*10);
-            
-            let tick = setInterval(() => {
-                m += 0.04;
-                document.getElementById('mult').innerText = m.toFixed(2) + "x";
-                let x = m * 24, y = m * 18;
-                document.getElementById('plane').style.transform = `translate(${x}px, -${y}px)`;
-                document.getElementById('gamePath').setAttribute('d', `M 0 260 Q ${x/2} ${260-y} ${x} ${260-y}`);
-
-                if(m >= cP || fCrash) {
-                    clearInterval(tick);
-                    document.getElementById('mult').innerText = "FLEW AWAY!";
-                    document.getElementById('mult').style.color = "#ef4444";
-                    gameOn = false; bets[1].on = false;
-                    setTimeout(() => {
-                        document.getElementById('plane').style.transform = "translate(0,0)";
-                        document.getElementById('gamePath').setAttribute('d', "M 0 260 Q 0 260 0 260");
-                        document.getElementById('mult').style.color = "var(--gold)";
-                        update(); loop();
-                    }, 3500);
-                }
-            }, 80);
-        }
-
-        function doBet(i) {
-            if(gameOn) {
-                if(bets[1].on) {
-                    let w = bets[1].amt * m;
-                    bal += w; wins++; bets[1].on = false;
-                    update(); tg.showAlert("WON " + w.toFixed(2) + " ETB!");
-                }
-                return;
-            }
-            if(bets[1].amt > bal) return tg.showAlert("Insufficient Funds!");
-            bal -= bets[1].amt; bets[1].on = true;
-            document.getElementById('btn1').innerText = "CASH OUT";
-            document.getElementById('btn1').style.background = "#ea580c";
-            update();
-        }
-
-        function switchW(isDep) {
-            document.getElementById('depView').classList.toggle('hidden', !isDep);
-            document.getElementById('wdView').classList.toggle('hidden', isDep);
-            document.getElementById('depTab').classList.toggle('tab-active', isDep);
-            document.getElementById('wdTab').classList.toggle('tab-active', !isDep);
-        }
-
-        function sendDep() {
-            let n = document.getElementById('dName').value, e = document.getElementById('dEft').value, a = document.getElementById('dAmt').value;
-            if(!n || !e || !a) return tg.showAlert("Fill all fields!");
-            tg.showAlert("Request Sent to Admin!");
-            logAdmin(`DEP: ${n} | EFT: ${e} | AMT: ${a}`);
-        }
-
-        function sendWD() {
-            let a = document.getElementById('wAcc').value, am = parseFloat(document.getElementById('wAmt').value);
-            if(am > bal) return tg.showAlert("Insufficient Balance!");
-            bal -= am; update();
-            tg.showAlert("Withdrawal Processed!");
-            logAdmin(`WD: ACC ${a} | AMT: ${am}`);
-        }
-
-        function nav(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(id).classList.add('active-page');
-            document.getElementById('n-'+id).classList.add('active');
-        }
-
-        function update() {
-            document.getElementById('uBal').innerText = bal.toFixed(2) + " ETB";
-            document.getElementById('wdBal').innerText = bal.toFixed(2) + " ETB";
-            document.getElementById('pBal').innerText = bal.toFixed(2);
-            document.getElementById('pWins').innerText = wins;
-            if(!bets[1].on) {
-                document.getElementById('btn1').innerText = "BET";
-                document.getElementById('btn1').style.background = "var(--btn-green)";
-            }
-        }
-
-        function toggleTheme() { document.body.classList.toggle('light-mode'); }
-        function forceCrash() { fCrash = true; }
-        function logAdmin(m) { document.getElementById('admLogs').innerHTML += `<br>> ${m}`; }
-        function genTop() {
-            const names = ["@Lemi_K", "@Samuel_Eth", "@Hana_V", "@Alex_2026", "@Mesi_Gold", "@Dawit_F"];
-            const list = document.getElementById('winnersList');
-            for(let i=4; i<=50; i++) {
-                list.innerHTML += `<div class="p-4 bg-zinc-900/30 rounded-2xl flex justify-between border border-white/5">
-                    <span class="text-sm font-bold">#${i} ${names[i%names.length]} <i class="fa-solid fa-circle-check verify-badge"></i></span>
-                    <span class="gold-text font-black">${(Math.random()*45000 + 100).toFixed(0)} ETB</span>
-                </div>`;
-            }
-        }
-
-        function setB(i, a) { bets[1].amt = a; }
-        init();
+        // Simple smooth scroll and live clock (demo)
+        console.log("%cBETWIN Tips በተሳካ ሁኔታ ተከፍቷል! 🔥", "color:#00b894; font-size:16px;");
+        
+        // Fake live update every 30 seconds
+        setInterval(() => {
+            console.log("አዲስ ትንበያ ተጨምሯል...");
+        }, 30000);
     </script>
 </body>
 </html>
