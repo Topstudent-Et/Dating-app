@@ -3,290 +3,306 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#ffd700">
-    <title>AVIA-MASTER ELITE | 24/7 Global Crash Game</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <title>AVIATOR GOLD ELITE ©2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
-        body { background: radial-gradient(circle at 20% 30%, #0a0a2a, #03050b); font-family: 'Inter', sans-serif; color: white; overflow-x: hidden; padding-top: 80px; }
-        .font-crash { font-family: 'Orbitron', monospace; letter-spacing: 2px; }
-        .glass-card { background: rgba(255,255,255,0.06); backdrop-filter: blur(12px); border: 1px solid rgba(255,215,0,0.25); border-radius: 32px; transition: 0.2s; }
-        .gold-text { background: linear-gradient(135deg, #ffd700, #ff8c00); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 0 8px rgba(255,215,0,0.3); }
-        .gold-border { border: 1px solid rgba(255,215,0,0.5); box-shadow: 0 0 20px rgba(255,215,0,0.2); }
-        .game-container { background: rgba(0,0,0,0.5); border-radius: 32px; padding: 20px; margin-bottom: 20px; border: 2px solid #ffd700; box-shadow: 0 0 25px rgba(255,215,0,0.3); }
-        .game-canvas { height: 200px; position: relative; }
-        #gamePath { stroke-width: 6; fill: none; filter: drop-shadow(0 0 6px currentColor); }
-        .trail-real { stroke: #00ff66; }
-        .trail-demo { stroke: #ff4444; }
-        .rocket { position: absolute; bottom: 20px; left: 20px; font-size: 48px; transition: transform 0.02s linear, opacity 0.2s; opacity: 1; }
-        .rocket-hidden { opacity: 0; }
-        .chip-btn { background: rgba(255,255,255,0.12); border: none; padding: 10px; border-radius: 16px; font-weight: 700; font-size: 14px; color: white; cursor: pointer; transition: 0.1s; }
-        .chip-btn.active-green { background: #00ff66; color: black; }
-        .bet-btn { background: #00ff66; border: none; padding: 14px 20px; border-radius: 28px; font-weight: 900; font-size: 24px; color: black; cursor: pointer; width: 150px; text-align: center; }
-        .bet-btn.cashout { background: #f97316; color: white; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 70px; display: flex; justify-content: space-around; align-items: center; background: rgba(10,10,20,0.95); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,215,0,0.3); z-index: 1000; }
-        .nav-item { font-size: 26px; color: #aaa; transition: 0.2s; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-        .nav-item span { font-size: 10px; font-weight: bold; }
-        .nav-item.active { color: #ffd700; transform: translateY(-3px); }
-        .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.95); padding: 10px 20px; border-radius: 60px; z-index: 2000; font-size: 13px; animation: fadeUp 0.2s ease; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
-        .verify-badge { background: linear-gradient(135deg, #38bdf8, #2dd4bf); padding: 2px 12px; border-radius: 30px; font-size: 9px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
-        .mode-toggle { background: rgba(255,255,255,0.12); border-radius: 40px; padding: 4px; display: inline-flex; }
-        .mode-opt { padding: 6px 18px; border-radius: 30px; font-size: 12px; font-weight: bold; cursor: pointer; }
-        .mode-opt.active { background: #00ff66; color: black; }
-        .admin-input { background: rgba(0,0,0,0.6); border: 1px solid #ffd700; border-radius: 12px; padding: 8px; color: white; width: 100%; margin-top: 5px; }
-        .history-chip { background: rgba(0,0,0,0.6); border-left: 3px solid #ffd700; padding: 4px 12px; border-radius: 40px; font-weight: 600; font-size: 0.85rem; display: inline-block; margin-right: 8px; margin-bottom: 8px; }
-        .podium { display: flex; justify-content: center; align-items: flex-end; gap: 20px; margin: 30px 0 40px; flex-wrap: wrap; }
-        .podium-card { text-align: center; padding: 20px 12px; border-radius: 48px; width: 150px; transition: 0.3s; }
-        .podium-card.first { background: linear-gradient(145deg, #ffd700, #b8860b); box-shadow: 0 20px 35px -10px rgba(255,215,0,0.5); transform: scale(1.05); }
-        .podium-card.second { background: linear-gradient(145deg, #c0c0c0, #808080); }
-        .podium-card.third { background: linear-gradient(145deg, #cd7f32, #8b4513); }
-        .podium-avatar { width: 75px; height: 75px; margin: 0 auto 10px; background: rgba(0,0,0,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 42px; border: 2px solid rgba(255,255,255,0.5); }
-        .first .podium-avatar { width: 95px; height: 95px; font-size: 58px; }
-        .podium-name { font-weight: 800; font-size: 1rem; margin-top: 6px; }
-        .podium-amount { font-weight: 900; font-size: 0.85rem; }
-        .wobble { animation: wobble 2.2s infinite ease-in-out; }
-        .first.wobble { animation-duration: 2s; }
-        .second.wobble { animation-duration: 2.4s; }
-        .third.wobble { animation-duration: 2.8s; }
-        @keyframes wobble { 0%,100% { transform: translateY(0) rotate(0deg); } 25% { transform: translateY(-6px) rotate(1deg); } 75% { transform: translateY(-3px) rotate(-1deg); } }
-        .winner-list-item { background: rgba(255,255,255,0.05); border-radius: 60px; padding: 8px 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-        @media (max-width: 550px) { .podium-card { width: 110px; padding: 12px 6px; } .podium-avatar { width: 55px; height: 55px; font-size: 32px; } .first .podium-avatar { width: 70px; height: 70px; font-size: 44px; } .bet-btn { width: 130px; font-size: 20px; } }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;700;900&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; transition: background 0.3s, color 0.3s; }
+        :root { --gold: #FFD700; --gold-dark: #B8860B; --bg: #050505; --text: #ffffff; --card: rgba(255,255,255,0.05); }
+        body.light-mode { --bg: #ffffff; --text: #050505; --card: rgba(0,0,0,0.05); }
+
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; }
+        .font-game { font-family: 'Orbitron', sans-serif; }
+        
+        /* Golden Luxury UI */
+        .gold-btn { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); color: #000; font-weight: 900; border-radius: 18px; box-shadow: 0 4px 15px rgba(184, 134, 11, 0.4); }
+        .gold-text { color: var(--gold); text-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+        .gold-border { border: 2px solid var(--gold); }
+
+        /* Navigation */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 75px; display: flex; justify-content: space-around; align-items: center; background: var(--bg); border-top: 1px solid var(--gold); z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
+        .nav-item { color: #888; display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: 800; }
+        .nav-item.active { color: var(--gold); }
+
+        /* Game Area */
+        .game-area { background: #000; border-radius: 30px; position: relative; height: 240px; overflow: hidden; border: 2px solid var(--gold); }
+        #gamePath { stroke: var(--gold); stroke-width: 6; fill: none; filter: drop-shadow(0 0 10px var(--gold)); }
+        #plane { position: absolute; font-size: 45px; z-index: 10; }
+
+        /* Pages */
+        .page { display: none; padding: 16px; height: calc(100vh - 75px); overflow-y: auto; padding-top: 90px; }
+        .active-page { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Podium */
+        .podium-container { display: flex; justify-content: center; align-items: flex-end; gap: 10px; height: 220px; margin-bottom: 30px; }
+        .podium-item { display: flex; flex-direction: column; align-items: center; animation: wobble 3s infinite ease-in-out; }
+        @keyframes wobble { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        /* Forms */
+        input { background: var(--card); border: 1px solid var(--gold); padding: 12px; border-radius: 12px; color: var(--text); width: 100%; outline: none; }
+        
+        .verify-badge { color: #38bdf8; font-size: 12px; margin-left: 4px; }
     </style>
 </head>
-<body>
+<body class="dark-mode">
 
-<!-- Header -->
-<div class="fixed top-0 left-0 right-0 z-50 px-4 py-3 flex justify-between items-center border-b border-white/10 backdrop-blur-xl bg-black/40">
-    <div class="flex items-center gap-3">
-        <div id="userAvatar" class="w-10 h-10 rounded-full bg-gradient-to-r from-red-500 to-pink-500 flex items-center justify-center text-xl overflow-hidden">
-            <img id="avatarImg" style="display:none; width:100%; height:100%; object-fit:cover;">
-            <span id="avatarPlaceholder">👤</span>
+    <header class="fixed top-0 w-full p-4 flex justify-between items-center z-[1100] backdrop-blur-xl border-b border-gold/20">
+        <div class="flex items-center gap-3">
+            <div id="uPfp" class="w-10 h-10 rounded-full bg-zinc-800 border-2 border-gold flex items-center justify-center overflow-hidden">👤</div>
+            <div>
+                <p id="uBal" class="gold-text font-black text-lg">0.00 ETB</p>
+                <button onclick="refreshBal()" class="text-[9px] font-bold opacity-50 uppercase tracking-tighter"><i class="fa-solid fa-rotate"></i> REFRESH BALANCE</button>
+            </div>
         </div>
-        <div>
-            <div class="flex items-center gap-2"><span id="userName" class="font-bold text-sm">@User</span><span class="verify-badge"><i class="fas fa-check-circle"></i> VERIFIED</span></div>
-            <div><span id="balanceDisplay" class="text-green-400 font-black text-lg">0 ETB</span></div>
+        <div class="flex gap-2">
+            <button onclick="toggleTheme()" class="w-10 h-10 rounded-full gold-border flex items-center justify-center"><i class="fa-solid fa-circle-half-stroke"></i></button>
+            <div class="flex bg-zinc-900/50 p-1 rounded-full border border-gold/30">
+                <button onclick="setMode(true)" id="rBtn" class="px-3 py-1 bg-green-500 text-black text-[9px] font-black rounded-full">REAL</button>
+                <button onclick="setMode(false)" id="dBtn" class="px-3 py-1 text-zinc-500 text-[9px] font-black rounded-full">DEMO</button>
+            </div>
         </div>
-    </div>
-    <div class="flex items-center gap-2">
-        <button id="soundToggle" class="text-xl"><i class="fas fa-volume-up"></i></button>
-        <div class="mode-toggle" id="modeToggle">
-            <div class="mode-opt active" data-mode="real">REAL</div>
-            <div class="mode-opt" data-mode="demo">DEMO</div>
+    </header>
+
+    <section id="play" class="page active-page">
+        <div class="mb-4 p-3 gold-border rounded-2xl bg-gradient-to-r from-yellow-500/10 to-transparent flex items-center gap-3">
+            <span class="text-2xl">🏆</span>
+            <p class="text-xs font-black italic gold-text uppercase">Win Up To 50,000 ETB Daily! / በቀን እስከ 50,000 ብር ያሸንፉ!</p>
         </div>
-    </div>
-</div>
 
-<!-- HOME PAGE -->
-<div id="homePage" class="page active-page" style="padding: 80px 16px 90px 16px;">
-    <div class="safety-banner" style="background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,100,0,0.15)); border:1px solid rgba(255,215,0,0.3); border-radius:60px; padding:12px 20px; text-align:center; margin-bottom:24px;">
-        <div class="font-bold text-lg gold-text">🏆 UP TO 50,000 ETB WIN PER DAY!</div>
-        <div class="text-sm opacity-90">PLAY & WIN REAL MONEY</div>
-        <div class="text-xs opacity-70 mt-1">Live Players: <span id="livePlayerCount">2,000+</span> active now</div>
-    </div>
-
-    <div class="glass-card p-3 mb-4">
-        <div class="flex items-center gap-2 mb-2"><i class="fas fa-chart-line text-yellow-400"></i><span class="font-bold text-sm">LAST ROUNDS</span></div>
-        <div id="historyContainer" class="flex flex-wrap gap-2 max-h-20 overflow-y-auto"></div>
-    </div>
-
-    <div class="game-container gold-border">
-        <div class="flex justify-between items-center mb-2"><span class="text-sm font-bold gold-text"><i class="fas fa-plane"></i> AVIATOR CRASH GAME</span><span id="roundTimer" class="text-xs text-blue-400">Next round: --</span></div>
-        <div class="game-canvas">
-            <svg width="100%" height="100%" style="position:absolute; top:0; left:0;"><path id="gamePath" d="M 0 180 Q 0 180 0 180"/></svg>
-            <div id="multiplierText" class="absolute inset-0 flex items-center justify-center"><span class="font-crash text-5xl font-black drop-shadow-lg gold-text">1.00x</span></div>
-            <div id="rocket" class="rocket">✈️</div>
-            <div id="countdownOverlay" class="absolute inset-0 flex items-center justify-center bg-black/70 rounded-3xl hidden"><span id="countdownNumber" class="font-crash text-6xl font-black text-blue-400">5</span></div>
+        <div class="game-area mb-6">
+            <div class="absolute top-4 left-4 flex items-center gap-2 z-20 bg-black/40 p-2 rounded-full">
+                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span class="text-[9px] font-bold text-white">2,481 LIVE PLAYERS</span>
+            </div>
+            <svg width="100%" height="100%" class="absolute"><path id="gamePath" d="M 0 240 Q 0 240 0 240" /></svg>
+            <div id="mText" class="font-game text-6xl italic absolute inset-0 flex items-center justify-center gold-text">1.00x</div>
+            <div id="plane" class="bottom-6 left-6">✈️</div>
         </div>
-    </div>
 
-    <div class="glass-card p-4 mb-3">
-        <div class="flex justify-between items-center mb-3"><span class="text-sm"><i class="fas fa-arrow-left"></i> LEFT SLOT</span><span id="autoCashLabel" class="text-xs text-yellow-400">⚡ AUTO: OFF</span></div>
-        <div class="flex gap-3"><div class="flex-1 grid grid-cols-4 gap-2"><button data-slot="1" data-amount="10" class="chip-btn bet-amount">10</button><button data-slot="1" data-amount="50" class="chip-btn bet-amount">50</button><button data-slot="1" data-amount="100" class="chip-btn bet-amount">100</button><button data-slot="1" data-amount="500" class="chip-btn bet-amount">500</button></div><button id="betBtn1" class="bet-btn">BET</button></div>
-        <div class="grid grid-cols-4 gap-2 mt-3"><button data-slot="1" data-auto="2" class="chip-btn auto-cash">2x auto</button><button data-slot="1" data-auto="4" class="chip-btn auto-cash">4x auto</button><button data-slot="1" data-auto="8" class="chip-btn auto-cash">8x auto</button><button data-slot="1" data-auto="0" class="chip-btn auto-cash">OFF</button></div>
-    </div>
-    <div class="glass-card p-4 mb-3">
-        <div class="flex justify-between items-center mb-3"><span class="text-sm"><i class="fas fa-arrow-right"></i> RIGHT SLOT</span><span id="autoCashLabel2" class="text-xs text-yellow-400">⚡ AUTO: OFF</span></div>
-        <div class="flex gap-3"><div class="flex-1 grid grid-cols-4 gap-2"><button data-slot="2" data-amount="10" class="chip-btn bet-amount">10</button><button data-slot="2" data-amount="50" class="chip-btn bet-amount">50</button><button data-slot="2" data-amount="100" class="chip-btn bet-amount">100</button><button data-slot="2" data-amount="500" class="chip-btn bet-amount">500</button></div><button id="betBtn2" class="bet-btn">BET</button></div>
-        <div class="grid grid-cols-4 gap-2 mt-3"><button data-slot="2" data-auto="2" class="chip-btn auto-cash">2x auto</button><button data-slot="2" data-auto="4" class="chip-btn auto-cash">4x auto</button><button data-slot="2" data-auto="8" class="chip-btn auto-cash">8x auto</button><button data-slot="2" data-auto="0" class="chip-btn auto-cash">OFF</button></div>
-    </div>
-    <div class="glass-card p-3"><div class="flex items-center gap-2 mb-2"><i class="fas fa-fire text-red-500"></i><span class="text-sm font-bold">LIVE WINNERS</span></div><div id="liveFeed" class="space-y-1 max-h-32 overflow-y-auto"></div></div>
-</div>
+        <div class="space-y-4">
+            <div class="p-3 rounded-2xl bg-zinc-900/30 border border-gold/10 flex gap-3">
+                <div class="flex-1 grid grid-cols-2 gap-2">
+                    <button onclick="setB(1,100)" class="bg-zinc-800/50 py-3 rounded-xl text-xs font-bold gold-text border border-gold/20">100</button>
+                    <button onclick="setB(1,1000)" class="bg-zinc-800/50 py-3 rounded-xl text-xs font-bold gold-text border border-gold/20">1000</button>
+                </div>
+                <button id="btn1" onclick="doBet(1)" class="gold-btn px-8">BET</button>
+            </div>
+            <div class="p-3 rounded-2xl bg-zinc-900/30 border border-gold/10 flex gap-3">
+                <div class="flex-1 grid grid-cols-2 gap-2">
+                    <button onclick="setB(2,100)" class="bg-zinc-800/50 py-3 rounded-xl text-xs font-bold gold-text border border-gold/20">100</button>
+                    <button onclick="setB(2,1000)" class="bg-zinc-800/50 py-3 rounded-xl text-xs font-bold gold-text border border-gold/20">1000</button>
+                </div>
+                <button id="btn2" onclick="doBet(2)" class="gold-btn px-8">BET</button>
+            </div>
+        </div>
+    </section>
 
-<!-- TOP WINNERS PAGE -->
-<div id="topPage" class="page" style="padding: 80px 16px 90px 16px; display: none;">
-    <div class="glass-card p-4 text-center mb-4 gold-border"><div class="text-xl font-bold gold-text">🏆 TOP WINNERS 🏅</div><div class="text-xs opacity-70">Celebrating the best players</div></div>
-    <div class="podium" id="podiumContainer"></div>
-    <div class="mt-6"><div class="flex items-center gap-2 mb-3"><i class="fas fa-list-ol text-yellow-400"></i><span class="font-bold">Other Winners</span></div><div id="topList" class="space-y-2 max-h-[400px] overflow-y-auto"></div></div>
-</div>
+    <section id="top" class="page">
+        <div class="podium-container">
+            <div class="podium-item" style="animation-delay: 0.2s">
+                <div class="w-16 h-16 rounded-full border-4 border-zinc-400 overflow-hidden mb-2">👤</div>
+                <p class="text-[10px] font-black mb-2">Samuel_K <i class="fa-solid fa-circle-check verify-badge"></i></p>
+                <div class="w-16 h-24 bg-zinc-500/20 gold-border rounded-t-xl flex justify-center pt-2 font-black text-xl">2</div>
+            </div>
+            <div class="podium-item">
+                <span class="text-3xl mb-1">👑</span>
+                <div class="w-20 h-20 rounded-full border-4 border-gold overflow-hidden mb-2 shadow-[0_0_20px_#FFD700]">👤</div>
+                <p class="text-xs font-black mb-2">Dawit_F <i class="fa-solid fa-circle-check verify-badge"></i></p>
+                <div class="w-20 h-32 bg-gold/20 gold-border rounded-t-xl flex justify-center pt-2 font-black text-3xl">1</div>
+            </div>
+            <div class="podium-item" style="animation-delay: 0.4s">
+                <div class="w-14 h-14 rounded-full border-4 border-orange-800 overflow-hidden mb-2">👤</div>
+                <p class="text-[10px] font-black mb-2">Hana_T <i class="fa-solid fa-circle-check verify-badge"></i></p>
+                <div class="w-14 h-16 bg-orange-900/20 gold-border rounded-t-xl flex justify-center pt-2 font-black text-lg">3</div>
+            </div>
+        </div>
+        <div id="winnersList" class="space-y-2 pb-10"></div>
+    </section>
 
-<!-- WALLET PAGE -->
-<div id="walletPage" class="page" style="padding: 80px 16px 90px 16px; display: none;">
-    <div class="flex gap-3 mb-4"><button id="depositTab" class="flex-1 py-3 rounded-2xl font-black bg-red-600">💰 DEPOSIT</button><button id="withdrawTab" class="flex-1 py-3 rounded-2xl font-black bg-zinc-800">💸 WITHDRAW</button></div>
-    <div id="depositSection"><div class="bg-yellow-500/20 p-2 rounded-xl text-center text-xs mb-3">⚠️ Minimum deposit: 50 ETB</div><div id="bankAccountsList" class="space-y-2 mb-3"></div><input type="text" id="depositName" placeholder="Full Name" class="w-full bg-white/10 p-3 rounded-xl outline-none"><input type="text" id="depositRef" placeholder="Transaction Reference" class="w-full bg-white/10 p-3 rounded-xl mt-2 outline-none"><input type="number" id="depositAmount" placeholder="Amount (ETB) min 50" class="w-full bg-white/10 p-3 rounded-xl mt-2 outline-none"><button id="submitDeposit" class="w-full mt-4 py-3 bg-red-600 rounded-2xl font-black">SUBMIT DEPOSIT</button></div>
-    <div id="withdrawSection" class="hidden"><input type="text" id="withdrawAccount" placeholder="CBE / Telebirr Account" class="w-full bg-white/10 p-3 rounded-xl outline-none"><input type="number" id="withdrawAmount" placeholder="Amount (ETB)" class="w-full bg-white/10 p-3 rounded-xl mt-2 outline-none"><div id="withdrawBalanceInfo" class="text-xs text-center mt-2"></div><button id="submitWithdraw" class="w-full mt-4 py-3 bg-green-600 rounded-2xl font-black text-black">CONFIRM WITHDRAW</button></div>
-    <div class="glass-card p-3 mt-4"><div class="flex items-center gap-2 mb-2"><i class="fas fa-clock text-blue-400"></i><span class="text-xs font-bold">Recent Transactions</span></div><div id="txList" class="space-y-1 max-h-48 overflow-y-auto"></div></div>
-</div>
+    <section id="wallet" class="page">
+        <div class="space-y-6">
+            <div class="p-6 rounded-3xl bg-zinc-900/40 gold-border">
+                <h3 class="gold-text font-black mb-4">DEPOSIT (ገንዘብ ያስገቡ)</h3>
+                <div class="space-y-3">
+                    <input id="depName" placeholder="Your Name / ስም">
+                    <input id="depEFT" placeholder="EFT/Transaction Number">
+                    <input id="depAmt" type="number" placeholder="Amount / የገንዘብ መጠን">
+                    <p class="text-[10px] opacity-50 mb-2">Pay to: <span id="admBank">CBE 1000179571815</span></p>
+                    <button onclick="submitDep()" class="gold-btn w-full py-4 uppercase">Submit Deposit</button>
+                </div>
+            </div>
 
-<!-- PROFILE PAGE -->
-<div id="profilePage" class="page" style="padding: 80px 16px 90px 16px; display: none;">
-    <div class="glass-card p-5 text-center"><div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-r from-red-500 to-pink-500 flex items-center justify-center text-3xl overflow-hidden"><img id="profileAvatar" style="display:none; width:100%; height:100%; object-fit:cover;"><span id="profileAvatarPlaceholder">👤</span></div><h3 id="profileName" class="text-xl font-black mt-2">@User</h3><div class="flex justify-center mt-1"><span class="verify-badge"><i class="fas fa-check-circle"></i> VERIFIED</span></div></div>
-    <div class="grid grid-cols-2 gap-3 mt-4"><div class="glass-card p-3 text-center"><div class="text-xs opacity-60">Balance</div><div id="profileBalance" class="text-green-400 font-black text-xl">0 ETB</div></div><div class="glass-card p-3 text-center"><div class="text-xs opacity-60">Total Games</div><div id="totalGames" class="font-black text-xl">0</div></div><div class="glass-card p-3 text-center"><div class="text-xs opacity-60">Total Won</div><div id="totalWon" class="text-green-400 font-black text-xl">0 ETB</div></div></div>
-    <div class="glass-card p-4 mt-4"><div class="flex items-center gap-2"><i class="fas fa-users text-blue-400"></i><span class="font-bold">Invite Friends</span><span class="text-xs text-green-400">+5 ETB each (max 100)</span></div><div class="flex gap-2 mt-2"><input type="text" id="refLink" readonly class="flex-1 bg-white/10 p-2 rounded-xl text-xs"><button id="copyRef" class="bg-blue-600 px-4 rounded-xl"><i class="fas fa-copy"></i></button></div><div class="text-center text-xs mt-2">Your referrals: <span id="refCount">0</span> | Bonus: <span id="refBonus">0</span> ETB</div><div class="text-center text-[10px] opacity-60 mt-1">Referral bonus withdrawable after 10 games</div></div>
-    <div id="adminPanel" class="glass-card p-4 mt-4 gold-border hidden"><div class="font-bold gold-text text-lg mb-3">⚙️ ADMIN PANEL</div><div class="grid grid-cols-2 gap-2 text-sm mb-3"><div class="bg-yellow-500/10 p-2 rounded">Total Deposit: <span id="adminDeposit" class="gold-text">0</span> ETB</div><div class="bg-yellow-500/10 p-2 rounded">Total Withdraw: <span id="adminWithdraw" class="gold-text">0</span> ETB</div><div class="bg-yellow-500/10 p-2 rounded">Admin Profit (20%): <span id="adminProfit" class="gold-text">0</span> ETB</div></div>
-    <div class="mb-3"><label class="text-xs">🎮 Set Crash Point (1.2 - 20):</label><input type="number" id="adminCrashPoint" class="admin-input" step="0.1" min="1.2" max="20"><button id="setCrashBtn" class="w-full mt-1 py-1 bg-red-600 rounded-xl text-xs">Apply Crash Point</button></div>
-    <div class="mb-3"><label class="text-xs">🏦 Bank Accounts (JSON array):</label><textarea id="bankAccountsInput" rows="2" class="admin-input" placeholder='[{"name":"CBE - DAWIT FIKADU","number":"1000179571815","icon":"building-columns"},{"name":"Telebirr - DAWIT FIKADU","number":"0906067696","icon":"mobile-alt"}]'></textarea><button id="saveBankAccounts" class="w-full mt-1 py-1 bg-blue-600 rounded-xl text-xs">Save Accounts</button></div>
-    <div class="mb-3 flex items-center justify-between"><span class="text-xs">🔗 Stop Referral Counting:</span><button id="toggleReferralStop" class="px-3 py-1 bg-yellow-600 rounded-xl text-xs">STOP</button></div>
-    <div class="mb-2"><span class="text-xs">📋 Pending Requests</span></div><div id="pendingRequests" class="space-y-1 max-h-32 overflow-y-auto mb-3"></div><button id="exportReport" class="w-full py-1 bg-blue-600 rounded-xl text-xs">📊 Export Report</button></div>
-</div>
+            <div class="p-6 rounded-3xl bg-zinc-900/40 gold-border">
+                <h3 class="gold-text font-black mb-4">WITHDRAW (ገንዘብ ያውጡ)</h3>
+                <div class="space-y-3">
+                    <input id="wdAcc" placeholder="Bank Account Number">
+                    <input id="wdAmt" type="number" placeholder="Amount to Withdraw">
+                    <button onclick="submitWD()" class="gold-btn w-full py-4 uppercase">Withdraw Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- Bottom Navigation -->
-<div class="bottom-nav"><div class="nav-item active" data-page="home"><i class="fas fa-gamepad"></i><span>Games</span></div><div class="nav-item" data-page="top"><i class="fas fa-trophy"></i><span>Top</span></div><div class="nav-item" data-page="wallet"><i class="fas fa-wallet"></i><span>Wallet</span></div><div class="nav-item" data-page="profile"><i class="fas fa-user"></i><span>Profile</span></div></div>
+    <section id="admin" class="page">
+        <div class="p-6 rounded-3xl border-2 border-red-600 bg-red-600/5 space-y-4">
+            <h2 class="text-red-500 font-black text-xl">ADMIN COMMAND CENTER</h2>
+            <button onclick="forceCrash()" class="w-full py-4 bg-red-600 text-white rounded-xl font-black">FORCE CRASH NOW</button>
+            <hr class="border-red-600/20">
+            <div>
+                <p class="text-xs font-bold mb-2">CHANGE BANK INFO</p>
+                <input id="newBank" placeholder="e.g. Telebirr 0906067696" class="mb-2">
+                <button onclick="updateBank()" class="w-full py-2 bg-zinc-800 rounded-lg text-xs font-bold">UPDATE BANK</button>
+            </div>
+            <div id="adminLog" class="bg-black p-4 rounded-xl h-40 overflow-y-auto text-[10px] font-mono text-green-500">
+                System Initialized...<br>Awaiting Requests...
+            </div>
+        </div>
+    </section>
 
-<script>
-    // ----------------------------- TELEGRAM & STORAGE -------------------------
-    const tg = window.Telegram.WebApp;
-    tg.expand();
-    tg.enableClosingConfirmation();
-    let tgUser = null;
-    try { tgUser = tg.initDataUnsafe?.user; } catch(e) {}
-    const userId = tgUser ? tgUser.id : 'guest_' + Date.now();
-    const username = tgUser ? (tgUser.username || tgUser.first_name || 'User') : 'Guest';
-    const photoUrl = tgUser?.photo_url || null;
+    <nav class="nav-bar">
+        <div onclick="nav('play')" class="nav-item active" id="n-play"><i class="fa-solid fa-jet-fighter-up"></i><span>PLAY</span></div>
+        <div onclick="nav('top')" class="nav-item" id="n-top"><i class="fa-solid fa-trophy"></i><span>WINNERS</span></div>
+        <div onclick="nav('wallet')" class="nav-item" id="n-wallet"><i class="fa-solid fa-wallet"></i><span>WALLET</span></div>
+        <div onclick="nav('admin')" class="nav-item" id="n-admin"><i class="fa-solid fa-unlock-keyhole"></i><span>ADMIN</span></div>
+    </nav>
 
-    const STORAGE = {
-        realBal: `real_bal_${userId}`, demoBal: `demo_bal_${userId}`, totalWon: `total_won_${userId}`,
-        totalGames: `total_games_${userId}`, history: `history_${userId}`, tx: `tx_${userId}`,
-        refCount: `ref_count_${userId}`, refBonus: `ref_bonus_${userId}`, totalPlayed: `total_played_${userId}`
-    };
-    let realBalance = parseFloat(localStorage.getItem(STORAGE.realBal)) || 100;
-    let demoBalance = parseFloat(localStorage.getItem(STORAGE.demoBal)) || 1000;
-    let totalWon = parseFloat(localStorage.getItem(STORAGE.totalWon)) || 0;
-    let totalGames = parseInt(localStorage.getItem(STORAGE.totalGames)) || 0;
-    let gameHistory = JSON.parse(localStorage.getItem(STORAGE.history)) || [];
-    let transactions = JSON.parse(localStorage.getItem(STORAGE.tx)) || [];
-    let referralCount = parseInt(localStorage.getItem(STORAGE.refCount)) || 0;
-    let referralBonus = parseFloat(localStorage.getItem(STORAGE.refBonus)) || 0;
-    let totalPlayedGames = parseInt(localStorage.getItem(STORAGE.totalPlayed)) || 0;
+    <script>
+        const tg = window.Telegram.WebApp; tg.expand();
+        let isReal = true, gameActive = false, m = 1.00;
+        let rBal = 0.00, dBal = 50.00;
+        let bets = { 1: { on: false, amt: 100 }, 2: { on: false, amt: 100 } };
+        let forceCr = false;
 
-    let adminTotalDeposit = parseFloat(localStorage.getItem('admin_deposit')) || 0;
-    let adminTotalWithdraw = parseFloat(localStorage.getItem('admin_withdraw')) || 0;
-    let adminProfitPool = parseFloat(localStorage.getItem('admin_profit')) || 0;
-    let pendingTx = JSON.parse(localStorage.getItem('pending_tx')) || [];
-    let bankAccounts = JSON.parse(localStorage.getItem('bank_accounts')) || [
-        { name: "CBE - DAWIT FIKADU", number: "1000179571815", icon: "building-columns" },
-        { name: "Telebirr - DAWIT FIKADU", number: "0906067696", icon: "mobile-alt" }
-    ];
-    let referralStopped = localStorage.getItem('referral_stopped') === 'true';
-    let customCrashPoint = parseFloat(localStorage.getItem('custom_crash_point')) || null;
-    const isAdmin = (username === 'Dawit_Fikadu21');
-    if(isAdmin) document.getElementById('adminPanel').classList.remove('hidden');
+        function init() {
+            const u = tg.initDataUnsafe?.user;
+            if(u) {
+                if(u.photo_url) document.querySelectorAll('.podium-item div:first-child, #uPfp').forEach(el => el.innerHTML = `<img src="${u.photo_url}" class="w-full h-full object-cover">`);
+                if(u.username !== "Dawit_Fikadu21") document.getElementById('n-admin').style.display = 'none';
+            }
+            updateUI(); genWinners(); loop();
+        }
 
-    // ----------------------------- SOUND -------------------------
-    let soundEnabled = true;
-    let audioCtx = null;
-    function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-    function playBeep(freq, duration, vol=0.2) { if(!soundEnabled) return; try { initAudio(); const now = audioCtx.currentTime; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.connect(gain); gain.connect(audioCtx.destination); osc.frequency.value = freq; gain.gain.setValueAtTime(vol, now); gain.gain.exponentialRampToValueAtTime(0.0001, now + duration); osc.start(); osc.stop(now + duration); } catch(e) {} }
-    function playWin() { playBeep(880,0.3,0.3); setTimeout(()=>playBeep(1320,0.5,0.3),200); }
-    function playCrash() { playBeep(220,0.6,0.4); }
-    function playBet() { playBeep(660,0.1,0.2); }
-    document.getElementById('soundToggle').addEventListener('click', () => { soundEnabled = !soundEnabled; document.getElementById('soundToggle').innerHTML = soundEnabled ? '<i class="fas fa-volume-up"></i>' : '<i class="fas fa-volume-mute"></i>'; showToast(soundEnabled ? 'Sound ON' : 'Sound OFF'); });
+        function loop() { if(!gameActive) setTimeout(start, 4000); }
 
-    // ----------------------------- GLOBAL UI -------------------------
-    const userNameSpan = document.getElementById('userName');
-    const balanceSpan = document.getElementById('balanceDisplay');
-    const profileBalance = document.getElementById('profileBalance');
-    const totalGamesSpan = document.getElementById('totalGames');
-    const totalWonSpan = document.getElementById('totalWon');
-    const liveFeedDiv = document.getElementById('liveFeed');
-    const multiplierSpan = document.getElementById('multiplierText');
-    const rocket = document.getElementById('rocket');
-    const gamePath = document.getElementById('gamePath');
-    const countdownOverlay = document.getElementById('countdownOverlay');
-    const countdownNumber = document.getElementById('countdownNumber');
-    let isRealMode = true;
-    let gameActive = false;
-    let currentMultiplier = 1.00;
-    let crashPoint = customCrashPoint || 1.2;
-    let gameLoop = null, countdownLoop = null, countdownActive = false;
-    let bets = { 1: { active: false, amount: 10, autoCash: 0 }, 2: { active: false, amount: 10, autoCash: 0 } };
-    let virtualPlayers = [];
-    for(let i=0;i<40;i++) virtualPlayers.push({ name: `Player${i}`, bet: Math.floor(Math.random()*60)+10, cashed: false });
-    let totalPool = 0, totalPayout = 0;
-    function resetPool() { totalPool = 0; totalPayout = 0; virtualPlayers.forEach(p => p.cashed = false); let realBet = (bets[1].active?bets[1].amount:0)+(bets[2].active?bets[2].amount:0); if(realBet>0 && isRealMode) totalPool += realBet; virtualPlayers.forEach(p => totalPool += p.bet); }
-    function simulateVirtualCashouts() { if(!gameActive) return; virtualPlayers.forEach(p => { if(!p.cashed && Math.random()<0.03 && currentMultiplier>=1.2) { let win = p.bet * currentMultiplier; totalPayout += win; p.cashed = true; addLiveFeed(p.name, win); } }); }
-    function checkHouseEdgeCrash() { return totalPool>0 && totalPayout >= totalPool*0.8; }
+        function start() {
+            gameActive = true; m = 1.00; forceCr = false;
+            let totalReal = (bets[1].on ? bets[1].amt : 0) + (bets[2].on ? bets[2].amt : 0);
+            let crashPoint = (isReal && totalReal > 0) ? 1.08 + (Math.random() * 1.2) : 1.1 + (Math.random() * 9);
 
-    // ----------------------------- UTC SYNC (24/7) -------------------------
-    function getCurrentRound() { return Math.floor(Date.now() / 30000); }
-    function getCountdownSeconds() { let elapsed = Date.now() - (getCurrentRound()*30000); if(elapsed<5000) return 5-Math.floor(elapsed/1000); return 0; }
-    function getCrashPointForRound(round) { if(customCrashPoint) return customCrashPoint; let r = ((round*123456789)%100000)/100000; let crash = 1.2 + r*18.8; return Math.min(crash,20); }
-    let currentRound = getCurrentRound();
-    let currentCrash = getCrashPointForRound(currentRound);
-    function startSync() { setInterval(() => { let newRound = getCurrentRound(); if(newRound !== currentRound) { currentRound = newRound; currentCrash = getCrashPointForRound(currentRound); if(gameActive) crashGame(true); resetGameVisual(); if(countdownLoop) clearInterval(countdownLoop); startCountdown(); } else if(!gameActive && !countdownActive && getCountdownSeconds()>0) startCountdown(); document.getElementById('livePlayerCount').innerText = (2000+Math.floor(Math.random()*500)).toLocaleString(); }, 500); }
+            let tick = setInterval(() => {
+                m += 0.04;
+                document.getElementById('mText').innerText = m.toFixed(2) + "x";
+                let x = m * 22, y = m * 16;
+                document.getElementById('plane').style.transform = `translate(${x}px, -${y}px) rotate(-15deg)`;
+                document.getElementById('gamePath').setAttribute('d', `M 0 240 Q ${x/2} ${240-y} ${x} ${240-y}`);
 
-    function startCountdown() { if(countdownActive) return; countdownActive=true; let timer=getCountdownSeconds(); if(timer<=0) timer=5; countdownOverlay.classList.remove('hidden'); const interval=setInterval(()=>{ timer--; countdownNumber.innerText=timer; if(timer<=0){ clearInterval(interval); countdownOverlay.classList.add('hidden'); countdownActive=false; startGame(); } },1000); countdownLoop=interval; }
-    function startGame() { gameActive=true; currentMultiplier=1.00; crashPoint=currentCrash; gamePath.classList.remove('trail-real','trail-demo'); gamePath.classList.add(isRealMode?'trail-real':'trail-demo'); rocket.classList.remove('rocket-hidden'); resetPool(); updateMultiplierDisplay(); gameLoop=setInterval(()=>{ if(!gameActive) return; currentMultiplier+=0.02; updateMultiplierDisplay(); animateRocket(); for(let i=1;i<=2;i++) if(bets[i].active && bets[i].autoCash>0 && currentMultiplier>=bets[i].autoCash) cashOut(i); simulateVirtualCashouts(); if(checkHouseEdgeCrash() || currentMultiplier>=crashPoint) crashGame(false); },45); }
-    function updateMultiplierDisplay() { multiplierSpan.innerHTML=`<span class="font-crash text-5xl font-black drop-shadow-lg gold-text">${currentMultiplier.toFixed(2)}x</span>`; }
-    function animateRocket() { let progress=Math.min(currentMultiplier/crashPoint,1); let x=progress*280, y=progress*150; rocket.style.transform=`translate(${x}px, -${y}px) rotate(-20deg)`; gamePath.setAttribute('d',`M 0 180 Q ${x/2} ${180-y} ${x+15} ${180-y-15}`); }
-    function cashOut(slotId) { if(!bets[slotId].active || !gameActive) return; let win = bets[slotId].amount * currentMultiplier; totalPayout += win; if(isRealMode) { realBalance += win; totalWon += win; localStorage.setItem(STORAGE.realBal, realBalance); localStorage.setItem(STORAGE.totalWon, totalWon); } else { demoBalance += win; localStorage.setItem(STORAGE.demoBal, demoBalance); } totalGames++; totalPlayedGames++; localStorage.setItem(STORAGE.totalGames, totalGames); localStorage.setItem(STORAGE.totalPlayed, totalPlayedGames); bets[slotId].active = false; updateBalanceUI(); updateBetButton(slotId); addLiveFeed(username, win); showToast(`🎉 Won ${win.toFixed(0)} ETB at ${currentMultiplier.toFixed(2)}x`); playWin(); if(win >= 300) addToTopWinners(username, win, currentMultiplier); }
-    function crashGame(forced) { gameActive=false; clearInterval(gameLoop); rocket.classList.add('rocket-hidden'); multiplierSpan.innerHTML=`<span class="font-crash text-2xl text-red-500">💥 CRASHED</span>`; if(isRealMode && !forced) { let totalRealBet=(bets[1].active?bets[1].amount:0)+(bets[2].active?bets[2].amount:0); if(totalRealBet>0){ adminProfitPool += totalRealBet*0.2; localStorage.setItem('admin_profit', adminProfitPool); if(isAdmin) updateAdminUI(); } } gameHistory.unshift({ multiplier: currentMultiplier.toFixed(2) }); if(gameHistory.length>20) gameHistory.pop(); localStorage.setItem(STORAGE.history, JSON.stringify(gameHistory)); updateHistoryUI(); playCrash(); setTimeout(()=>{ resetGameVisual(); },2000); }
-    function resetGameVisual() { rocket.style.transform='translate(0px,0px) rotate(-20deg)'; rocket.classList.remove('rocket-hidden'); gamePath.setAttribute('d','M 0 180 Q 0 180 0 180'); currentMultiplier=1.00; multiplierSpan.innerHTML=`<span class="font-crash text-5xl font-black drop-shadow-lg gold-text">1.00x</span>`; if(!gameActive && !countdownActive) startCountdown(); }
-    function handleBet(slotId) { if(gameActive) { cashOut(slotId); return; } let balance = isRealMode ? realBalance : demoBalance; if(bets[slotId].amount > balance) { showToast('❌ Insufficient balance!'); return; } if(isRealMode) { realBalance -= bets[slotId].amount; localStorage.setItem(STORAGE.realBal, realBalance); } else { demoBalance -= bets[slotId].amount; localStorage.setItem(STORAGE.demoBal, demoBalance); } bets[slotId].active = true; updateBalanceUI(); updateBetButton(slotId); showToast(`✅ ${bets[slotId].amount} ETB bet placed`); playBet(); }
+                if(m >= crashPoint || forceCr) {
+                    clearInterval(tick);
+                    document.getElementById('mText').innerText = "FLEW AWAY!";
+                    document.getElementById('mText').style.color = "#ff4444";
+                    gameActive = false;
+                    [1,2].forEach(i => bets[i].on = false);
+                    setTimeout(() => {
+                        document.getElementById('plane').style.transform = "translate(0,0)";
+                        document.getElementById('gamePath').setAttribute('d', "M 0 240 Q 0 240 0 240");
+                        document.getElementById('mText').style.color = "var(--gold)";
+                        updateUI(); loop();
+                    }, 3000);
+                }
+            }, 70);
+        }
 
-    function updateBalanceUI() { let bal = isRealMode ? realBalance : demoBalance; balanceSpan.innerText = bal.toFixed(2)+' ETB'; profileBalance.innerText = bal.toFixed(2)+' ETB'; totalGamesSpan.innerText = totalGames; totalWonSpan.innerText = totalWon.toFixed(0)+' ETB'; document.getElementById('refCount').innerText = referralCount; document.getElementById('refBonus').innerText = referralBonus; document.getElementById('withdrawBalanceInfo').innerHTML = `Your balance: ${bal.toFixed(2)} ETB`; }
-    function updateBetButton(slot) { let btn = document.getElementById(`betBtn${slot}`); if(bets[slot].active) { btn.innerText = 'CASH OUT'; btn.classList.add('cashout'); } else { btn.innerText = 'BET'; btn.classList.remove('cashout'); } }
-    function updateHistoryUI() { let container = document.getElementById('historyContainer'); container.innerHTML = ''; gameHistory.slice(0,12).forEach(h => { container.innerHTML += `<div class="history-chip">${h.multiplier}x</div>`; }); }
-    const ethiopianNames = ["Abebe","Kebede","Alemu","Melat","Fevu","Alem","Davied","John","Tigist","Selam","Biruk","Eden","Nahom","Meron","Kidus","Betty","Mikiyas","Lydia","Henok","Hana","Samuel","Ruth","Gebre","Yonas","Helen"];
-    function addLiveFeed(name, amount) { let item = document.createElement('div'); item.className = 'flex justify-between items-center p-2 rounded-xl bg-white/5'; item.innerHTML = `<div><i class="fas fa-trophy text-yellow-500 mr-1"></i><span class="font-bold">${name}</span><span class="verify-badge ml-2 text-[8px]"><i class="fas fa-check-circle"></i> VERIFIED</span></div><div class="text-green-400 font-black">+${amount.toFixed(0)} ETB</div>`; liveFeedDiv.prepend(item); if(liveFeedDiv.children.length>12) liveFeedDiv.removeChild(liveFeedDiv.lastChild); }
-    function showToast(msg) { let t=document.createElement('div'); t.className='toast'; t.innerText=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),2000); }
+        function doBet(i) {
+            if(gameActive) {
+                if(bets[i].on) {
+                    let win = bets[i].amt * m;
+                    if(isReal) rBal += win; else dBal += win;
+                    bets[i].on = false; updateUI();
+                    tg.showAlert(`WON: ${win.toFixed(2)} ETB!`);
+                }
+                return;
+            }
+            let bal = isReal ? rBal : dBal;
+            if(bets[i].amt > bal) return tg.showAlert("Insufficient Balance!");
+            if(isReal) rBal -= bets[i].amt; else dBal -= bets[i].amt;
+            bets[i].on = true; updateUI();
+            document.getElementById('btn'+i).innerText = "CASH OUT";
+            document.getElementById('btn'+i).style.background = "#f97316";
+        }
 
-    // ----------------------------- TOP WINNERS PODIUM -------------------------
-    let topWinners = JSON.parse(localStorage.getItem('top_winners')) || [];
-    function addToTopWinners(name, amount, multiplier) { topWinners.push({ name, amount, multiplier, timestamp: Date.now() }); topWinners.sort((a,b)=>b.amount - a.amount); if(topWinners.length>50) topWinners.pop(); localStorage.setItem('top_winners', JSON.stringify(topWinners)); renderPodiumAndList(); }
-    function renderPodiumAndList() { if(!document.getElementById('podiumContainer')) return; const podiumDiv=document.getElementById('podiumContainer'); const listDiv=document.getElementById('topList'); const top3=topWinners.slice(0,3); podiumDiv.innerHTML=''; const order=[1,0,2]; const classes=['second','first','third']; const icons=['🥈','👑','🥉']; for(let i=0;i<3;i++){ let winner=top3[order[i]]; if(winner){ podiumDiv.innerHTML+=`<div class="podium-card ${classes[order[i]]} wobble"><div class="podium-avatar">${icons[order[i]]}</div><div class="podium-name">${winner.name}</div><div class="podium-amount">${winner.amount.toLocaleString()} ETB</div><div class="text-[10px] opacity-80">${winner.multiplier}x</div></div>`; } else { podiumDiv.innerHTML+=`<div class="podium-card ${classes[order[i]]} wobble"><div class="podium-avatar">❓</div><div class="podium-name">---</div><div class="podium-amount">0 ETB</div></div>`; } }
-        const rest=topWinners.slice(3); listDiv.innerHTML=''; rest.forEach((w,idx)=>{ listDiv.innerHTML+=`<div class="winner-list-item"><div class="flex items-center gap-2"><span class="text-yellow-400 font-bold">#${idx+4}</span><span class="font-bold">${w.name}</span><span class="verify-badge text-[8px]"><i class="fas fa-check-circle"></i> VERIFIED</span></div><div class="text-green-400 font-black">${w.amount.toLocaleString()} ETB</div><div class="text-[10px]">${w.multiplier}x</div></div>`; }); if(rest.length===0) listDiv.innerHTML='<div class="text-center text-gray-400">More winners will appear soon</div>'; }
-    function loadTopWinnersFromStorage() { let stored=localStorage.getItem('top_winners'); if(stored) topWinners=JSON.parse(stored); else { topWinners=[{name:"DAWI_FIKADU",amount:245000,multiplier:12.4},{name:"Lemi_X",amount:124500,multiplier:8.2},{name:"Abebe_K",amount:89300,multiplier:6.7},{name:"Hana_23",amount:67200,multiplier:5.9}]; localStorage.setItem('top_winners',JSON.stringify(topWinners)); } renderPodiumAndList(); }
+        function toggleTheme() { document.body.classList.toggle('light-mode'); }
 
-    // ----------------------------- BANK ACCOUNTS & WALLET -------------------------
-    function renderBankAccounts() { let container=document.getElementById('bankAccountsList'); container.innerHTML=''; bankAccounts.forEach(acc=>{ container.innerHTML+=`<div class="glass-card p-2 flex justify-between items-center cursor-pointer" data-copy="${acc.number}"><div><i class="fas fa-${acc.icon} text-2xl mr-2"></i><span class="font-bold">${acc.name}</span><div class="text-green-400 font-bold">${acc.number}</div></div><i class="fas fa-copy text-gray-400"></i></div>`; }); document.querySelectorAll('[data-copy]').forEach(el=>{ el.addEventListener('click',()=>{ navigator.clipboard.writeText(el.dataset.copy); showToast('📋 Copied!'); }); }); }
-    function updateTransactionUI() { let container=document.getElementById('txList'); container.innerHTML=''; transactions.slice(0,8).forEach(tx=>{ let statusColor=tx.status==='completed'?'text-green-400':(tx.status==='rejected'?'text-red-400':'text-yellow-400'); container.innerHTML+=`<div class="flex justify-between text-xs p-2 bg-white/5 rounded"><span>${tx.type==='deposit'?'💰 Deposit':'💸 Withdraw'}</span><span>${tx.amount} ETB</span><span class="${statusColor}">${tx.status}</span></div>`; }); }
-    document.getElementById('submitDeposit').addEventListener('click',()=>{ let name=document.getElementById('depositName').value, ref=document.getElementById('depositRef').value, amount=parseFloat(document.getElementById('depositAmount').value); if(!name||!ref||!amount) { showToast('Fill all fields'); return; } if(amount<50){ showToast('Minimum 50 ETB'); return; } let tx={ id:Date.now(), type:'deposit', amount, status:'pending', name, ref }; pendingTx.unshift(tx); transactions.unshift(tx); localStorage.setItem('pending_tx',JSON.stringify(pendingTx)); localStorage.setItem(STORAGE.tx,JSON.stringify(transactions)); showToast('✅ Deposit request sent to admin'); updateTransactionUI(); if(isAdmin) updateAdminUI(); document.getElementById('depositName').value=''; document.getElementById('depositRef').value=''; document.getElementById('depositAmount').value=''; });
-    document.getElementById('submitWithdraw').addEventListener('click',()=>{ let acc=document.getElementById('withdrawAccount').value, amount=parseFloat(document.getElementById('withdrawAmount').value); let bal=isRealMode?realBalance:demoBalance; if(!acc||!amount){ showToast('Fill all fields'); return; } if(amount>bal){ showToast(`Insufficient balance! Your balance: ${bal.toFixed(2)} ETB`); return; } if(amount>(bal-referralBonus) && totalPlayedGames<10){ showToast('Play 10 games first to withdraw referral bonus'); return; } let tx={ id:Date.now(), type:'withdraw', amount, status:'pending', account:acc }; pendingTx.unshift(tx); transactions.unshift(tx); localStorage.setItem('pending_tx',JSON.stringify(pendingTx)); localStorage.setItem(STORAGE.tx,JSON.stringify(transactions)); showToast('✅ Withdraw request sent to admin'); updateTransactionUI(); if(isAdmin) updateAdminUI(); document.getElementById('withdrawAccount').value=''; document.getElementById('withdrawAmount').value=''; });
+        function submitDep() {
+            let n = document.getElementById('depName').value;
+            let e = document.getElementById('depEFT').value;
+            let a = document.getElementById('depAmt').value;
+            if(!n || !e || !a) return tg.showAlert("Please fill all fields!");
+            logAdmin(`DEPOSIT REQ: ${n} | EFT: ${e} | AMT: ${a}`);
+            tg.showAlert("Request Sent to Admin!");
+        }
 
-    // ----------------------------- ADMIN FUNCTIONS -------------------------
-    function updateAdminUI() { if(!isAdmin) return; document.getElementById('adminDeposit').innerText=adminTotalDeposit.toFixed(0); document.getElementById('adminWithdraw').innerText=adminTotalWithdraw.toFixed(0); document.getElementById('adminProfit').innerText=adminProfitPool.toFixed(0); document.getElementById('adminCrashPoint').value=customCrashPoint||1.2; document.getElementById('bankAccountsInput').value=JSON.stringify(bankAccounts,null,2); let pendingDiv=document.getElementById('pendingRequests'); pendingDiv.innerHTML=''; pendingTx.forEach(tx=>{ pendingDiv.innerHTML+=`<div class="flex justify-between items-center text-xs p-2 bg-white/5 rounded"><div><b>${tx.type}</b> ${tx.amount} ETB<br><span class="opacity-50">${tx.name||tx.account}</span></div><div><button data-id="${tx.id}" class="approveTx bg-green-600 px-2 py-1 rounded">✓</button><button data-id="${tx.id}" class="rejectTx bg-red-600 px-2 py-1 rounded">✗</button></div></div>`; }); document.querySelectorAll('.approveTx').forEach(btn=>{ btn.addEventListener('click',()=>{ let id=parseInt(btn.dataset.id); let tx=pendingTx.find(t=>t.id===id); if(tx){ tx.status='completed'; if(tx.type==='deposit'){ adminTotalDeposit+=tx.amount; if(isRealMode){ realBalance+=tx.amount; localStorage.setItem(STORAGE.realBal,realBalance); } } else { adminTotalWithdraw+=tx.amount; if(isRealMode){ realBalance-=tx.amount; localStorage.setItem(STORAGE.realBal,realBalance); } } updateBalanceUI(); pendingTx=pendingTx.filter(t=>t.id!==id); localStorage.setItem('pending_tx',JSON.stringify(pendingTx)); localStorage.setItem('admin_deposit',adminTotalDeposit); localStorage.setItem('admin_withdraw',adminTotalWithdraw); updateAdminUI(); updateTransactionUI(); showToast(`✅ ${tx.amount} ETB ${tx.type} approved`); } }); }); document.querySelectorAll('.rejectTx').forEach(btn=>{ btn.addEventListener('click',()=>{ let id=parseInt(btn.dataset.id); pendingTx=pendingTx.filter(t=>t.id!==id); localStorage.setItem('pending_tx',JSON.stringify(pendingTx)); updateAdminUI(); updateTransactionUI(); showToast('❌ Request rejected'); }); }); }
-    document.getElementById('setCrashBtn')?.addEventListener('click',()=>{ let val=parseFloat(document.getElementById('adminCrashPoint').value); if(val>=1.2 && val<=20){ customCrashPoint=val; localStorage.setItem('custom_crash_point',customCrashPoint); currentCrash=customCrashPoint; showToast(`Crash point set to ${customCrashPoint}x`); } else showToast('Invalid crash point (1.2 - 20)'); });
-    document.getElementById('saveBankAccounts')?.addEventListener('click',()=>{ try{ let newAcc=JSON.parse(document.getElementById('bankAccountsInput').value); bankAccounts=newAcc; localStorage.setItem('bank_accounts',JSON.stringify(bankAccounts)); renderBankAccounts(); showToast('Bank accounts saved'); } catch(e){ showToast('Invalid JSON'); } });
-    document.getElementById('toggleReferralStop')?.addEventListener('click',()=>{ referralStopped=!referralStopped; localStorage.setItem('referral_stopped',referralStopped); document.getElementById('toggleReferralStop').innerText=referralStopped?'START':'STOP'; showToast(referralStopped?'Referral counting STOPPED':'Referral counting ACTIVE'); });
-    document.getElementById('exportReport')?.addEventListener('click',()=>{ console.log('ADMIN REPORT',{adminTotalDeposit,adminTotalWithdraw,adminProfitPool,totalGames}); showToast('📊 Report in console'); });
+        function submitWD() {
+            let acc = document.getElementById('wdAcc').value;
+            let amt = parseFloat(document.getElementById('wdAmt').value);
+            if(amt > rBal) return tg.showAlert("Insufficient Real Balance!");
+            rBal -= amt; updateUI();
+            logAdmin(`WITHDRAW REQ: ACC ${acc} | AMT ${amt}`);
+            tg.showAlert("Withdrawal Processed!");
+        }
 
-    // ----------------------------- REFERRAL -------------------------
-    const urlParams = new URLSearchParams(window.location.search);
-    const referrer = urlParams.get('ref');
-    if (referrer && referrer !== username && !localStorage.getItem(`referred_${userId}`) && !referralStopped) {
-        localStorage.setItem(`referred_${userId}`, 'true');
-        let rc = parseInt(localStorage.getItem(`ref_count_${referrer}`)) || 0;
-        if(rc<100){ rc++; let nb = rc*5; localStorage.setItem(`ref_count_${referrer}`, rc); localStorage.setItem(`ref_bonus_${referrer}`, nb); if(username === referrer){ referralCount=rc; referralBonus=nb; localStorage.setItem(STORAGE.refCount, referralCount); localStorage.setItem(STORAGE.refBonus, referralBonus); updateBalanceUI(); } showToast(`🎉 Invited by ${referrer}! +5 ETB bonus`); }
-    }
-    document.getElementById('refLink').value = `https://t.me/world_all_gamesbot?start=ref_${username}`;
-    document.getElementById('copyRef').addEventListener('click', () => { navigator.clipboard.writeText(document.getElementById('refLink').value); showToast('📋 Link copied'); });
+        function logAdmin(msg) {
+            document.getElementById('adminLog').innerHTML += `<br>[${new Date().toLocaleTimeString()}] ${msg}`;
+        }
 
-    // ----------------------------- NAVIGATION & EVENT BINDINGS -------------------------
-    document.querySelectorAll('.nav-item').forEach(el => { el.addEventListener('click', () => { let page = el.dataset.page; document.querySelectorAll('.page').forEach(p => p.style.display = 'none'); document.getElementById(page + 'Page').style.display = 'block'; document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); if(page === 'top') renderPodiumAndList(); if(page === 'profile' && isAdmin) updateAdminUI(); }); });
-    document.querySelectorAll('.bet-amount').forEach(btn => { btn.addEventListener('click', () => { let slot = parseInt(btn.dataset.slot), amount = parseInt(btn.dataset.amount); bets[slot].amount = amount; document.querySelectorAll(`.bet-amount[data-slot='${slot}']`).forEach(b => b.classList.remove('active-green')); btn.classList.add('active-green'); showToast(`Bet set to ${amount} ETB`); }); });
-    document.querySelectorAll('.auto-cash').forEach(btn => { btn.addEventListener('click', () => { let slot = parseInt(btn.dataset.slot), auto = parseInt(btn.dataset.auto); bets[slot].autoCash = auto; document.getElementById(`autoCashLabel${slot===1?'':'2'}`).innerText = auto>0 ? `⚡ AUTO: ${auto}x` : '⚡ AUTO: OFF'; document.querySelectorAll(`.auto-cash[data-slot='${slot}']`).forEach(b => b.classList.remove('active-green')); btn.classList.add('active-green'); showToast(auto>0 ? `Auto cashout at ${auto}x` : 'Auto cashout OFF'); }); });
-    document.getElementById('betBtn1').addEventListener('click', () => handleBet(1)); document.getElementById('betBtn2').addEventListener('click', () => handleBet(2));
-    document.querySelectorAll('.mode-opt').forEach(opt => { opt.addEventListener('click', () => { isRealMode = opt.dataset.mode === 'real'; document.querySelectorAll('.mode-opt').forEach(o => o.classList.remove('active')); opt.classList.add('active'); updateBalanceUI(); showToast(isRealMode ? 'REAL MODE ACTIVE' : 'DEMO MODE ACTIVE'); gamePath.classList.remove('trail-real','trail-demo'); gamePath.classList.add(isRealMode ? 'trail-real' : 'trail-demo'); }); });
-    document.getElementById('depositTab').addEventListener('click',()=>{ document.getElementById('depositSection').classList.remove('hidden'); document.getElementById('withdrawSection').classList.add('hidden'); document.getElementById('depositTab').className='flex-1 py-3 rounded-2xl font-black bg-red-600'; document.getElementById('withdrawTab').className='flex-1 py-3 rounded-2xl font-black bg-zinc-800'; });
-    document.getElementById('withdrawTab').addEventListener('click',()=>{ document.getElementById('depositSection').classList.add('hidden'); document.getElementById('withdrawSection').classList.remove('hidden'); document.getElementById('depositTab').className='flex-1 py-3 rounded-2xl font-black bg-zinc-800'; document.getElementById('withdrawTab').className='flex-1 py-3 rounded-2xl font-black bg-green-600'; });
+        function updateBank() {
+            let b = document.getElementById('newBank').value;
+            document.getElementById('admBank').innerText = b;
+            tg.showAlert("Bank Updated!");
+        }
 
-    // ----------------------------- INIT -------------------------
-    if(tgUser){ userNameSpan.innerText = '@' + username; document.getElementById('profileName').innerText = '@' + username; if(photoUrl){ document.getElementById('avatarImg').src=photoUrl; document.getElementById('avatarImg').style.display='block'; document.getElementById('avatarPlaceholder').style.display='none'; document.getElementById('profileAvatar').src=photoUrl; document.getElementById('profileAvatar').style.display='block'; document.getElementById('profileAvatarPlaceholder').style.display='none'; } }
-    renderBankAccounts(); loadTopWinnersFromStorage(); updateBalanceUI(); updateHistoryUI(); updateTransactionUI(); startSync(); startCountdown(); setInterval(()=>{ if(Math.random()>0.6) addLiveFeed(ethiopianNames[Math.floor(Math.random()*ethiopianNames.length)], Math.floor(Math.random()*3000)+200); }, 8000);
-</script>
+        function forceCrash() { forceCr = true; }
+
+        function setMode(r) {
+            isReal = r;
+            document.getElementById('rBtn').className = r ? "px-3 py-1 bg-green-500 text-black text-[9px] font-black rounded-full" : "px-3 py-1 text-zinc-500 text-[9px] font-black";
+            document.getElementById('dBtn').className = !r ? "px-3 py-1 bg-red-600 text-white text-[9px] font-black rounded-full" : "px-3 py-1 text-zinc-500 text-[9px] font-black";
+            updateUI();
+        }
+
+        function nav(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('active-page');
+            document.getElementById('n-'+id).classList.add('active');
+        }
+
+        function updateUI() {
+            document.getElementById('uBal').innerText = (isReal ? rBal : dBal).toFixed(2) + " ETB";
+            [1,2].forEach(i => { if(!bets[i].on) {
+                let b = document.getElementById('btn'+i);
+                b.innerText = "BET"; b.style.background = "linear-gradient(135deg, #FFD700 0%, #B8860B 100%)";
+            }});
+        }
+
+        function refreshBal() { updateUI(); tg.showAlert("Balance Refreshed!"); }
+
+        function genWinners() {
+            const names = ["@Lemi_K", "@Samuel_Eth", "@Hana_Verified", "@Abe_Bet", "@Mesi_Gold", "@Alex_2026", "@Ethio_King"];
+            const list = document.getElementById('winnersList');
+            for(let i=1; i<=50; i++) {
+                list.innerHTML += `<div class="p-4 rounded-2xl bg-zinc-900/30 border border-gold/10 flex justify-between items-center">
+                    <span class="text-sm font-bold text-zinc-400">#${i} <span class="text-white ml-2">${names[i%names.length]}</span> <i class="fa-solid fa-circle-check verify-badge"></i></span>
+                    <span class="gold-text font-black">${(Math.random()*45000 + 500).toFixed(0)} ETB</span>
+                </div>`;
+            }
+        }
+
+        function setB(i, a) { bets[i].amt = a; }
+        init();
+    </script>
 </body>
 </html>
