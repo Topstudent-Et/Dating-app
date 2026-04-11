@@ -2,293 +2,494 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AVIATOR GOLD PRO ©2026</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>AVIATOR GOLD PRO | ETHIOPIA</title>
+    <!-- Tailwind + Font Awesome -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Telegram WebApp -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;700;900&display=swap');
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
-        :root { --gold: #FFD700; --bg: #050505; --card: rgba(255, 255, 255, 0.04); }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; overflow: hidden; height: 100vh; }
-        .font-game { font-family: 'Orbitron', sans-serif; }
-
-        /* Rectangle Game Canvas */
-        .game-canvas { 
-            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%); 
-            border-radius: 20px; position: relative; 
-            height: 180px; width: 100%; /* Rectangle Shape */
-            overflow: hidden; border: 2px solid var(--gold); 
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.1); 
+        * {
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
-
-        /* Betting Buttons */
-        .bet-container { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
-        .bet-box { background: var(--card); padding: 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
-        .bet-btn { background: #22c55e; height: 65px; border-radius: 18px; font-weight: 900; font-size: 24px; box-shadow: 0 6px 0 #15803d; transition: 0.1s; width: 100%; }
-        .bet-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #15803d; }
-        .cashout-btn { background: #ea580c; box-shadow: 0 6px 0 #9a3412; }
-
-        /* Navigation */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 80px; display: flex; justify-content: space-around; align-items: center; background: rgba(0,0,0,0.9); border-top: 1px solid var(--gold); z-index: 1000; }
-        .nav-item { color: #666; font-size: 10px; font-weight: 900; text-align: center; }
-        .nav-item.active { color: var(--gold); }
-
-        /* Podium */
-        .podium-box { display: flex; justify-content: center; align-items: flex-end; gap: 15px; height: 160px; margin-bottom: 20px; }
-        .rank-1 { height: 140px; width: 80px; background: rgba(255,215,0,0.1); border-top: 3px solid var(--gold); border-radius: 10px 10px 0 0; position: relative; }
-        .rank-2, .rank-3 { height: 100px; width: 70px; background: rgba(255,255,255,0.05); border-top: 3px solid #ccc; border-radius: 10px 10px 0 0; }
-        
-        .crown-anim { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); font-size: 30px; animation: bounce 2s infinite; }
-        @keyframes bounce { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -10px); } }
-
-        .page { display: none; padding: 20px; height: calc(100vh - 80px); overflow-y: auto; padding-top: 90px; }
-        .active-page { display: block; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .verify-badge { color: #38bdf8; font-size: 14px; margin-left: 5px; }
-        .shimmer { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); background-size: 200% 100%; animation: shimmer 2s infinite; }
-        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        body {
+            background: #0A0A0A;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap');
+        .font-aviator {
+            font-family: 'Orbitron', monospace;
+        }
+        .gold-text {
+            background: linear-gradient(135deg, #FFD966, #FFB347);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .game-canvas {
+            background: radial-gradient(circle at 30% 20%, #121212, #010101);
+            border-radius: 28px;
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05);
+            transition: all 0.2s;
+        }
+        .bet-card {
+            background: rgba(20, 20, 30, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,215,0,0.2);
+            transition: all 0.2s;
+        }
+        .btn-bet {
+            background: linear-gradient(95deg, #2b8c3e, #1f6e30);
+            box-shadow: 0 6px 0 #0e4a1c;
+            transition: 0.07s linear;
+        }
+        .btn-bet:active {
+            transform: translateY(3px);
+            box-shadow: 0 3px 0 #0e4a1c;
+        }
+        .btn-cashout {
+            background: linear-gradient(95deg, #e67e22, #d35400);
+            box-shadow: 0 6px 0 #a04000;
+        }
+        .nav-item {
+            transition: 0.2s;
+        }
+        .active-tab {
+            color: #FFD966;
+            text-shadow: 0 0 5px rgba(255,217,0,0.5);
+        }
+        ::-webkit-scrollbar {
+            width: 3px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f1f1f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f1c40f;
+            border-radius: 10px;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-6px); }
+        }
+        .plane-glow {
+            filter: drop-shadow(0 0 6px #ffd966);
+        }
     </style>
 </head>
-<body>
+<body class="text-white">
 
-    <header class="fixed top-0 w-full p-4 flex justify-between items-center z-[1100] bg-black/80 backdrop-blur-md border-b border-white/5">
+    <!-- Fixed Header -->
+    <div class="fixed top-0 left-0 w-full z-50 bg-black/80 backdrop-blur-lg border-b border-white/10 px-5 py-3 flex justify-between items-center">
         <div class="flex items-center gap-3">
-            <div id="uPfp" class="w-12 h-12 rounded-full border-2 border-gold overflow-hidden bg-zinc-800">👤</div>
+            <div id="avatarHeader" class="w-11 h-11 rounded-full bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center text-xl font-bold shadow-lg">
+                👤
+            </div>
             <div>
-                <p id="uBal" class="text-xl font-black text-green-500">0.00 ETB</p>
-                <p class="text-[9px] font-bold text-zinc-500">DAILY LIMIT: 100,000 ETB</p>
-            </div>
-        </div>
-        <div id="uNameTop" class="text-[10px] font-black bg-gold/10 px-3 py-1 rounded-full border border-gold/30">DAI_USER <i class="fa-solid fa-circle-check verify-badge"></i></div>
-    </header>
-
-    <section id="play" class="page active-page">
-        <div class="game-canvas">
-            <div class="absolute top-3 left-4 z-20 flex items-center gap-2 bg-black/50 px-2 py-1 rounded-full border border-white/10">
-                <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                <span class="text-[9px] font-black"><span id="liveCount">3,829</span> ONLINE</span>
-            </div>
-            <div id="mText" class="font-game text-6xl absolute inset-0 flex items-center justify-center italic text-white" style="text-shadow: 0 0 20px rgba(255,215,0,0.4);">1.00x</div>
-            <div id="plane" class="absolute bottom-4 left-4 text-5xl transition-transform duration-100">✈️</div>
-        </div>
-
-        <div class="bet-container">
-            <div class="bet-box">
-                <div class="flex justify-between mb-2"><span class="text-[10px] font-bold opacity-50">BET 1</span><span id="b1_val" class="text-[10px] font-black">100 ETB</span></div>
-                <button id="btn1" onclick="handleBet(1)" class="bet-btn">BET</button>
-            </div>
-            <div class="bet-box">
-                <div class="flex justify-between mb-2"><span class="text-[10px] font-bold opacity-50">BET 2</span><span id="b2_val" class="text-[10px] font-black">500 ETB</span></div>
-                <button id="btn2" onclick="handleBet(2)" class="bet-btn">BET</button>
-            </div>
-        </div>
-        <p class="text-center text-[9px] mt-4 opacity-40 font-bold">PROUDLY ETHIOPIAN 🇪🇹 | 24/7 SERVICE</p>
-    </section>
-
-    <section id="wallet" class="page">
-        <div class="bg-zinc-900/50 p-6 rounded-3xl mb-6 border border-gold/20">
-            <h2 class="text-xs font-black mb-4">DEPOSIT (ከ50 ብር ጀምሮ)</h2>
-            <p class="text-[11px] mb-4 text-zinc-400">በቴሌብር ወይም በንግድ ባንክ ያስገቡ። ትክክለኛ የEFT ቁጥር ያስገቡ።</p>
-            <div class="space-y-3">
-                <div class="p-3 bg-black rounded-xl border border-white/5 flex items-center gap-3">
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Commercial_Bank_of_Ethiopia_logo.png/220px-Commercial_Bank_of_Ethiopia_logo.png" class="w-8">
-                    <div><p class="text-[10px] font-bold">CBE Account</p><p id="cbeAcc" class="text-sm font-game gold-text">1000179571815</p></div>
+                <div class="flex items-center gap-2">
+                    <span id="headerBalance" class="text-2xl font-black text-green-400 tracking-wide">0.00</span>
+                    <span class="text-xs font-bold text-white/50">ETB</span>
                 </div>
-                <input id="dName" placeholder="Full Name / ስም" class="w-full p-4 bg-zinc-800 rounded-xl outline-none text-sm">
-                <input id="dEft" placeholder="EFT Number" class="w-full p-4 bg-zinc-800 rounded-xl outline-none text-sm">
-                <button onclick="tg.showAlert('ለአድሚን ተልኳል!')" class="w-full py-4 bg-gold text-black font-black rounded-xl shimmer">SUBMIT DEPOSIT</button>
+                <div class="text-[9px] text-white/40 font-mono">LIMIT: 100K ETB</div>
             </div>
         </div>
-
-        <div class="bg-zinc-900/50 p-6 rounded-3xl border border-white/5">
-            <h2 class="text-xs font-black mb-2">WITHDRAW (ገንዘብ ማውጣት)</h2>
-            <p class="text-[10px] mb-4 opacity-50">ያለዎት ባላንስ ከሌለ ማውጣት አይችሉም።</p>
-            <input id="wAmt" type="number" placeholder="Amount" class="w-full p-4 bg-zinc-800 rounded-xl outline-none mb-3">
-            <button onclick="checkBal()" class="w-full py-4 bg-zinc-700 font-black rounded-xl">WITHDRAW NOW</button>
+        <div id="userNameBadge" class="bg-amber-500/10 border border-amber-500/30 rounded-full px-3 py-1 text-[11px] font-bold flex items-center gap-1">
+            <i class="fa-solid fa-circle-check text-sky-400 text-[10px]"></i> <span id="tgName">PLAYER</span>
         </div>
-    </section>
+    </div>
 
-    <section id="top" class="page">
-        <h2 class="text-center font-black text-lg mb-6">TOP WINNERS <i class="fa-solid fa-trophy text-gold"></i></h2>
-        <div class="podium-box">
-            <div class="rank-2 flex flex-col items-center justify-end p-2">
-                <div class="w-10 h-10 rounded-full bg-zinc-700 mb-2 border-2 border-zinc-400 overflow-hidden">👤</div>
-                <span class="text-[8px] font-bold">@User_2</span>
-                <span class="text-[15px]">🥈</span>
+    <!-- PAGES -->
+    <div class="pt-24 pb-24 px-4 overflow-y-auto h-screen" id="appContainer">
+        <!-- PLAY PAGE -->
+        <div id="page-play" class="page active">
+            <div class="game-canvas relative w-full h-52 md:h-64 mb-5 overflow-hidden">
+                <div class="absolute top-3 left-3 bg-black/60 backdrop-blur-sm rounded-full px-3 py-1 text-[10px] font-bold border border-white/20 z-10 flex items-center gap-1">
+                    <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                    <span id="liveCounter">2,841</span> online
+                </div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div id="multiplierDisplay" class="text-7xl md:text-8xl font-aviator font-black tracking-wider text-white drop-shadow-2xl" style="text-shadow: 0 0 20px #FFD966;">1.00x</div>
+                </div>
+                <div id="planeIcon" class="absolute bottom-4 left-4 text-5xl transition-all duration-75 ease-linear will-change-transform plane-glow">✈️</div>
             </div>
-            <div class="rank-1 flex flex-col items-center justify-end p-2">
-                <span class="crown-anim">👑</span>
-                <div class="w-14 h-14 rounded-full bg-zinc-700 mb-2 border-2 border-gold overflow-hidden">👤</div>
-                <span class="text-[8px] font-bold">@Dawit_F</span>
-                <span class="text-[20px]">🥇</span>
+
+            <!-- Bet Controls -->
+            <div class="grid grid-cols-2 gap-4 mt-2">
+                <div class="bet-card rounded-2xl p-3">
+                    <div class="flex justify-between text-xs font-bold mb-2"><span>BET 1</span><span id="bet1AmountLabel" class="text-amber-400">100 ETB</span></div>
+                    <button id="betBtn1" onclick="placeBet(1)" class="w-full py-4 rounded-xl font-black text-white text-xl transition-all btn-bet">BET</button>
+                </div>
+                <div class="bet-card rounded-2xl p-3">
+                    <div class="flex justify-between text-xs font-bold mb-2"><span>BET 2</span><span id="bet2AmountLabel" class="text-amber-400">500 ETB</span></div>
+                    <button id="betBtn2" onclick="placeBet(2)" class="w-full py-4 rounded-xl font-black text-white text-xl transition-all btn-bet">BET</button>
+                </div>
             </div>
-            <div class="rank-3 flex flex-col items-center justify-end p-2">
-                <div class="w-10 h-10 rounded-full bg-zinc-700 mb-2 border-2 border-orange-800 overflow-hidden">👤</div>
-                <span class="text-[8px] font-bold">@User_3</span>
-                <span class="text-[15px]">🥉</span>
+            <p class="text-center text-[10px] text-white/30 mt-5 font-mono">🇪🇹 PROUDLY ETHIOPIAN | 24/7 FAST CASHOUT</p>
+        </div>
+
+        <!-- WALLET PAGE -->
+        <div id="page-wallet" class="page hidden">
+            <div class="bg-white/5 backdrop-blur-sm rounded-3xl p-5 border border-white/10 mb-6">
+                <h3 class="text-sm font-black flex items-center gap-2"><i class="fa-solid fa-building-columns text-amber-500"></i> DEPOSIT (Min 50 ETB)</h3>
+                <p class="text-[11px] text-white/50 mt-1">Transfer via Telebirr / CBE, then confirm below</p>
+                <div class="flex items-center justify-between bg-black/40 p-3 rounded-xl mt-3 border border-white/10">
+                    <span class="text-xs">🏦 CBE Account</span>
+                    <span class="font-mono text-sm tracking-wider text-amber-300">1000179571815</span>
+                </div>
+                <div class="mt-4 space-y-3">
+                    <input type="text" id="depositName" placeholder="Full name (as per bank)" class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-sm outline-none focus:border-amber-500">
+                    <input type="text" id="depositRef" placeholder="Transaction reference (EFT / Telebirr ID)" class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-sm outline-none">
+                    <div class="flex gap-2">
+                        <input type="number" id="depositAmount" placeholder="Amount ETB" class="flex-1 bg-black/60 border border-white/20 rounded-xl p-3 text-sm">
+                        <button onclick="submitDeposit()" class="bg-gradient-to-r from-amber-500 to-amber-600 px-5 rounded-xl font-black text-black">Confirm</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white/5 backdrop-blur-sm rounded-3xl p-5 border border-white/10">
+                <h3 class="text-sm font-black flex items-center gap-2"><i class="fa-solid fa-arrow-right-from-bracket text-red-400"></i> WITHDRAW</h3>
+                <p class="text-[11px] text-white/50">Minimum 200 ETB | Processed within 24h</p>
+                <div class="flex gap-2 mt-3">
+                    <input type="number" id="withdrawAmount" placeholder="Amount ETB" class="flex-1 bg-black/60 border border-white/20 rounded-xl p-3 text-sm">
+                    <button onclick="requestWithdraw()" class="bg-red-600/80 hover:bg-red-600 px-5 rounded-xl font-bold text-white">Request</button>
+                </div>
+                <div class="mt-4 text-[11px] text-white/40 text-center">* Withdrawals credited to your registered bank/Telebirr</div>
+            </div>
+            <div class="mt-5 text-[10px] text-white/30 text-center">📜 Transaction history (last 5)</div>
+            <div id="txHistory" class="mt-2 space-y-1 max-h-40 overflow-y-auto"></div>
+        </div>
+
+        <!-- TOP WINNERS PAGE -->
+        <div id="page-top" class="page hidden">
+            <h2 class="text-center font-black text-xl mb-3 gold-text">🏆 WINNERS CIRCLE</h2>
+            <div class="flex justify-center items-end gap-3 mb-8 mt-4">
+                <div class="flex flex-col items-center w-20 bg-white/5 rounded-t-2xl py-2"><i class="fa-solid fa-medal text-zinc-400 text-2xl"></i><span class="text-[10px] font-bold mt-1" id="secondUser">@User2</span><span class="text-xs" id="secondAmt">0</span></div>
+                <div class="flex flex-col items-center w-24 bg-gradient-to-t from-amber-500/20 to-transparent rounded-t-2xl py-3 -mt-4 border-x border-t border-amber-500/40"><i class="fa-solid fa-crown text-3xl text-amber-400"></i><span class="text-xs font-black mt-1" id="firstUser">@Dawit_F</span><span class="text-sm font-black gold-text" id="firstAmt">0</span></div>
+                <div class="flex flex-col items-center w-20 bg-white/5 rounded-t-2xl py-2"><i class="fa-solid fa-medal text-amber-700 text-2xl"></i><span class="text-[10px] font-bold mt-1" id="thirdUser">@User3</span><span class="text-xs" id="thirdAmt">0</span></div>
+            </div>
+            <div id="winnersList" class="space-y-2 max-h-80 overflow-y-auto pr-1"></div>
+        </div>
+
+        <!-- PROFILE PAGE -->
+        <div id="page-profile" class="page hidden">
+            <div class="flex flex-col items-center">
+                <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-amber-400 to-amber-700 p-1 mb-3">
+                    <div class="w-full h-full rounded-full bg-black flex items-center justify-center text-4xl" id="profileAvatar">👤</div>
+                </div>
+                <h2 class="text-xl font-black" id="profileName">USER</h2>
+                <div class="text-[10px] text-green-400 bg-green-500/20 px-3 py-1 rounded-full mt-1">Verified account <i class="fa-solid fa-check-circle"></i></div>
+            </div>
+            <div class="grid grid-cols-2 gap-3 mt-6">
+                <div class="bg-white/5 p-4 rounded-2xl text-center"><p class="text-[10px] text-white/40">TOTAL DEPOSITED</p><p id="statDeposit" class="text-xl font-black gold-text">0</p></div>
+                <div class="bg-white/5 p-4 rounded-2xl text-center"><p class="text-[10px] text-white/40">BALANCE</p><p id="statBalance" class="text-xl font-black text-green-400">0</p></div>
+                <div class="bg-white/5 p-4 rounded-2xl text-center"><p class="text-[10px] text-white/40">TOTAL WON</p><p id="statWon" class="text-xl font-black gold-text">0</p></div>
+                <div class="bg-white/5 p-4 rounded-2xl text-center"><p class="text-[10px] text-white/40">GAMES PLAYED</p><p id="statGames" class="text-xl font-black">0</p></div>
+            </div>
+            <div class="mt-6 bg-white/5 border border-dashed border-amber-500/40 rounded-2xl p-4">
+                <p class="text-[11px] font-bold text-center">REFERRAL PROGRAM (5 ETB per friend)</p>
+                <div class="flex mt-2 bg-black/50 rounded-full p-2 justify-between items-center">
+                    <code id="refLink" class="text-[9px] truncate">https://t.me/AviatorGold_Bot?start=ref_xxx</code>
+                    <button onclick="copyRef()" class="text-amber-400 text-xs"><i class="fa-regular fa-copy"></i> Copy</button>
+                </div>
+                <p class="text-[9px] text-center mt-2 text-white/30">Max 100 referrals | Auto bonus on deposit</p>
             </div>
         </div>
-        <div id="wList" class="space-y-2 pb-10"></div>
-    </section>
+    </div>
 
-    <section id="profile" class="page text-center">
-        <div class="w-24 h-24 mx-auto rounded-full border-4 border-gold p-1 mb-4 shadow-lg shadow-gold/20">
-            <div id="pImg" class="w-full h-full rounded-full bg-zinc-800 overflow-hidden">👤</div>
-        </div>
-        <h2 id="pName" class="text-2xl font-black">USER <i class="fa-solid fa-circle-check verify-badge"></i></h2>
-        
-        <div class="grid grid-cols-2 gap-3 mt-8">
-            <div class="bg-zinc-900/50 p-4 rounded-2xl border border-white/5"><p class="text-[9px] opacity-40">DEPOSITED</p><p id="pDep" class="text-lg font-black">0.00</p></div>
-            <div class="bg-zinc-900/50 p-4 rounded-2xl border border-white/5"><p class="text-[9px] opacity-40">BALANCE</p><p id="pBal" class="text-lg font-black text-green-500">0.00</p></div>
-            <div class="bg-zinc-900/50 p-4 rounded-2xl border border-white/5"><p class="text-[9px] opacity-40">WON</p><p id="pWon" class="text-lg font-black gold-text">0.00</p></div>
-            <div class="bg-zinc-900/50 p-4 rounded-2xl border border-white/5"><p class="text-[9px] opacity-40">GAMES</p><p id="pGames" class="text-lg font-black">0</p></div>
-        </div>
-
-        <div class="mt-8 p-6 bg-zinc-900/30 rounded-3xl border border-dashed border-gold/30">
-            <p class="text-[10px] font-black mb-3">REFERRAL (5 ETB / FRIEND)</p>
-            <div class="p-3 bg-black rounded-lg text-[9px] font-mono text-zinc-500 truncate">https://t.me/AviatorGold_Bot?start=r_9382</div>
-            <p class="text-[8px] mt-2 opacity-40">MAX: 100 FRIENDS</p>
-        </div>
-    </section>
-
-    <section id="admin" class="page">
-        <div class="bg-red-900/10 border-2 border-red-600 p-6 rounded-3xl space-y-4">
-            <h2 class="text-red-500 font-black">ADMIN CONTROL PANEL</h2>
-            <button onclick="fCrash()" class="w-full py-4 bg-red-600 text-white font-black rounded-xl">FORCE CRASH NOW</button>
-            <div class="flex gap-2">
-                <button onclick="setRef(false)" class="flex-1 py-2 bg-zinc-800 rounded-lg text-[10px] font-bold">REF: OFF</button>
-                <button onclick="setRef(true)" class="flex-1 py-2 bg-green-900 rounded-lg text-[10px] font-bold">REF: ON</button>
-            </div>
-            <hr class="border-red-600/20">
-            <input id="aBank" placeholder="Update Bank Account" class="w-full p-3 bg-black rounded-lg text-xs border border-red-600/30">
-            <button onclick="updSys()" class="w-full py-3 bg-white text-black font-black rounded-xl text-xs">UPDATE SYSTEM</button>
-            <div id="aLogs" class="h-32 bg-black/80 rounded-xl p-3 font-mono text-[9px] text-green-500 overflow-y-auto mt-2">Logs: System Active...</div>
-        </div>
-    </section>
-
-    <nav class="nav-bar">
-        <div onclick="nav('play')" class="nav-item active" id="n-play"><i class="fa-solid fa-plane-up text-xl mb-1"></i><p>PLAY</p></div>
-        <div onclick="nav('wallet')" class="nav-item" id="n-wallet"><i class="fa-solid fa-wallet text-xl mb-1"></i><p>WALLET</p></div>
-        <div onclick="nav('top')" class="nav-item" id="n-top"><i class="fa-solid fa-crown text-xl mb-1"></i><p>TOP</p></div>
-        <div onclick="nav('profile')" class="nav-item" id="n-profile"><i class="fa-solid fa-user-circle text-xl mb-1"></i><p>PROFILE</p></div>
-    </nav>
-
-    <audio id="sndFly" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" loop></audio>
-    <audio id="sndJet" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+    <!-- BOTTOM NAVIGATION -->
+    <div class="fixed bottom-0 w-full bg-black/90 backdrop-blur-lg border-t border-amber-500/30 flex justify-around py-2 z-50">
+        <div onclick="switchPage('play')" class="nav-item flex flex-col items-center py-1 px-4 rounded-xl active-tab" id="nav-play"><i class="fa-solid fa-plane-up text-xl"></i><span class="text-[9px] font-bold">PLAY</span></div>
+        <div onclick="switchPage('wallet')" class="nav-item flex flex-col items-center py-1 px-4 rounded-xl text-white/50" id="nav-wallet"><i class="fa-solid fa-wallet text-xl"></i><span class="text-[9px] font-bold">WALLET</span></div>
+        <div onclick="switchPage('top')" class="nav-item flex flex-col items-center py-1 px-4 rounded-xl text-white/50" id="nav-top"><i class="fa-solid fa-crown text-xl"></i><span class="text-[9px] font-bold">TOP</span></div>
+        <div onclick="switchPage('profile')" class="nav-item flex flex-col items-center py-1 px-4 rounded-xl text-white/50" id="nav-profile"><i class="fa-solid fa-user-circle text-xl"></i><span class="text-[9px] font-bold">PROFILE</span></div>
+    </div>
 
     <script>
-        const tg = window.Telegram.WebApp; tg.expand();
-        let bal = 0.00, gameOn = false, m = 1.00, bActive = {1:false, 2:false}, bAmt = {1:100, 2:500};
-        let forceC = false, stats = {dep:0, won:0, games:0};
+        // ---------- DATA & STATE ----------
+        let userData = {
+            id: 'user_' + Math.floor(Math.random() * 100000),
+            name: 'PLAYER',
+            balance: 1500.00,    // starting demo balance
+            totalDeposited: 0,
+            totalWon: 0,
+            gamesPlayed: 0,
+            transactions: []
+        };
+        let gameState = {
+            active: false,
+            currentMultiplier: 1.00,
+            crashPoint: 0,
+            activeBets: { 1: false, 2: false },
+            betAmounts: { 1: 100, 2: 500 },
+            gameInterval: null,
+            nextRoundTimeout: null
+        };
+        let winnersHistory = []; // store { name, amount, date }
 
-        function init() {
-            const u = tg.initDataUnsafe?.user;
-            if(u) {
-                document.getElementById('pName').innerText = u.first_name || "USER";
-                if(u.photo_url) document.querySelectorAll('div[id*="Pfp"], #pImg, .rank-1 div, .rank-2 div, .rank-3 div').forEach(el => el.innerHTML = `<img src="${u.photo_url}" class="w-full h-full object-cover">`);
-                if(u.username !== "Dawit_Fikadu21") document.getElementById('n-admin')?.remove();
+        // Load from localStorage
+        function loadData() {
+            const stored = localStorage.getItem('aviator_gold_pro');
+            if(stored) {
+                try {
+                    const data = JSON.parse(stored);
+                    userData = { ...userData, ...data.user };
+                    if(data.winners) winnersHistory = data.winners;
+                } catch(e) {}
             }
-            updUI(); genT(); loop();
-        }
-
-        function loop() { if(!gameOn) setTimeout(start, 5000); }
-
-        function start() {
-            gameOn = true; m = 1.00; forceC = false;
-            document.getElementById('mText').style.color = "white";
-            document.getElementById('sndFly').play();
-
-            // 20% House Edge Logic: if bet is active, crash early
-            let target = (bActive[1] || bActive[2]) ? 1.05 + (Math.random()*1.3) : 1.1 + (Math.random()*12);
-            
-            let tick = setInterval(() => {
-                m += 0.04;
-                document.getElementById('mText').innerText = m.toFixed(2) + "x";
-                let x = m * 25, y = m * 15;
-                document.getElementById('plane').style.transform = `translate(${x}px, -${y}px)`;
-
-                if(m >= target || forceC) {
-                    clearInterval(tick);
-                    crash();
+            if(!userData.name || userData.name === 'PLAYER') {
+                const tg = window.Telegram?.WebApp?.initDataUnsafe?.user;
+                if(tg && tg.first_name) {
+                    userData.name = tg.first_name;
                 }
-            }, 80);
+            }
+            updateUI();
+            renderWinnersPage();
+            renderTxHistory();
+        }
+        function saveData() {
+            localStorage.setItem('aviator_gold_pro', JSON.stringify({
+                user: userData,
+                winners: winnersHistory
+            }));
+        }
+        function updateUI() {
+            document.getElementById('headerBalance').innerText = userData.balance.toFixed(2);
+            document.getElementById('statBalance').innerText = userData.balance.toFixed(2);
+            document.getElementById('statDeposit').innerText = userData.totalDeposited.toFixed(2);
+            document.getElementById('statWon').innerText = userData.totalWon.toFixed(2);
+            document.getElementById('statGames').innerText = userData.gamesPlayed;
+            document.getElementById('profileName').innerHTML = userData.name + ' <i class="fa-solid fa-circle-check text-sky-400 text-xs"></i>';
+            document.getElementById('tgName').innerText = userData.name.length > 12 ? userData.name.slice(0,10)+'..' : userData.name;
+            const refCode = btoa(userData.id).slice(0,12);
+            document.getElementById('refLink').innerHTML = `https://t.me/AviatorGold_Bot?start=${refCode}`;
+            document.getElementById('bet1AmountLabel').innerText = gameState.betAmounts[1] + ' ETB';
+            document.getElementById('bet2AmountLabel').innerText = gameState.betAmounts[2] + ' ETB';
         }
 
-        function crash() {
-            gameOn = false; bActive[1] = bActive[2] = false;
-            document.getElementById('sndFly').pause();
-            document.getElementById('sndFly').currentTime = 0;
-            document.getElementById('sndJet').play();
-            
-            document.getElementById('mText').innerText = "FLEW AWAY!";
-            document.getElementById('mText').style.color = "#ef4444";
-            
-            setTimeout(() => {
-                document.getElementById('plane').style.transform = "translate(0,0)";
-                updUI(); loop();
-            }, 3500);
+        // Transaction helpers
+        function addTransaction(type, amount, status = 'completed') {
+            userData.transactions.unshift({ type, amount, date: new Date().toLocaleString(), status });
+            if(userData.transactions.length > 20) userData.transactions.pop();
+            renderTxHistory();
+            saveData();
         }
-
-        function handleBet(i) {
-            if(gameOn) {
-                if(bActive[i]) {
-                    let w = bAmt[i] * m;
-                    bal += w; stats.won += w; bActive[i] = false;
-                    tg.showAlert(`CONGRATS! YOU WON ${w.toFixed(2)} ETB!`);
-                    updUI();
-                }
+        function renderTxHistory() {
+            const container = document.getElementById('txHistory');
+            if(!container) return;
+            if(userData.transactions.length === 0) {
+                container.innerHTML = '<div class="text-white/30 text-[10px] text-center py-2">No transactions yet</div>';
                 return;
             }
-            if(bAmt[i] > bal) return tg.showAlert("Insufficient Funds!");
-            bal -= bAmt[i]; bActive[i] = true; stats.games++;
-            updUI();
+            container.innerHTML = userData.transactions.slice(0,5).map(tx => `
+                <div class="flex justify-between text-[10px] bg-white/5 p-2 rounded-lg">
+                    <span>${tx.type}</span>
+                    <span class="${tx.type === 'DEPOSIT' ? 'text-green-400' : 'text-red-400'}">${tx.type === 'DEPOSIT' ? '+' : '-'} ${tx.amount} ETB</span>
+                    <span class="text-white/30">${tx.date}</span>
+                </div>
+            `).join('');
         }
 
-        function updUI() {
-            document.getElementById('uBal').innerText = bal.toFixed(2) + " ETB";
-            document.getElementById('pBal').innerText = bal.toFixed(2);
-            document.getElementById('pWon').innerText = stats.won.toFixed(2);
-            document.getElementById('pGames').innerText = stats.games;
-            document.getElementById('pDep').innerText = stats.dep.toFixed(2);
+        // Deposit / Withdraw Simulation
+        window.submitDeposit = function() {
+            const amount = parseFloat(document.getElementById('depositAmount').value);
+            const name = document.getElementById('depositName').value.trim();
+            const ref = document.getElementById('depositRef').value.trim();
+            if(!amount || amount < 50) { tgShowAlert('Min deposit 50 ETB'); return; }
+            if(!name || !ref) { tgShowAlert('Please fill full name and transaction reference'); return; }
+            userData.balance += amount;
+            userData.totalDeposited += amount;
+            addTransaction('DEPOSIT', amount, 'verified');
+            updateUI();
+            saveData();
+            document.getElementById('depositAmount').value = '';
+            document.getElementById('depositName').value = '';
+            document.getElementById('depositRef').value = '';
+            tgShowAlert(`✅ ${amount} ETB added to balance!`);
+        };
+        window.requestWithdraw = function() {
+            let amount = parseFloat(document.getElementById('withdrawAmount').value);
+            if(isNaN(amount) || amount < 200) { tgShowAlert('Minimum withdraw: 200 ETB'); return; }
+            if(amount > userData.balance) { tgShowAlert('Insufficient balance'); return; }
+            userData.balance -= amount;
+            addTransaction('WITHDRAW', amount, 'pending approval');
+            updateUI();
+            saveData();
+            document.getElementById('withdrawAmount').value = '';
+            tgShowAlert(`Withdrawal request of ${amount} ETB submitted. Admin processes within 24h.`);
+        };
 
-            [1,2].forEach(i => {
-                const btn = document.getElementById('btn'+i);
-                if(bActive[i]) {
-                    btn.innerText = gameOn ? "CASH OUT" : "WAITING...";
-                    btn.className = gameOn ? "bet-btn cashout-btn" : "bet-btn opacity-50";
-                } else {
-                    btn.innerText = "BET";
-                    btn.className = "bet-btn";
+        // Game Logic
+        function startGameRound() {
+            if(gameState.active) return;
+            gameState.active = true;
+            gameState.currentMultiplier = 1.00;
+            updateMultiplierDisplay();
+            // Generate crash point with house edge (~5% house edge => average multiplier ~20 but realistic)
+            let r = Math.random();
+            // distribution: multiplier = 1 / (1 - r * 0.96) capped max 50x
+            let raw = 1 / (1 - (r * 0.96));
+            let crashMult = Math.min(50, Math.max(1.03, raw));
+            gameState.crashPoint = crashMult;
+            // move plane & increment
+            if(gameState.gameInterval) clearInterval(gameState.gameInterval);
+            gameState.gameInterval = setInterval(() => {
+                if(!gameState.active) return;
+                let step = 0.025;
+                gameState.currentMultiplier += step;
+                updateMultiplierDisplay();
+                let planeMove = Math.min(85, gameState.currentMultiplier * 8);
+                document.getElementById('planeIcon').style.transform = `translate(${planeMove}px, -${Math.min(40, gameState.currentMultiplier * 3)}px)`;
+                if(gameState.currentMultiplier >= gameState.crashPoint) {
+                    crashRound();
                 }
-            });
+            }, 65);
         }
-
-        function nav(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(id).classList.add('active-page');
-            document.getElementById('n-'+id).classList.add('active');
+        function updateMultiplierDisplay() {
+            document.getElementById('multiplierDisplay').innerHTML = gameState.currentMultiplier.toFixed(2) + 'x';
         }
-
-        function genT() {
-            const l = document.getElementById('wList');
-            for(let i=4; i<=50; i++) {
-                l.innerHTML += `<div class="p-4 bg-zinc-900/40 rounded-2xl flex justify-between border border-white/5">
-                    <span class="text-sm font-bold">#${i} @User_${i*19} <i class="fa-solid fa-circle-check verify-badge" style="font-size:10px"></i></span>
-                    <span class="gold-text font-black">${(Math.random()*20000+100).toFixed(0)} ETB</span>
-                </div>`;
+        function crashRound() {
+            if(!gameState.active) return;
+            clearInterval(gameState.gameInterval);
+            gameState.active = false;
+            // lose all active bets
+            for(let i of [1,2]) {
+                if(gameState.activeBets[i]) {
+                    gameState.activeBets[i] = false;
+                    updateBetButtons();
+                }
+            }
+            // show crash text
+            document.getElementById('multiplierDisplay').innerHTML = '💥 CRASH!';
+            setTimeout(() => {
+                if(!gameState.active) document.getElementById('multiplierDisplay').innerHTML = '1.00x';
+                document.getElementById('planeIcon').style.transform = `translate(0px, 0px)`;
+            }, 1200);
+            if(gameState.nextRoundTimeout) clearTimeout(gameState.nextRoundTimeout);
+            gameState.nextRoundTimeout = setTimeout(() => {
+                if(!gameState.active) startGameRound();
+            }, 2800);
+        }
+        function cashoutBet(slot) {
+            if(!gameState.active) return;
+            if(!gameState.activeBets[slot]) return;
+            let betAmount = gameState.betAmounts[slot];
+            let winAmount = betAmount * gameState.currentMultiplier;
+            userData.balance += winAmount;
+            userData.totalWon += winAmount;
+            userData.gamesPlayed++;
+            // Record winner
+            winnersHistory.unshift({ name: userData.name, amount: winAmount, date: new Date().toLocaleTimeString(), mult: gameState.currentMultiplier.toFixed(2) });
+            if(winnersHistory.length > 30) winnersHistory.pop();
+            addTransaction('WIN', winAmount, 'cashout');
+            gameState.activeBets[slot] = false;
+            updateUI();
+            updateBetButtons();
+            renderWinnersPage();
+            saveData();
+            tgShowAlert(`🎉 CASHOUT! You won ${winAmount.toFixed(2)} ETB @ ${gameState.currentMultiplier.toFixed(2)}x`);
+        }
+        window.placeBet = function(slot) {
+            if(gameState.active) {
+                // if game active, cashout
+                cashoutBet(slot);
+                return;
+            }
+            let betVal = gameState.betAmounts[slot];
+            if(betVal > userData.balance) {
+                tgShowAlert(`Insufficient balance! Need ${betVal} ETB`);
+                return;
+            }
+            userData.balance -= betVal;
+            gameState.activeBets[slot] = true;
+            updateUI();
+            updateBetButtons();
+            saveData();
+            // If no round active, start immediately
+            if(!gameState.active && !gameState.gameInterval) {
+                startGameRound();
+            }
+        };
+        function updateBetButtons() {
+            const btn1 = document.getElementById('betBtn1');
+            const btn2 = document.getElementById('betBtn2');
+            if(gameState.active) {
+                btn1.innerText = gameState.activeBets[1] ? "CASH OUT" : "BET";
+                btn2.innerText = gameState.activeBets[2] ? "CASH OUT" : "BET";
+                btn1.className = gameState.activeBets[1] ? "w-full py-4 rounded-xl font-black text-white text-xl transition-all btn-cashout" : "w-full py-4 rounded-xl font-black text-white text-xl transition-all btn-bet opacity-70";
+                btn2.className = gameState.activeBets[2] ? "w-full py-4 rounded-xl font-black text-white text-xl transition-all btn-cashout" : "w-full py-4 rounded-xl font-black text-white text-xl transition-all btn-bet opacity-70";
+            } else {
+                btn1.innerText = "BET";
+                btn2.innerText = "BET";
+                btn1.className = "w-full py-4 rounded-xl font-black text-white text-xl transition-all btn-bet";
+                btn2.className = "w-full py-4 rounded-xl font-black text-white text-xl transition-all btn-bet";
             }
         }
-
-        function fCrash() { forceC = true; }
-        function checkBal() { tg.showAlert("ባላንስ የሎትም! መጀመሪያ ዲፖዚት ያድርጉ።"); }
-        function updSys() { let b = document.getElementById('aBank').value; if(b) { document.getElementById('cbeAcc').innerText = b; tg.showAlert("Updated!"); }}
-        
-        init();
+        // Winners Page Render
+        function renderWinnersPage() {
+            const sorted = [...winnersHistory].sort((a,b)=> b.amount - a.amount).slice(0,10);
+            const podium = [...sorted];
+            if(podium[0]) { document.getElementById('firstUser').innerHTML = podium[0].name.slice(0,12); document.getElementById('firstAmt').innerHTML = podium[0].amount.toFixed(0); }
+            if(podium[1]) { document.getElementById('secondUser').innerHTML = podium[1].name.slice(0,10); document.getElementById('secondAmt').innerHTML = podium[1].amount.toFixed(0); }
+            if(podium[2]) { document.getElementById('thirdUser').innerHTML = podium[2].name.slice(0,10); document.getElementById('thirdAmt').innerHTML = podium[2].amount.toFixed(0); }
+            const listDiv = document.getElementById('winnersList');
+            if(listDiv) {
+                listDiv.innerHTML = sorted.map((w, idx) => `
+                    <div class="flex justify-between items-center bg-white/5 p-3 rounded-xl border border-white/5">
+                        <div class="flex items-center gap-2"><span class="text-amber-400 text-sm">${idx+1}</span><span class="font-bold text-sm">${w.name}</span><i class="fa-solid fa-circle-check text-sky-400 text-[9px]"></i></div>
+                        <div><span class="gold-text font-black">${w.amount.toFixed(2)} ETB</span><span class="text-[8px] text-white/30 ml-2">${w.mult}x</span></div>
+                    </div>
+                `).join('');
+                if(sorted.length === 0) listDiv.innerHTML = '<div class="text-center text-white/30 text-sm">No winners yet. Place a bet and cashout!</div>';
+            }
+        }
+        // UI & Telegram
+        function tgShowAlert(msg) {
+            if(window.Telegram?.WebApp) window.Telegram.WebApp.showAlert(msg);
+            else alert(msg);
+        }
+        window.copyRef = function() {
+            let link = document.getElementById('refLink').innerText;
+            navigator.clipboard.writeText(link);
+            tgShowAlert("Referral link copied!");
+        };
+        // Page Switching
+        window.switchPage = function(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+            document.getElementById(`page-${pageId}`).classList.remove('hidden');
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active-tab', 'text-amber-400'));
+            document.getElementById(`nav-${pageId}`).classList.add('active-tab', 'text-amber-400');
+            if(pageId === 'top') renderWinnersPage();
+            if(pageId === 'wallet') renderTxHistory();
+        };
+        // simulate online count
+        setInterval(() => {
+            let cnt = Math.floor(2800 + Math.random() * 800);
+            document.getElementById('liveCounter') && (document.getElementById('liveCounter').innerText = cnt);
+        }, 8000);
+        // Avatar & telegram
+        const tg = window.Telegram?.WebApp;
+        if(tg) {
+            tg.expand();
+            const user = tg.initDataUnsafe?.user;
+            if(user && user.first_name) userData.name = user.first_name;
+            if(user?.photo_url) {
+                const imgHtml = `<img src="${user.photo_url}" class="w-full h-full object-cover rounded-full">`;
+                document.getElementById('avatarHeader').innerHTML = imgHtml;
+                document.getElementById('profileAvatar').innerHTML = imgHtml;
+            }
+        }
+        // initial load
+        loadData();
+        updateBetButtons();
+        // start game loop initially
+        setTimeout(() => { if(!gameState.active && !gameState.gameInterval) startGameRound(); }, 500);
+        // additional interval to avoid stuck
+        setInterval(() => { if(!gameState.active && !gameState.gameInterval && !gameState.nextRoundTimeout) startGameRound(); }, 3000);
+        // update stats
+        window.renderWinnersPage = renderWinnersPage;
     </script>
 </body>
 </html>
