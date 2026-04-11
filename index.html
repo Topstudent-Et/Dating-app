@@ -13,19 +13,18 @@
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap');
         .font-aviator { font-family: 'Orbitron', monospace; }
         .gold-text { background: linear-gradient(135deg, #FFD966, #FFB347); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .game-canvas { background: radial-gradient(circle at 30% 20%, #121212, #010101); border-radius: 32px; border: 1px solid rgba(255, 215, 0, 0.4); box-shadow: 0 15px 35px rgba(0,0,0,0.5); position: relative; overflow: hidden; }
-        canvas { display: block; width: 100%; height: 100%; background: transparent; }
-        .bet-btn { background: linear-gradient(95deg, #2b8c3e, #1f6e30); box-shadow: 0 5px 0 #0e4a1c; transition: 0.07s linear; }
-        .bet-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #0e4a1c; }
-        .cashout-btn { background: linear-gradient(95deg, #e67e22, #d35400); box-shadow: 0 5px 0 #a04000; }
+        .game-canvas { background: radial-gradient(circle at 30% 20%, #121212, #010101); border-radius: 32px; border: 1px solid rgba(255, 215, 0, 0.5); box-shadow: 0 15px 35px rgba(0,0,0,0.6); position: relative; overflow: hidden; }
+        canvas { display: block; width: 100%; height: 100%; background: transparent; cursor: pointer; }
+        .big-bet-btn { background: linear-gradient(95deg, #2b8c3e, #1f6e30); box-shadow: 0 6px 0 #0e4a1c; transition: 0.07s linear; }
+        .big-bet-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #0e4a1c; }
+        .cashout-big { background: linear-gradient(95deg, #e67e22, #d35400); box-shadow: 0 6px 0 #a04000; }
         .nav-item.active { color: #FFD966; text-shadow: 0 0 6px #ffb347; }
         .podium-glow { animation: float 2s ease-in-out infinite; }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
-        .winner-item { transition: all 0.2s; }
-        .admin-only { display: none; }
         .live-player { background: rgba(255,255,255,0.05); border-radius: 30px; padding: 4px 10px; font-size: 11px; margin: 4px; display: inline-flex; align-items: center; gap: 6px; }
-        .milestone { position: absolute; bottom: 20px; right: 20px; display: flex; gap: 8px; z-index: 10; }
-        .milestone-badge { background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); padding: 4px 8px; border-radius: 20px; font-size: 11px; font-weight: bold; border-left: 2px solid #FFD966; }
+        .copy-icon { cursor: pointer; transition: 0.2s; }
+        .copy-icon:hover { color: #FFD966; }
+        .admin-only { display: none; }
         ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-track { background: #1f1f1f; }
         ::-webkit-scrollbar-thumb { background: #f1c40f; }
@@ -36,7 +35,7 @@
     <!-- Fixed Header -->
     <div class="fixed top-0 left-0 w-full z-50 bg-black/80 backdrop-blur-xl border-b border-amber-500/30 px-4 py-2 flex justify-between items-center">
         <div class="flex items-center gap-3">
-            <div id="avatarHeader" class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-amber-700 flex items-center justify-center text-lg font-bold shadow-lg">👤</div>
+            <div id="avatarHeader" class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-amber-700 flex items-center justify-center text-lg font-bold shadow-lg overflow-hidden">👤</div>
             <div>
                 <div class="flex items-baseline gap-1">
                     <span id="headerBalance" class="text-xl font-black text-green-400">0.00</span>
@@ -57,18 +56,27 @@
                 <div id="multiplierBig" class="absolute inset-0 flex items-center justify-center pointer-events-none">
                     <div class="text-7xl md:text-8xl font-aviator font-black drop-shadow-2xl" style="text-shadow: 0 0 25px #FFD966;" id="multiplierText">1.00x</div>
                 </div>
-                <div class="milestone">
-                    <div class="milestone-badge">2x</div><div class="milestone-badge">4x</div><div class="milestone-badge">8x</div><div class="milestone-badge">10x</div>
+                <div class="absolute bottom-2 right-2 flex gap-2 z-10">
+                    <div class="bg-black/50 backdrop-blur px-2 py-0.5 rounded-full text-[9px] font-bold border border-white/20">2x</div>
+                    <div class="bg-black/50 backdrop-blur px-2 py-0.5 rounded-full text-[9px] font-bold border border-white/20">4x</div>
+                    <div class="bg-black/50 backdrop-blur px-2 py-0.5 rounded-full text-[9px] font-bold border border-white/20">8x</div>
+                    <div class="bg-black/50 backdrop-blur px-2 py-0.5 rounded-full text-[9px] font-bold border border-white/20">10x</div>
                 </div>
                 <div class="absolute top-3 left-3 bg-black/60 backdrop-blur rounded-full px-3 py-1 text-[9px] font-bold z-10 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> <span id="liveCount">0</span> online</div>
             </div>
 
-            <!-- Bet Buttons Row -->
-            <div class="grid grid-cols-4 gap-2 mb-4">
+            <!-- Quick Bet Row (small) -->
+            <div class="grid grid-cols-4 gap-2 mb-3">
                 <button onclick="quickBet(10)" class="bg-white/10 py-3 rounded-xl font-bold text-sm border border-white/20">10 ETB</button>
                 <button onclick="quickBet(50)" class="bg-white/10 py-3 rounded-xl font-bold text-sm border border-white/20">50 ETB</button>
                 <button onclick="quickBet(100)" class="bg-white/10 py-3 rounded-xl font-bold text-sm border border-white/20">100 ETB</button>
                 <button onclick="quickBet(200)" class="bg-white/10 py-3 rounded-xl font-bold text-sm border border-white/20">200 ETB</button>
+            </div>
+
+            <!-- TWO BIG BET BUTTONS (BET 100 & BET 500) -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <button id="bigBet1Btn" onclick="placeBigBet(100)" class="big-bet-btn w-full py-5 rounded-2xl font-black text-2xl tracking-wide shadow-lg">🎰 BET 100</button>
+                <button id="bigBet2Btn" onclick="placeBigBet(500)" class="big-bet-btn w-full py-5 rounded-2xl font-black text-2xl tracking-wide shadow-lg">🎲 BET 500</button>
             </div>
 
             <!-- Live Players List -->
@@ -85,8 +93,14 @@
                 <div class="bg-white/5 rounded-2xl p-4 border border-white/10">
                     <h3 class="font-black text-sm flex items-center gap-2"><i class="fa-solid fa-circle-dollar-to-slot text-green-400"></i> DEPOSIT</h3>
                     <div class="mt-2 space-y-3">
-                        <div class="bg-black/40 p-2 rounded-xl"><span class="text-[10px] text-white/50">🏦 CBE (Dawit Fikadu)</span><div class="font-mono text-xs">1000179571815</div></div>
-                        <div class="bg-black/40 p-2 rounded-xl"><span class="text-[10px] text-white/50">📱 Telebirr (Dawit Fikadu)</span><div class="font-mono text-xs">0906067696</div></div>
+                        <div class="bg-black/40 p-2 rounded-xl flex justify-between items-center">
+                            <span><span class="text-[10px] text-white/50">🏦 CBE (Dawit Fikadu)</span><div class="font-mono text-xs">1000179571815</div></span>
+                            <i class="fa-regular fa-copy copy-icon text-white/60 hover:text-amber-400" onclick="copyToClipboard('1000179571815')"></i>
+                        </div>
+                        <div class="bg-black/40 p-2 rounded-xl flex justify-between items-center">
+                            <span><span class="text-[10px] text-white/50">📱 Telebirr (Dawit Fikadu)</span><div class="font-mono text-xs">0906067696</div></span>
+                            <i class="fa-regular fa-copy copy-icon text-white/60 hover:text-amber-400" onclick="copyToClipboard('0906067696')"></i>
+                        </div>
                         <input type="text" id="depositFullName" placeholder="Full name" class="w-full bg-black/60 border border-white/20 rounded-xl p-2 text-sm">
                         <input type="text" id="depositFtNumber" placeholder="FT / Transaction number" class="w-full bg-black/60 border border-white/20 rounded-xl p-2 text-sm">
                         <input type="number" id="depositAmount" placeholder="Amount ETB" class="w-full bg-black/60 border border-white/20 rounded-xl p-2 text-sm">
@@ -109,7 +123,7 @@
             <div class="mt-4 text-[10px] text-white/30 text-center">📋 Pending approvals appear in Admin panel</div>
         </div>
 
-        <!-- TOP WINNERS PAGE (50 real names, animated podium) -->
+        <!-- TOP WINNERS PAGE (Podium + 50 list) -->
         <div id="page-top" class="page hidden">
             <h2 class="text-center font-black text-xl gold-text mb-2">🏆 TOP 50 WINNERS</h2>
             <div class="flex justify-center items-end gap-3 mb-8 mt-2">
@@ -123,7 +137,7 @@
         <!-- PROFILE PAGE -->
         <div id="page-profile" class="page hidden">
             <div class="flex flex-col items-center">
-                <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-amber-400 to-amber-700 p-1 mb-2"><div id="profileAvatar" class="w-full h-full rounded-full bg-black flex items-center justify-center text-3xl">👤</div></div>
+                <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-amber-400 to-amber-700 p-1 mb-2 overflow-hidden"><div id="profileAvatar" class="w-full h-full rounded-full bg-black flex items-center justify-center text-3xl">👤</div></div>
                 <h2 class="text-xl font-black" id="profileName">USER</h2>
                 <div class="text-[10px] text-green-400 bg-green-500/20 px-3 py-1 rounded-full mt-1"><i class="fa-solid fa-circle-check"></i> Verified</div>
             </div>
@@ -171,58 +185,234 @@
         let gameActive = false, currentMultiplier = 1.00, crashPoint = 1.00, gameInterval = null, nextRoundTimeout = null;
         let activeBet = 0; // current bet amount (0 if none)
         let autoCrashEnabled = true;
-        let adminProfit = 0; // 20% from wins
-        let livePlayers = []; // random names
-        let winnersList = []; // top 50 winners {name, amount, date}
+        let adminProfit = 0;
+        let winnersList = [];
         let roundSeed = Date.now();
-        
-        // Canvas & trail
+
+        // Canvas & trail (red line following plane)
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         let planeX = 40, planeY = 200;
+        let trailPoints = [];
         
-        function resizeCanvas() { const rect = canvas.parentElement.getBoundingClientRect(); canvas.width = rect.width; canvas.height = rect.height; drawTrail(); }
+        function resizeCanvas() { 
+            const rect = canvas.parentElement.getBoundingClientRect(); 
+            canvas.width = rect.width; 
+            canvas.height = rect.height; 
+            planeX = 40; planeY = canvas.height/2;
+            drawGameFrame();
+        }
         window.addEventListener('resize', resizeCanvas);
         
-        let trailPoints = [];
-        function drawTrail() { if(!ctx) return; ctx.clearRect(0,0,canvas.width,canvas.height); ctx.beginPath(); ctx.strokeStyle = '#ff3333'; ctx.lineWidth = 4; ctx.shadowBlur = 6; ctx.shadowColor = 'red'; for(let i=0;i<trailPoints.length-1;i++){ ctx.moveTo(trailPoints[i].x, trailPoints[i].y); ctx.lineTo(trailPoints[i+1].x, trailPoints[i+1].y); ctx.stroke(); } }
-        function updatePlanePosition(mult) { let progress = Math.min(0.9, (mult-1)/15); planeX = 40 + (canvas.width-80)*progress; planeY = 200 - (mult-1)*6; if(planeY<30) planeY=30; trailPoints.push({x:planeX, y:planeY}); if(trailPoints.length>30) trailPoints.shift(); drawTrail(); }
+        function drawGameFrame() {
+            if(!ctx) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // draw red trail
+            if(trailPoints.length > 1) {
+                ctx.beginPath();
+                ctx.strokeStyle = '#ff3333';
+                ctx.lineWidth = 4;
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = '#ff0000';
+                for(let i=0; i<trailPoints.length-1; i++) {
+                    ctx.moveTo(trailPoints[i].x, trailPoints[i].y);
+                    ctx.lineTo(trailPoints[i+1].x, trailPoints[i+1].y);
+                    ctx.stroke();
+                }
+                ctx.shadowBlur = 0;
+            }
+            // draw plane emoji
+            ctx.font = `${Math.min(48, canvas.width/12)}px "Segoe UI Emoji"`;
+            ctx.fillStyle = '#FFD966';
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#FFB347';
+            ctx.fillText("✈️", planeX-20, planeY);
+            ctx.shadowBlur = 0;
+        }
+        
+        function updatePlanePosition(mult) {
+            let progress = Math.min(0.85, (mult-1)/14);
+            planeX = 40 + (canvas.width-80)*progress;
+            planeY = canvas.height/2 - (mult-1)*5;
+            if(planeY < 35) planeY = 35;
+            trailPoints.push({x: planeX, y: planeY});
+            if(trailPoints.length > 35) trailPoints.shift();
+            drawGameFrame();
+        }
         
         // Deterministic crash sync (all players see same)
-        function getDeterministicCrash(roundTimestamp) { let seed = Math.floor(roundTimestamp / 25); let r = (Math.sin(seed) * 10000) % 1; let raw = 1 / (1 - (r * 0.92)); return Math.min(50, Math.max(1.05, raw)); }
+        function getDeterministicCrash(roundTimestamp) { 
+            let seed = Math.floor(roundTimestamp / 25); 
+            let r = (Math.sin(seed) * 10000) % 1; 
+            let raw = 1 / (1 - (r * 0.92)); 
+            return Math.min(50, Math.max(1.05, raw)); 
+        }
         
-        function startGameRound() { if(gameActive) return; gameActive = true; currentMultiplier = 1.00; let roundTime = Math.floor(Date.now() / 1000); crashPoint = getDeterministicCrash(roundTime); document.getElementById('multiplierText').innerText = '1.00x'; updatePlanePosition(1); if(gameInterval) clearInterval(gameInterval); gameInterval = setInterval(()=>{ if(!gameActive) return; currentMultiplier += 0.022; if(currentMultiplier>=crashPoint) crashRound(); else { document.getElementById('multiplierText').innerText = currentMultiplier.toFixed(2)+'x'; updatePlanePosition(currentMultiplier); } }, 50); }
+        function startGameRound() { 
+            if(gameActive) return; 
+            gameActive = true; 
+            currentMultiplier = 1.00; 
+            trailPoints = [];
+            planeX = 40; planeY = canvas.height/2;
+            drawGameFrame();
+            let roundTime = Math.floor(Date.now() / 1000); 
+            crashPoint = getDeterministicCrash(roundTime); 
+            document.getElementById('multiplierText').innerText = '1.00x'; 
+            if(gameInterval) clearInterval(gameInterval); 
+            gameInterval = setInterval(()=>{ 
+                if(!gameActive) return; 
+                currentMultiplier += 0.022; 
+                if(currentMultiplier >= crashPoint) crashRound(); 
+                else { 
+                    document.getElementById('multiplierText').innerText = currentMultiplier.toFixed(2)+'x'; 
+                    updatePlanePosition(currentMultiplier); 
+                } 
+            }, 50); 
+        }
         
-        function crashRound() { if(!gameActive) return; clearInterval(gameInterval); gameActive = false; if(activeBet>0){ // lose bet, no refund
-            activeBet=0; updateBetUI(); }
-        document.getElementById('multiplierText').innerHTML = '💥 CRASH!'; setTimeout(()=>{ if(!gameActive) document.getElementById('multiplierText').innerHTML = '1.00x'; trailPoints=[]; drawTrail(); }, 1500); if(nextRoundTimeout) clearTimeout(nextRoundTimeout); nextRoundTimeout = setTimeout(()=>{ startGameRound(); }, 3000); }
+        function crashRound() { 
+            if(!gameActive) return; 
+            clearInterval(gameInterval); 
+            gameActive = false; 
+            if(activeBet>0){ activeBet=0; updateBetButtons(); }
+            document.getElementById('multiplierText').innerHTML = '💥 FLEW AWAY!';
+            // draw explosion effect? just text
+            setTimeout(()=>{ 
+                if(!gameActive) document.getElementById('multiplierText').innerHTML = '1.00x'; 
+                trailPoints = [];
+                drawGameFrame();
+            }, 2000); 
+            if(nextRoundTimeout) clearTimeout(nextRoundTimeout); 
+            nextRoundTimeout = setTimeout(()=>{ startGameRound(); }, 3200); 
+        }
         
-        function cashout() { if(!gameActive || activeBet===0) return; let winAmount = activeBet * currentMultiplier; let adminFee = winAmount * 0.2; let playerWin = winAmount - adminFee; currentUser.balance += playerWin; currentUser.totalWon += playerWin; currentUser.gamesPlayed++; adminProfit += adminFee; addWinner(currentUser.name, winAmount); saveUser(); updateUI(); activeBet=0; updateBetUI(); tgShowAlert(`🎉 CASHOUT! You won ${playerWin.toFixed(2)} ETB (20% admin fee: ${adminFee.toFixed(2)})`); }
+        function cashout() { 
+            if(!gameActive || activeBet===0) return; 
+            let winAmount = activeBet * currentMultiplier; 
+            let adminFee = winAmount * 0.2; 
+            let playerWin = winAmount - adminFee; 
+            currentUser.balance += playerWin; 
+            currentUser.totalWon += playerWin; 
+            currentUser.gamesPlayed++; 
+            adminProfit += adminFee; 
+            addWinner(currentUser.name, winAmount); 
+            saveUser(); 
+            updateUI(); 
+            activeBet = 0; 
+            updateBetButtons(); 
+            tgShowAlert(`🎉 CASHOUT! You won ${playerWin.toFixed(2)} ETB (20% admin fee: ${adminFee.toFixed(2)})`); 
+        }
         
-        function quickBet(amount) { if(gameActive){ if(activeBet>0) cashout(); return; } if(amount>currentUser.balance){ tgShowAlert("Insufficient balance!"); return; } currentUser.balance -= amount; activeBet = amount; updateUI(); updateBetUI(); if(!gameActive && !gameInterval) startGameRound(); }
+        function quickBet(amount) { 
+            if(gameActive){ 
+                if(activeBet>0) cashout(); 
+                return; 
+            } 
+            if(amount > currentUser.balance){ tgShowAlert("Insufficient balance!"); return; } 
+            currentUser.balance -= amount; 
+            activeBet = amount; 
+            updateUI(); 
+            updateBetButtons(); 
+            if(!gameActive && !gameInterval) startGameRound(); 
+        }
         
-        function updateBetUI() { let btnDiv = document.querySelectorAll('.grid-cols-4 button'); btnDiv.forEach(btn=>btn.classList.remove('bg-amber-500','text-black')); if(activeBet>0 && !gameActive){ document.querySelectorAll('.grid-cols-4 button').forEach(btn=>{ if(parseInt(btn.innerText)===activeBet) btn.classList.add('bg-amber-500','text-black'); }); } let cashoutBtn = document.createElement('div'); }
+        function placeBigBet(amount) {
+            quickBet(amount);
+        }
+        
+        function updateBetButtons() {
+            const btn1 = document.getElementById('bigBet1Btn');
+            const btn2 = document.getElementById('bigBet2Btn');
+            if(gameActive && activeBet > 0) {
+                btn1.innerText = activeBet === 100 ? "💸 CASH OUT" : "BET 100";
+                btn2.innerText = activeBet === 500 ? "💸 CASH OUT" : "BET 500";
+                btn1.className = (activeBet === 100) ? "cashout-big w-full py-5 rounded-2xl font-black text-2xl tracking-wide" : "big-bet-btn w-full py-5 rounded-2xl font-black text-2xl tracking-wide";
+                btn2.className = (activeBet === 500) ? "cashout-big w-full py-5 rounded-2xl font-black text-2xl tracking-wide" : "big-bet-btn w-full py-5 rounded-2xl font-black text-2xl tracking-wide";
+            } else {
+                btn1.innerText = "🎰 BET 100";
+                btn2.innerText = "🎲 BET 500";
+                btn1.className = "big-bet-btn w-full py-5 rounded-2xl font-black text-2xl tracking-wide";
+                btn2.className = "big-bet-btn w-full py-5 rounded-2xl font-black text-2xl tracking-wide";
+            }
+        }
         
         // Live Players Simulation
         const ethiopianNames = ["Dawit","Abel","Meron","Biruk","Hanna","Yonas","Selam","Natnael","Eden","Mekdes","Kidus","Liya","Henok","Ruth","Samuel","Betty","Girum","Tsion","Ermias","Frehiwot"];
-        function updateLivePlayers() { let listDiv = document.getElementById('livePlayersList'); let html = ''; for(let i=0;i<12;i++){ let name = ethiopianNames[Math.floor(Math.random()*ethiopianNames.length)]+Math.floor(Math.random()*100); let bet = [10,50,100,200][Math.floor(Math.random()*4)]; html += `<div class="live-player"><i class="fa-solid fa-user-circle"></i> ${name} <span class="text-amber-400">${bet} ETB</span></div>`; } listDiv.innerHTML = html; document.getElementById('liveCount').innerText = 1800+Math.floor(Math.random()*700); } setInterval(updateLivePlayers, 7000); updateLivePlayers();
+        function updateLivePlayers() { 
+            let listDiv = document.getElementById('livePlayersList'); 
+            let html = ''; 
+            for(let i=0;i<12;i++){ 
+                let name = ethiopianNames[Math.floor(Math.random()*ethiopianNames.length)]+Math.floor(Math.random()*100); 
+                let bet = [10,50,100,200][Math.floor(Math.random()*4)]; 
+                html += `<div class="live-player"><i class="fa-solid fa-user-circle"></i> ${name} <span class="text-amber-400">${bet} ETB</span></div>`; 
+            } 
+            listDiv.innerHTML = html; 
+            document.getElementById('liveCount').innerText = 1800+Math.floor(Math.random()*700); 
+        } 
+        setInterval(updateLivePlayers, 7000); 
+        updateLivePlayers();
         
         // Top Winners (50 real names)
-        const realNames = ["Abebe Bikila","Meskel Haile","Tigist Assefa","Kenenisa Bekele","Derartu Tulu","Haile Gebrselassie","Feyisa Lilesa","Almaz Ayana","Genet Gelana","Birhanu Legese","Letesenbet Gidey","Yomif Kejelcha","Gudaf Tsegay","Sifan Hassan","Tamirat Tola","Lemi Berhanu","Ayele Abshero","Tsegaye Mekonnen","Worknesh Degefa","Ruti Aga","Dibaba Tirunesh","Ejegayehu Dibaba","Mulugeta Wami","Gelete Burka","Mizan Alem","Dawit Fikadu","Selamawit Teferi","Bethelhem Moges","Eden Girmay","Natnael Tesfaye","Henok Mulubrhan","Kidus Girmay","Meron Teshome","Yonas Kinde","Biruk Degefa","Hanna Tsegaye","Ermias Ayele","Tsion Abebe","Frehiwot Goshu","Mekdes Woldu","Samuel Tsegay","Girma Bekele","Liya Kebede","Ruth Ayele","Betty Hailu","Solomon Berhanu","Assefa Mezegebu","Tilahun Regassa","Belaynesh Oljira","Mamitu Daska"];
-        function buildTopWinners() { winnersList = []; for(let i=0;i<50;i++){ winnersList.push({ name: realNames[i%realNames.length], amount: Math.floor(5000 + Math.random()*45000), date: new Date(Date.now()-i*86400000).toLocaleDateString() }); } winnersList.sort((a,b)=>b.amount-a.amount); renderTopWinners(); }
-        function renderTopWinners() { if(winnersList.length<3) return; document.getElementById('firstName').innerText = winnersList[0].name.slice(0,15); document.getElementById('firstAmount').innerText = winnersList[0].amount; document.getElementById('secondName').innerText = winnersList[1].name.slice(0,12); document.getElementById('secondAmount').innerText = winnersList[1].amount; document.getElementById('thirdName').innerText = winnersList[2].name.slice(0,12); document.getElementById('thirdAmount').innerText = winnersList[2].amount; let container = document.getElementById('topWinnersList'); container.innerHTML = winnersList.slice(0,50).map((w,i)=>`<div class="flex justify-between items-center bg-white/5 p-2 rounded-lg"><span class="text-[10px] font-bold">#${i+1} ${w.name}</span><span class="gold-text text-sm">${w.amount.toFixed(0)} ETB</span></div>`).join(''); }
-        function addWinner(name, amount){ winnersList.unshift({name, amount, date: new Date().toLocaleString()}); winnersList.sort((a,b)=>b.amount-a.amount); if(winnersList.length>50) winnersList.pop(); renderTopWinners(); saveWinners(); }
+        const realNames = ["Abebe Bikila","Meskel Haile","Tigist Assefa","Kenenisa Bekele","Derartu Tulu","Haile Gebrselassie","Feyisa Lilesa","Almaz Ayana","Genet Gelana","Birhanu Legese","Letesenbet Gidey","Yomif Kejelcha","Gudaf Tsegay","Sifan Hassan","Tamirat Tola","Lemi Berhanu","Ayele Abshero","Tsegaye Mekonnen","Worknesh Degefa","Ruti Aga","Dibaba Tirunesh","Ejegayebu Dibaba","Mulugeta Wami","Gelete Burka","Mizan Alem","Dawit Fikadu","Selamawit Teferi","Bethelhem Moges","Eden Girmay","Natnael Tesfaye","Henok Mulubrhan","Kidus Girmay","Meron Teshome","Yonas Kinde","Biruk Degefa","Hanna Tsegaye","Ermias Ayele","Tsion Abebe","Frehiwot Goshu","Mekdes Woldu","Samuel Tsegay","Girma Bekele","Liya Kebede","Ruth Ayele","Betty Hailu","Solomon Berhanu","Assefa Mezegebu","Tilahun Regassa","Belaynesh Oljira","Mamitu Daska"];
+        function buildTopWinners() { 
+            winnersList = []; 
+            for(let i=0;i<50;i++){ 
+                winnersList.push({ name: realNames[i%realNames.length], amount: Math.floor(5000 + Math.random()*45000), date: new Date(Date.now()-i*86400000).toLocaleDateString() }); 
+            } 
+            winnersList.sort((a,b)=>b.amount-a.amount); 
+            renderTopWinners(); 
+        }
+        function renderTopWinners() { 
+            if(winnersList.length<3) return; 
+            document.getElementById('firstName').innerText = winnersList[0].name.slice(0,15); 
+            document.getElementById('firstAmount').innerText = winnersList[0].amount; 
+            document.getElementById('secondName').innerText = winnersList[1].name.slice(0,12); 
+            document.getElementById('secondAmount').innerText = winnersList[1].amount; 
+            document.getElementById('thirdName').innerText = winnersList[2].name.slice(0,12); 
+            document.getElementById('thirdAmount').innerText = winnersList[2].amount; 
+            let container = document.getElementById('topWinnersList'); 
+            container.innerHTML = winnersList.slice(0,50).map((w,i)=>`<div class="flex justify-between items-center bg-white/5 p-2 rounded-lg"><span class="text-[10px] font-bold">#${i+1} ${w.name}</span><span class="gold-text text-sm">${w.amount.toFixed(0)} ETB</span></div>`).join(''); 
+        }
+        function addWinner(name, amount){ 
+            winnersList.unshift({name, amount, date: new Date().toLocaleString()}); 
+            winnersList.sort((a,b)=>b.amount-a.amount); 
+            if(winnersList.length>50) winnersList.pop(); 
+            renderTopWinners(); 
+            saveWinners(); 
+        }
         
         // Wallet Deposit/Withdraw with Admin Approval
-        window.requestDeposit = function(){ let fullname = document.getElementById('depositFullName').value; let ft = document.getElementById('depositFtNumber').value; let amt = parseFloat(document.getElementById('depositAmount').value); if(!fullname || !ft || amt<50){ tgShowAlert("Fill all fields, min 50 ETB"); return; } pendingDeposits.push({id:Date.now(), user:currentUser.name, userId:currentUser.id, fullname, ft, amount:amt, status:'pending', utc:new Date().toISOString()}); savePending(); tgShowAlert("Deposit request sent to admin. Await approval."); document.getElementById('depositFullName').value=''; document.getElementById('depositFtNumber').value=''; document.getElementById('depositAmount').value=''; renderAdminLogs(); };
-        window.requestWithdraw = function(){ let acc = document.getElementById('withdrawAccount').value; let amt = parseFloat(document.getElementById('withdrawAmountInput').value); if(!acc || amt<200){ tgShowAlert("Account and min 200 ETB"); return; } if(amt>currentUser.balance){ tgShowAlert("Insufficient balance"); return; } pendingWithdraws.push({id:Date.now(), user:currentUser.name, userId:currentUser.id, account:acc, amount:amt, status:'pending', utc:new Date().toISOString()}); savePending(); tgShowAlert("Withdraw request sent to admin."); document.getElementById('withdrawAmountInput').value=''; renderAdminLogs(); };
+        window.requestDeposit = function(){ 
+            let fullname = document.getElementById('depositFullName').value; 
+            let ft = document.getElementById('depositFtNumber').value; 
+            let amt = parseFloat(document.getElementById('depositAmount').value); 
+            if(!fullname || !ft || amt<50){ tgShowAlert("Fill all fields, min 50 ETB"); return; } 
+            pendingDeposits.push({id:Date.now(), user:currentUser.name, userId:currentUser.id, fullname, ft, amount:amt, status:'pending', utc:new Date().toISOString()}); 
+            savePending(); 
+            tgShowAlert("Deposit request sent to admin. Await approval."); 
+            document.getElementById('depositFullName').value=''; 
+            document.getElementById('depositFtNumber').value=''; 
+            document.getElementById('depositAmount').value=''; 
+            renderAdminLogs(); 
+        };
+        window.requestWithdraw = function(){ 
+            let acc = document.getElementById('withdrawAccount').value; 
+            let amt = parseFloat(document.getElementById('withdrawAmountInput').value); 
+            if(!acc || amt<200){ tgShowAlert("Account and min 200 ETB"); return; } 
+            if(amt>currentUser.balance){ tgShowAlert("Insufficient balance"); return; } 
+            pendingWithdraws.push({id:Date.now(), user:currentUser.name, userId:currentUser.id, account:acc, amount:amt, status:'pending', utc:new Date().toISOString()}); 
+            savePending(); 
+            tgShowAlert("Withdraw request sent to admin."); 
+            document.getElementById('withdrawAmountInput').value=''; 
+            renderAdminLogs(); 
+        };
         
-        // Admin functions (only visible to Dawit_Fikadu21)
-        function isAdmin(){ let tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user; return tgUser && (tgUser.username === 'Dawit_Fikadu21' || tgUser.username === 'Dawit_Fikadu'); }
+        // Admin functions
+        function isAdmin(){ let tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user; return tgUser && (tgUser.username === 'Dawit_Fikadu21'); }
         function toggleAutoCrash(){ autoCrashEnabled = !autoCrashEnabled; document.getElementById('autoCrashBtn').innerText = `Auto Crash: ${autoCrashEnabled?'ON':'OFF'}`; }
         function forceCrashNow(){ if(gameActive) crashRound(); addLog("Manual force crash executed"); }
         function resetGameState(){ if(gameInterval)clearInterval(gameInterval); gameActive=false; activeBet=0; startGameRound(); addLog("Game state reset"); }
-        function setUserBalance(){ let uid = document.getElementById('adminUserId').value; let bal = parseFloat(document.getElementById('adminBalanceSet').value); if(uid===currentUser.id){ currentUser.balance=bal; saveUser(); updateUI(); addLog(`Balance set to ${bal} for ${currentUser.name}`); } else addLog("User ID not found (demo: use current)"); }
+        function setUserBalance(){ let uid = document.getElementById('adminUserId').value; let bal = parseFloat(document.getElementById('adminBalanceSet').value); if(uid===currentUser.id){ currentUser.balance=bal; saveUser(); updateUI(); addLog(`Balance set to ${bal} for ${currentUser.name}`); } else addLog("User ID not found"); }
         function showDepositRequests(){ let msg = pendingDeposits.map(d=>`${d.user} - ${d.amount} ETB - ${d.ft}`).join('\n') || "None"; tgShowAlert("Deposits:\n"+msg); }
         function approveDeposit(index){ let dep = pendingDeposits[index]; if(dep){ currentUser.balance += dep.amount; currentUser.totalDeposited += dep.amount; dep.status='approved'; saveUser(); addLog(`Approved deposit ${dep.amount} for ${dep.user}`); updateUI(); } pendingDeposits.splice(index,1); savePending(); renderAdminLogs(); }
         function approveWithdraw(index){ let wd = pendingWithdraws[index]; if(wd && wd.amount<=currentUser.balance){ currentUser.balance -= wd.amount; wd.status='approved'; saveUser(); addLog(`Approved withdraw ${wd.amount} to ${wd.account}`); updateUI(); } else addLog("Withdraw failed: balance low"); pendingWithdraws.splice(index,1); savePending(); renderAdminLogs(); }
@@ -230,21 +420,64 @@
         function addLog(msg){ let logDiv = document.getElementById('adminLogs'); if(logDiv) logDiv.innerHTML += `<div>🕒 ${new Date().toUTCString().slice(-12)} ${msg}</div>`; }
         
         // UI Helpers
+        function copyToClipboard(text) { navigator.clipboard.writeText(text); tgShowAlert(`Copied: ${text}`); }
         function tgShowAlert(msg){ if(window.Telegram?.WebApp) window.Telegram.WebApp.showAlert(msg); else alert(msg); }
-        function updateUI(){ document.getElementById('headerBalance').innerText = currentUser.balance.toFixed(2); document.getElementById('profileBalance').innerText = currentUser.balance.toFixed(2); document.getElementById('profileWon').innerText = currentUser.totalWon.toFixed(2); document.getElementById('profileGames').innerText = currentUser.gamesPlayed; document.getElementById('profileDeposited').innerText = currentUser.totalDeposited.toFixed(2); document.getElementById('withdrawBalanceShow').innerText = currentUser.balance.toFixed(2); }
+        function updateUI(){ 
+            document.getElementById('headerBalance').innerText = currentUser.balance.toFixed(2); 
+            document.getElementById('profileBalance').innerText = currentUser.balance.toFixed(2); 
+            document.getElementById('profileWon').innerText = currentUser.totalWon.toFixed(2); 
+            document.getElementById('profileGames').innerText = currentUser.gamesPlayed; 
+            document.getElementById('profileDeposited').innerText = currentUser.totalDeposited.toFixed(2); 
+            document.getElementById('withdrawBalanceShow').innerText = currentUser.balance.toFixed(2); 
+        }
         function saveUser(){ localStorage.setItem('aviator_user', JSON.stringify(currentUser)); localStorage.setItem('winners_top', JSON.stringify(winnersList)); localStorage.setItem('pending_deposits', JSON.stringify(pendingDeposits)); localStorage.setItem('pending_withdraws', JSON.stringify(pendingWithdraws)); }
-        function loadData(){ let u = localStorage.getItem('aviator_user'); if(u){ let parsed = JSON.parse(u); currentUser = {...currentUser, ...parsed}; } let w = localStorage.getItem('winners_top'); if(w) winnersList = JSON.parse(w); let pd = localStorage.getItem('pending_deposits'); if(pd) pendingDeposits = JSON.parse(pd); let pw = localStorage.getItem('pending_withdraws'); if(pw) pendingWithdraws = JSON.parse(pw); if(winnersList.length===0) buildTopWinners(); else renderTopWinners(); updateUI(); }
+        function loadData(){ 
+            let u = localStorage.getItem('aviator_user'); if(u){ let parsed = JSON.parse(u); currentUser = {...currentUser, ...parsed}; } 
+            let w = localStorage.getItem('winners_top'); if(w) winnersList = JSON.parse(w); 
+            let pd = localStorage.getItem('pending_deposits'); if(pd) pendingDeposits = JSON.parse(pd); 
+            let pw = localStorage.getItem('pending_withdraws'); if(pw) pendingWithdraws = JSON.parse(pw); 
+            if(winnersList.length===0) buildTopWinners(); else renderTopWinners(); 
+            updateUI(); 
+        }
         function savePending(){ localStorage.setItem('pending_deposits', JSON.stringify(pendingDeposits)); localStorage.setItem('pending_withdraws', JSON.stringify(pendingWithdraws)); }
         function saveWinners(){ localStorage.setItem('winners_top', JSON.stringify(winnersList)); }
         
         // Telegram & Profile
-        const tg = window.Telegram?.WebApp; if(tg){ tg.expand(); let user = tg.initDataUnsafe?.user; if(user){ currentUser.name = user.first_name || user.username || "Player"; currentUser.id = user.id; if(user.photo_url) currentUser.photo = user.photo_url; document.getElementById('profileName').innerHTML = `${currentUser.name} <i class="fa-solid fa-circle-check text-sky-400 text-xs"></i>`; document.getElementById('tgName').innerText = currentUser.name; if(currentUser.photo) document.getElementById('avatarHeader').innerHTML = `<img src="${currentUser.photo}" class="w-full h-full object-cover rounded-full">`; } if(isAdmin()) document.querySelectorAll('.admin-only').forEach(el=>el.style.display='flex'); }
+        const tg = window.Telegram?.WebApp; 
+        if(tg){ 
+            tg.expand(); 
+            let user = tg.initDataUnsafe?.user; 
+            if(user){ 
+                currentUser.name = user.first_name || user.username || "Player"; 
+                currentUser.id = user.id; 
+                if(user.photo_url) currentUser.photo = user.photo_url; 
+                document.getElementById('profileName').innerHTML = `${currentUser.name} <i class="fa-solid fa-circle-check text-sky-400 text-xs"></i>`; 
+                document.getElementById('tgName').innerText = currentUser.name; 
+                if(currentUser.photo) { 
+                    document.getElementById('avatarHeader').innerHTML = `<img src="${currentUser.photo}" class="w-full h-full object-cover rounded-full">`;
+                    document.getElementById('profileAvatar').innerHTML = `<img src="${currentUser.photo}" class="w-full h-full object-cover rounded-full">`;
+                }
+            } 
+            if(isAdmin()) document.querySelectorAll('.admin-only').forEach(el=>el.style.display='flex'); 
+        }
         
-        function switchPage(page){ document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden')); document.getElementById(`page-${page}`).classList.remove('hidden'); document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active','text-amber-400')); document.getElementById(`nav-${page}`).classList.add('active','text-amber-400'); if(page==='admin' && isAdmin()) renderAdminLogs(); if(page==='top') renderTopWinners(); }
+        function switchPage(page){ 
+            document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden')); 
+            document.getElementById(`page-${page}`).classList.remove('hidden'); 
+            document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active','text-amber-400')); 
+            document.getElementById(`nav-${page}`).classList.add('active','text-amber-400'); 
+            if(page==='admin' && isAdmin()) renderAdminLogs(); 
+            if(page==='top') renderTopWinners(); 
+        }
         
-        window.quickBet = quickBet; window.cashout = cashout; window.switchPage = switchPage; window.toggleAutoCrash = toggleAutoCrash; window.forceCrashNow = forceCrashNow; window.resetGameState = resetGameState; window.setUserBalance = setUserBalance; window.showDepositRequests = showDepositRequests; window.approveDeposit = approveDeposit; window.approveWithdraw = approveWithdraw;
+        window.quickBet = quickBet; window.placeBigBet = placeBigBet; window.cashout = cashout; window.switchPage = switchPage; 
+        window.toggleAutoCrash = toggleAutoCrash; window.forceCrashNow = forceCrashNow; window.resetGameState = resetGameState; 
+        window.setUserBalance = setUserBalance; window.showDepositRequests = showDepositRequests; 
+        window.approveDeposit = approveDeposit; window.approveWithdraw = approveWithdraw; window.copyToClipboard = copyToClipboard;
         
-        loadData(); startGameRound(); setInterval(()=>{ if(gameActive && activeBet===0 && !gameInterval) startGameRound(); }, 5000);
+        loadData(); 
+        startGameRound(); 
+        setInterval(()=>{ if(gameActive && activeBet===0 && !gameInterval) startGameRound(); }, 5000);
         resizeCanvas();
     </script>
 </body>
