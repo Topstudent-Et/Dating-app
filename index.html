@@ -1,197 +1,276 @@
 <!DOCTYPE html>
-<html lang="am">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abiator - አቪዬተር ጨዋታ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AVIATOR GOLD ELITE ©2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(#0a0a2a, #1a0033);
-            color: white;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-        }
-        h1 { margin: 10px 0; color: #00ffcc; }
-        #game {
-            width: 700px;
-            height: 400px;
-            border: 3px solid #00ffcc;
-            background: #000033;
-            margin: 20px auto;
-            position: relative;
-            overflow: hidden;
-        }
-        #plane {
-            position: absolute;
-            font-size: 50px;
-            transition: all 0.1s linear;
-        }
-        #multiplier {
-            font-size: 60px;
-            font-weight: bold;
-            color: #ffff00;
-            margin: 10px;
-        }
-        .controls {
-            margin: 20px;
-        }
-        input, button {
-            padding: 12px 20px;
-            font-size: 18px;
-            margin: 5px;
-        }
-        button {
-            background: #ff0066;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        button:hover { background: #ff3388; }
-        #cashout { background: #00cc66; }
-        #history {
-            max-width: 700px;
-            margin: 20px auto;
-            text-align: left;
-        }
-        .bet { color: #00ffcc; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;700;900&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        :root { --gold: #FFD700; --gold-dark: #B8860B; --real: #00ff66; --demo: #ff4444; }
+        
+        body { font-family: 'Inter', sans-serif; background: #050505; color: white; overflow: hidden; height: 100vh; }
+        .font-game { font-family: 'Orbitron', sans-serif; }
+        
+        /* Golden Theme */
+        .gold-gradient { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); color: black; }
+        .gold-border { border: 1px solid rgba(255, 215, 0, 0.3); }
+        .gold-text { color: #FFD700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+
+        /* Navigation */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 75px; display: flex; justify-content: space-around; align-items: center; background: rgba(10,10,10,0.95); border-top: 1px solid rgba(255,215,0,0.2); z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #666; font-size: 10px; font-weight: 800; }
+        .nav-item.active { color: #FFD700; }
+
+        /* Game UI */
+        .canvas-area { background: #000; border-radius: 30px; border: 2px solid #FFD700; position: relative; height: 240px; overflow: hidden; box-shadow: 0 0 30px rgba(184, 134, 11, 0.3); }
+        #gamePath { stroke: var(--theme-color, #00ff66); stroke-width: 6; fill: none; }
+        #plane { position: absolute; font-size: 45px; z-index: 10; transition: transform 0.05s linear; }
+
+        .page { display: none; padding: 16px; height: calc(100vh - 75px); overflow-y: auto; padding-top: 85px; }
+        .active-page { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .bet-btn { width: 110px; border-radius: 20px; font-weight: 900; font-style: italic; font-size: 18px; color: black; }
+        
+        /* Admin Section */
+        .admin-panel { background: rgba(255, 0, 0, 0.1); border: 1px solid red; border-radius: 15px; padding: 10px; margin-top: 20px; }
     </style>
 </head>
-<body>
-    <h1>✈️ Abiator (Aviator Crash Game) ✈️</h1>
-    <p>ቤት አድርግ → አውሮፕላኑ ሲበር ገንዘብ አውጣ!</p>
+<body class="is-real">
 
-    <div id="game">
-        <div id="plane">✈️</div>
-    </div>
+    <header class="fixed top-0 w-full p-4 flex justify-between items-center z-[1100] bg-black/80 backdrop-blur-md border-b border-gold-dark/20">
+        <div class="flex items-center gap-3">
+            <div id="uPfp" class="w-10 h-10 rounded-full bg-zinc-800 border border-gold/30 overflow-hidden flex items-center justify-center text-xl">👤</div>
+            <div>
+                <p id="uBal" class="gold-text font-black text-lg">0.00 ETB</p>
+                <p class="text-[8px] font-black opacity-60 uppercase tracking-tighter" id="winNotice">WIN UP TO 50,000 ETB DAILY!</p>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="toggleLang()" id="langBtn" class="bg-white/10 px-3 py-1 rounded-lg text-[10px] font-black">አማርኛ</button>
+            <div class="flex bg-white/5 p-1 rounded-full border border-white/10 text-[9px] font-black">
+                <button onclick="setMode(true)" id="rBtn" class="px-3 py-1 bg-green-500 text-black rounded-full">REAL</button>
+                <button onclick="setMode(false)" id="dBtn" class="px-3 py-1 text-zinc-500">DEMO</button>
+            </div>
+        </div>
+    </header>
 
-    <div id="multiplier">1.00x</div>
+    <section id="play" class="page active-page">
+        <div class="canvas-area mb-5">
+            <div class="absolute top-4 left-4 flex items-center gap-2">
+                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span class="text-[9px] font-bold opacity-60"><span id="liveCount">2485</span> LIVE PLAYERS</span>
+            </div>
+            <svg width="100%" height="100%" class="absolute"><path id="gamePath" d="M 0 240 Q 0 240 0 240" /></svg>
+            <div id="mText" class="font-game text-6xl italic absolute inset-0 flex items-center justify-center gold-text">1.00x</div>
+            <div id="plane" class="bottom-6 left-6">✈️</div>
+        </div>
 
-    <div class="controls">
-        <input type="number" id="betAmount" value="50" placeholder="ቤት መጠን (ብር)">
-        <button onclick="placeBet()">ቤት አድርግ</button>
-        <button id="cashoutBtn" onclick="cashOut()" disabled>ገንዘብ አውጣ (Cash Out)</button>
-    </div>
+        <div class="grid grid-cols-1 gap-3">
+            <div class="bg-white/5 p-3 rounded-2xl border gold-border flex gap-3">
+                <div class="flex-1 grid grid-cols-2 gap-2">
+                    <button onclick="setB(1,100)" class="bg-white/10 py-3 rounded-xl text-xs font-black">100</button>
+                    <button onclick="setB(1,1000)" class="bg-white/10 py-3 rounded-xl text-xs font-black">1000</button>
+                </div>
+                <button id="btn1" onclick="doBet(1)" class="bet-btn gold-gradient" data-t="bet">BET</button>
+            </div>
+            <div class="bg-white/5 p-3 rounded-2xl border gold-border flex gap-3">
+                <div class="flex-1 grid grid-cols-2 gap-2">
+                    <button onclick="setB(2,100)" class="bg-white/10 py-3 rounded-xl text-xs font-black">100</button>
+                    <button onclick="setB(2,1000)" class="bg-white/10 py-3 rounded-xl text-xs font-black">1000</button>
+                </div>
+                <button id="btn2" onclick="doBet(2)" class="bet-btn gold-gradient" data-t="bet">BET</button>
+            </div>
+        </div>
+    </section>
 
-    <p>ባላንስ: <span id="balance" class="bet">1000</span> ብር</p>
+    <section id="top" class="page">
+        <h2 class="text-center font-black text-xl gold-text mb-6" data-t="topWinners">DAILY TOP WINNERS</h2>
+        <div id="winnersList" class="space-y-2"></div>
+    </section>
 
-    <div id="history">
-        <strong>የቀድሞ ማባዛቶች:</strong>
-        <div id="crashHistory"></div>
-    </div>
+    <section id="wallet" class="page">
+        <div class="space-y-4">
+            <div class="bg-zinc-900/80 p-6 rounded-[30px] border gold-border">
+                <p class="text-[10px] gold-text font-black mb-4" data-t="depositTitle">DEPOSIT FUNDS</p>
+                <div onclick="copy('1000179571815')" class="bg-black p-4 rounded-xl mb-3 flex justify-between border border-white/5">
+                    <span class="gold-text font-game">CBE: 1000179571815</span><i class="fa-solid fa-copy opacity-30"></i>
+                </div>
+                <div onclick="copy('0906067696')" class="bg-black p-4 rounded-xl flex justify-between border border-white/5">
+                    <span class="gold-text font-game">TELEBIRR: 0906067696</span><i class="fa-solid fa-copy opacity-30"></i>
+                </div>
+            </div>
+            <div class="bg-zinc-900/80 p-6 rounded-[30px] border gold-border">
+                <p class="text-[10px] gold-text font-black mb-4" data-t="withdrawTitle">WITHDRAWAL</p>
+                <input id="withdrawAmt" type="number" placeholder="Amount" class="w-full bg-black p-4 rounded-xl mb-3 border border-white/10 outline-none">
+                <button onclick="requestWithdraw()" class="w-full py-4 gold-gradient rounded-xl font-black" data-t="withdrawBtn">WITHDRAW NOW</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="admin" class="page">
+        <div class="admin-panel">
+            <h2 class="text-red-500 font-black mb-4">ADMIN CONTROL</h2>
+            <div class="flex flex-col gap-3">
+                <button onclick="forceCrash()" class="bg-red-600 py-3 rounded-xl font-bold">FORCE CRASH NOW</button>
+                <div class="bg-black/50 p-3 rounded-lg">
+                    <p class="text-[10px] opacity-50">MANAGE BALANCE (User: @Dai)</p>
+                    <input id="admAdd" type="number" placeholder="Add Amount" class="w-full bg-transparent border-b border-white/20 p-2 text-sm outline-none">
+                    <button onclick="addBal()" class="w-full mt-2 bg-green-600 py-2 rounded-lg text-xs font-bold">ADD BALANCE</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <nav class="nav-bar">
+        <div onclick="nav('play')" class="nav-item active" id="n-play"><i class="fa-solid fa-plane"></i><span data-t="nPlay">PLAY</span></div>
+        <div onclick="nav('top')" class="nav-item" id="n-top"><i class="fa-solid fa-trophy"></i><span data-t="nTop">TOP</span></div>
+        <div onclick="nav('wallet')" class="nav-item" id="n-wallet"><i class="fa-solid fa-wallet"></i><span data-t="nWallet">WALLET</span></div>
+        <div onclick="nav('admin')" class="nav-item" id="n-admin"><i class="fa-solid fa-lock"></i><span>ADMIN</span></div>
+    </nav>
 
     <script>
-        let balance = 1000;
-        let currentBet = 0;
-        let multiplier = 1.0;
-        let isFlying = false;
-        let crashPoint = 0;
-        let interval = null;
-        let plane = document.getElementById('plane');
-        let multiplierEl = document.getElementById('multiplier');
-        let balanceEl = document.getElementById('balance');
-        let cashoutBtn = document.getElementById('cashoutBtn');
-        let historyEl = document.getElementById('crashHistory');
+        const tg = window.Telegram.WebApp; tg.expand();
+        let isReal = true, gameActive = false, m = 1.00, lang = 'en';
+        let rBal = 0.00, dBal = 50.00;
+        let bets = { 1: { on: false, amt: 100 }, 2: { on: false, amt: 100 } };
+        let adminForceCrash = false;
 
-        function placeBet() {
-            if (isFlying) return alert("ጨዋታው እየተጫወተ ነው!");
-            
-            const betInput = parseFloat(document.getElementById('betAmount').value);
-            if (!betInput || betInput <= 0) return alert("ትክክለኛ ቤት አስገባ!");
-            if (betInput > balance) return alert("በቂ ባላንስ የለህም!");
+        const texts = {
+            en: { nPlay: "PLAY", nTop: "TOP", nWallet: "WALLET", bet: "BET", cash: "CASH OUT", topWinners: "DAILY TOP WINNERS", depositTitle: "DEPOSIT FUNDS", withdrawTitle: "WITHDRAWAL", withdrawBtn: "WITHDRAW NOW", winNotice: "WIN UP TO 50,000 ETB DAILY!" },
+            am: { nPlay: "ተጫወት", nTop: "አሸናፊዎች", nWallet: "ዋሌት", bet: "መድብ", cash: "አውጣ", topWinners: "የዕለቱ ከፍተኛ አሸናፊዎች", depositTitle: "ገንዘብ አስገባ", withdrawTitle: "ገንዘብ አውጣ", withdrawBtn: "አሁን አውጣ", winNotice: "በቀን እስከ 50,000 ብር ያሸንፉ!" }
+        };
 
-            currentBet = betInput;
-            balance -= betInput;
-            balanceEl.textContent = balance.toFixed(0);
-
-            // አዲስ ጨዋታ ጀምር
-            startGame();
+        function toggleLang() {
+            lang = lang === 'en' ? 'am' : 'en';
+            document.getElementById('langBtn').innerText = lang === 'en' ? 'አማርኛ' : 'English';
+            document.querySelectorAll('[data-t]').forEach(el => {
+                const key = el.getAttribute('data-t');
+                el.innerText = texts[lang][key];
+            });
+            updateUI();
         }
 
-        function startGame() {
-            isFlying = true;
-            multiplier = 1.0;
-            cashoutBtn.disabled = false;
+        function init() {
+            const u = tg.initDataUnsafe?.user;
+            if(u) {
+                if(u.photo_url) document.getElementById('uPfp').innerHTML = `<img src="${u.photo_url}" class="w-full h-full object-cover">`;
+                // If user is Dawit, show admin tab
+                if(u.username !== "Dawit_Fikadu21") document.getElementById('n-admin').style.display = 'none';
+            }
+            genWinners(); updateUI(); loop();
+        }
 
-            // ራንደም crash point (1.0x \~ 50x)
-            crashPoint = Math.random() * 49 + 1.2; // ቢያንስ 1.2x
+        function loop() { if(!gameActive) setTimeout(start, 4000); }
 
-            plane.style.left = '50px';
-            plane.style.top = '200px';
+        function start() {
+            gameActive = true; m = 1.00; adminForceCrash = false;
+            let totalReal = (bets[1].on ? bets[1].amt : 0) + (bets[2].on ? bets[2].amt : 0);
+            
+            // 20% Admin Profit Logic
+            let crashPoint = (isReal && totalReal > 0) ? 1.05 + (Math.random() * 1.5) : 1.1 + (Math.random() * 10);
 
-            interval = setInterval(() => {
-                multiplier += 0.05 + (multiplier * 0.008); // ፍጥነት ይጨምራል
-                multiplierEl.textContent = multiplier.toFixed(2) + "x";
+            let tick = setInterval(() => {
+                m += 0.04;
+                document.getElementById('mText').innerText = m.toFixed(2) + "x";
+                let x = m * 22, y = m * 16;
+                document.getElementById('plane').style.transform = `translate(${x}px, -${y}px) rotate(-15deg)`;
+                document.getElementById('gamePath').setAttribute('d', `M 0 240 Q ${x/2} ${240-y} ${x} ${240-y}`);
 
-                // አውሮፕላኑ ይንቀሳቀስ
-                const progress = Math.min(multiplier / 10, 1);
-                plane.style.left = (50 + progress * 500) + 'px';
-                plane.style.top = (200 - progress * 150) + 'px';
-
-                if (multiplier >= crashPoint) {
-                    crash();
+                if(m >= crashPoint || adminForceCrash) {
+                    clearInterval(tick);
+                    document.getElementById('mText').innerText = "FLEW AWAY!";
+                    document.getElementById('mText').style.color = "#ff4444";
+                    gameActive = false;
+                    [1,2].forEach(i => bets[i].on = false);
+                    setTimeout(() => {
+                        document.getElementById('plane').style.transform = "translate(0,0)";
+                        document.getElementById('gamePath').setAttribute('d', "M 0 240 Q 0 240 0 240");
+                        document.getElementById('mText').style.color = "#FFD700";
+                        updateUI(); loop();
+                    }, 3500);
                 }
-            }, 80);
+            }, 70);
         }
 
-        function cashOut() {
-            if (!isFlying) return;
-            clearInterval(interval);
-            isFlying = false;
-            cashoutBtn.disabled = true;
-
-            const win = Math.floor(currentBet * multiplier);
-            balance += win;
-            balanceEl.textContent = balance.toFixed(0);
-
-            alert(`🎉 ተሳክቷል! ${multiplier.toFixed(2)}x × ${currentBet} = ${win} ብር አሸንፈሃል!`);
-            addToHistory(multiplier);
-            resetGame();
+        function doBet(i) {
+            if(gameActive) {
+                if(bets[i].on) {
+                    let win = bets[i].amt * m;
+                    if(isReal) rBal += win; else dBal += win;
+                    bets[i].on = false; updateUI();
+                    tg.showAlert((lang === 'en' ? "WON: " : "አሸነፉ: ") + win.toFixed(2) + " ETB");
+                }
+                return;
+            }
+            let bal = isReal ? rBal : dBal;
+            if(bets[i].amt > bal) return tg.showAlert(lang === 'en' ? "Insufficient Balance!" : "በቂ ሂሳብ የሎትም!");
+            if(isReal) rBal -= bets[i].amt; else dBal -= bets[i].amt;
+            bets[i].on = true; updateUI();
+            document.getElementById('btn'+i).innerText = texts[lang].cash;
+            document.getElementById('btn'+i).style.background = "#f97316";
         }
 
-        function crash() {
-            clearInterval(interval);
-            isFlying = false;
-            cashoutBtn.disabled = true;
-
-            plane.style.transition = 'all 0.3s';
-            plane.style.transform = 'rotate(45deg)';
-            
-            setTimeout(() => {
-                alert(`💥 አውሮፕላኑ በ ${multiplier.toFixed(2)}x በረረ! ቤትህ ጠፋ 😢`);
-                addToHistory(multiplier);
-                resetGame();
-            }, 300);
+        function requestWithdraw() {
+            let amt = parseFloat(document.getElementById('withdrawAmt').value);
+            if(isNaN(amt) || amt > rBal || amt <= 0) return tg.showAlert("Invalid Amount!");
+            rBal -= amt;
+            updateUI();
+            tg.showAlert("Withdrawal Request Sent! Remaining: " + rBal.toFixed(2) + " ETB");
         }
 
-        function resetGame() {
-            multiplier = 1.0;
-            multiplierEl.textContent = "1.00x";
-            plane.style.transition = 'none';
-            plane.style.left = '50px';
-            plane.style.top = '200px';
-            plane.style.transform = 'rotate(0deg)';
+        function addBal() {
+            let amt = parseFloat(document.getElementById('admAdd').value);
+            if(!isNaN(amt)) rBal += amt;
+            updateUI();
+            tg.showAlert("Added: " + amt);
         }
 
-        function addToHistory(mult) {
-            const item = document.createElement('span');
-            item.style.marginRight = '10px';
-            item.style.color = mult < 2 ? '#ff6666' : (mult < 5 ? '#ffff66' : '#66ff66');
-            item.textContent = mult.toFixed(2) + "x  ";
-            historyEl.appendChild(item);
-            
-            if (historyEl.children.length > 12) {
-                historyEl.removeChild(historyEl.children[0]);
+        function forceCrash() { adminForceCrash = true; }
+
+        function setMode(r) {
+            isReal = r;
+            document.getElementById('rBtn').className = r ? "px-3 py-1 bg-green-500 text-black rounded-full" : "px-3 py-1 text-zinc-500";
+            document.getElementById('dBtn').className = !r ? "px-3 py-1 bg-red-600 text-white rounded-full" : "px-3 py-1 text-zinc-500";
+            updateUI();
+        }
+
+        function nav(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('active-page');
+            document.getElementById('n-'+id).classList.add('active');
+        }
+
+        function updateUI() {
+            document.getElementById('uBal').innerText = (isReal ? rBal : dBal).toFixed(2) + " ETB";
+            document.getElementById('gamePath').style.stroke = isReal ? "var(--real)" : "var(--demo)";
+            [1,2].forEach(i => { if(!bets[i].on) {
+                let b = document.getElementById('btn'+i);
+                b.innerText = texts[lang].bet; b.style.background = "linear-gradient(135deg, #FFD700 0%, #B8860B 100%)";
+            }});
+        }
+
+        function genWinners() {
+            const names = ["@Dawit_F", "@Lemi_K", "@Hana_T", "@Samuel_Eth", "@Alex_21", "@Mesi_G"];
+            const list = document.getElementById('winnersList');
+            for(let i=0; i<20; i++) {
+                list.innerHTML += `<div class="bg-white/5 p-4 rounded-xl flex justify-between items-center border border-white/5">
+                    <span class="text-sm font-bold">${names[i%names.length]} <i class="fa-solid fa-circle-check text-sky-400 text-[10px]"></i></span>
+                    <span class="gold-text font-black">${(Math.random()*50000).toFixed(0)} ETB</span>
+                </div>`;
             }
         }
 
-        // የመጀመሪያ ታሪክ
-        addToHistory(1.45);
-        addToHistory(3.2);
-        addToHistory(12.8);
-        addToHistory(1.9);
+        function setB(i, a) { bets[i].amt = a; }
+        function copy(t) { navigator.clipboard.writeText(t); tg.showAlert("Copied: " + t); }
+
+        init();
     </script>
 </body>
 </html>
