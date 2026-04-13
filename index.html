@@ -12,33 +12,31 @@
         body { background: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; }
         .font-game { font-family: 'Orbitron', sans-serif; }
         
-        /* Game Area */
         .game-view { position: relative; height: 260px; background: radial-gradient(circle at bottom left, #200, #000); border-radius: 25px; margin: 10px; border: 1px solid #311; overflow: hidden; }
         #canvas { width: 100%; height: 100%; }
         #multiplier { position: absolute; left: 50%; top: 45%; transform: translate(-50%, -50%); font-size: 4.5rem; font-weight: 900; z-index: 10; font-family: 'Orbitron'; color: #fff; text-shadow: 0 0 30px rgba(255,0,0,0.6); }
         #plane { position: absolute; font-size: 2.8rem; z-index: 20; transform: translate(-50%, -50%); filter: drop-shadow(0 0 10px red); }
 
-        /* Controls Layout */
         .main-grid { display: grid; grid-template-columns: 110px 1fr; gap: 10px; padding: 10px; height: calc(100vh - 430px); overflow-y: auto; }
         .side-btns { display: flex; flex-direction: column; gap: 5px; }
         .opt-btn { background: #111; border: 1px solid #333; border-radius: 10px; padding: 8px; font-size: 11px; font-weight: 900; color: #666; transition: 0.3s; }
         .opt-btn.active { border-color: #ff0000; color: #fff; background: #200; }
 
-        /* Action Buttons */
         .bet-card { background: #0a0a0a; border: 1px solid #1a1a1a; padding: 12px; border-radius: 22px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; }
         .action-btn { height: 70px; border-radius: 18px; font-weight: 900; font-size: 1.4rem; transition: 0.2s; border-bottom: 5px solid rgba(0,0,0,0.3); }
-        .btn-bet { background: #e11d48; color: white; } /* Red for Bet */
-        .btn-cash { background: #f59e0b; color: white; } /* Orange for Cashout */
+        .btn-bet { background: #e11d48; color: white; }
+        .btn-cash { background: #f59e0b; color: white; }
         .btn-waiting { background: #1a1a1a; color: #444; }
 
         .nav-bar { position: fixed; bottom: 0; width: 100%; height: 85px; background: #080808; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #1a1a1a; z-index: 1000; }
-        .nav-item { color: #555; font-size: 10px; font-weight: 900; text-align: center; }
+        .nav-item { color: #555; font-size: 10px; font-weight: 900; text-align: center; cursor: pointer; }
         .nav-item.active { color: #ff0000; }
 
         .page { display: none; height: 100vh; overflow-y: auto; padding-bottom: 100px; }
         .page.active { display: block; }
         
         .gold-grad { background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .admin-stat-card { background: #0f0f0f; border-radius: 20px; padding: 12px; border-left: 4px solid #f59e0b; margin-bottom: 12px; }
     </style>
 </head>
 <body>
@@ -68,10 +66,10 @@
                 <button onclick="quickSet(100)" class="opt-btn">100</button>
                 <button onclick="quickSet(200)" class="opt-btn">200</button>
                 <p class="text-[8px] text-zinc-600 font-black mt-3">AUTO (1 & 2)</p>
-                <button class="opt-btn">2x</button>
-                <button class="opt-btn">4x</button>
-                <button class="opt-btn">8x</button>
-                <button class="opt-btn">10x</button>
+                <button onclick="autoSet(2)" class="opt-btn">2x</button>
+                <button onclick="autoSet(4)" class="opt-btn">4x</button>
+                <button onclick="autoSet(8)" class="opt-btn">8x</button>
+                <button onclick="autoSet(10)" class="opt-btn">10x</button>
             </div>
             <div>
                 <div class="bet-card">
@@ -167,6 +165,16 @@
 
     <div id="adminPage" class="page p-6">
         <h2 class="text-red-600 font-game text-center mb-6">ADMIN CONTROL</h2>
+        
+        <!-- የአሁኑ ዙር ስታቲስቲክስ (የዚህ ተጠቃሚ ብቻ) -->
+        <div class="bg-zinc-900 p-4 rounded-2xl border border-zinc-800 mb-6">
+            <p class="text-[10px] text-zinc-400 uppercase font-bold mb-2">የዚህ ክፍለ ጊዜ ውርርድ እና ካሽ አውት ክትትል</p>
+            <div class="admin-stat-card"><span class="text-orange-400 font-bold">💰 ጠቅላላ ውርርድ የተደረገ:</span> <span id="totalBetDisplay" class="text-green-400 font-mono">0.00 ETB</span></div>
+            <div class="admin-stat-card"><span class="text-orange-400 font-bold">✅ ጠቅላላ ካሽ አውት የተደረገ:</span> <span id="totalCashoutDisplay" class="text-yellow-400 font-mono">0.00 ETB</span></div>
+            <div class="admin-stat-card"><span class="text-orange-400 font-bold">📊 የአድሚን እምቅ ትርፍ (ቤት ክፍያ):</span> <span id="houseProfitDisplay" class="text-red-400 font-mono">0.00 ETB</span></div>
+            <p class="text-[9px] text-zinc-500 italic mt-2">* እያንዳንዱ ተጫዋች የራሱን ጨዋታ ስለሚጫወት እነዚህ እሴቶች ለዚህ ተጠቃሚ ብቻ ናቸው። ሁሉንም ተጫዋቾች አንድ ላይ ለማየት የሰርቨር ሎጂክ ያስፈልጋል።</p>
+        </div>
+
         <div class="bg-zinc-900 p-5 rounded-3xl border border-zinc-800 space-y-3 mb-8 shadow-2xl">
             <p class="text-[10px] text-zinc-500 font-bold italic">UPDATE BANK INFO</p>
             <input type="text" id="admCbeName" placeholder="CBE Account Holder Name" class="w-full bg-black p-3 rounded-xl border border-zinc-800 text-xs">
@@ -179,10 +187,14 @@
         
         <div class="bg-red-950/20 p-4 rounded-2xl border border-red-900/30 mb-6">
             <p class="text-[10px] text-red-500 font-bold mb-2">FORCE CRASH (NEXT ROUND)</p>
-            <input type="number" id="fCrash" placeholder="Example: 1.10" class="w-full bg-black p-3 rounded-xl border border-zinc-800 text-xs mb-2">
+            <input type="number" id="fCrash" step="0.01" placeholder="Example: 1.10" class="w-full bg-black p-3 rounded-xl border border-zinc-800 text-xs mb-2">
             <button onclick="setForceCrash()" class="w-full bg-red-600 py-2 rounded-xl font-black text-xs">SET CRASH</button>
         </div>
 
+        <div class="mb-4 flex justify-between items-center">
+            <p class="text-sm font-black text-zinc-400">📋 የገንዘብ ጥያቄዎች (Deposit/Withdraw)</p>
+            <button onclick="renderInbox()" class="text-[10px] bg-zinc-800 px-3 py-1 rounded-full">⟳ አድስ</button>
+        </div>
         <div id="adminInbox" class="space-y-3 pb-20"></div>
     </div>
 
@@ -199,11 +211,14 @@
         let db = JSON.parse(localStorage.getItem('wg_master_v3_'+uid)) || {
             bal: 0.0, games: 0, inbox: [],
             cbe: "1000179571815", cbeN: "CBE - Dawit Fikadu",
-            aby: "165097254", abyN: "Abyssinia - Dawit Fikadu"
+            aby: "165097254", abyN: "Abyssinia - Dawit Fikadu",
+            totalBetSession: 0,   // ጠቅላላ ውርርድ በዚህ ክፍለ ጊዜ
+            totalCashoutSession: 0 // ጠቅላላ ካሽ አውት በዚህ ክፍለ ጊዜ
         };
 
         let mult = 1.0; let isRun = false; let activeState = {1: 'BET', 2: 'BET'};
         let path = []; let forceNext = null;
+        let autoTarget = {1: null, 2: null}; // auto cashout target multiplier
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -214,7 +229,8 @@
                 if(tg.initDataUnsafe.user.photo_url) document.getElementById('uImg').src = tg.initDataUnsafe.user.photo_url;
                 if(tg.initDataUnsafe.user.username === "Dawit_Fikadu21") document.getElementById('adminBtn').classList.remove('hidden');
             }
-            refreshUI(); renderLeaders(); engine();
+            refreshUI(); renderLeaders(); updateAdminStats();
+            engine();
         }
 
         function refreshUI() {
@@ -227,6 +243,24 @@
             document.getElementById('abyAcc').innerText = db.aby;
             document.getElementById('abyName').innerText = db.abyN;
             localStorage.setItem('wg_master_v3_'+uid, JSON.stringify(db));
+            updateAdminStats();
+        }
+
+        function updateAdminStats() {
+            document.getElementById('totalBetDisplay').innerText = db.totalBetSession.toFixed(2) + " ETB";
+            document.getElementById('totalCashoutDisplay').innerText = db.totalCashoutSession.toFixed(2) + " ETB";
+            let profit = db.totalBetSession - db.totalCashoutSession;
+            document.getElementById('houseProfitDisplay').innerText = profit.toFixed(2) + " ETB";
+        }
+
+        // የውርርድ መጠን ሲጨምር ወደ አድሚን ስታቲስቲክስ መዝግብ
+        function addToTotalBet(amount) {
+            db.totalBetSession += amount;
+            refreshUI();
+        }
+        function addToTotalCashout(amount) {
+            db.totalCashoutSession += amount;
+            refreshUI();
         }
 
         function engine() {
@@ -234,20 +268,27 @@
             isRun = true; mult = 1.0; path = [{x:0, y:canvas.height-20}];
             document.getElementById('statusMsg').classList.add('hidden');
             
-            // 20% Profit Logic + Admin Force Crash
-            let crashPoint = forceNext || (1.05 + Math.random() * 3.5);
-            if(!forceNext && Math.random() < 0.2) crashPoint = 1.00; // House Edge
+            // 20% House Edge: 20% chance to crash at 1.00x immediately
+            let crashPoint = forceNext;
+            if(!forceNext) {
+                if(Math.random() < 0.20) {
+                    crashPoint = 1.00;
+                } else {
+                    crashPoint = 1.05 + Math.random() * 3.5;
+                }
+            }
             forceNext = null;
 
             let loop = setInterval(() => {
-                mult += 0.01 * (mult / 2.5);
+                mult += 0.012 * (mult / 2.2);
+                if(mult > 10) mult = 10; // cap
                 document.getElementById('multiplier').innerText = mult.toFixed(2) + "x";
                 
-                let nx = (mult - 1) * 65;
+                let nx = Math.min((mult - 1) * 65, canvas.width - 40);
                 let ny = (canvas.height - 20) - (Math.pow(mult - 1, 1.4) * 45) + Math.sin(mult * 4) * 8;
+                if(ny < 5) ny = 5;
                 path.push({x: nx, y: ny});
                 
-                // Draw Line & Trace
                 ctx.clearRect(0,0,canvas.width,canvas.height);
                 ctx.beginPath(); ctx.moveTo(0, canvas.height);
                 path.forEach(p => ctx.lineTo(p.x, p.y));
@@ -263,14 +304,49 @@
                 document.getElementById('plane').style.left = nx + "px";
                 document.getElementById('plane').style.top = ny + "px";
 
-                if(mult >= crashPoint || nx > canvas.width - 20) {
+                // Auto cashout check
+                for(let s of [1,2]) {
+                    if(activeState[s] === 'CASH' && autoTarget[s] !== null && mult >= autoTarget[s]) {
+                        performCashout(s);
+                    }
+                }
+
+                if(mult >= crashPoint || nx >= canvas.width - 30) {
                     clearInterval(loop); isRun = false;
-                    document.getElementById('multiplier').innerText = "FLY AWAY!";
+                    document.getElementById('multiplier').innerText = "💥 CRASH!";
+                    // ያልተወጡ ውርርዶች ይጠፋሉ (በቀላሉ ወደ BET ይመለሳሉ)
+                    for(let s of [1,2]) {
+                        if(activeState[s] === 'CASH' || activeState[s] === 'WAIT') {
+                            // ማጣት: ምንም አይጨመርም, ቀድሞ ተቀንሷል
+                            activeState[s] = 'BET';
+                            let btn = document.getElementById('btn'+s);
+                            btn.className = "action-btn btn-bet";
+                            btn.innerText = "BET";
+                        }
+                        autoTarget[s] = null;
+                    }
+                    refreshUI();
                     resetRound();
                     document.getElementById('statusMsg').classList.remove('hidden');
                     setTimeout(engine, 4000);
                 }
             }, 70);
+        }
+
+        function performCashout(slot) {
+            if(activeState[slot] !== 'CASH') return;
+            let amt = parseFloat(document.getElementById('amt'+slot).value);
+            let win = amt * mult;
+            db.bal += win;
+            addToTotalCashout(win);
+            activeState[slot] = 'BET';
+            autoTarget[slot] = null;
+            let btn = document.getElementById('btn'+slot);
+            btn.className = "action-btn btn-bet";
+            btn.innerText = "BET";
+            refreshUI();
+            // በጨዋታ ጊዜ የማሳወቂያ መልእክት
+            tg.showPopup({title: "አሸንፈዋል!", message: `${win.toFixed(2)} ETB አግኝተዋል!`, buttons: [{type:"ok"}]});
         }
 
         function handleAction(s) {
@@ -280,40 +356,40 @@
             if(activeState[s] === 'BET') {
                 if(isRun && mult > 1.01) return alert("ዙሩ ጀምሯል! ቀጣዩን ይጠብቁ።");
                 if(db.bal < a || a <= 0) return alert("ባላንስ የለዎትም!");
-                db.bal -= a; db.games++;
+                db.bal -= a;
+                db.games++;
+                addToTotalBet(a);
                 activeState[s] = 'WAIT';
                 btn.className = "action-btn btn-waiting";
                 btn.innerText = "WAITING...";
+                refreshUI();
             } else if(activeState[s] === 'CASH') {
-                let win = a * mult;
-                db.bal += win;
-                activeState[s] = 'BET';
-                btn.className = "action-btn btn-bet";
-                btn.innerText = "BET";
-                alert("አሸንፈዋል! +" + win.toFixed(2));
+                performCashout(s);
             }
-            refreshUI();
         }
 
         function resetRound() {
             [1,2].forEach(s => {
                 let btn = document.getElementById('btn'+s);
-                activeState[s] = 'BET';
-                btn.className = "action-btn btn-bet";
-                btn.innerText = "BET";
+                if(activeState[s] !== 'BET') {
+                    activeState[s] = 'BET';
+                    btn.className = "action-btn btn-bet";
+                    btn.innerText = "BET";
+                }
+                autoTarget[s] = null;
             });
             refreshUI();
         }
 
-        // Live Cashout Sync
+        // Live cashout enable when game running
         setInterval(() => {
             if(isRun && mult > 1.01) {
                 [1,2].forEach(s => {
                     if(activeState[s] === 'WAIT') {
                         activeState[s] = 'CASH';
                         document.getElementById('btn'+s).className = "action-btn btn-cash";
-                    }
-                    if(activeState[s] === 'CASH') {
+                        document.getElementById('btn'+s).innerHTML = `<span class="text-[10px] block">CASH OUT</span>${(parseFloat(document.getElementById('amt'+s).value)*mult).toFixed(2)}`;
+                    } else if(activeState[s] === 'CASH') {
                         let a = parseFloat(document.getElementById('amt'+s).value);
                         document.getElementById('btn'+s).innerHTML = `<span class="text-[10px] block">CASH OUT</span>${(a*mult).toFixed(2)}`;
                     }
@@ -321,47 +397,81 @@
             }
         }, 100);
 
+        function autoSet(multiplier) {
+            if(!isRun || mult < 1.1) return alert("ጨዋታ ከጀመረ በኋላ አውቶማቲክ ማዘጋጀት ይቻላል!");
+            for(let s of [1,2]) {
+                if(activeState[s] === 'CASH') {
+                    autoTarget[s] = multiplier;
+                    tg.showPopup({title: "Auto", message: `Slot ${s} በ ${multiplier}x ላይ በራስ ይወጣል`});
+                }
+            }
+        }
+
         // Admin Actions
         function updateGlobalBanks() {
             db.cbe = document.getElementById('admCbeAcc').value || db.cbe;
             db.cbeN = document.getElementById('admCbeName').value || db.cbeN;
             db.aby = document.getElementById('admAbyAcc').value || db.aby;
             db.abyN = document.getElementById('admAbyName').value || db.abyN;
-            refreshUI(); alert("ባንክ ለሁሉም ተጠቃሚዎች ተቀይሯል!");
+            refreshUI(); alert("ባንክ መረጃ ተሻሽሏል!");
         }
 
         function setForceCrash() {
-            forceNext = parseFloat(document.getElementById('fCrash').value);
-            alert("ቀጣዩ ዙር በ " + forceNext + " ላይ ክራሽ እንዲያደርግ ታዟል!");
+            let val = parseFloat(document.getElementById('fCrash').value);
+            if(val && val > 1.0) {
+                forceNext = val;
+                alert(`ቀጣዩ ዙር በ ${val}x ላይ ክራሽ ያደርጋል!`);
+            } else alert("ከ1.00 በላይ ቁጥር ያስገቡ");
         }
 
-        function submitToAdmin(t) {
-            let a = parseFloat(document.getElementById(t==='DEP'?'da':'wa').value);
-            let r = document.getElementById(t==='DEP'?'dr':'wc').value;
-            if(!a || !r) return alert("መረጃ በትክክል ያስገቡ!");
-            db.inbox.push({ type: t, amt: a, ref: r, time: new Date().toLocaleTimeString() });
-            refreshUI(); alert("ጥያቄው ለአድሚን ተልኳል!");
+        function submitToAdmin(type) {
+            let amt = parseFloat(document.getElementById(type==='DEP'?'da':'wa').value);
+            let ref = document.getElementById(type==='DEP'?'dr':'wc').value;
+            if(!amt || !ref) return alert("መረጃ በትክክል ያስገቡ!");
+            db.inbox.push({ type: type, amt: amt, ref: ref, time: new Date().toLocaleString(), status: "pending" });
+            refreshUI();
+            alert("ጥያቄው ለአድሚን ተልኳል!");
+            if(document.getElementById('adminPage').classList.contains('active')) renderInbox();
         }
 
         function renderInbox() {
             const box = document.getElementById('adminInbox');
-            box.innerHTML = db.inbox.length ? '' : '<p class="text-center text-xs text-zinc-600 italic py-10">ምንም ጥያቄ የለም</p>';
+            if(!db.inbox.length) {
+                box.innerHTML = '<p class="text-center text-xs text-zinc-600 italic py-10">ምንም ጥያቄ የለም</p>';
+                return;
+            }
+            box.innerHTML = '';
             db.inbox.forEach((m, i) => {
                 box.innerHTML += `<div class="bg-zinc-950 p-4 rounded-2xl border border-zinc-800 flex justify-between items-center shadow-lg">
                     <div><p class="text-xs font-black uppercase text-red-500">${m.type}: ${m.amt} ETB</p><p class="text-[9px] text-zinc-500">${m.ref} • ${m.time}</p></div>
                     <div class="flex gap-2">
-                        <button onclick="approve(${i})" class="bg-green-600 px-4 py-2 rounded-xl text-[10px] font-black">OK</button>
-                        <button onclick="reject(${i})" class="bg-red-600 px-4 py-2 rounded-xl text-[10px] font-black">X</button>
+                        <button onclick="approve(${i})" class="bg-green-600 px-4 py-2 rounded-xl text-[10px] font-black">አጽድቅ</button>
+                        <button onclick="reject(${i})" class="bg-red-600 px-4 py-2 rounded-xl text-[10px] font-black">ውድቅ</button>
                     </div>
                 </div>`;
             });
         }
 
-        function approve(i) {
-            if(db.inbox[i].type === 'DEP') db.bal += db.inbox[i].amt;
-            db.inbox.splice(i, 1); refreshUI(); renderInbox();
+        function approve(idx) {
+            let req = db.inbox[idx];
+            if(req.type === 'DEP') {
+                db.bal += req.amt;
+                alert(`${req.amt} ETB ተጨምሯል`);
+            } else if(req.type === 'WIT') {
+                if(db.bal >= req.amt) {
+                    db.bal -= req.amt;
+                    alert(`${req.amt} ETB ተቀንሷል (ለደንበኛው ይላኩ)`);
+                } else alert("በቂ ባላንስ የለም!");
+            }
+            db.inbox.splice(idx,1);
+            refreshUI();
+            renderInbox();
         }
-        function reject(i) { db.inbox.splice(i, 1); refreshUI(); renderInbox(); }
+        function reject(idx) {
+            db.inbox.splice(idx,1);
+            refreshUI();
+            renderInbox();
+        }
 
         function renderLeaders() {
             const names = ["Abebe Kebede", "Tigist Walelign", "Mulugeta Kassa", "Lidiya Tesfaye", "Kaleb Metaferia", "Fasil Gebre", "Elias Jember", "Selam Yohannes", "Biniyam Hailu", "Hanna Belay"];
@@ -375,14 +485,22 @@
         }
 
         function quickSet(v) { document.getElementById('amt1').value = v; document.getElementById('amt2').value = v; }
+        function setTab(t) {
+            if(t==='D') { document.getElementById('depArea').classList.remove('hidden'); document.getElementById('witArea').classList.add('hidden'); document.getElementById('tD').classList.add('bg-red-600'); document.getElementById('tW').classList.remove('bg-red-600'); }
+            else { document.getElementById('depArea').classList.add('hidden'); document.getElementById('witArea').classList.remove('hidden'); document.getElementById('tW').classList.add('bg-red-600'); document.getElementById('tD').classList.remove('bg-red-600'); }
+        }
         function showPage(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            event.currentTarget.classList.add('active');
             if(id === 'adminPage') renderInbox();
+            if(id === 'playPage') engine();
         }
-        function shareInvite() { tg.openTelegramLink(`https://t.me/share/url?url=https://t.me/WorldBot?start=${uid}&text=Join and Win Daily!`); db.bal += 5; refreshUI(); }
+        function shareInvite() { 
+            tg.openTelegramLink(`https://t.me/share/url?url=https://t.me/WorldBot?start=${uid}&text=Join and Win Daily!`); 
+            db.bal += 5; 
+            refreshUI(); 
+            alert("5 ETB ቦነስ ተጨምሯል!");
+        }
 
         window.onload = init;
     </script>
