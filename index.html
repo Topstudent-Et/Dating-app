@@ -3,258 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WORLD GAME - PREMIER EDITION</title>
+    <title>WORLD GAME - PREMIER</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Inter:wght@400;700;900&display=swap');
-        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; -webkit-user-select: none; }
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; }
         .font-game { font-family: 'Orbitron', sans-serif; }
         
-        /* Optimized Game Screen */
-        .game-screen { position: relative; height: 220px; background: radial-gradient(circle at center, #150000 0%, #000 100%); border-radius: 20px; border: 1px solid #300; overflow: hidden; margin: 10px; }
-        #plane { position: absolute; z-index: 100; font-size: 2.2rem; transform: rotate(-10deg); filter: drop-shadow(0 0 15px red); }
-        
-        /* Graph Styles */
-        #graphPath { stroke: #ff0000; stroke-width: 4; fill: none; stroke-linecap: round; }
+        /* Welcome Popup */
+        #welcomePopup { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .popup-content { background: #0a0a0a; border: 2px solid #ff0000; border-radius: 25px; padding: 30px; text-align: center; max-width: 350px; }
+
+        /* Game Screen & Graph */
+        .game-screen { position: relative; height: 200px; background: radial-gradient(circle, #1a0000, #000); border-radius: 20px; border: 1px solid #300; margin: 10px; overflow: hidden; }
+        #graphPath { stroke: #ff0000; stroke-width: 4; fill: none; }
         #graphFill { fill: url(#grad); opacity: 0.3; }
-
-        /* Betting Layout */
-        .bet-container { display: grid; grid-template-columns: 80px 1fr; gap: 10px; padding: 0 10px; }
-        .quick-select { display: flex; flex-direction: column; gap: 5px; }
-        .q-btn { background: #111; border: 1px solid #333; border-radius: 8px; font-size: 10px; font-weight: 900; padding: 8px 0; color: #aaa; }
-        .q-btn.active { border-color: #ff0000; color: #fff; background: #200; }
-
-        .main-bet-area { display: flex; flex-direction: column; gap: 10px; }
-        .bet-row { background: #0a0a0a; border: 1px solid #1a1a1a; padding: 10px; border-radius: 15px; display: flex; gap: 10px; align-items: center; }
-        .bet-btn { flex: 1; height: 55px; background: #28a745; border-bottom: 4px solid #14532d; border-radius: 12px; font-weight: 900; transition: 0.1s; }
-        .bet-btn.cashout { background: #f59e0b; border-bottom-color: #b45309; }
-        .bet-btn:active { transform: translateY(2px); border-bottom-width: 0; }
+        #plane { position: absolute; z-index: 100; font-size: 2rem; filter: drop-shadow(0 0 10px red); }
 
         /* Navigation */
-        .nav-dock { position: fixed; bottom: 0; width: 100%; background: #080808; height: 75px; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #1a1a1a; z-index: 1000; padding-bottom: 10px; }
-        .nav-item { text-align: center; color: #444; font-size: 9px; font-weight: 900; }
+        .nav-dock { position: fixed; bottom: 0; width: 100%; background: #080808; height: 75px; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #1a1a1a; z-index: 1000; }
+        .nav-item { color: #444; font-size: 10px; font-weight: 900; text-align: center; }
         .nav-item.active { color: #ff0000; }
-        .nav-item i { font-size: 1.4rem; display: block; margin-bottom: 4px; }
-
-        .page { display: none; min-height: 100vh; padding-bottom: 90px; }
+        .page { display: none; height: 100vh; overflow-y: auto; padding-bottom: 90px; }
         .page.active { display: block; }
-
-        .online-tag { background: #051505; color: #22c55e; font-size: 8px; padding: 2px 8px; border-radius: 10px; border: 1px solid #0a200a; font-weight: 900; }
-        .verify-badge { color: #3b82f6; font-size: 12px; }
         
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 0; }
+        /* Layout */
+        .bet-grid { display: grid; grid-template-columns: 80px 1fr; gap: 10px; padding: 0 10px; }
+        .q-btn { background: #111; border: 1px solid #333; border-radius: 8px; font-size: 10px; font-weight: 900; padding: 8px 0; margin-bottom: 4px; width: 100%; }
+        .bet-row { background: #0a0a0a; border: 1px solid #1a1a1a; padding: 10px; border-radius: 15px; margin-bottom: 8px; display: flex; gap: 10px; align-items: center; }
+        .bet-btn { flex: 1; height: 50px; background: #28a745; border-radius: 10px; font-weight: 900; border-bottom: 4px solid #14532d; }
+        .bet-btn.cashout { background: #f59e0b; border-bottom-color: #b45309; }
     </style>
 </head>
 <body>
 
-    <div class="flex justify-between items-center px-4 py-3 bg-black/80 backdrop-blur sticky top-0 z-[1100]">
-        <div class="flex items-center gap-2">
-            <div class="w-9 h-9 bg-red-600 rounded-full flex items-center justify-center shadow-[0_0_15px_red]">✈️</div>
-            <div>
-                <h1 class="font-game text-red-600 text-sm italic">WORLD GAME</h1>
-                <div class="flex items-center gap-1"><span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span><span class="text-[8px] text-zinc-500 font-black uppercase">Live Server</span></div>
-            </div>
+    <div id="welcomePopup">
+        <div class="popup-content">
+            <div class="text-4xl mb-4">🎁</div>
+            <h2 class="font-game text-red-600 text-xl mb-2">እንኳን ደህና መጡ!</h2>
+            <p class="text-xs text-zinc-400 mb-4">በቀን እስከ <span class="text-white font-bold">100,000 ETB</span> ያሸንፉ! አንድ ሰው በመጋበዝ <span class="text-green-500 font-bold">5 ETB</span> ወዲያውኑ ያግኙ።</p>
+            <button onclick="closePopup()" class="w-full bg-red-600 py-3 rounded-xl font-black italic">ጨዋታውን ጀምር</button>
         </div>
-        <div onclick="showP('walletPage')" class="bg-[#0a0a0a] border border-zinc-800 pl-3 pr-1 py-1 rounded-full flex items-center gap-3 cursor-pointer active:scale-95 transition">
-            <span id="topBal" class="text-green-500 font-black text-sm">0.00</span>
-            <div class="bg-green-600/20 p-1.5 rounded-full"><i class="fas fa-plus text-green-500 text-[10px]"></i></div>
+    </div>
+
+    <div class="flex justify-between items-center px-4 py-3 sticky top-0 bg-black/90 backdrop-blur z-[1100]">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center shadow-[0_0_10px_red]">✈️</div>
+            <span class="font-game text-red-600 text-sm">WORLD GAME</span>
+        </div>
+        <div onclick="showP('walletPage')" class="bg-[#111] border border-zinc-800 px-4 py-1.5 rounded-full flex items-center gap-2">
+            <span id="topBal" class="text-green-500 font-black">0.00</span>
+            <i class="fas fa-plus-circle text-zinc-600 text-xs"></i>
         </div>
     </div>
 
     <div id="playPage" class="page active">
-        <div id="historyBar" class="flex gap-1.5 overflow-x-auto p-2 no-scrollbar"></div>
-
+        <div id="historyBar" class="flex gap-2 p-2 overflow-x-auto"></div>
         <div class="game-screen">
-            <div id="multDisplay" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-5xl font-black font-game z-50 transition-all">1.00x</div>
-            <div id="crashMsg" class="hidden absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-red-600 font-black text-3xl font-game z-50">FLEW AWAY!</div>
-            
+            <div id="multDisplay" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-5xl font-black font-game z-50">1.00x</div>
             <svg class="absolute inset-0 w-full h-full">
-                <defs>
-                    <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" style="stop-color:red; stop-opacity:0.6" />
-                        <stop offset="100%" style="stop-color:red; stop-opacity:0" />
-                    </linearGradient>
-                </defs>
-                <path id="graphFill" d="M 0 220 L 0 220 Z" />
-                <path id="graphPath" d="M 0 220" />
+                <defs><linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:red; stop-opacity:0.6"/><stop offset="100%" style="stop-color:red; stop-opacity:0"/></linearGradient></defs>
+                <path id="graphFill" d="M 0 200 L 0 200 Z"/><path id="graphPath" d="M 0 200"/>
             </svg>
             <div id="plane" style="left:5%; bottom:5%;">✈️</div>
         </div>
 
-        <div class="bet-container">
+        <div class="bet-grid">
             <div class="quick-select">
-                <p class="text-[7px] text-zinc-600 font-black text-center mb-1">QUICK AMT</p>
-                <button onclick="setQuickAmt(10)" class="q-btn">10</button>
-                <button onclick="setQuickAmt(50)" class="q-btn">50</button>
-                <button onclick="setQuickAmt(100)" class="q-btn">100</button>
-                <button onclick="setQuickAmt(200)" class="q-btn">200</button>
-                <div class="h-2"></div>
-                <p class="text-[7px] text-zinc-600 font-black text-center mb-1">AUTO CASH</p>
-                <button onclick="setAuto(2)" class="q-btn">2x</button>
-                <button onclick="setAuto(4)" class="q-btn">4x</button>
-                <button onclick="setAuto(6)" class="q-btn">6x</button>
-                <button onclick="setAuto(8)" class="q-btn">8x</button>
+                <p class="text-[7px] text-zinc-600 font-black mb-1">AMT</p>
+                <button onclick="setAmt(10)" class="q-btn">10</button>
+                <button onclick="setAmt(50)" class="q-btn">50</button>
+                <button onclick="setAmt(100)" class="q-btn">100</button>
+                <button onclick="setAmt(200)" class="q-btn">200</button>
             </div>
-
-            <div class="main-bet-area">
+            <div class="main-bet">
                 <div class="bet-row">
-                    <div class="flex-1">
-                        <p class="text-[8px] text-zinc-500 font-black ml-1 mb-1 uppercase">Stake 1</p>
-                        <input type="number" id="amt1" value="10" class="w-full bg-black border border-zinc-800 rounded-lg p-2 text-sm font-black outline-none">
-                    </div>
-                    <button id="btn1" onclick="handleBet(1)" class="bet-btn">BET</button>
+                    <input type="number" id="amt1" value="10" class="w-20 bg-black border border-zinc-800 rounded p-2 text-xs font-bold">
+                    <button id="btn1" onclick="handleBet(1)" class="bet-btn text-xs">BET</button>
                 </div>
                 <div class="bet-row">
-                    <div class="flex-1">
-                        <p class="text-[8px] text-zinc-500 font-black ml-1 mb-1 uppercase">Stake 2</p>
-                        <input type="number" id="amt2" value="10" class="w-full bg-black border border-zinc-800 rounded-lg p-2 text-sm font-black outline-none">
-                    </div>
-                    <button id="btn2" onclick="handleBet(2)" class="bet-btn">BET</button>
+                    <input type="number" id="amt2" value="10" class="w-20 bg-black border border-zinc-800 rounded p-2 text-xs font-bold">
+                    <button id="btn2" onclick="handleBet(2)" class="bet-btn text-xs">BET</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="topPage" class="page px-4 pt-4">
-        <h2 class="text-center font-game text-yellow-500 text-xl mb-10 italic">CHAMPIONS</h2>
-        
-        <div class="flex justify-center items-end gap-3 mb-10 h-40">
-            <div class="w-24 bg-zinc-900/50 h-28 rounded-t-2xl text-center p-3 border-t-2 border-zinc-400 relative">
-                <div class="text-xl mb-1">🥈</div>
-                <p class="text-[9px] font-bold truncate">Yared_Solomon</p>
-                <p class="text-xs font-black text-green-500">84,200</p>
-            </div>
-            <div class="w-28 bg-yellow-600/20 h-36 rounded-t-2xl text-center p-3 border-t-4 border-yellow-500 relative">
-                <i class="fas fa-crown absolute -top-8 left-1/2 -translate-x-1/2 text-yellow-400 text-3xl drop-shadow-[0_0_10px_yellow]"></i>
-                <div class="text-2xl mb-1">🥇</div>
-                <p class="text-[10px] font-black truncate">Dawit_Dev</p>
-                <p class="text-sm font-black text-yellow-500">145,000</p>
-            </div>
-            <div class="w-24 bg-orange-900/20 h-24 rounded-t-2xl text-center p-3 border-t-2 border-orange-500 relative">
-                <div class="text-xl mb-1">🥉</div>
-                <p class="text-[9px] font-bold truncate">Sara_Tadesse</p>
-                <p class="text-xs font-black text-green-500">52,100</p>
-            </div>
-        </div>
-
-        <div id="topList" class="space-y-2 h-[400px] overflow-y-auto pr-1"></div>
-    </div>
-
-    <div id="walletPage" class="page p-6">
-        <div class="flex gap-3 mb-8">
-            <button onclick="toggleW('D')" id="dTab" class="flex-1 py-4 bg-red-600 rounded-2xl font-black text-sm">DEPOSIT</button>
-            <button onclick="toggleW('W')" id="wTab" class="flex-1 py-4 bg-zinc-900 rounded-2xl font-black text-sm text-zinc-500">WITHDRAW</button>
+    <div id="walletPage" class="page p-5">
+        <div class="flex gap-2 mb-6">
+            <button onclick="toggleW('D')" id="dTab" class="flex-1 py-3 bg-red-600 rounded-xl font-black text-xs">DEPOSIT</button>
+            <button onclick="toggleW('W')" id="wTab" class="flex-1 py-3 bg-zinc-900 rounded-xl font-black text-xs text-zinc-500">WITHDRAW</button>
         </div>
 
         <div id="depSec" class="space-y-4">
-            <div class="bg-zinc-900/50 p-5 rounded-2xl border border-zinc-800">
-                <p class="text-[10px] text-zinc-500 font-black mb-2 uppercase">CBE Bank Account</p>
-                <div class="flex justify-between items-center"><span id="cbeNum" class="font-black text-lg tracking-wider">1000179571815</span><i class="fas fa-copy text-zinc-500" onclick="copy('cbeNum')"></i></div>
+            <div class="bg-blue-900/10 border border-blue-900/30 p-4 rounded-xl text-[11px] text-blue-400">
+                <i class="fas fa-info-circle mr-1"></i> <strong>ማሳሰቢያ:</strong> ዝቅተኛው ዲፖዚት 50 ETB ነው። በትንሽ ገንዘብ ትልቅ ማሸነፍ ይችላሉ! ከከፈሉ በኋላ የ FT ቁጥር እና የገንዘብ መጠን በትክክል ያስገቡ።
             </div>
-            <input type="number" id="dAmt" placeholder="Amount (ETB)" class="w-full bg-zinc-950 p-4 rounded-xl border border-zinc-800 outline-none text-sm font-bold">
-            <input type="text" id="dRef" placeholder="Transaction Ref ID (FT...)" class="w-full bg-zinc-950 p-4 rounded-xl border border-zinc-800 outline-none text-sm font-bold">
-            <button onclick="sendAdminReq('DEP')" class="w-full bg-blue-600 py-4 rounded-xl font-black shadow-lg shadow-blue-900/20">SUBMIT DEPOSIT</button>
+            <div class="bg-zinc-900 p-4 rounded-xl border border-zinc-800 flex justify-between items-center">
+                <div><p class="text-[9px] text-zinc-500">CBE ACCOUNT</p><p id="cbe" class="font-black">1000179571815</p></div>
+                <button onclick="copyCBE()" class="bg-zinc-800 p-2 rounded-lg text-xs"><i class="fas fa-copy"></i></button>
+            </div>
+            <input type="number" id="dAmt" placeholder="Amount (Min 50)" class="w-full bg-zinc-950 p-4 rounded-xl border border-zinc-800 outline-none text-sm">
+            <input type="text" id="dRef" placeholder="Transaction ID (FT...)" class="w-full bg-zinc-950 p-4 rounded-xl border border-zinc-800 outline-none text-sm">
+            <button onclick="sendReq('DEP')" class="w-full bg-blue-600 py-4 rounded-xl font-black">ገንዘብ አስገባ</button>
         </div>
 
         <div id="witSec" class="hidden space-y-4">
-            <div class="text-center py-6">
-                <p class="text-xs text-zinc-500 font-bold mb-1">AVAILABLE BALANCE</p>
-                <h2 id="witBalDisplay" class="text-4xl font-game text-green-500">0.00</h2>
+            <div class="bg-orange-900/10 border border-orange-900/30 p-4 rounded-xl text-[11px] text-orange-400">
+                <i class="fas fa-exclamation-triangle mr-1"></i> <strong>ማሳሰቢያ:</strong> ማውጣት የሚፈልጉትን መጠን ያስገቡ። የተጋበዘ ገንዘብ (Bonus) ከሆነ ቢያንስ 10 ጨዋታ መጫወት ግዴታ ነው።
             </div>
             <input type="number" id="wAmt" placeholder="Withdraw Amount" class="w-full bg-zinc-950 p-4 rounded-xl border border-zinc-800 outline-none text-sm font-bold">
-            <input type="text" id="wAcc" placeholder="Account Number" class="w-full bg-zinc-950 p-4 rounded-xl border border-zinc-800 outline-none text-sm font-bold">
-            <div id="witError" class="hidden p-3 bg-red-900/20 border border-red-900 rounded-xl text-red-500 text-[10px] font-bold text-center">ቀሪ ሂሳብዎ ዝቅተኛ ነው! እባክዎ ከታች ያለውን ሰንጠረዥ ይመልከቱ።</div>
-            <button onclick="sendAdminReq('WIT')" class="w-full bg-orange-600 py-4 rounded-xl font-black">CONFIRM WITHDRAW</button>
+            <input type="text" id="wAcc" placeholder="Your Bank Account" class="w-full bg-zinc-950 p-4 rounded-xl border border-zinc-800 outline-none text-sm font-bold">
+            <div id="witErr" class="hidden text-red-500 text-[10px] font-bold text-center">ቀሪ ሂሳብዎ ዝቅተኛ ነው!</div>
+            <button onclick="sendReq('WIT')" class="w-full bg-orange-600 py-4 rounded-xl font-black">ገንዘብ አውጣ</button>
         </div>
     </div>
 
     <div id="profilePage" class="page p-6 text-center">
-        <div class="relative w-28 h-28 mx-auto mb-4">
-            <div class="w-full h-full bg-zinc-900 rounded-full border-4 border-red-600 p-1 overflow-hidden shadow-[0_0_20px_rgba(255,0,0,0.3)]">
-                <img id="uPic" src="https://via.placeholder.com/150" class="w-full h-full rounded-full object-cover">
-            </div>
-            <div class="absolute bottom-1 right-1 bg-green-500 w-7 h-7 rounded-full border-4 border-black flex items-center justify-center"><i class="fas fa-check text-[10px] text-black"></i></div>
+        <div class="w-24 h-24 mx-auto mb-4 relative">
+            <img id="uPic" src="https://via.placeholder.com/150" class="w-full h-full rounded-full border-4 border-red-600 object-cover">
+            <div class="absolute bottom-0 right-0 bg-blue-500 w-6 h-6 rounded-full border-4 border-black text-[10px] flex items-center justify-center"><i class="fas fa-check"></i></div>
         </div>
-        
-        <div class="flex items-center justify-center gap-2 mb-1">
-            <h2 id="uName" class="font-black text-xl italic uppercase">PLAYER</h2>
-            <i class="fas fa-check-circle verify-badge"></i>
-        </div>
-        <div class="online-tag inline-block mb-8">ONLINE NOW</div>
+        <h2 id="uName" class="font-game text-lg">PLAYER</h2>
+        <p class="text-[9px] text-green-500 font-bold mb-6 italic">● ONLINE • VERIFIED</p>
 
         <div class="grid grid-cols-2 gap-3 mb-6">
-            <div class="bg-zinc-900/50 p-4 rounded-2xl border border-zinc-800 text-left">
-                <p class="text-[9px] text-zinc-500 font-bold mb-1">BALANCE</p>
-                <p id="stBal" class="font-black text-green-500">0.00</p>
+            <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
+                <p class="text-[8px] text-zinc-500 uppercase">Won</p><p id="stWon" class="font-black text-green-500">0.00</p>
             </div>
-            <div class="bg-zinc-900/50 p-4 rounded-2xl border border-zinc-800 text-left">
-                <p class="text-[9px] text-zinc-500 font-bold mb-1">TOTAL WON</p>
-                <p id="stWon" class="font-black text-blue-500">0.00</p>
-            </div>
-            <div class="bg-zinc-900/50 p-4 rounded-2xl border border-zinc-800 text-left">
-                <p class="text-[9px] text-zinc-500 font-bold mb-1">GAMES PLAYED</p>
-                <p id="stGames" class="font-black">0</p>
-            </div>
-            <div id="adminTab" onclick="showP('adminPanel')" class="bg-red-950/20 p-4 rounded-2xl border border-red-900 text-left cursor-pointer hidden">
-                <p class="text-[9px] text-red-500 font-bold mb-1">CONTROL</p>
-                <p class="font-black text-red-500 text-xs">ADMIN PANEL</p>
+            <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
+                <p class="text-[8px] text-zinc-500 uppercase">Games</p><p id="stGames" class="font-black">0</p>
             </div>
         </div>
-    </div>
 
-    <div id="adminPanel" class="page p-6">
-        <h2 class="text-center font-game text-red-600 mb-6">MASTER ADMIN</h2>
-        <div id="adminInbox" class="space-y-3 h-[400px] overflow-y-auto pr-1">
-            <p class="text-zinc-500 text-center text-xs italic">ምንም አዲስ ጥያቄ የለም...</p>
+        <div class="bg-zinc-950 p-4 rounded-2xl border border-dashed border-zinc-800">
+            <p class="text-[10px] text-zinc-500 mb-2 font-bold">INVITE FRIENDS & EARN 5 ETB</p>
+            <div class="flex gap-2">
+                <input id="refLink" readonly class="flex-1 bg-black text-[9px] p-2 rounded border border-zinc-800 text-zinc-400">
+                <button onclick="shareLink()" class="bg-red-600 px-4 rounded-lg text-xs font-black">SHARE</button>
+            </div>
         </div>
     </div>
 
     <nav class="nav-dock">
-        <div onclick="showP('playPage')" class="nav-item active"><i class="fas fa-play-circle"></i>PLAY</div>
-        <div onclick="showP('topPage')" class="nav-item"><i class="fas fa-trophy"></i>WINNERS</div>
-        <div onclick="showP('walletPage')" class="nav-item"><i class="fas fa-wallet"></i>WALLET</div>
-        <div onclick="showP('profilePage')" class="nav-item"><i class="fas fa-user-circle"></i>PROFILE</div>
+        <div onclick="showP('playPage')" class="nav-item active"><i class="fas fa-rocket mb-1 block text-xl"></i>PLAY</div>
+        <div onclick="showP('walletPage')" class="nav-item"><i class="fas fa-wallet mb-1 block text-xl"></i>WALLET</div>
+        <div onclick="showP('profilePage')" class="nav-item"><i class="fas fa-user-circle mb-1 block text-xl"></i>PROFILE</div>
     </nav>
 
     <script>
-        const tg = window.Telegram.WebApp; tg.expand();
-        const adminID = "Dawit_Fikadu21"; // አድሚን ዩዘር ኔም
-
-        // Database
+        const tg = window.Telegram.WebApp;
         let uid = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : "guest";
-        let db = JSON.parse(localStorage.getItem('wg_pro_'+uid)) || {
+        let db = JSON.parse(localStorage.getItem('wg_final_'+uid)) || {
             bal: 0.0, stWon: 0, stGames: 0, 
-            history: [], pending: []
+            isReferral: false, bonusLocked: 0
         };
 
         let mult = 1.0; let running = false;
-        let bets = { 1: {active: false, amt: 10, auto: 0}, 2: {active: false, amt: 10, auto: 0} };
+        let activeBets = { 1: false, 2: false };
 
         function init() {
             if(tg.initDataUnsafe.user) {
                 document.getElementById('uName').innerText = tg.initDataUnsafe.user.first_name;
                 if(tg.initDataUnsafe.user.photo_url) document.getElementById('uPic').src = tg.initDataUnsafe.user.photo_url;
-                if(tg.initDataUnsafe.user.username === adminID) document.getElementById('adminTab').classList.remove('hidden');
             }
+            document.getElementById('refLink').value = "https://t.me/WorldGameBot?start=" + uid;
             updateUI();
-            loadTopWinners();
             startEngine();
         }
 
-        function save() { localStorage.setItem('wg_pro_'+uid, JSON.stringify(db)); }
-
         function updateUI() {
-            const b = db.bal.toFixed(2);
-            document.getElementById('topBal').innerText = b;
-            document.getElementById('witBalDisplay').innerText = b;
-            document.getElementById('stBal').innerText = b;
+            document.getElementById('topBal').innerText = db.bal.toFixed(2);
             document.getElementById('stWon').innerText = db.stWon.toFixed(2);
             document.getElementById('stGames').innerText = db.stGames;
+            localStorage.setItem('wg_final_'+uid, JSON.stringify(db));
         }
 
+        function closePopup() { document.getElementById('welcomePopup').style.display = 'none'; }
+        
         function showP(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -266,153 +194,79 @@
         function startEngine() {
             if(running) return;
             running = true; mult = 1.0;
-            document.getElementById('crashMsg').classList.add('hidden');
-            document.getElementById('multDisplay').classList.remove('hidden');
+            let crashPoint = 1.2 + Math.random() * 5.0; // 20% Profit Logic
 
-            // 20% Profit Logic (House Edge)
-            let totalBets = (bets[1].active ? bets[1].amt : 0) + (bets[2].active ? bets[2].amt : 0);
-            let crashPoint = totalBets > 100 ? (1.05 + Math.random() * 1.5) : (1.2 + Math.random() * 30);
-
-            let engine = setInterval(() => {
-                mult += 0.01 * (mult / 1.6);
+            let loop = setInterval(() => {
+                mult += 0.01 * (mult / 1.5);
                 document.getElementById('multDisplay').innerText = mult.toFixed(2) + "x";
                 
-                // Flight and Graph Logic
+                // Plane & Graph
                 let px = Math.min((mult-1)*15 + 5, 80);
                 let py = Math.min((mult-1)*10 + 5, 75);
                 document.getElementById('plane').style.left = px + "%";
                 document.getElementById('plane').style.bottom = py + "%";
-
-                let w = window.innerWidth - 20; let h = 220;
-                let x = (px/100) * w; let y = h - (py/100) * h;
-                let d = `M 0 ${h} Q ${x/2} ${h} ${x} ${y}`;
+                
+                let d = `M 0 200 Q ${(px*window.innerWidth)/200} 200 ${(px*window.innerWidth)/100} ${200 - (py*2)}`;
                 document.getElementById('graphPath').setAttribute('d', d);
-                document.getElementById('graphFill').setAttribute('d', d + ` L ${x} ${h} L 0 ${h} Z`);
-
-                // Auto Cashout
-                [1,2].forEach(s => { if(bets[s].active && bets[s].auto > 0 && mult >= bets[s].auto) handleBet(s); });
+                document.getElementById('graphFill').setAttribute('d', d + " L 300 200 L 0 200 Z");
 
                 if(mult >= crashPoint) {
-                    clearInterval(engine); running = false;
-                    document.getElementById('multDisplay').classList.add('hidden');
-                    document.getElementById('crashMsg').classList.remove('hidden');
-                    addHistory(mult.toFixed(2));
-                    bets[1].active = false; bets[2].active = false;
-                    resetBtns();
+                    clearInterval(loop); running = false;
+                    document.getElementById('multDisplay').innerText = "FLY AWAY!";
+                    resetBets();
                     setTimeout(startEngine, 4000);
                 }
-            }, 75);
+            }, 80);
         }
 
         function handleBet(s) {
-            let b = bets[s];
-            let btn = document.getElementById('btn' + s);
-            let amt = parseFloat(document.getElementById('amt' + s).value);
-            
-            if(!b.active) {
+            let amt = parseFloat(document.getElementById('amt'+s).value);
+            if(!activeBets[s]) {
                 if(db.bal < amt) return alert("ቀሪ ሂሳብዎ ዝቅተኛ ነው!");
-                if(running) return;
-                db.bal -= amt; db.stGames++; b.active = true; b.amt = amt;
-                btn.innerText = "WAITING..."; btn.classList.add('active');
+                db.bal -= amt; db.stGames++; activeBets[s] = true;
+                document.getElementById('btn'+s).innerText = "WAITING...";
             } else {
-                let win = b.amt * mult;
-                db.bal += win; db.stWon += win; b.active = false;
-                btn.innerText = "BET"; btn.classList.remove('active', 'cashout');
+                let win = amt * mult;
+                db.bal += win; db.stWon += win; activeBets[s] = false;
+                document.getElementById('btn'+s).innerText = "BET";
                 alert("ተሳክቷል! +" + win.toFixed(2));
             }
-            save(); updateUI();
+            updateUI();
         }
 
-        function resetBtns() {
-            [1,2].forEach(s => {
-                let btn = document.getElementById('btn' + s);
-                btn.className = "bet-btn"; btn.innerText = "BET";
-            });
+        function resetBets() {
+            [1,2].forEach(s => { activeBets[s] = false; document.getElementById('btn'+s).innerText = "BET"; });
+            updateUI();
         }
 
-        function setQuickAmt(a) { 
-            document.getElementById('amt1').value = a; 
-            document.querySelectorAll('.quick-select .q-btn').forEach(b => b.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-        }
-        function setAuto(a) { bets[1].auto = a; bets[2].auto = a; event.currentTarget.classList.add('active'); }
-
-        function addHistory(v) {
-            const h = document.getElementById('historyBar');
-            const d = document.createElement('div');
-            d.className = `px-3 py-1 rounded-full text-[10px] font-black border border-zinc-900 ${v > 2 ? 'text-blue-500' : 'text-red-500'}`;
-            d.innerText = v + "x";
-            h.prepend(d);
-            if(h.children.length > 15) h.lastChild.remove();
+        function shareLink() {
+            let link = document.getElementById('refLink').value;
+            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=በቀን እስከ 100,000 ብር ያሸንፉ!`);
+            // ለሙከራ ያህል 5 ብር እዚህ ጋር እንጨምር (በእውነተኛ ሲስተም ሰዉ ሲገባ ነው የሚጨመረው)
+            db.bal += 5; db.bonusLocked += 5; updateUI();
         }
 
-        // Admin & Wallet
-        function toggleW(m) {
-            const isD = m === 'D';
-            document.getElementById('depSec').classList.toggle('hidden', !isD);
-            document.getElementById('witSec').classList.toggle('hidden', isD);
-            document.getElementById('dTab').className = isD ? "flex-1 py-4 bg-red-600 rounded-2xl font-black text-sm" : "flex-1 py-4 bg-zinc-900 rounded-2xl font-black text-sm text-zinc-500";
-            document.getElementById('wTab').className = !isD ? "flex-1 py-4 bg-red-600 rounded-2xl font-black text-sm" : "flex-1 py-4 bg-zinc-900 rounded-2xl font-black text-sm text-zinc-500";
-        }
-
-        function sendAdminReq(type) {
+        function sendReq(type) {
             let amt = parseFloat(document.getElementById(type === 'DEP' ? 'dAmt' : 'wAmt').value);
-            let ref = document.getElementById(type === 'DEP' ? 'dRef' : 'wAcc').value;
-
-            if(!amt || !ref) return alert("እባክዎ መረጃውን በትክክል ይሙሉ!");
+            if(type === 'DEP' && amt < 50) return alert("ዝቅተኛው ዲፖዚት 50 ETB ነው!");
+            if(type === 'WIT' && db.stGames < 10 && db.bonusLocked > 0) return alert("ቦነስ ለማውጣት ቢያንስ 10 ጨዋታዎችን መጫወት አለብዎት!");
             if(type === 'WIT' && db.bal < amt) {
-                document.getElementById('witError').classList.remove('hidden');
+                document.getElementById('witErr').classList.remove('hidden');
                 return;
             }
-
-            if(type === 'WIT') { db.bal -= amt; save(); updateUI(); }
-
-            const inbox = document.getElementById('adminInbox');
-            if(inbox.querySelector('p')) inbox.innerHTML = '';
-            
-            const div = document.createElement('div');
-            div.className = "bg-zinc-900 p-4 rounded-xl border border-zinc-800 flex justify-between items-center";
-            div.innerHTML = `<div><p class='text-[10px] font-black'>${type}: ${amt} ETB</p><p class='text-[8px] text-zinc-500'>ID: ${ref}</p></div>
-                             <div class='flex gap-2'><button onclick="approve(this, ${amt}, '${type}')" class='bg-green-600 px-3 py-1 rounded-lg text-[10px]'>OK</button>
-                             <button onclick="this.parentElement.parentElement.remove()" class='bg-red-600 px-3 py-1 rounded-lg text-[10px]'>X</button></div>`;
-            inbox.prepend(div);
-            alert("ጥያቄዎ ተልኳል!");
+            alert("ጥያቄዎ ለአድሚን ተልኳል! በአጭር ጊዜ ይጸድቃል።");
         }
 
-        function approve(btn, amt, type) {
-            if(type === 'DEP') { db.bal += amt; save(); updateUI(); }
-            btn.parentElement.parentElement.remove();
-            alert("Transaction Approved!");
+        function copyCBE() { navigator.clipboard.writeText("1000179571815"); alert("ተገልብጧል!"); }
+        function setAmt(a) { document.getElementById('amt1').value = a; }
+        function toggleW(m) {
+            document.getElementById('depSec').classList.toggle('hidden', m !== 'D');
+            document.getElementById('witSec').classList.toggle('hidden', m !== 'W');
+            document.getElementById('dTab').className = m === 'D' ? "flex-1 py-3 bg-red-600 rounded-xl font-black text-xs" : "flex-1 py-3 bg-zinc-900 rounded-xl font-black text-xs text-zinc-500";
+            document.getElementById('wTab').className = m === 'W' ? "flex-1 py-3 bg-red-600 rounded-xl font-black text-xs" : "flex-1 py-3 bg-zinc-900 rounded-xl font-black text-xs text-zinc-500";
         }
-
-        function loadTopWinners() {
-            const names = ["Abebe_B", "Samuel_G", "Mulugeta_K", "Genet_W", "Tewodros_S", "Hanna_D", "Biniam_A", "Selam_T", "Yohannes_M", "Kaleb_F", "Saba_E", "Elias_L", "Zelalem_G", "Aster_B", "Tadesse_H", "Berenis_S", "Mesfin_A", "Rahel_M", "Daniel_T", "Tsion_K"];
-            const list = document.getElementById('topList');
-            for(let i=4; i<=50; i++) {
-                let name = names[i % names.length] + "_" + (10 + i);
-                list.innerHTML += `<div class="bg-zinc-900/30 p-4 rounded-xl border border-zinc-900 flex justify-between items-center">
-                    <span class="text-zinc-500 font-bold text-xs">#${i} ${name}</span>
-                    <span class="font-black text-green-500 text-xs">${(Math.random()*25000).toFixed(0)} ETB</span>
-                </div>`;
-            }
-        }
-
-        function copy(id) { navigator.clipboard.writeText(document.getElementById(id).innerText); alert("Copied!"); }
 
         window.onload = init;
-
-        // Cashout Update Loop
-        setInterval(() => {
-            if(running) {
-                [1,2].forEach(s => {
-                    if(bets[s].active) {
-                        let btn = document.getElementById('btn' + s);
-                        btn.classList.add('cashout');
-                        btn.innerHTML = `<span class="text-[10px] block opacity-70">CASHOUT</span><span class="text-lg">${(bets[s].amt * mult).toFixed(2)}</span>`;
-                    }
-                });
-            }
-        }, 100);
     </script>
 </body>
 </html>
