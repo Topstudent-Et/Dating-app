@@ -9,59 +9,74 @@ const io = new Server(server, { cors: { origin: "*" } });
 
 app.use(express.static(path.join(__dirname, '/')));
 
-// የጋራ መረጃዎች (Global State)
-let gameState = {
+let state = {
     mult: 1.0,
     isRun: false,
+    startTime: null,
+    history: [],
     bankInfo: { name: "CBE - Dawit F.", acc: "1000179571815" },
-    adminRequests: [],
-    forceNext: null,
-    totalIn: 0
+    activeBets: [],
+    requests: [],
+    totals: { deposit: 0, withdraw: 0, profit: 0 },
+    forceCrashNow: false,
+    nextCrashPoint: null
 };
 
-function startNewRound() {
-    gameState.isRun = true;
-    gameState.mult = 1.0;
+function gameLoop() {
+    state.isRun = true;
+    state.mult = 1.0;
+    state.startTime = Date.now();
+    state.activeBets = [];
     
-    // 20% ትርፍ ስሌት
-    let crashPoint = gameState.forceNext || (Math.random() < 0.2 ? 1.00 : (1.01 + Math.random() * 5.0).toFixed(2));
-    gameState.forceNext = null;
+    // 20% ትርፍ ለማስጠበቅ የሚደረግ ስሌት
+    let target = state.nextCrashPoint || (Math.random() < 0.2 ? 1.00 : (1.05 + Math.random() * 4).toFixed(2));
+    state.nextCrashPoint = null;
 
-    let loop = setInterval(() => {
-        gameState.mult += 0.01 * (gameState.mult / 2);
-        io.emit('tick', { mult: gameState.mult.toFixed(2) });
+    let timer = setInterval(() => {
+        state.mult += 0.01 * (state.mult / 1.5);
+        io.emit('tick', { mult: state.mult.toFixed(2), bets: state.activeBets });
 
-        if (gameState.mult >= crashPoint) {
-            clearInterval(loop);
-            gameState.isRun = false;
-            io.emit('crash', { point: gameState.mult.toFixed(2) });
-            setTimeout(startNewRound, 5000); // 5 ሴኮንድ እረፍት
+        // አድሚን "ክራሽ አድርግ" ካለ ወይም የታለመው ነጥብ ላይ ከደረሰ
+        if (state.forceCrashNow || state.mult >= target) {
+            clearInterval(timer);
+            state.isRun = false;
+            state.forceCrashNow = false;
+            io.emit('crash', { point: state.mult.toFixed(2) });
+            state.history.unshift(state.mult.toFixed(2));
+            if(state.history.length > 10) state.history.pop();
+            setTimeout(gameLoop, 5000); // 5 ሴኮንድ እረፍት
         }
     }, 100);
 }
 
 io.on('connection', (socket) => {
-    // አዲስ ሰው ሲገባ የባንክ መረጃ እና ያለውን ሁኔታ መላክ
-    socket.emit('init', gameState);
+    socket.emit('init', state);
 
-    // አድሚን የባንክ ቁጥር ሲቀይር ለሁሉም መላክ
-    socket.on('updateBank', (data) => {
-        gameState.bankInfo = data;
-        io.emit('bankChanged', data);
+    socket.on('placeBet', (data) => {
+        if(!state.isRun || state.mult < 1.05) {
+            state.activeBets.push({...data, socketId: socket.id});
+            io.emit('updateBets', state.activeBets);
+        }
     });
 
-    // የዲፖዚት ጥያቄ ለአድሚን መላክ
+    socket.on('adminAction', (data) => {
+        if(data.type === 'CRASH_NOW') state.forceCrashNow = true;
+        if(data.type === 'SET_BANK') { state.bankInfo = data.val; io.emit('bankUpdate', state.bankInfo); }
+    });
+
     socket.on('newRequest', (req) => {
-        gameState.adminRequests.push(req);
-        io.emit('updateAdminBox', gameState.adminRequests);
+        state.requests.push(req);
+        io.emit('adminInbox', state.requests);
     });
 
-    // Force Crash ትእዛዝ
-    socket.on('setForce', (val) => {
-        gameState.forceNext = val;
+    socket.on('approveReq', (index) => {
+        let req = state.requests[index];
+        if(req.type === 'DEP') state.totals.deposit += req.amt;
+        state.requests.splice(index, 1);
+        io.emit('adminInbox', state.requests);
+        io.emit('statsUpdate', state.totals);
     });
 });
 
-startNewRound();
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+gameLoop();
+server.listen(process.env.PORT || 3000);
