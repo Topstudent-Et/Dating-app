@@ -1,342 +1,175 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="am">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>WORLD GAME • FLEW AWY</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mega Crash - Pro</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Inter:wght@400;700;900&display=swap');
-        body { background: radial-gradient(circle at 20% 30%, #0a0a0a, #030000); font-family: 'Inter', sans-serif; }
-        .font-game { font-family: 'Orbitron', monospace; }
-        .multiplier-digit { font-size: 5rem; transition: all 0.03s linear; text-shadow: 0 0 15px rgba(255,0,0,0.4); }
-        @media (max-width: 500px) { .multiplier-digit { font-size: 3rem; } }
-        .flew-animation { animation: shakeFly 0.4s ease-in-out; background: rgba(220,38,38,0.2); border-radius: 2rem; }
-        @keyframes shakeFly {
-            0% { transform: translateX(0) rotate(0deg); opacity: 1; }
-            25% { transform: translateX(-12px) rotate(-5deg); }
-            75% { transform: translateX(12px) rotate(5deg); }
-            100% { transform: translateX(0) rotate(0deg); opacity: 0.8; }
-        }
-        .history-badge { transition: all 0.1s; }
-        .cashout-glow { animation: cashPulse 0.4s ease-out; }
-        @keyframes cashPulse {
-            0% { box-shadow: 0 0 0 0 #f59e0b; }
-            100% { box-shadow: 0 0 0 15px rgba(245,158,11,0); }
-        }
-        .profit-card { background: rgba(0,0,0,0.65); backdrop-filter: blur(4px); border-left: 4px solid #f59e0b; }
+        :root { --bg: #0b0e11; --card: #1e2329; --primary: #fcd535; --text: #eaeaea; --danger: #f6465d; --success: #0ecb81; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding-bottom: 70px; }
+        
+        /* Navigation */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #333; z-index: 1000; }
+        .nav-item { color: #848e9c; text-decoration: none; font-size: 12px; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .nav-item.active { color: var(--primary); }
+        .nav-item i { font-size: 20px; margin-bottom: 5px; }
+
+        /* Sections */
+        .section { display: none; padding: 20px; animation: fadeIn 0.3s; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Play Area */
+        .game-card { background: var(--card); border-radius: 15px; padding: 20px; text-align: center; margin-bottom: 20px; border: 1px solid #333; }
+        #multiplier { font-size: 4rem; font-weight: bold; color: var(--primary); margin: 20px 0; }
+        .btn-bet { background: var(--primary); color: black; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; font-size: 18px; cursor: pointer; }
+        .btn-cashout { background: var(--success); color: white; display: none; }
+
+        /* Wallet & Profile */
+        .balance-box { background: linear-gradient(45deg, #2c3e50, #000000); padding: 30px; border-radius: 15px; margin-bottom: 20px; }
+        .list-item { background: var(--card); padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; border-left: 4px solid var(--primary); }
+        
+        /* Admin Panel */
+        .admin-controls { border: 2px dashed var(--danger); padding: 15px; border-radius: 10px; }
     </style>
 </head>
-<body class="text-white min-h-screen flex flex-col">
+<body>
 
-    <!-- header with balance -->
-    <div class="flex justify-between items-center p-4 bg-black/80 border-b border-red-900/60 sticky top-0 z-10 backdrop-blur-sm">
-        <h1 class="font-game text-red-500 text-xl tracking-wider">✈️ WORLD GAME</h1>
-        <div class="bg-zinc-900/80 px-5 py-2 rounded-full border border-zinc-700 shadow-lg">
-            <span id="balanceDisplay" class="text-green-400 font-black text-lg">100.00 ETB</span>
+    <div id="play" class="section active">
+        <h2 style="color: var(--primary);">Naho Vibe Crash</h2>
+        <div class="game-card">
+            <div id="multiplier">1.00x</div>
+            <p id="game-status">ቀጣይ ዙር በመጠባበቅ ላይ...</p>
+        </div>
+        <div class="game-card">
+            <input type="number" id="betAmount" value="10" style="width: 80%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: none;">
+            <button id="mainBtn" class="btn-bet" onclick="handleAction()">BET</button>
         </div>
     </div>
 
-    <div class="flex-1 p-4 flex flex-col items-center justify-center">
-        <!-- main game panel -->
-        <div class="bg-black/50 backdrop-blur-md rounded-3xl p-6 w-full max-w-md border border-red-900/40 shadow-2xl">
-            
-            <!-- multiplier & special message area -->
-            <div class="text-center mb-3">
-                <div id="multiplierBox" class="font-game multiplier-digit font-black text-white bg-black/40 rounded-3xl py-4 px-2 inline-block w-full">
-                    <span id="multiplierValue">1.00</span><span>x</span>
-                </div>
-                <div id="gameStatus" class="text-sm text-amber-400 mt-2 font-semibold tracking-wide">⚡ PLACE BET TO START</div>
-            </div>
-
-            <!-- crash history (last 12 results) -->
-            <div id="history" class="flex flex-wrap justify-center gap-2 mb-5 text-xs"></div>
-
-            <!-- bet controls -->
-            <div class="bg-zinc-900/60 rounded-2xl p-4 mb-4 border border-zinc-800">
-                <div class="flex gap-3">
-                    <input type="number" id="betAmount" value="10" step="1" min="1" class="bg-black text-white p-3 rounded-xl w-full border border-zinc-700 text-center font-bold text-lg">
-                    <button id="betBtn" class="bg-red-600 px-6 py-3 rounded-xl font-bold text-lg hover:bg-red-700 transition shadow-lg">BET</button>
-                </div>
-                <div class="flex justify-between text-[11px] text-zinc-400 mt-2 px-1">
-                    <span>💰 min 1 ETB</span>
-                    <span>✈️ cashout before plane flies away</span>
-                </div>
-            </div>
-
-            <!-- cashout button -->
-            <button id="cashoutBtn" disabled class="w-full bg-orange-600 py-4 rounded-xl font-bold text-2xl disabled:opacity-40 disabled:bg-gray-700 transition-all flex items-center justify-center gap-2">
-                <i class="fas fa-hand-holding-usd"></i> CASH OUT
-            </button>
-
-            <!-- live message -->
-            <div id="message" class="text-center text-sm mt-4 h-8 font-medium"></div>
-        </div>
-
-        <!-- admin profit tracker (per player session) -->
-        <div class="w-full max-w-md mt-6 profit-card rounded-2xl p-4 border border-orange-900/40">
-            <h3 class="text-orange-400 text-sm font-bold mb-3 flex items-center gap-2"><i class="fas fa-chart-simple"></i> ADMIN OVERVIEW (this device)</h3>
-            <div class="grid grid-cols-2 gap-3 text-xs">
-                <div class="bg-black/50 p-2 rounded-lg">
-                    <p class="text-zinc-400">📊 TOTAL BETS</p>
-                    <p id="totalBetStat" class="text-yellow-400 font-bold text-lg">0.00 ETB</p>
-                </div>
-                <div class="bg-black/50 p-2 rounded-lg">
-                    <p class="text-zinc-400">🏆 TOTAL CAShed</p>
-                    <p id="totalCashStat" class="text-green-400 font-bold text-lg">0.00 ETB</p>
-                </div>
-                <div class="bg-black/50 p-2 rounded-lg col-span-2">
-                    <p class="text-zinc-400">📈 ESTIMATED ADMIN PROFIT (20% edge)</p>
-                    <p id="adminProfitStat" class="text-orange-400 font-bold text-2xl">0.00 ETB</p>
-                    <p class="text-[9px] text-zinc-500 mt-1">* based on total bets - total cashouts | mathematical house edge = 20%</p>
-                </div>
-            </div>
-            <div class="text-[10px] text-center text-zinc-500 mt-2 border-t border-zinc-800 pt-2">
-                <i class="fas fa-shield-alt text-green-500 mr-1"></i> Crash point: 20% chance at 1.00x → ensures long‑term 20% profit
-            </div>
+    <div id="winners" class="section">
+        <h2>ምርጥ አሸናፊዎች (Top Winners)</h2>
+        <div id="winners-list">
+            <div class="list-item"><span>1. ዳዊት</span> <span>+5,400 ETB</span></div>
+            <div class="list-item"><span>2. ሳሙኤል</span> <span>+3,200 ETB</span></div>
+            <div class="list-item"><span>3. ኤልሳ</span> <span>+1,850 ETB</span></div>
         </div>
     </div>
+
+    <div id="wallet" class="section">
+        <h2>Wallet</h2>
+        <div class="balance-box">
+            <small>ጠቅላላ ቀሪ ሂሳብ</small>
+            <h1 id="userBalance">1,000.00 ETB</h1>
+        </div>
+        <button class="btn-bet" style="background: var(--success); color: white;">ገንዘብ አስገባ (Deposit)</button>
+        <p style="margin-top: 15px;">የቅርብ ጊዜ እንቅስቃሴዎች</p>
+        <div class="list-item"><small>Withdrawal</small> <span>-200 ETB</span></div>
+    </div>
+
+    <div id="profile" class="section">
+        <h2>Profile</h2>
+        <div class="game-card">
+            <i class="fas fa-user-circle" style="font-size: 80px; color: var(--primary);"></i>
+            <h3>Dawit Designer</h3>
+            <p>ID: #882910</p>
+        </div>
+        <div class="list-item" onclick="alert('Settings')">Settings <i class="fas fa-chevron-right"></i></div>
+        <div class="list-item" style="color: var(--danger);">Logout <i class="fas fa-sign-out-alt"></i></div>
+    </div>
+
+    <div id="admin" class="section">
+        <h2 style="color: var(--danger);">Admin Panel</h2>
+        <div class="admin-controls">
+            <p>ጠቅላላ የገባ ገንዘብ: <b id="adminTotalIn">50,000 ETB</b></p>
+            <p>የቤት ትርፍ (20%): <b style="color: var(--success);" id="adminProfit">10,000 ETB</b></p>
+            <hr>
+            <label>ቀጣይ Crash በስንት ይሁን?</label>
+            <input type="number" id="manualCrash" placeholder="Ex: 1.5">
+            <button onclick="setManualCrash()" style="background: var(--danger); color: white; border: none; padding: 10px; border-radius: 5px;">አዝዝ</button>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="showSection('play', this)"><i class="fas fa-play"></i>Play</div>
+        <div class="nav-item" onclick="showSection('winners', this)"><i class="fas fa-trophy"></i>Winners</div>
+        <div class="nav-item" onclick="showSection('wallet', this)"><i class="fas fa-wallet"></i>Wallet</div>
+        <div class="nav-item" onclick="showSection('profile', this)"><i class="fas fa-user"></i>Profile</div>
+        <div class="nav-item" onclick="showSection('admin', this)"><i class="fas fa-user-shield"></i>Admin</div>
+    </nav>
 
     <script>
-        // ------------------- PLAYER STATE -------------------
-        let balance = 100.00;               // starting balance
+        const socket = io("የአንተ_የrailway_ሊንክ_እዚህ_ይግባ");
+        let balance = 1000;
+        let isFlying = false;
         let currentBet = 0;
-        let hasActiveBet = false;
-        let gameActive = false;              // round running & multiplier increasing
-        let currentMultiplier = 1.00;
-        let crashPoint = null;
-        let gameInterval = null;
-        
-        // stats for admin profit (only this browser session)
-        let totalBetsAmount = 0;
-        let totalCashoutAmount = 0;
-        
-        // DOM elements
-        const balanceSpan = document.getElementById('balanceDisplay');
-        const multiplierSpan = document.getElementById('multiplierValue');
-        const gameStatusSpan = document.getElementById('gameStatus');
-        const historyDiv = document.getElementById('history');
-        const betAmountInput = document.getElementById('betAmount');
-        const betBtn = document.getElementById('betBtn');
-        const cashoutBtn = document.getElementById('cashoutBtn');
-        const messageDiv = document.getElementById('message');
-        const totalBetStatSpan = document.getElementById('totalBetStat');
-        const totalCashStatSpan = document.getElementById('totalCashStat');
-        const adminProfitSpan = document.getElementById('adminProfitStat');
-        
-        let crashHistory = [];   // store last crash multipliers (max 12)
-        
-        // ------------------- HELPER FUNCTIONS -------------------
-        function showMessage(msg, isError = false) {
-            messageDiv.innerHTML = msg;
-            messageDiv.className = 'text-center text-sm mt-4 h-8 font-medium ' + (isError ? 'text-red-400' : 'text-emerald-400');
-            setTimeout(() => {
-                if (messageDiv.innerHTML === msg) messageDiv.innerHTML = '';
-            }, 2800);
+
+        function showSection(id, element) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            element.classList.add('active');
         }
-        
-        function updateBalanceUI() {
-            balanceSpan.innerText = balance.toFixed(2) + ' ETB';
-        }
-        
-        function updateAdminStatsUI() {
-            totalBetStatSpan.innerText = totalBetsAmount.toFixed(2) + ' ETB';
-            totalCashStatSpan.innerText = totalCashoutAmount.toFixed(2) + ' ETB';
-            let profit = totalBetsAmount - totalCashoutAmount;
-            adminProfitSpan.innerText = profit.toFixed(2) + ' ETB';
-        }
-        
-        // add to total bets (when player places a wager)
-        function addToTotalBets(amount) {
-            totalBetsAmount += amount;
-            updateAdminStatsUI();
-        }
-        
-        // add to total cashed out (when player successfully cashes out)
-        function addToTotalCashout(amount) {
-            totalCashoutAmount += amount;
-            updateAdminStatsUI();
-        }
-        
-        // generate crash point with 20% house edge: 20% chance -> 1.00x , 80% chance between 1.05 and 4.55
-        function generateCrashPoint() {
-            if (Math.random() < 0.20) {
-                return 1.00;
+
+        function handleAction() {
+            const btn = document.getElementById('mainBtn');
+            if (!isFlying) {
+                // መወራረድ
+                let amount = parseFloat(document.getElementById('betAmount').value);
+                if(amount <= balance) {
+                    currentBet = amount;
+                    balance -= amount;
+                    updateUI();
+                    socket.emit('placeBet', amount);
+                    btn.innerText = "CASH OUT (1.00x)";
+                    btn.style.background = "#0ecb81";
+                    btn.style.color = "white";
+                    isFlying = true;
+                    startSimulatedFlight();
+                }
             } else {
-                // range 1.05 -> 4.55 (fair distribution)
-                return 1.05 + Math.random() * 3.5;
+                // ገንዘብ ማውጣት
+                cashOut();
             }
         }
-        
-        // update history display (latest crash points)
-        function updateHistoryUI() {
-            historyDiv.innerHTML = crashHistory.map(point => {
-                let colorClass = (point === 1.00) ? 'border-red-500 text-red-400' : (point >= 3.5 ? 'border-purple-500 text-purple-300' : 'border-yellow-500 text-yellow-400');
-                return `<span class="border ${colorClass} px-2 py-1 rounded-full text-xs font-mono bg-black/40">${point.toFixed(2)}x</span>`;
-            }).join('');
-        }
-        
-        // record crash point into history (after each round)
-        function recordCrashPoint(point) {
-            crashHistory.unshift(point);
-            if (crashHistory.length > 12) crashHistory.pop();
-            updateHistoryUI();
-        }
-        
-        // ---------- FLY AWAY (CRASH) EVENT ----------
-        function flyAway() {
-            if (gameInterval) {
-                clearInterval(gameInterval);
-                gameInterval = null;
-            }
-            gameActive = false;
+
+        function startSimulatedFlight() {
+            let mult = 1.0;
+            const btn = document.getElementById('mainBtn');
+            const multDisplay = document.getElementById('multiplier');
             
-            // if player had an active bet and did NOT cashout -> bet lost
-            if (hasActiveBet && currentBet > 0) {
-                showMessage(`💨 PLANE FLEW AWY! ${currentBet.toFixed(2)} ETB lost.`, true);
-                hasActiveBet = false;
-                currentBet = 0;
-            }
-            
-            // show "FLEW AWY" on multiplier area with red animation
-            const multiplierBox = document.getElementById('multiplierBox');
-            multiplierBox.classList.add('flew-animation');
-            // change text to "FLEW AWY" in red
-            const originalMultiplierText = multiplierSpan.innerText;
-            multiplierSpan.innerText = 'FLEW';
-            // add extra span for "AWY" effect
-            let tempSpan = document.createElement('span');
-            tempSpan.innerText = ' AWY';
-            tempSpan.style.color = '#ef4444';
-            tempSpan.style.fontSize = 'inherit';
-            multiplierSpan.parentNode.appendChild(tempSpan);
-            multiplierSpan.style.color = '#ef4444';
-            gameStatusSpan.innerHTML = '💥 PLANE DISAPPEARED · NEXT ROUND READY';
-            cashoutBtn.disabled = true;
-            cashoutBtn.innerText = '💸 CASH OUT';
-            betBtn.disabled = false;
-            
-            // after animation, restore multiplier display
-            setTimeout(() => {
-                multiplierBox.classList.remove('flew-animation');
-                multiplierSpan.innerText = originalMultiplierText;
-                multiplierSpan.style.color = 'white';
-                if (multiplierSpan.parentNode.lastChild && multiplierSpan.parentNode.lastChild.nodeType === 1 && multiplierSpan.parentNode.lastChild.innerText === ' AWY') {
-                    multiplierSpan.parentNode.removeChild(multiplierSpan.parentNode.lastChild);
-                }
-                gameStatusSpan.innerHTML = '⚡ NEW ROUND · PLACE BET';
-            }, 1200);
-            
-            // record crash point in history
-            recordCrashPoint(crashPoint);
-        }
-        
-        // start multiplier engine (called after bet is placed)
-        function startRound() {
-            if (gameActive) return;
-            crashPoint = generateCrashPoint();
-            currentMultiplier = 1.00;
-            multiplierSpan.innerText = '1.00';
-            gameActive = true;
-            gameStatusSpan.innerHTML = '✈️ FLYING · CASH OUT BEFORE IT FLEES';
-            cashoutBtn.disabled = false;
-            cashoutBtn.classList.add('cashout-glow');
-            setTimeout(() => cashoutBtn.classList.remove('cashout-glow'), 400);
-            
-            const startTime = Date.now();
-            gameInterval = setInterval(() => {
-                if (!gameActive) return;
-                const elapsed = (Date.now() - startTime) / 1000;
-                let mult = 1.00 + (elapsed * 0.85);
-                if (mult > 10.0) mult = 10.0;
-                currentMultiplier = parseFloat(mult.toFixed(3));
-                multiplierSpan.innerText = currentMultiplier.toFixed(2);
+            let timer = setInterval(() => {
+                if(!isFlying) { clearInterval(timer); return; }
+                mult += 0.01;
+                multDisplay.innerText = mult.toFixed(2) + "x";
+                if(isFlying) btn.innerText = `CASH OUT (${mult.toFixed(2)}x)`;
                 
-                // check crash condition
-                if (currentMultiplier >= crashPoint) {
-                    flyAway();
-                }
-            }, 35);
+                // እዚህ ጋር ሰርቨሩ crash እንዲያደርግ ትእዛዝ ሲልክ ይቆማል
+            }, 100);
         }
-        
-        // ---------- PLAYER ACTIONS ----------
-        function placeBet() {
-            if (gameActive) {
-                showMessage('❌ Round in progress! Wait for next round.', true);
-                return;
-            }
-            let amount = parseFloat(betAmountInput.value);
-            if (isNaN(amount) || amount <= 0) {
-                showMessage('❌ Enter valid bet amount (min 1 ETB)', true);
-                return;
-            }
-            if (amount > balance) {
-                showMessage('❌ Insufficient balance!', true);
-                return;
-            }
-            // deduct balance
-            balance -= amount;
-            currentBet = amount;
-            hasActiveBet = true;
-            updateBalanceUI();
-            addToTotalBets(amount);
-            showMessage(`✅ Bet placed: ${amount.toFixed(2)} ETB. Cashout before plane flies!`);
-            betBtn.disabled = true;
-            // start new round
-            startRound();
-        }
-        
+
         function cashOut() {
-            if (!gameActive) {
-                showMessage('⚠️ No active round or already finished.', true);
-                return;
-            }
-            if (!hasActiveBet || currentBet <= 0) {
-                showMessage('⚠️ No active bet to cash out.', true);
-                return;
-            }
-            const winAmount = currentBet * currentMultiplier;
-            balance += winAmount;
-            updateBalanceUI();
-            addToTotalCashout(winAmount);
-            showMessage(`🎉 CASHED OUT! Won ${winAmount.toFixed(2)} ETB (${currentMultiplier.toFixed(2)}x)`);
-            
-            // end round cleanly (no crash)
-            if (gameInterval) {
-                clearInterval(gameInterval);
-                gameInterval = null;
-            }
-            gameActive = false;
-            hasActiveBet = false;
-            currentBet = 0;
-            cashoutBtn.disabled = true;
-            betBtn.disabled = false;
-            gameStatusSpan.innerHTML = '✅ CASHOUT SUCCESS · PLACE NEW BET';
-            // do NOT record crash point because player exited safely
+            let mult = parseFloat(document.getElementById('multiplier').innerText);
+            let win = currentBet * mult;
+            balance += win;
+            isFlying = false;
+            resetButton();
+            updateUI();
+            alert("አሸንፈዋል: " + win.toFixed(2) + " ETB");
         }
-        
-        // reset game state after crash (enable bet button)
-        function resetAfterCrash() {
-            // already handled in flyAway, but ensure bet button enabled if not already
-            if (!gameActive) {
-                betBtn.disabled = false;
-            }
+
+        function resetButton() {
+            const btn = document.getElementById('mainBtn');
+            btn.innerText = "BET";
+            btn.style.background = "#fcd535";
+            btn.style.color = "black";
         }
-        
-        // attach event listeners
-        betBtn.onclick = placeBet;
-        cashoutBtn.onclick = cashOut;
-        
-        // initialize UI
-        updateBalanceUI();
-        updateAdminStatsUI();
-        // add some dummy history for visual (optional)
-        crashHistory = [2.45, 1.08, 3.22, 1.00, 1.67, 4.10];
-        updateHistoryUI();
-        
-        // small instruction
-        console.log('🎮 WORLD GAME loaded | 20% house edge active (1.00x crash probability = 0.2)');
+
+        function updateUI() {
+            document.getElementById('userBalance').innerText = balance.toFixed(2) + " ETB";
+        }
     </script>
 </body>
 </html>
