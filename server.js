@@ -9,34 +9,31 @@ const io = new Server(server, { cors: { origin: "*" } });
 
 app.use(express.static(path.join(__dirname, '/')));
 
+// የሲስተሙ ዋና ዳታ (Database)
 let state = {
     mult: 1.0,
     isRun: false,
-    startTime: null,
-    history: [],
     bankInfo: { name: "CBE - Dawit F.", acc: "1000179571815" },
     activeBets: [],
     requests: [],
     totals: { deposit: 0, withdraw: 0, profit: 0 },
     forceCrashNow: false,
-    nextCrashPoint: null
+    history: []
 };
 
 function gameLoop() {
     state.isRun = true;
     state.mult = 1.0;
-    state.startTime = Date.now();
     state.activeBets = [];
     
-    // 20% ትርፍ ለማስጠበቅ የሚደረግ ስሌት
-    let target = state.nextCrashPoint || (Math.random() < 0.2 ? 1.00 : (1.05 + Math.random() * 4).toFixed(2));
-    state.nextCrashPoint = null;
+    // 20% ትርፍ ለማስጠበቅ የሚደረግ የክራሽ ነጥብ ስሌት
+    let target = state.forceCrashNow ? 1.00 : (Math.random() < 0.2 ? 1.00 : (1.05 + Math.random() * 5).toFixed(2));
+    state.forceCrashNow = false;
 
     let timer = setInterval(() => {
         state.mult += 0.01 * (state.mult / 1.5);
-        io.emit('tick', { mult: state.mult.toFixed(2), bets: state.activeBets });
+        io.emit('tick', { mult: state.mult.toFixed(2) });
 
-        // አድሚን "ክራሽ አድርግ" ካለ ወይም የታለመው ነጥብ ላይ ከደረሰ
         if (state.forceCrashNow || state.mult >= target) {
             clearInterval(timer);
             state.isRun = false;
@@ -44,7 +41,7 @@ function gameLoop() {
             io.emit('crash', { point: state.mult.toFixed(2) });
             state.history.unshift(state.mult.toFixed(2));
             if(state.history.length > 10) state.history.pop();
-            setTimeout(gameLoop, 5000); // 5 ሴኮንድ እረፍት
+            setTimeout(gameLoop, 4000); // 4 ሰከንድ እረፍት
         }
     }, 100);
 }
@@ -53,15 +50,16 @@ io.on('connection', (socket) => {
     socket.emit('init', state);
 
     socket.on('placeBet', (data) => {
-        if(!state.isRun || state.mult < 1.05) {
-            state.activeBets.push({...data, socketId: socket.id});
-            io.emit('updateBets', state.activeBets);
-        }
+        state.activeBets.push(data);
+        io.emit('updateBets', state.activeBets);
     });
 
     socket.on('adminAction', (data) => {
         if(data.type === 'CRASH_NOW') state.forceCrashNow = true;
-        if(data.type === 'SET_BANK') { state.bankInfo = data.val; io.emit('bankUpdate', state.bankInfo); }
+        if(data.type === 'SET_BANK') {
+            state.bankInfo = data.val;
+            io.emit('bankUpdate', state.bankInfo);
+        }
     });
 
     socket.on('newRequest', (req) => {
@@ -74,7 +72,6 @@ io.on('connection', (socket) => {
         if(req.type === 'DEP') state.totals.deposit += req.amt;
         state.requests.splice(index, 1);
         io.emit('adminInbox', state.requests);
-        io.emit('statsUpdate', state.totals);
     });
 });
 
