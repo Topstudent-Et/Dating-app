@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WORLD GAME PRO V6 - ELITE</title>
+    <title>WORLD GAME PRO V7 - ULTIMATE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -13,34 +13,33 @@
         body { background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; margin: 0; }
         .font-game { font-family: 'Orbitron', sans-serif; }
         
-        /* Game Canvas & Trail */
-        .game-view { position: relative; height: 320px; background: radial-gradient(circle at bottom left, #2a0505, #000); border-radius: 30px; margin: 12px; border: 1.5px solid #1a1a1a; overflow: hidden; }
-        #multiplier { position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%); font-size: 5rem; font-weight: 900; z-index: 10; font-family: 'Orbitron'; text-shadow: 0 0 20px rgba(255,0,0,0.5); }
-        #plane { position: absolute; font-size: 3.5rem; z-index: 20; transition: all 0.1s linear; transform: rotate(-15deg); filter: drop-shadow(0 0 15px #f00); }
+        /* Game Screen */
+        .game-view { position: relative; height: 320px; background: radial-gradient(circle at bottom left, #2a0505, #000); border-radius: 25px; margin: 10px; border: 1px solid #1a1a1a; overflow: hidden; }
+        #multiplier { position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%); font-size: 5rem; font-weight: 900; z-index: 10; font-family: 'Orbitron'; color: #fff; }
+        #plane { position: absolute; font-size: 3rem; z-index: 20; transition: all 0.1s linear; }
         #trail-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 15; pointer-events: none; }
 
-        .btn-bet { background: linear-gradient(180deg, #28a745, #1e7e34); border-bottom: 5px solid #145523; border-radius: 20px; transition: 0.1s; }
-        .btn-bet:active { transform: translateY(2px); border-bottom-width: 2px; }
-        .btn-cash { background: linear-gradient(180deg, #ffc107, #d39e00); color: #000; border-bottom: 5px solid #916c00; border-radius: 20px; }
+        /* Layout Fixes */
+        .bet-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 10px; padding: 0 10px; margin-bottom: 10px; }
+        .btn-bet { background: linear-gradient(180deg, #28a745, #1e7e34); height: 100%; border-radius: 15px; font-weight: 900; }
+        .btn-cash { background: linear-gradient(180deg, #ffc107, #d39e00); color: #000; }
         
-        .page { display: none; height: 100vh; overflow-y: auto; padding-bottom: 110px; }
+        .page { display: none; height: 100vh; overflow-y: auto; padding-bottom: 100px; }
         .active-page { display: block; }
-        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 85px; background: #050505; display: flex; justify-content: space-around; items-center; border-top: 1px solid #111; z-index: 1000; padding-bottom: 15px; }
-        .nav-item { color: #444; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.3s; }
-        .nav-item.active { color: #ff0000; }
+        
+        /* Centered Podium */
+        .crown-box { position: absolute; top: -50px; left: 50%; transform: translateX(-50%); font-size: 50px; }
+        .podium-gold { background: linear-gradient(to top, rgba(234,179,8,0.2), transparent); border-t-4 border-yellow-500; height: 160px !important; }
 
-        .crown-anim { animation: float 1.8s infinite ease-in-out; }
-        @keyframes float { 0%, 100% { transform: translateY(0) scale(1.1); } 50% { transform: translateY(-12px) scale(1.2); } }
         ::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="bg-black">
 
-    <header class="flex justify-between items-center p-4 border-b border-zinc-900 sticky top-0 bg-black/90 backdrop-blur-md z-[2000]">
-        <div class="font-game text-red-600 italic text-2xl tracking-tighter">WORLD GAME</div>
-        <div onclick="showPage('wallet')" class="bg-zinc-900 px-4 py-2 rounded-full border border-zinc-800 flex items-center gap-2 active:scale-90 transition">
+    <header class="flex justify-between items-center p-4 border-b border-zinc-900 sticky top-0 bg-black z-[1000]">
+        <div class="font-game text-red-600 italic text-xl">WORLD GAME V7</div>
+        <div class="bg-zinc-900 px-4 py-2 rounded-full border border-zinc-800 flex items-center gap-2">
             <span id="hBal" class="text-green-500 font-black text-sm">0.00 ETB</span>
-            <i class="fas fa-plus-circle text-zinc-600 text-[10px]"></i>
         </div>
     </header>
 
@@ -49,148 +48,129 @@
             <canvas id="trail-canvas"></canvas>
             <div id="multiplier">1.00x</div>
             <div id="plane" style="left: 10%; bottom: 10%;">✈️</div>
-            
-            <div id="crashAlert" class="absolute inset-0 bg-black/90 hidden flex flex-col items-center justify-center z-50 animate-fadeIn">
-                <p class="text-zinc-500 font-black text-[10px] tracking-[5px] uppercase mb-1">FLEW AWAY!</p>
-                <h1 id="crashVal" class="text-red-600 font-game text-7xl italic">1.00x</h1>
+            <div id="crashAlert" class="absolute inset-0 bg-black/95 hidden flex flex-col items-center justify-center z-50">
+                <p class="text-zinc-500 font-bold text-xs mb-1">FLY AWAY!</p>
+                <h1 id="crashVal" class="text-red-600 font-game text-6xl italic">1.00x</h1>
             </div>
         </div>
 
-        <div id="adminQuick" class="hidden px-4 mb-4">
-            <div class="bg-red-600/10 border border-red-600/30 p-3 rounded-2xl flex gap-2">
-                <input type="number" id="forceVal" placeholder="Force Crash (Ex: 1.05)" class="flex-1 bg-black border border-zinc-800 rounded-xl p-3 text-xs outline-none text-red-500 font-bold">
-                <button onclick="setForce()" class="bg-red-600 px-6 rounded-xl font-black text-[10px] uppercase">LOCK</button>
+        <div id="adminQuick" class="hidden px-3 mb-3">
+            <div class="bg-red-900/10 border border-red-900/30 p-2 rounded-xl flex gap-2">
+                <input type="number" id="forceVal" placeholder="Force Crash" class="flex-1 bg-black border border-zinc-800 rounded-lg p-2 text-xs outline-none">
+                <button onclick="setForce()" class="bg-red-600 px-4 rounded-lg font-black text-[10px]">LOCK</button>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 gap-3 px-4">
-            <div class="bg-zinc-900/40 p-5 rounded-[30px] border border-zinc-800">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="flex-1 flex items-center bg-black rounded-2xl p-1 border border-zinc-800">
-                        <button onclick="adj(1, -10)" class="w-12 h-10 text-zinc-500 text-2xl font-black">-</button>
-                        <input type="number" id="a1" value="10" class="w-full bg-transparent text-center font-black text-2xl outline-none">
-                        <button onclick="adj(1, 10)" class="w-12 h-10 text-zinc-500 text-2xl font-black">+</button>
-                    </div>
+        <div class="bet-grid">
+            <button id="b1" onclick="handleBet(1)" class="btn-bet text-xl italic flex flex-col items-center justify-center">
+                <span>BET</span>
+                <span id="b1_sub" class="text-[9px] opacity-60"></span>
+            </button>
+            <div class="bg-zinc-900/50 p-3 rounded-2xl border border-zinc-800">
+                <div class="flex items-center gap-2 mb-2">
+                    <button onclick="adj(1,-10)" class="w-8 h-8 bg-zinc-800 rounded-lg">-</button>
+                    <input type="number" id="a1" value="10" class="flex-1 bg-transparent text-center font-black outline-none text-lg">
+                    <button onclick="adj(1,10)" class="w-8 h-8 bg-zinc-800 rounded-lg">+</button>
                 </div>
-                <button id="b1" onclick="handleBet(1)" class="w-full py-5 btn-bet font-black text-2xl italic uppercase tracking-tighter">BET</button>
+                <div class="grid grid-cols-3 gap-1">
+                    <button onclick="setA(1,2)" class="bg-zinc-800 py-1 rounded text-[9px]">2x</button>
+                    <button onclick="setA(1,4)" class="bg-zinc-800 py-1 rounded text-[9px]">4x</button>
+                    <button onclick="setA(1,8)" class="bg-zinc-800 py-1 rounded text-[9px]">8x</button>
+                </div>
             </div>
+        </div>
 
-            <div class="bg-zinc-900/40 p-5 rounded-[30px] border border-zinc-800">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="flex-1 flex items-center bg-black rounded-2xl p-1 border border-zinc-800">
-                        <button onclick="adj(2, -10)" class="w-12 h-10 text-zinc-500 text-2xl font-black">-</button>
-                        <input type="number" id="a2" value="20" class="w-full bg-transparent text-center font-black text-2xl outline-none">
-                        <button onclick="adj(2, 10)" class="w-12 h-10 text-zinc-500 text-2xl font-black">+</button>
-                    </div>
+        <div class="bet-grid">
+            <button id="b2" onclick="handleBet(2)" class="btn-bet text-xl italic flex flex-col items-center justify-center">
+                <span>BET</span>
+                <span id="b2_sub" class="text-[9px] opacity-60"></span>
+            </button>
+            <div class="bg-zinc-900/50 p-3 rounded-2xl border border-zinc-800">
+                <div class="flex items-center gap-2 mb-2">
+                    <button onclick="adj(2,-10)" class="w-8 h-8 bg-zinc-800 rounded-lg">-</button>
+                    <input type="number" id="a2" value="20" class="flex-1 bg-transparent text-center font-black outline-none text-lg">
+                    <button onclick="adj(2,10)" class="w-8 h-8 bg-zinc-800 rounded-lg">+</button>
                 </div>
-                <button id="b2" onclick="handleBet(2)" class="w-full py-5 btn-bet font-black text-2xl italic uppercase tracking-tighter">BET</button>
+                <div class="grid grid-cols-3 gap-1">
+                    <button onclick="setA(2,2)" class="bg-zinc-800 py-1 rounded text-[9px]">2x</button>
+                    <button onclick="setA(2,4)" class="bg-zinc-800 py-1 rounded text-[9px]">4x</button>
+                    <button onclick="setA(2,8)" class="bg-zinc-800 py-1 rounded text-[9px]">8x</button>
+                </div>
             </div>
         </div>
     </div>
 
     <div id="topPage" class="page p-6">
-        <h2 class="text-center font-game text-yellow-500 mb-12 italic uppercase tracking-widest">Global Champions</h2>
-        <div class="flex justify-center items-end gap-2 mb-10 h-44">
-            <div class="w-1/3 bg-zinc-900 h-28 rounded-t-[35px] text-center p-4 relative border border-zinc-800">
-                <span class="absolute -top-8 left-1/2 -translate-x-1/2 text-4xl">🥈</span>
-                <p class="text-[10px] font-bold text-zinc-400">Solomon Kassa</p>
-                <p class="text-green-500 font-black text-xs">98,240</p>
+        <h2 class="text-center font-game text-yellow-500 mb-16 italic">TOP WINNERS</h2>
+        <div class="flex justify-center items-end gap-3 mb-10 h-44">
+            <div class="w-1/3 bg-zinc-900 h-28 rounded-t-3xl text-center p-3 relative border border-zinc-800">
+                <span class="absolute -top-10 left-1/2 -translate-x-1/2 text-3xl">🥈</span>
+                <p class="text-[9px] font-bold">Sara Solomon</p>
+                <p class="text-green-500 font-black text-xs">112,400</p>
             </div>
-            <div class="w-1/3 bg-yellow-500/10 border-t-4 border-yellow-500 h-40 rounded-t-[35px] text-center p-4 relative">
-                <span class="absolute -top-14 left-1/2 -translate-x-1/2 text-6xl crown-anim">👑</span>
-                <p id="top1Name" class="text-[11px] font-black text-yellow-500 uppercase">Dawit Fikadu</p>
-                <p class="text-sm font-black text-white">245,500</p>
+            <div class="w-1/3 podium-gold rounded-t-3xl text-center p-3 relative">
+                <div class="crown-box animate-bounce">👑</div>
+                <p id="top1Name" class="text-[11px] font-black text-yellow-500 uppercase mt-4">Dawit Fikadu</p>
+                <p class="text-sm font-black">285,500</p>
             </div>
-            <div class="w-1/3 bg-zinc-900 h-24 rounded-t-[35px] text-center p-4 relative border border-zinc-800">
-                <span class="absolute -top-8 left-1/2 -translate-x-1/2 text-4xl">🥉</span>
-                <p class="text-[10px] font-bold text-zinc-400">Mulugeta Abate</p>
-                <p class="text-green-500 font-black text-xs">72,100</p>
+            <div class="w-1/3 bg-zinc-900 h-24 rounded-t-3xl text-center p-3 relative border border-zinc-800">
+                <span class="absolute -top-10 left-1/2 -translate-x-1/2 text-3xl">🥉</span>
+                <p class="text-[9px] font-bold">Yonas Abel</p>
+                <p class="text-green-500 font-black text-xs">84,100</p>
             </div>
         </div>
         <div id="topList" class="space-y-2"></div>
     </div>
 
-    <div id="walletPage" class="page p-6">
-        <div class="flex bg-zinc-900 p-1 rounded-2xl mb-8 border border-zinc-800">
-            <button onclick="setTab('D')" id="tabD" class="flex-1 py-4 bg-red-600 rounded-xl font-black text-xs transition-all">DEPOSIT</button>
-            <button onclick="setTab('W')" id="tabW" class="flex-1 py-4 rounded-xl font-black text-xs text-zinc-500 transition-all">WITHDRAW</button>
-        </div>
-
-        <div id="depArea" class="space-y-4">
-            <div class="bg-zinc-900 p-8 rounded-[40px] border border-zinc-800 text-center">
-                <p id="bankName" class="text-red-500 font-black text-xs uppercase mb-2">CBE (የኢትዮጵያ ንግድ ባንክ)</p>
-                <p id="bankAcc" class="text-3xl font-black tracking-widest mb-6 select-all">1000179571815</p>
-                <div class="bg-black/50 p-3 rounded-xl"><p class="text-[9px] text-zinc-500 leading-relaxed">አካውንቱን ኮፒ አድርገው ብር ይላኩ፤ በመቀጠል የላኩበትን የትራንዛክሽን ቁጥር (FT ቁጥር) ከታች ያስገቡ።</p></div>
-            </div>
-            <input type="number" id="dAmt" placeholder="Amount (ETB)" class="w-full bg-zinc-950 p-5 rounded-2xl border border-zinc-800 outline-none font-bold text-xl text-center">
-            <input type="text" id="dRef" placeholder="Transaction ID (Ex: FT24...)" class="w-full bg-zinc-950 p-5 rounded-2xl border border-zinc-800 outline-none text-center">
-            <button onclick="sendReq('DEP')" class="w-full bg-blue-600 py-5 rounded-2xl font-black text-lg uppercase shadow-lg shadow-blue-900/20">SEND TO ADMIN</button>
-        </div>
-        
-        <div id="witArea" class="hidden space-y-4 animate-fadeIn">
-            <input type="number" id="wAmt" placeholder="የሚወጣ መጠን" class="w-full bg-zinc-950 p-5 rounded-2xl border border-zinc-800 outline-none text-center font-bold text-xl">
-            <input type="text" id="wAcc" placeholder="የባንክ አካውንት ቁጥር" class="w-full bg-zinc-950 p-5 rounded-2xl border border-zinc-800 outline-none text-center">
-            <button onclick="sendReq('WIT')" class="w-full bg-orange-600 py-5 rounded-2xl font-black text-lg uppercase">WITHDRAW NOW</button>
-        </div>
-    </div>
-
     <div id="profilePage" class="page p-8 text-center">
         <div class="relative w-32 h-32 mx-auto mb-6">
-            <img id="uPic" src="https://via.placeholder.com/150" class="w-full h-full rounded-full border-4 border-red-600 p-1 object-cover">
+            <img id="uPic" src="https://via.placeholder.com/150" class="w-full h-full rounded-full border-4 border-red-600 p-1">
             <i class="fas fa-check-circle absolute bottom-1 right-2 text-blue-500 text-3xl bg-black rounded-full"></i>
         </div>
-        <h2 id="uName" class="font-black text-3xl mb-1 italic tracking-tighter">PLAYER</h2>
-        <p class="text-zinc-600 text-xs font-bold mb-10 tracking-[6px] uppercase">Verified Account</p>
+        <h2 id="uName" class="font-black text-2xl mb-1 italic">PLAYER</h2>
+        <p class="text-zinc-600 text-xs font-bold mb-10 tracking-[5px]">VERIFIED</p>
         
-        <div class="grid grid-cols-2 gap-4 mb-8">
-            <div class="bg-zinc-900 p-6 rounded-[35px] border border-zinc-800">
-                <p class="text-[10px] text-zinc-500 font-black mb-1 uppercase">Wallet</p>
-                <p id="pBal" class="text-2xl font-game text-green-500">0.00</p>
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="bg-zinc-900 p-6 rounded-3xl border border-zinc-800 text-left">
+                <p class="text-[9px] text-zinc-500 uppercase">Balance</p>
+                <p id="pBal" class="text-xl font-game text-green-500">0.00</p>
             </div>
-            <div class="bg-zinc-900 p-6 rounded-[35px] border border-zinc-800">
-                <p class="text-[10px] text-zinc-500 font-black mb-1 uppercase">Total Games</p>
-                <p id="pGames" class="text-2xl font-game">0</p>
+            <div class="bg-zinc-900 p-6 rounded-3xl border border-zinc-800 text-left">
+                <p class="text-[9px] text-zinc-500 uppercase">Games</p>
+                <p id="pGames" class="text-xl font-game">0</p>
             </div>
         </div>
-        <div class="bg-zinc-900/30 p-5 rounded-2xl border border-zinc-800 mb-6 flex items-center justify-between">
-            <div class="text-left">
-                <p class="text-[8px] text-zinc-500 uppercase font-black">Invite Friend</p>
-                <p class="text-[10px] font-bold text-blue-500">t.me/WorldGameBot?start=ref777</p>
-            </div>
-            <i class="fas fa-copy text-zinc-600"></i>
-        </div>
-        <button id="admBtn" onclick="showPage('admin')" class="hidden w-full bg-red-600/10 py-5 rounded-2xl border border-red-600 text-red-500 font-black uppercase tracking-widest animate-pulse">ADMIN DASHBOARD</button>
+        <button id="admBtn" onclick="showPage('admin')" class="hidden w-full bg-red-600/10 py-5 rounded-2xl border border-red-600 text-red-500 font-black italic">ADMIN PANEL</button>
     </div>
 
     <div id="adminPage" class="page p-5">
-        <h2 class="text-red-600 font-game text-center mb-8 italic">MANAGEMENT CENTER</h2>
-        <div class="grid grid-cols-2 gap-3 mb-6">
-            <div class="bg-zinc-900 p-5 rounded-2xl text-center border border-zinc-800">
-                <p class="text-[9px] text-zinc-500 uppercase font-black mb-1">Total In</p>
-                <p id="totalIn" class="text-green-500 font-black text-xl">0.00</p>
+        <h2 class="text-red-600 font-game text-center mb-6 italic tracking-tighter">ADMIN SYSTEM</h2>
+        <div class="grid grid-cols-2 gap-2 mb-6">
+            <div class="bg-zinc-900 p-4 rounded-xl text-center">
+                <p class="text-[8px] text-zinc-500">TOTAL IN</p>
+                <p id="totalIn" class="text-green-500 font-black">0.00</p>
             </div>
-            <div class="bg-zinc-900 p-5 rounded-2xl text-center border border-zinc-800">
-                <p class="text-[9px] text-zinc-500 uppercase font-black mb-1">Profit (20%)</p>
-                <p id="profit" class="text-yellow-500 font-black text-xl">0.00</p>
+            <div class="bg-zinc-900 p-4 rounded-xl text-center">
+                <p class="text-[8px] text-zinc-500">20% PROFIT</p>
+                <p id="profit" class="text-yellow-500 font-black">0.00</p>
             </div>
         </div>
         
-        <div class="bg-zinc-900 p-6 rounded-3xl border border-zinc-800 mb-8">
-            <p class="text-[10px] text-zinc-400 font-bold mb-3 uppercase tracking-tighter">Bank Information Setup</p>
-            <input type="text" id="setBN" placeholder="Bank Name" class="w-full bg-black border border-zinc-800 p-4 rounded-xl mb-2 text-xs">
-            <input type="text" id="setBA" placeholder="Account Number" class="w-full bg-black border border-zinc-800 p-4 rounded-xl mb-4 text-xs font-bold tracking-widest">
-            <button onclick="updateBank()" class="w-full bg-blue-600 py-4 rounded-xl font-black text-xs uppercase">Update For All Users</button>
+        <div class="space-y-4">
+            <button onclick="socket.emit('clearSystem')" class="w-full bg-zinc-800 py-4 rounded-xl text-xs font-bold text-red-500"><i class="fas fa-trash-alt mr-2"></i> CLEAR ALL SYSTEM DATA</button>
+            <div class="bg-zinc-900 p-4 rounded-2xl border border-zinc-800">
+                <input type="text" id="setBN" placeholder="Bank Name" class="w-full bg-black border border-zinc-800 p-3 rounded-lg mb-2 text-xs">
+                <input type="text" id="setBA" placeholder="Account Number" class="w-full bg-black border border-zinc-800 p-3 rounded-lg mb-4 text-xs">
+                <button onclick="updateBank()" class="w-full bg-blue-600 py-3 rounded-lg font-black text-xs">UPDATE BANK INFO</button>
+            </div>
         </div>
-
-        <h3 class="text-zinc-500 text-[10px] font-black mb-4 uppercase ml-2">Pending Requests</h3>
-        <div id="adminInbox" class="space-y-3"></div>
+        <div id="adminInbox" class="mt-6 space-y-2"></div>
     </div>
 
-    <nav class="nav-bar">
-        <div onclick="showPage('play')" id="n-play" class="nav-item active"><i class="fas fa-plane-up text-xl"></i><span class="text-[10px] font-black uppercase mt-1">Play</span></div>
-        <div onclick="showPage('top')" id="n-top" class="nav-item"><i class="fas fa-trophy text-xl"></i><span class="text-[10px] font-black uppercase mt-1">Top</span></div>
-        <div onclick="showPage('wallet')" id="n-wallet" class="nav-item"><i class="fas fa-wallet text-xl"></i><span class="text-[10px] font-black uppercase mt-1">Wallet</span></div>
-        <div onclick="showPage('profile')" id="n-profile" class="nav-item"><i class="fas fa-user-circle text-xl"></i><span class="text-[10px] font-black uppercase mt-1">Profile</span></div>
+    <nav class="fixed bottom-0 w-full h-[85px] bg-black border-t border-zinc-900 flex justify-around items-center z-[2000] pb-4">
+        <div onclick="showPage('play')" id="n-play" class="flex flex-col items-center text-red-600"><i class="fas fa-plane-up text-xl"></i><span class="text-[9px] font-black mt-1">PLAY</span></div>
+        <div onclick="showPage('top')" id="n-top" class="flex flex-col items-center text-zinc-500"><i class="fas fa-trophy text-xl"></i><span class="text-[9px] font-black mt-1">TOP</span></div>
+        <div onclick="showPage('profile')" id="n-profile" class="flex flex-col items-center text-zinc-500"><i class="fas fa-user-circle text-xl"></i><span class="text-[9px] font-black mt-1">PROFILE</span></div>
     </nav>
 
     <script>
@@ -199,25 +179,19 @@
         tg.expand();
         
         let user = tg.initDataUnsafe.user || { id: 777, first_name: "Dawit", username: "Dawit_Fikadu21", photo_url: "" };
-        let db = JSON.parse(localStorage.getItem('wg_v6_db_'+user.id)) || { bal: 15.0, games: 0 };
+        let db = JSON.parse(localStorage.getItem('wg_v7_'+user.id)) || { bal: 25.0, games: 0 };
         let curM = 1.0, isRun = false, myBets = [null, null], trail = [];
 
-        // 1. GAME ENGINE & TRAIL RENDERER
+        // 1. GAME ANIMATION
         const canvas = document.getElementById('trail-canvas');
         const ctx = canvas.getContext('2d');
-        
-        function renderTrail() {
+        function drawTrail() {
             ctx.clearRect(0,0, canvas.width, canvas.height);
             if(trail.length < 2) return;
-            ctx.beginPath();
-            ctx.lineWidth = 6;
-            let grad = ctx.createLinearGradient(0, canvas.height, canvas.width, 0);
-            grad.addColorStop(0, "rgba(255,0,0,0.7)");
-            grad.addColorStop(1, "rgba(255,0,0,0)");
-            ctx.strokeStyle = grad;
-            ctx.lineCap = "round";
-            ctx.lineJoin = "round";
-            ctx.moveTo(trail[0].x, trail[0].y);
+            ctx.beginPath(); ctx.lineWidth = 5;
+            let g = ctx.createLinearGradient(0, canvas.height, canvas.width, 0);
+            g.addColorStop(0, "rgba(255,0,0,0.8)"); g.addColorStop(1, "rgba(255,0,0,0)");
+            ctx.strokeStyle = g; ctx.moveTo(trail[0].x, trail[0].y);
             for(let i=1; i<trail.length; i++) ctx.lineTo(trail[i].x, trail[i].y);
             ctx.stroke();
         }
@@ -229,19 +203,12 @@
             
             let x = Math.min((curM - 1) * 45, 88);
             let y = Math.min((curM - 1) * 35, 78);
-            let plane = document.getElementById('plane');
-            
-            // Calculate pixel positions for trail
+            let p = document.getElementById('plane');
             let px = (10 + x) * canvas.width / 100;
             let py = (90 - y) * canvas.height / 100;
             trail.push({x: px, y: py});
-            
-            plane.style.left = (10 + x) + "%";
-            plane.style.bottom = (10 + y) + "%";
-            plane.style.transform = `rotate(${-15 - (y/3)}deg)`;
-            
-            renderTrail();
-            updateUIs();
+            p.style.left = (10 + x) + "%"; p.style.bottom = (10 + y) + "%";
+            drawTrail(); updateBtns();
         });
 
         socket.on('crash', (d) => {
@@ -249,111 +216,64 @@
             document.getElementById('multiplier').innerText = "FLY AWAY!";
             document.getElementById('crashVal').innerText = d.point + "x";
             document.getElementById('crashAlert').classList.remove('hidden');
-            updateUIs();
+            updateBtns();
             setTimeout(() => {
-                document.getElementById('plane').style.left = "10%";
-                document.getElementById('plane').style.bottom = "10%";
-                document.getElementById('plane').style.transform = "rotate(-15deg)";
+                document.getElementById('plane').style.left = "10%"; document.getElementById('plane').style.bottom = "10%";
                 ctx.clearRect(0,0, canvas.width, canvas.height);
             }, 3000);
         });
 
-        // 2. ADMIN SYNC
-        socket.on('adminData', (data) => {
-            document.getElementById('totalIn').innerText = data.totalIn.toLocaleString() + " ETB";
-            document.getElementById('profit').innerText = (data.totalIn * 0.2).toLocaleString() + " ETB";
-            const box = document.getElementById('adminInbox'); box.innerHTML = '';
-            data.reqs.forEach((r, i) => {
-                box.innerHTML += `<div class="bg-zinc-900 p-4 rounded-2xl border border-zinc-800 flex justify-between items-center animate-fadeIn">
-                    <div class="text-left">
-                        <p class="text-[10px] font-black ${r.type==='DEP'?'text-blue-500':'text-orange-500'}">${r.type} REQUEST</p>
-                        <p class="text-xs font-bold mt-1">${r.amt} ETB</p>
-                        <p class="text-[8px] text-zinc-500 uppercase">${r.name} | ${r.ref}</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="socket.emit('approveReq', ${i})" class="bg-green-600 px-4 py-2 rounded-lg text-[10px] font-black">OK</button>
-                        <button onclick="socket.emit('rejectReq', ${i})" class="bg-red-600 px-4 py-2 rounded-lg text-[10px] font-black">X</button>
-                    </div>
-                </div>`;
-            });
-        });
-
-        socket.on('bankChanged', (d) => {
-            document.getElementById('bankName').innerText = d.name;
-            document.getElementById('bankAcc').innerText = d.acc;
-        });
-
-        // 3. CORE ACTIONS
+        // 2. LOGIC
         function handleBet(id) {
             let amt = parseFloat(document.getElementById('a'+id).value);
             if(!isRun && !myBets[id-1]) {
-                if(db.bal < amt) return alert("Insufficient Balance!");
+                if(db.bal < amt) return alert("Balance የለዎትም!");
                 db.bal -= amt; db.games++; myBets[id-1] = amt;
+                document.getElementById('b'+id+'_sub').innerText = amt + " ETB";
                 socket.emit('placeBet', { amt, name: user.first_name });
             } else if(isRun && myBets[id-1]) {
                 let win = myBets[id-1] * curM;
                 db.bal += win; socket.emit('cashOut', { name: user.first_name, win: curM });
-                myBets[id-1] = null; alert("You Cashed Out: " + win.toFixed(1) + " ETB!");
+                myBets[id-1] = null; document.getElementById('b'+id+'_sub').innerText = "";
+                alert("ተቀብለዋል: " + win.toFixed(1) + " ETB");
             }
             refresh();
         }
 
         function refresh() {
-            document.getElementById('hBal').innerText = db.bal.toFixed(2) + " ETB";
+            document.getElementById('hBal').innerText = db.bal.toFixed(2);
             document.getElementById('pBal').innerText = db.bal.toFixed(2);
             document.getElementById('pGames').innerText = db.games;
-            localStorage.setItem('wg_v6_db_'+user.id, JSON.stringify(db));
+            localStorage.setItem('wg_v7_'+user.id, JSON.stringify(db));
         }
 
         function showPage(p) {
             document.querySelectorAll('.page').forEach(el => el.classList.remove('active-page'));
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('nav div').forEach(el => el.className = "flex flex-col items-center text-zinc-500");
             document.getElementById(p+'Page').classList.add('active-page');
-            document.getElementById('n-'+p).classList.add('active');
+            document.getElementById('n-'+p).className = "flex flex-col items-center text-red-600";
         }
 
-        function updateUIs() {
+        function updateBtns() {
             for(let i=1; i<=2; i++) {
                 let b = document.getElementById('b'+i);
-                if(!isRun && myBets[i-1]) { b.innerText = "WAITING..."; b.className = "w-full py-5 bg-zinc-800 text-zinc-600 rounded-2xl font-black italic"; }
-                else if(isRun && myBets[i-1]) { b.innerText = "CASH OUT"; b.className = "w-full py-5 btn-cash font-black text-2xl italic"; }
-                else { b.innerText = "BET"; b.className = "w-full py-5 btn-bet font-black text-2xl italic"; }
+                if(!isRun && myBets[i-1]) { b.innerText = "WAITING..."; b.className = "btn-bet opacity-50 text-xs italic"; }
+                else if(isRun && myBets[i-1]) { b.innerText = "CASH OUT"; b.className = "btn-bet btn-cash text-xl italic"; }
+                else { b.innerText = "BET"; b.className = "btn-bet text-xl italic"; }
             }
         }
 
         function adj(id, v) { let e = document.getElementById('a'+id); e.value = Math.max(10, parseInt(e.value) + v); }
-        function setTab(t) {
-            document.getElementById('tabD').className = t==='D' ? "flex-1 py-4 bg-red-600 rounded-xl font-black text-xs" : "flex-1 py-4 rounded-xl font-black text-xs text-zinc-500";
-            document.getElementById('tabW').className = t==='W' ? "flex-1 py-4 bg-red-600 rounded-xl font-black text-xs" : "flex-1 py-4 rounded-xl font-black text-xs text-zinc-500";
-            document.getElementById('depArea').classList.toggle('hidden', t==='W');
-            document.getElementById('witArea').classList.toggle('hidden', t==='D');
-        }
-
-        function sendReq(type) {
-            let a = type==='DEP' ? document.getElementById('dAmt').value : document.getElementById('wAmt').value;
-            let r = type==='DEP' ? document.getElementById('dRef').value : document.getElementById('wAcc').value;
-            if(!a || !r) return alert("እባክዎ ሁሉንም መረጃ ያስገቡ!");
-            socket.emit('newRequest', {type, amt: a, ref: r, name: user.first_name, uid: user.id});
-            alert("ጥያቄዎ ለአድሚን ተልኳል!");
-        }
-
-        function updateBank() {
-            socket.emit('updateBank', { name: document.getElementById('setBN').value, acc: document.getElementById('setBA').value });
-            alert("Bank Details Updated!");
-        }
-
-        function setForce() { socket.emit('setForce', parseFloat(document.getElementById('forceVal').value)); alert("Next Round Force Set!"); }
+        function setA(id, x) { let e = document.getElementById('a'+id); e.value = (parseInt(e.value) * x); }
+        function setForce() { socket.emit('setForce', parseFloat(document.getElementById('forceVal').value)); alert("Locked!"); }
 
         function renderWinners() {
-            const etNames = ["Abel Tesfaye", "Hana Girma", "Kaleb Efrem", "Lidiya Tekle", "Binyam Assefa", "Tigist Mulu", "Elias Kebede", "Rahel Samuel", "Yohannes Tekle", "Selam Haile", "Bruk Assefa", "Genet Tadesse"];
+            const etNames = ["Abel Tesfaye", "Hana Girma", "Kaleb Efrem", "Lidiya Tekle", "Binyam Assefa", "Tigist Mulu", "Elias Kebede", "Rahel Samuel", "Yohannes Tekle", "Selam Haile"];
             const box = document.getElementById('topList');
             for(let i=4; i<=50; i++) {
-                box.innerHTML += `<div class="bg-zinc-900/40 p-5 rounded-2xl border border-zinc-900 flex justify-between items-center text-[12px] mb-2 animate-fadeIn">
-                    <div class="flex items-center gap-3">
-                        <span class="text-zinc-700 font-bold w-5">#${i}</span>
-                        <span class="font-bold">${etNames[i%etNames.length]} <i class="fas fa-check-circle text-blue-500 text-[9px] ml-1"></i></span>
-                    </div>
-                    <span class="font-black text-green-500">${(Math.random()*25000 + 1000).toLocaleString()}</span>
+                box.innerHTML += `<div class="bg-zinc-900/40 p-5 rounded-2xl border border-zinc-900 flex justify-between items-center text-[12px] mb-2">
+                    <span>#${i} ${etNames[i%10]} <i class="fas fa-check-circle text-blue-500 text-[9px]"></i></span>
+                    <span class="font-black text-green-500">${(Math.random()*15000 + 1000).toLocaleString()}</span>
                 </div>`;
             }
         }
@@ -365,7 +285,6 @@
             if(user.username === "Dawit_Fikadu21") {
                 document.getElementById('admBtn').classList.remove('hidden');
                 document.getElementById('adminQuick').classList.remove('hidden');
-                document.getElementById('top1Name').innerText = user.first_name;
             }
             renderWinners(); refresh();
         };
