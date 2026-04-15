@@ -3,230 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>World All Games Bot - Aviator Pro</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Aviator World - Premium Edition</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-red: #ff0000;
-            --bg-dark: #0b0b0b;
-            --panel-bg: #1a1a1a;
+            --primary-green: #28a745;
+            --aviator-red: #e11d48;
+            --bg-dark: #050505;
+            --card-bg: #121212;
             --gold: #ffd700;
-            --verified-blue: #1da1f2;
         }
 
-        body {
-            background-color: var(--bg-dark);
-            color: white;
-            font-family: 'Ubuntu', sans-serif;
-            margin: 0;
-            overflow-x: hidden;
-        }
+        body { background: var(--bg-dark); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 70px; }
+        
+        /* Header & Balance */
+        .top-nav { display: flex; justify-content: space-between; padding: 15px; background: #000; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #222; }
+        .balance-chip { background: #1e1e1e; padding: 8px 15px; border-radius: 20px; border: 1px solid #333; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .balance-chip i { color: var(--primary-green); }
 
-        /* Game Animation Canvas */
-        .game-screen {
-            position: relative;
-            width: 100%;
-            height: 350px;
-            background: #000;
-            border-bottom: 3px solid #333;
-        }
+        /* Game Stage */
+        .stage { position: relative; height: 300px; background: radial-gradient(circle at bottom left, #2a0a0a 0%, #000 80%); overflow: hidden; }
+        .multiplier { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 5rem; font-weight: 800; z-index: 10; }
+        .plane-trail { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
 
-        #multi-display {
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 5rem;
-            font-weight: 900;
-            z-index: 10;
-            text-shadow: 0 0 20px rgba(255,255,255,0.2);
-        }
+        /* Top 3 Winners Podium */
+        .podium { display: flex; justify-content: center; align-items: flex-end; gap: 10px; padding: 20px 0; background: #0a0a0a; }
+        .podium-item { text-align: center; width: 100px; }
+        .rank-1 { height: 140px; background: linear-gradient(to top, #1a1a1a, #ffd70033); border-radius: 10px 10px 0 0; border: 1px solid var(--gold); }
+        .rank-2, .rank-3 { height: 100px; background: #1a1a1a; border-radius: 10px 10px 0 0; border: 1px solid #555; }
+        .avatar-circle { width: 50px; height: 50px; border-radius: 50%; border: 2px solid white; margin: -25px auto 10px; overflow: hidden; background: #333; }
 
-        /* Top 50 Winners List */
-        .leaderboard {
-            padding: 15px;
-            background: var(--panel-bg);
-        }
+        /* Wallet Tabs */
+        .wallet-tabs { display: flex; background: #111; border-radius: 10px; margin: 15px; overflow: hidden; }
+        .tab-btn { flex: 1; padding: 15px; border: none; background: transparent; color: #888; cursor: pointer; }
+        .tab-btn.active { background: #222; color: white; border-bottom: 2px solid var(--primary-green); }
 
-        .winner-card {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px;
-            border-bottom: 1px solid #2a2a2a;
-        }
+        /* Navigation Menu */
+        .bottom-bar { position: fixed; bottom: 0; width: 100%; background: #080808; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #222; }
+        .nav-link { color: #666; text-decoration: none; font-size: 11px; text-align: center; }
+        .nav-link.active { color: var(--primary-green); }
+        .nav-link i { font-size: 20px; display: block; margin-bottom: 4px; }
 
-        .rank-box { width: 40px; font-weight: bold; }
-        .name-box { flex-grow: 1; display: flex; align-items: center; gap: 8px; }
-        .verified { color: var(--verified-blue); font-size: 0.9rem; }
-
-        /* Navigation Buttons */
-        .nav-bar {
-            display: flex;
-            justify-content: space-around;
-            padding: 15px;
-            background: #111;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .nav-btn {
-            background: #222;
-            border: 1px solid #444;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .nav-btn.active { background: var(--primary-red); border-color: var(--primary-red); }
-
-        /* Admin & Wallet Sections */
-        .wallet-panel {
-            padding: 20px;
-            display: none; /* Hidden by default */
-        }
-
-        .bank-info-box {
-            background: #222;
-            padding: 15px;
-            border-left: 5px solid var(--primary-red);
-            margin-bottom: 20px;
-            border-radius: 5px;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            background: #000;
-            border: 1px solid #444;
-            color: white;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        .action-btn {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-        }
+        /* Share Button */
+        .share-card { background: linear-gradient(45deg, #0088cc, #004466); margin: 15px; padding: 20px; border-radius: 15px; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div class="nav-bar">
-        <button class="nav-btn active" onclick="showSection('game')">PLAY</button>
-        <button class="nav-btn" onclick="showSection('winners')">TOP 50</button>
-        <button class="nav-btn" onclick="showSection('wallet')">WALLET</button>
-        <button class="nav-btn" onclick="showSection('profile')">PROFILE</button>
-    </div>
-
-    <div id="game-sec">
-        <div class="game-screen">
-            <div id="multi-display">1.00x</div>
-            <canvas id="gameCanvas"></canvas>
+    <div class="top-nav">
+        <div style="font-weight: bold; color: var(--aviator-red);">AVIATOR</div>
+        <div class="balance-chip" onclick="showSection('wallet')">
+            <i class="fas fa-wallet"></i> <span id="user-balance">0.00 ETB</span>
         </div>
     </div>
 
-    <div id="wallet-sec" class="wallet-panel">
-        <h2>💰 የገንዘብ ማስተላለፊያ</h2>
-        <div class="bank-info-box">
-            <p>ንግድ ባንክ (CBE): <b id="cbe-display">1000179571815</b></p>
-            <p>አቢሲኒያ (Abyssinia): <b id="aby-display">165097254</b></p>
-            <p>አድሚን: <b>@Dawit_Fikadu21</b></p>
+    <section id="game-ui">
+        <div class="stage">
+            <div class="multiplier" id="multi">1.00x</div>
+            <canvas id="canvas"></canvas>
         </div>
+        
+        <div style="padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div style="background: #151515; padding: 15px; border-radius: 12px; border: 1px solid #333;">
+                <button style="background: var(--primary-green); width: 100%; padding: 15px; border: none; border-radius: 8px; color: white; font-weight: bold;">BET</button>
+            </div>
+            <div style="background: #151515; padding: 15px; border-radius: 12px; border: 1px solid #333;">
+                <button style="background: var(--primary-green); width: 100%; padding: 15px; border: none; border-radius: 8px; color: white; font-weight: bold;">BET</button>
+            </div>
+        </div>
+    </section>
 
-        <h3>Deposit (ገንዘብ ለማስገባት)</h3>
-        <input type="number" id="dep-amt" placeholder="መጠን (Amount)">
-        <input type="text" id="ft-num" placeholder="የ FT ቁጥር (Transaction Number)">
-        <button class="action-btn" style="background: #28a745; color: white;" onclick="submitToAdmin('Deposit')">ለአድሚን ላክ</button>
+    <section id="winners-ui" style="display:none;">
+        <div class="podium">
+            <div class="podium-item rank-2">
+                <div class="avatar-circle"><img src="https://via.placeholder.com/50" width="100%"></div>
+                🥈 2nd <br> <small>Selam T.</small>
+            </div>
+            <div class="podium-item rank-1">
+                <div class="avatar-circle" style="border-color: gold;"><img src="https://via.placeholder.com/50" width="100%"></div>
+                👑 1st <br> <b>Aman G.</b>
+            </div>
+            <div class="podium-item rank-3">
+                <div class="avatar-circle"><img src="https://via.placeholder.com/50" width="100%"></div>
+                🥉 3rd <br> <small>Dawit F.</small>
+            </div>
+        </div>
+        </section>
 
-        <h3 style="margin-top: 30px;">Withdraw (ገንዘብ ለማውጣት)</h3>
-        <input type="number" id="with-amt" placeholder="የሚወጣ መጠን">
-        <input type="text" id="bank-acc" placeholder="የባንክ አካውንት ቁጥርዎ">
-        <button class="action-btn" style="background: var(--primary-red); color: white;" onclick="submitToAdmin('Withdraw')">የማውጫ ጥያቄ ላክ</button>
+    <section id="wallet-ui" style="display:none;">
+        <div class="wallet-tabs">
+            <button class="tab-btn active" onclick="toggleWallet('dep')">DEPOSIT</button>
+            <button class="tab-btn" onclick="toggleWallet('with')">WITHDRAW</button>
+        </div>
+        <div id="dep-box" style="padding: 20px;">
+            <h3>ንግድ ባንክ (CBE): <span id="cbe-num">1000179571815</span></h3>
+            <input type="number" placeholder="የገንዘብ መጠን" style="width:100%; padding:12px; background:#222; color:white; border:1px solid #444; margin-bottom:10px;">
+            <input type="text" placeholder="የ FT ቁጥር ያስገቡ" style="width:100%; padding:12px; background:#222; color:white; border:1px solid #444;">
+            <button style="background:var(--primary-green); width:100%; padding:15px; margin-top:10px; border:none; color:white;">ለአድሚን ላክ</button>
+        </div>
+    </section>
+
+    <div class="share-card">
+        <h3>🚀 ጓደኞችዎን ይጋብዙ!</h3>
+        <p>በቀን እስከ 100,000 ማሸነፍ እንደሚችሉ ይንገሯቸው። በአንድ ሰው 5 ብር ያግኙ!</p>
+        <button onclick="shareGame()" style="background: white; color: #0088cc; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold;">
+            <i class="fab fa-telegram-plane"></i> አሁኑኑ ሼር አድርግ
+        </button>
     </div>
 
-    <div id="winners-sec" class="leaderboard" style="display:none;">
-        <h2 style="text-align: center;">🏆 Top 50 Winners</h2>
-        <div id="winners-list"></div>
-    </div>
+    <nav class="bottom-bar">
+        <a href="#" class="nav-link active" onclick="showSection('game')"><i class="fas fa-play"></i>PLAY</a>
+        <a href="#" class="nav-link" onclick="showSection('wallet')"><i class="fas fa-wallet"></i>WALLET</a>
+        <a href="#" class="nav-link" onclick="showSection('winners')"><i class="fas fa-trophy"></i>TOP 50</a>
+        <a href="#" class="nav-link" onclick="showSection('profile')"><i class="fas fa-user"></i>PROFILE</a>
+    </nav>
 
     <script>
-        // --- 1. CONFIGURATION (እዚህ ጋር የባንክ ቁጥሩን መቀየር ትችላለህ) ---
-        const sysConfig = {
-            cbe: "1000179571815",
-            abyssinia: "165097254",
-            admin: "@Dawit_Fikadu21"
-        };
-
-        // የባንክ ቁጥሩን በገጹ ላይ በራስ ሰር መጫን
-        document.getElementById('cbe-display').innerText = sysConfig.cbe;
-        document.getElementById('aby-display').innerText = sysConfig.abyssinia;
-
-        // --- 2. TOP 50 WINNERS (ኢትዮጵያዊ ስሞች) ---
-        const names = [
-            "Amanuel G.", "Selamawit T.", "Dawit Fikadu", "Bereket T.", "Hana Y.",
-            "Tewodros K.", "Meryem A.", "Yonas Alemu", "Eskinder N.", "Rahel G.",
-            "Samuel B.", "Hiwot A.", "Biniyam E.", "Martha H.", "Kaleb T.",
-            "Solomon T.", "Genet M.", "Abel Tesfaye", "Fikirte A.", "Daniel G.",
-            "Zelalem T.", "Tigist S.", "Mulugeta W.", "Aster A.", "Kedir M.",
-            "Lydia H.", "Fasil D.", "Tadele G.", "Saron B.", "Henok A.",
-            "Elias T.", "Meaza M.", "Kirubel S.", "Tsion Y.", "Yared W.",
-            "Helen K.", "Abraham L.", "Meseret D.", "Tamirat B.", "Frehiwot S.",
-            "Getnet A.", "Beza T.", "Natnael M.", " Kalkidan G.", "Eyob S.",
-            "Semira A.", "Jemal H.", "Worku B.", "Nigist T.", "Desta F."
-        ];
-
-        const list = document.getElementById('winners-list');
-        names.forEach((name, i) => {
-            let rank = "";
-            if(i === 0) rank = "👑";
-            else if(i === 1) rank = "🥈";
-            else if(i === 2) rank = "🥉";
-            else rank = i + 1;
-
-            list.innerHTML += `
-                <div class="winner-card">
-                    <div class="name-box">
-                        <div class="rank-box">${rank}</div>
-                        <span>${name}</span>
-                        <i class="fas fa-check-circle verified"></i>
-                    </div>
-                    <div style="font-weight:bold; color:#28a745;">${(Math.random()*8000 + 500).toFixed(2)} ETB</div>
-                </div>
-            `;
-        });
-
-        // --- 3. UI NAVIGATION ---
-        function showSection(section) {
-            document.getElementById('game-sec').style.display = section === 'game' ? 'block' : 'none';
-            document.getElementById('winners-sec').style.display = section === 'winners' ? 'block' : 'none';
-            document.getElementById('wallet-sec').style.display = section === 'wallet' ? 'block' : 'none';
-            
-            // Update active button
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+        function shareGame() {
+            const text = "🔥 ምርጥ የኤቪየተር ጨዋታ! ዛሬውኑ ተቀላቀሉና በቀን እስከ 100,000 ብር ያሸንፉ። ሲገቡ የ5 ብር ስጦታ ያገኛሉ! 👇\nhttps://t.me/World_All_Gamesbot";
+            window.open(`https://t.me/share/url?url=${encodeURIComponent(text)}`);
         }
-
-        // --- 4. ADMIN SUBMISSION ---
-        function submitToAdmin(type) {
-            const amount = type === 'Deposit' ? document.getElementById('dep-amt').value : document.getElementById('with-amt').value;
-            const ref = type === 'Deposit' ? document.getElementById('ft-num').value : document.getElementById('bank-acc').value;
-
-            if(!amount || !ref) {
-                alert("እባክዎ ሁሉንም መረጃዎች በትክክል ይሙሉ።");
-                return;
-            }
-
-            // እዚህ ጋር ወደ አድሚን ቴሌግራም የሚላክበት API ሊንክ ማከል ይቻላል
-            alert(`የ ${type} ጥያቄዎ መጠን ${amount} ETB ለአድሚን ${sysConfig.admin} ተልኳል። በቅርቡ ይጸድቅልዎታል።`);
+        
+        function showSection(id) {
+            document.querySelectorAll('section').forEach(s => s.style.display = 'none');
+            document.getElementById(id + '-ui').style.display = 'block';
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            event.currentTarget.classList.add('active');
         }
     </script>
 </body>
