@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WORLD GAME V44 - PODIUM EDITION</title>
+    <title>WORLD GAME V47 - ULTIMATE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -12,18 +12,19 @@
         body { background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; margin: 0; }
         .font-game { font-family: 'Orbitron', sans-serif; }
         
-        /* Podium Styles */
-        .podium-container { display: flex; align-items: flex-end; justify-content: center; gap: 8px; height: 180px; margin-top: 40px; margin-bottom: 20px; }
-        .podium-box { position: relative; display: flex; flex-direction: column; align-items: center; width: 30%; border-radius: 15px 15px 0 0; transition: 0.3s; }
-        .rank-1 { height: 140px; background: linear-gradient(180deg, #ffd70044, #000); border: 2px solid #ffd700; border-bottom: none; }
-        .rank-2 { height: 110px; background: linear-gradient(180deg, #c0c0c044, #000); border: 2px solid #c0c0c0; border-bottom: none; }
-        .rank-3 { height: 90px; background: linear-gradient(180deg, #cd7f3244, #000); border: 2px solid #cd7f32; border-bottom: none; }
-        .crown-icon { position: absolute; top: -35px; font-size: 35px; filter: drop-shadow(0 0 10px #ffd700); animation: float 2s infinite ease-in-out; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        .game-screen { position: relative; height: 280px; background: radial-gradient(circle at bottom left, #1a0202, #000 95%); border-radius: 20px; margin: 10px; border: 1px solid #1a1a1a; overflow: hidden; }
+        #multiplier { position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%); font-size: 4.5rem; font-weight: 900; z-index: 10; font-family: 'Orbitron'; color: #fff; }
+        
+        .bet-btn { background: linear-gradient(180deg, #28a745, #1e7e34); height: 100%; border-radius: 12px; font-weight: 900; border-bottom: 4px solid #145523; color: white; transition: 0.1s; width: 45%; }
+        .bet-btn.active { background: linear-gradient(180deg, #dc3545, #a71d2a); border-bottom-color: #721c24; }
 
-        .page { display: none; height: 100vh; overflow-y: auto; padding-bottom: 110px; }
+        .podium-box { position: relative; display: flex; flex-direction: column; align-items: center; width: 30%; border-radius: 15px 15px 0 0; border: 1px solid rgba(255,255,255,0.1); border-bottom: none; }
+        .p-1 { height: 130px; background: linear-gradient(180deg, #ffd70022, #000); border-color: #ffd700; }
+        .p-2 { height: 100px; background: linear-gradient(180deg, #c0c0c022, #000); border-color: #c0c0c0; }
+        .p-3 { height: 80px; background: linear-gradient(180deg, #cd7f3222, #000); border-color: #cd7f32; }
+        
+        .page { display: none; height: 100vh; overflow-y: auto; padding-bottom: 120px; }
         .active-page { display: block; }
-        .bet-btn { background: linear-gradient(180deg, #28a745, #1e7e34); height: 50px; border-radius: 12px; font-weight: 900; width: 100%; border-bottom: 3px solid #145523; }
         .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #22c55e; color: white; padding: 10px 20px; border-radius: 50px; font-size: 11px; z-index: 9999; display: none; }
     </style>
 </head>
@@ -33,154 +34,173 @@
 
     <header class="flex justify-between items-center p-4 border-b border-zinc-900 bg-black sticky top-0 z-[1000]">
         <div class="flex items-center gap-2">
-            <img id="hPic" src="https://via.placeholder.com/40" class="w-8 h-8 rounded-full border border-zinc-800">
-            <span id="hName" class="text-[10px] font-black uppercase truncate w-20">NAHOM</span>
+            <img id="uPic" src="https://via.placeholder.com/40" class="w-9 h-9 rounded-full border border-zinc-700 bg-zinc-800">
+            <div>
+                <p id="uName" class="text-[10px] font-black uppercase tracking-tighter">LOADING...</p>
+                <p class="text-[8px] text-green-500 font-bold uppercase">Online</p>
+            </div>
         </div>
         <div class="bg-zinc-900 px-4 py-1.5 rounded-full border border-zinc-800 flex items-center gap-2">
-            <span id="topBal" class="text-green-500 font-black text-sm">0.00</span>
+            <span id="topBal" class="text-green-500 font-game text-sm">0.00</span>
             <i class="fas fa-coins text-yellow-500 text-[10px]"></i>
         </div>
     </header>
 
-    <div id="playPage" class="page active-page px-2 text-center">
-        <div class="relative h-64 bg-zinc-950 rounded-3xl m-2 border border-zinc-900 overflow-hidden flex flex-col items-center justify-center">
-            <div id="multiplier" class="text-6xl font-game font-black text-white">1.00x</div>
-            <div id="statusLabel" class="text-[10px] uppercase tracking-widest text-zinc-500 mt-2">Waiting for next round...</div>
+    <div id="playPage" class="page active-page">
+        <div class="game-screen">
+            <div id="multiplier">1.00x</div>
+            <div id="crashAlert" class="absolute inset-0 bg-black/95 hidden flex flex-col items-center justify-center z-50">
+                <h1 id="crashVal" class="text-red-600 font-game text-5xl">1.00x</h1>
+                <p class="text-white text-[10px] font-black uppercase mt-2">Flew Away!</p>
+            </div>
         </div>
-        <div class="p-4 space-y-3">
-            <div class="flex gap-2"><input type="number" id="amt1" value="100" class="bg-zinc-900 w-full p-4 rounded-xl outline-none"><button onclick="handleBet(1)" class="bet-btn">BET</button></div>
+        
+        <div class="px-4 space-y-3">
+            <div class="flex gap-2 h-16">
+                <div class="flex-1 bg-zinc-900 rounded-xl border border-zinc-800 p-2"><input type="number" id="amt1" value="100" class="bg-transparent w-full h-full outline-none font-black text-xl"></div>
+                <button onclick="handleBet(1)" id="btn1" class="bet-btn">BET</button>
+            </div>
+            <div class="flex gap-2 h-16">
+                <div class="flex-1 bg-zinc-900 rounded-xl border border-zinc-800 p-2"><input type="number" id="amt2" value="200" class="bg-transparent w-full h-full outline-none font-black text-xl"></div>
+                <button onclick="handleBet(2)" id="btn2" class="bet-btn" style="background:linear-gradient(180deg, #d39e00, #936e00); border-bottom-color:#6d5200;">BET</button>
+            </div>
         </div>
     </div>
 
     <div id="walletPage" class="page p-5">
-        <div class="space-y-3 mb-6">
-            <p class="text-[10px] font-bold text-zinc-500 uppercase">Transfer To:</p>
-            <div class="bg-zinc-900 p-4 rounded-2xl border border-zinc-800 flex justify-between items-center" onclick="copy('1000179571815', 'CBE')">
-                <div><p class="text-[9px] text-blue-500 font-bold">CBE</p><p class="text-sm font-black">1000179571815</p></div>
-                <i class="fas fa-copy text-zinc-600"></i>
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <div onclick="copy('1000179571815', 'CBE')" class="bg-zinc-900 p-4 rounded-2xl border border-zinc-800 text-center">
+                <p class="text-[8px] text-blue-500 font-bold mb-1">CBE</p>
+                <p class="text-[10px] font-black">1000179571815</p>
             </div>
-            <div class="bg-zinc-900 p-4 rounded-2xl border border-zinc-800 flex justify-between items-center" onclick="copy('165097254', 'Abyssinia')">
-                <div><p class="text-[9px] text-yellow-500 font-bold">ABYSSINIA</p><p class="text-sm font-black">165097254</p></div>
-                <i class="fas fa-copy text-zinc-600"></i>
+            <div onclick="copy('165097254', 'Abyssinia')" class="bg-zinc-900 p-4 rounded-2xl border border-zinc-800 text-center">
+                <p class="text-[8px] text-yellow-500 font-bold mb-1">ABYSSINIA</p>
+                <p class="text-[10px] font-black">165097254</p>
             </div>
         </div>
-        <div class="bg-zinc-900 p-5 rounded-2xl border border-zinc-800 space-y-4">
+        <div class="bg-zinc-900 p-5 rounded-3xl border border-zinc-800 space-y-4">
             <input type="number" id="depAmt" placeholder="Amount (ETB)" class="bg-black w-full p-4 rounded-xl outline-none border border-zinc-800">
-            <input type="text" id="depFT" placeholder="FT Number / Transaction ID" class="bg-black w-full p-4 rounded-xl outline-none border border-zinc-800">
-            <button onclick="requestDep()" class="w-full bg-blue-600 py-4 rounded-xl font-black text-xs uppercase">Submit Deposit</button>
+            <input type="text" id="depFT" placeholder="Transaction (FT) Number" class="bg-black w-full p-4 rounded-xl outline-none border border-zinc-800">
+            <button onclick="submitReq()" class="w-full bg-blue-600 py-4 rounded-xl font-black text-xs uppercase">Submit Deposit</button>
         </div>
     </div>
 
     <div id="topPage" class="page p-4">
-        <div class="podium-container">
-            <div class="podium-box rank-2">
-                <span class="text-2xl mb-1">🥈</span>
-                <p class="text-[8px] font-bold text-zinc-400">Tsega.A</p>
-                <p class="text-[10px] font-black">15,400</p>
-            </div>
-            <div class="podium-box rank-1">
-                <span class="crown-icon">👑</span>
-                <p class="text-[9px] font-bold text-yellow-500 uppercase">Dawit.W</p>
-                <p class="text-xs font-black">32,100</p>
-            </div>
-            <div class="podium-box rank-3">
-                <span class="text-2xl mb-1">🥉</span>
-                <p class="text-[8px] font-bold text-zinc-400">Bekele.D</p>
-                <p class="text-[10px] font-black">12,800</p>
-            </div>
+        <div class="flex items-end justify-center gap-2 h-44 mt-6 mb-8">
+            <div class="podium-box p-2">🥈<p class="text-[8px] font-bold">Yonas.K</p><p class="text-[10px] font-black">21,400</p></div>
+            <div class="podium-box p-1">👑<p id="crownName" class="text-[9px] font-black text-yellow-500">YOU</p><p class="text-xs font-black">45,000</p></div>
+            <div class="podium-box p-3">🥉<p class="text-[8px] font-bold">Betty.S</p><p class="text-[10px] font-black">15,800</p></div>
         </div>
-        <div id="leadersList" class="space-y-2 mt-4">
-            </div>
+        <div id="leadersList" class="space-y-2 px-2"></div>
     </div>
 
     <div id="adminPage" class="page p-5">
-        <h2 class="text-center font-black text-red-500 mb-6 uppercase">Admin Panel</h2>
-        <div id="requestsBox" class="space-y-3"></div>
+        <h2 class="text-center font-black text-red-600 mb-6 uppercase">Admin Requests</h2>
+        <div id="adminRequests" class="space-y-3">
+            <p class="text-center text-zinc-600 text-[10px]">No pending requests.</p>
+        </div>
     </div>
 
     <div id="profilePage" class="page p-10 text-center">
-        <img id="uPic" src="https://via.placeholder.com/150" class="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-green-600">
-        <h2 id="uName" class="font-black text-xl mb-4 uppercase tracking-tighter">NAHOM</h2>
-        <div class="bg-zinc-900 p-8 rounded-3xl mb-8 border border-zinc-800">
-            <p id="pBal" class="text-5xl font-black text-green-500">0.00</p>
-            <p class="text-[8px] text-zinc-500 uppercase mt-2">Available Balance</p>
+        <img id="uPicMain" src="https://via.placeholder.com/150" class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-zinc-900">
+        <h2 id="uNameMain" class="font-black text-xl mb-6 uppercase">PLAYER</h2>
+        <div class="bg-zinc-900 p-8 rounded-3xl border border-zinc-800 mb-6">
+            <p id="pBal" class="text-5xl font-game font-black text-green-500">0.00</p>
+            <p class="text-[10px] text-zinc-500 mt-2 uppercase font-bold">Total Balance (ETB)</p>
         </div>
-        <button id="adminBtn" onclick="showPage('admin')" class="hidden w-full bg-yellow-600 py-4 rounded-xl font-black text-xs uppercase">Open Admin Panel</button>
+        <button id="adminBtn" onclick="showPage('admin')" class="hidden w-full bg-yellow-600 py-4 rounded-xl font-black text-xs uppercase mb-3">Open Admin Panel</button>
     </div>
 
     <nav class="fixed bottom-0 w-full h-20 bg-black border-t border-zinc-900 flex justify-around items-center z-[2000] pb-5">
-        <div onclick="showPage('play')" id="n-play" class="text-red-600 flex flex-col items-center"><i class="fas fa-rocket"></i><span class="text-[8px] mt-1">GAME</span></div>
+        <div onclick="showPage('play')" id="n-play" class="text-red-600 flex flex-col items-center"><i class="fas fa-play"></i><span class="text-[8px] mt-1">PLAY</span></div>
         <div onclick="showPage('wallet')" id="n-wallet" class="flex flex-col items-center"><i class="fas fa-wallet"></i><span class="text-[8px] mt-1">WALLET</span></div>
-        <div onclick="showPage('top')" id="n-top" class="flex flex-col items-center"><i class="fas fa-trophy"></i><span class="text-[8px] mt-1">LEADERS</span></div>
-        <div onclick="showPage('profile')" id="n-profile" class="flex flex-col items-center"><i class="fas fa-user"></i><span class="text-[8px] mt-1">ME</span></div>
+        <div onclick="showPage('top')" id="n-top" class="flex flex-col items-center"><i class="fas fa-trophy"></i><span class="text-[8px] mt-1">TOP</span></div>
+        <div onclick="showPage('profile')" id="n-profile" class="flex flex-col items-center"><i class="fas fa-user-circle"></i><span class="text-[8px] mt-1">PROFILE</span></div>
     </nav>
 
     <script>
         const tg = window.Telegram.WebApp;
-        const ADMIN_ID = 12345678; // ያንተን ID እዚህ ጋር ቀይረው
-        let user = tg.initDataUnsafe.user || { id: 12345678, first_name: "Nahom" };
-        let db = JSON.parse(localStorage.getItem('world_podium_db')) || { bal: 0.0, reqs: [] };
+        tg.expand();
+        const ADMIN_ID = 12345678; // ያንተን ID እዚህ ያስገቡ
+        
+        let user = tg.initDataUnsafe.user || { id: 12345678, first_name: "Nahom", photo_url: "" };
+        let db = JSON.parse(localStorage.getItem('world_v47_db')) || { bal: 0.0, reqs: [] };
+        
+        let curM = 1.0, isFlying = false;
 
-        function requestDep() {
-            const a = document.getElementById('depAmt').value;
-            const f = document.getElementById('depFT').value;
-            if(!a || !f) return alert("Fill all fields!");
-            db.reqs.push({ id: Date.now(), user: user.first_name, amt: parseFloat(a), ft: f });
-            save(); toast("Sent to Admin Panel! ✅");
+        function save() {
+            localStorage.setItem('world_v47_db', JSON.stringify(db));
+            document.getElementById('topBal').innerText = db.bal.toFixed(2);
+            document.getElementById('pBal').innerText = db.bal.toFixed(2);
         }
 
-        function adminDo(id, act) {
-            const i = db.reqs.findIndex(r => r.id === id);
-            if(act === 'ok') db.bal += db.reqs[i].amt;
-            db.reqs.splice(i, 1);
+        function handleBet(id) {
+            let a = parseFloat(document.getElementById('amt'+id).value);
+            if(!isFlying && db.bal >= a) {
+                db.bal -= a; save();
+                tg.HapticFeedback.impactOccurred('medium');
+                showToast("Bet Placed!");
+            }
+        }
+
+        function submitReq() {
+            const a = document.getElementById('depAmt').value;
+            const f = document.getElementById('depFT').value;
+            if(!a || !f) return alert("Empty fields!");
+            db.reqs.push({ id: Date.now(), user: user.first_name, amount: parseFloat(a), ft: f });
+            save(); showToast("Request Sent! ✅");
+        }
+
+        function adminProcess(id, act) {
+            const idx = db.reqs.findIndex(r => r.id === id);
+            if(act === 'ok') db.bal += db.reqs[idx].amount;
+            db.reqs.splice(idx, 1);
             save(); renderAdmin();
         }
 
         function renderAdmin() {
-            const b = document.getElementById('requestsBox');
-            if(db.reqs.length === 0) { b.innerHTML = `<p class="text-zinc-600 text-center text-[10px]">No pending requests.</p>`; return; }
-            b.innerHTML = db.reqs.map(r => `
-                <div class="bg-zinc-900 p-4 rounded-xl border border-zinc-800 flex justify-between items-center">
-                    <div><p class="text-xs font-black uppercase">${r.user}</p><p class="text-green-500 font-bold">${r.amt} ETB</p><p class="text-[8px] text-zinc-500">FT: ${r.ft}</p></div>
-                    <div class="flex gap-2"><button onclick="adminDo(${r.id},'ok')" class="bg-green-600 px-3 py-2 rounded-lg text-[10px] font-black">OK</button><button onclick="adminDo(${r.id},'no')" class="bg-red-600 px-3 py-2 rounded-lg text-[10px] font-black">X</button></div>
+            const list = document.getElementById('adminRequests');
+            if(db.reqs.length === 0) { list.innerHTML = `<p class="text-center text-zinc-600 text-[10px]">No requests.</p>`; return; }
+            list.innerHTML = db.reqs.map(r => `
+                <div class="bg-zinc-900 p-4 rounded-xl flex justify-between items-center border border-zinc-800">
+                    <div><p class="text-xs font-black uppercase">${r.user}</p><p class="text-green-500 font-bold">${r.amount} ETB</p></div>
+                    <div class="flex gap-2"><button onclick="adminProcess(${r.id},'ok')" class="bg-green-600 p-2 rounded text-[10px]">OK</button><button onclick="adminProcess(${r.id},'no')" class="bg-red-600 p-2 rounded text-[10px]">X</button></div>
                 </div>`).join('');
         }
-
-        function renderTop() {
-            const list = document.getElementById('leadersList');
-            const data = ["Hana.G", "Elias.T", "Sara.M", "Yonas.K", "Betty.S", "Miki.Y", "Abel.Z"];
-            list.innerHTML = data.map((n, i) => `
-                <div class="bg-zinc-900/40 p-3 rounded-xl flex justify-between items-center border border-zinc-800 mx-2">
-                    <span class="text-[10px] font-bold text-zinc-500">#${i+4} ${n}</span>
-                    <span class="text-white font-black text-xs">${(10000 - i*1000).toLocaleString()} ETB</span>
-                </div>`).join('');
-        }
-
-        function save() { localStorage.setItem('world_podium_db', JSON.stringify(db)); refresh(); }
-        function refresh() { document.getElementById('topBal').innerText = db.bal.toFixed(2); document.getElementById('pBal').innerText = db.bal.toFixed(2); }
-        function toast(m) { const t = document.getElementById('toast'); t.innerText = m; t.style.display='block'; setTimeout(()=>t.style.display='none', 2000); }
-        function copy(t, b) { navigator.clipboard.writeText(t); toast(b + " Copied! ✅"); }
 
         function showPage(p) {
             document.querySelectorAll('.page').forEach(el => el.classList.remove('active-page'));
             document.getElementById(p+'Page').classList.add('active-page');
             document.querySelectorAll('nav div').forEach(el => el.classList.remove('text-red-600'));
-            if(document.getElementById('n-'+p)) document.getElementById('n-'+p).classList.add('text-red-600');
+            document.getElementById('n-'+p).classList.add('text-red-600');
             if(p === 'admin') renderAdmin();
-            if(p === 'top') renderTop();
         }
 
+        function showToast(m) { const t = document.getElementById('toast'); t.innerText = m; t.style.display='block'; setTimeout(()=>t.style.display='none', 2000); }
+        function copy(t, b) { navigator.clipboard.writeText(t); showToast(b + " Copied!"); }
+
         window.onload = () => {
-            document.getElementById('hName').innerText = user.first_name;
-            document.getElementById('uName').innerText = user.first_name;
+            const name = user.first_name.toUpperCase();
+            document.getElementById('uName').innerText = name;
+            document.getElementById('uNameMain').innerText = name;
+            document.getElementById('crownName').innerText = name;
+            if(user.photo_url) {
+                document.getElementById('uPic').src = user.photo_url;
+                document.getElementById('uPicMain').src = user.photo_url;
+            }
             if(user.id === ADMIN_ID) document.getElementById('adminBtn').classList.remove('hidden');
-            
-            let m = 1.0;
+
+            const list = document.getElementById('leadersList');
+            ["Dawit.F", "Hana.G", "Miki.Y", "Elias.T", "Sara.M", "Yonas.K", "Betty.S"].forEach((n, i) => {
+                list.innerHTML += `<div class="bg-zinc-900/50 p-3 rounded-xl flex justify-between items-center border border-zinc-900"><span class="text-[10px] text-zinc-500 font-bold">#${i+4} ${n}</span><span class="text-xs font-black">${(12000 - i*1000).toLocaleString()} ETB</span></div>`;
+            });
+
+            // Mini Game Engine
             setInterval(() => {
-                if(m < 3.0) { m += 0.07; document.getElementById('multiplier').innerText = m.toFixed(2) + "x"; }
-                else { m = 1.0; }
+                if(curM < 2.5) { curM += 0.05; document.getElementById('multiplier').innerText = curM.toFixed(2) + "x"; }
+                else { curM = 1.0; }
             }, 100);
-            refresh();
+            save();
         };
     </script>
 </body>
