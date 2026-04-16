@@ -3,62 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aviator Ethiopia - Dai</title>
+    <title>Aviator Ethiopia Pro</title>
     <style>
         :root {
-            --primary: #e11d48;
-            --secondary: #10b981;
-            --bg: #0f172a;
-            --card: #1e293b;
+            --bg-color: #000000;
+            --card-color: #1a1a1a;
+            --accent-color: #e11d48; /* Red for Fly Away */
+            --success-color: #28a745; /* Green for Bet */
+            --wallet-color: #6366f1; /* Indigo for Withdraw */
         }
 
         body {
-            background-color: var(--bg);
+            background-color: var(--bg-color);
             color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             margin: 0;
-            padding-bottom: 70px;
-            user-select: none;
+            padding-bottom: 80px;
+            overflow-x: hidden;
         }
 
-        /* Header & Balance */
-        .header {
+        /* Top Balance Bar */
+        .top-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 15px;
-            background: var(--card);
-            border-bottom: 2px solid #334155;
+            background: var(--card-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .balance-box {
-            background: #000;
-            padding: 8px 15px;
-            border-radius: 20px;
+        .balance-container {
+            background: #111;
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 1px solid #333;
             display: flex;
             align-items: center;
             gap: 10px;
             cursor: pointer;
-            border: 1px solid var(--secondary);
         }
 
-        /* Game Area */
-        #game-view {
-            height: 300px;
-            position: relative;
-            background: radial-gradient(circle at bottom left, #1e1b4b, #000);
+        /* Game Screen */
+        #game-area {
+            height: 350px;
             margin: 10px;
-            border-radius: 15px;
+            background: radial-gradient(circle at bottom left, #0f172a, #000);
+            border-radius: 20px;
+            position: relative;
             overflow: hidden;
-        }
-
-        #plane {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            font-size: 50px;
-            z-index: 10;
-            transition: transform 0.1s linear;
+            border: 1px solid #222;
         }
 
         #multiplier {
@@ -66,240 +61,263 @@
             top: 40%;
             width: 100%;
             text-align: center;
-            font-size: 4rem;
+            font-size: 5rem;
             font-weight: 900;
-            z-index: 5;
+            z-index: 10;
         }
 
-        .flew-away {
-            color: #ff0000;
-            font-size: 1.5rem;
-            display: none;
+        #plane-emoji {
             position: absolute;
-            top: 20%;
+            bottom: 20px;
+            left: 20px;
+            font-size: 60px;
+            z-index: 20;
+            transition: transform 0.1s linear;
+            filter: drop-shadow(0 0 10px red);
+        }
+
+        .flew-away-text {
+            position: absolute;
+            top: 25%;
             width: 100%;
             text-align: center;
+            color: var(--accent-color);
+            font-size: 2rem;
+            font-weight: bold;
+            display: none;
+            text-transform: uppercase;
         }
 
-        /* Betting Panels */
-        .bet-container {
+        /* Betting Section */
+        .bet-section {
             display: flex;
-            gap: 10px;
+            flex-direction: column;
+            gap: 15px;
             padding: 10px;
         }
 
-        .bet-card {
-            flex: 1;
-            background: var(--card);
-            padding: 15px;
-            border-radius: 15px;
+        .bet-box {
+            background: var(--card-color);
+            padding: 20px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bet-input-group { width: 45%; }
+        .bet-input-group input {
+            width: 100%;
+            background: #000;
+            border: 1px solid #444;
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 1.2rem;
             text-align: center;
         }
 
-        .bet-btn {
-            background: var(--secondary);
+        .bet-button {
+            width: 50%;
+            background: var(--success-color);
             border: none;
             color: white;
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
+            padding: 15px;
+            border-radius: 15px;
             font-weight: bold;
             font-size: 1.1rem;
-            margin-top: 10px;
         }
 
-        /* Navigation */
-        .nav-bar {
+        /* Bottom Nav */
+        .bottom-menu {
             position: fixed;
             bottom: 0;
             width: 100%;
-            background: var(--card);
+            background: #111;
             display: flex;
             justify-content: space-around;
-            padding: 10px 0;
-            border-top: 1px solid #334155;
+            padding: 15px 0;
+            border-top: 1px solid #222;
         }
 
-        .nav-item {
-            text-align: center;
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
+        .menu-item { text-align: center; opacity: 0.6; cursor: pointer; }
+        .menu-item.active { opacity: 1; color: var(--success-color); }
 
-        .nav-item.active { opacity: 1; color: var(--primary); }
-
-        /* Sections */
-        .page { display: none; padding: 15px; }
+        /* Pages */
+        .page { display: none; padding: 20px; }
         .page.active { display: block; }
 
-        /* Top Winners List */
-        .winner-item {
+        /* Wallet Actions */
+        .wallet-btns { display: flex; gap: 15px; margin-top: 20px; }
+        .btn-dep { background: var(--success-color); flex: 1; padding: 15px; border-radius: 12px; text-align: center; }
+        .btn-with { background: var(--wallet-color); flex: 1; padding: 15px; border-radius: 12px; text-align: center; }
+
+        /* Winners List */
+        .winner-row {
             display: flex;
             justify-content: space-between;
-            background: #334155;
-            margin-bottom: 5px;
-            padding: 10px;
-            border-radius: 8px;
+            padding: 12px;
+            background: #111;
+            margin-bottom: 8px;
+            border-radius: 10px;
         }
 
-        /* Wallet Modal */
-        .wallet-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
+        /* Strategy Animation */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
-        .dep-btn { background: var(--secondary); flex: 1; padding: 15px; border-radius: 10px; text-align: center; }
-        .with-btn { background: #6366f1; flex: 1; padding: 15px; border-radius: 10px; text-align: center; }
-
-        /* Animation */
-        @keyframes wobble {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-            100% { transform: translateY(0); }
+        .strategy-box {
+            animation: bounce 3s infinite ease-in-out;
+            background: #1e1b4b;
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px dashed #444;
+            margin-top: 10px;
         }
-        .strategy-card { animation: wobble 2s infinite ease-in-out; background: #312e81; padding: 15px; border-radius: 10px; }
-
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="logo" style="color:var(--primary); font-weight:bold;">AVIATOR ETB</div>
-        <div class="balance-box" onclick="showPage('wallet')">
+    <div class="top-nav">
+        <div style="font-weight: 900; color: var(--accent-color);">AVIATOR ETB</div>
+        <div class="balance-container" onclick="showPage('wallet-page')">
             <span>👛</span>
-            <span id="user-balance">500.00</span> ETB
+            <span id="main-balance">1,250.00</span> ETB
         </div>
     </div>
 
-    <div id="play" class="page active">
-        <div id="game-view">
+    <div id="play-page" class="page active">
+        <div id="game-area">
             <div id="multiplier">1.00x</div>
-            <div id="flew-text" class="flew-away">FLEW AWAY!</div>
-            <div id="plane">✈️</div>
-            <canvas id="line-canvas" style="position:absolute; top:0; left:0; width:100%; height:100%;"></canvas>
+            <div id="flew-away" class="flew-away-text">FLEW AWAY!</div>
+            <div id="plane-emoji">✈️</div>
+            <canvas id="trail-canvas" style="position:absolute; top:0; left:0; width:100%; height:100%;"></canvas>
         </div>
 
-        <div class="bet-container">
-            <div class="bet-card">
-                <input type="number" id="amt1" value="10" style="width:80%; padding:5px; border-radius:5px;">
-                <button class="bet-btn" onclick="placeBet(1)">BET</button>
+        <div class="bet-section">
+            <div class="bet-box">
+                <div class="bet-input-group"><input type="number" value="10" id="bet1"></div>
+                <button class="bet-button" onclick="handleBet(1)">BET</button>
             </div>
-            <div class="bet-card">
-                <input type="number" id="amt2" value="10" style="width:80%; padding:5px; border-radius:5px;">
-                <button class="bet-btn" onclick="placeBet(2)">BET</button>
+            <div class="bet-box">
+                <div class="bet-input-group"><input type="number" value="50" id="bet2"></div>
+                <button class="bet-button" onclick="handleBet(2)">BET</button>
             </div>
         </div>
 
-        <div class="strategy-card" style="margin:10px;">
-            💡 <strong>ስትራቴጂ:</strong> ሁልጊዜ በ 1.50x ላይ ካሽ አውት ማድረግ ትርፋማ ያደርጋል!
+        <div class="strategy-box">
+            🎯 <strong>ስትራቴጂ:</strong> ሁልጊዜ ትርፍዎን በ 2.0x ላይ ማውጣት የኪሳራ እድልን ይቀንሳል!
         </div>
     </div>
 
-    <div id="wallet" class="page">
-        <h2>የእርስዎ ዋሌት</h2>
-        <div style="background:#000; padding:20px; border-radius:15px; text-align:center; font-size:1.5rem;">
-            የአሁኑ ባላንስ: <span style="color:var(--secondary)">500.00 ETB</span>
+    <div id="wallet-page" class="page">
+        <h2>የፋይናንስ ማዕከል</h2>
+        <div style="background:#111; padding:30px; border-radius:20px; text-align:center;">
+            <p style="opacity:0.6;">የአሁኑ ቀሪ ሂሳብ</p>
+            <h1 style="font-size:2.5rem; color:var(--success-color);">1,250.00 ETB</h1>
         </div>
-        <div class="wallet-actions">
-            <div class="dep-btn" onclick="alert('የዲፖዚት ሲስተም')">📥 ዲፖዚት (Deposit)</div>
-            <div class="with-btn" onclick="alert('የዊዝድሮው ሲስተም')">📤 ዊዝድሮው (Withdraw)</div>
+        <div class="wallet-btns">
+            <div class="btn-dep" onclick="requestAction('Deposit')">📥 ዲፖዚት (Deposit)</div>
+            <div class="btn-with" onclick="requestAction('Withdraw')">📤 ዊዝድሮው (Withdraw)</div>
+        </div>
+        <div style="margin-top:20px; color:#888; font-size:0.9rem;">
+            * ማንኛውም ጥያቄ በአድሚን በኩል በ30 ደቂቃ ውስጥ ይጸድቃል።
         </div>
     </div>
 
-    <div id="winners" class="page">
-        <h3>ምርጥ 50 አሸናፊዎች</h3>
-        <div id="winners-list">
+    <div id="top-page" class="page">
+        <h3>ምርጥ 50 አሸናፊዎች (TOP 50)</h3>
+        <div id="winners-container"></div>
+    </div>
+
+    <div id="profile-page" class="page">
+        <div style="text-align:center;">
+            <div style="width:120px; height:120px; background:#333; border-radius:50%; margin:20px auto; border:3px solid var(--success-color); overflow:hidden;">
+                <img src="https://via.placeholder.com/120" id="tg-photo" style="width:100%;">
             </div>
+            <h2 id="tg-username">Dai @SoftwareDev</h2>
+            <div style="display:flex; justify-content:space-around; margin-top:30px;">
+                <div class="bet-box" style="flex-direction:column; padding:15px; width:40%;">
+                    <small>ዲፖዚት</small>
+                    <b>5,000 ETB</b>
+                </div>
+                <div class="bet-box" style="flex-direction:column; padding:15px; width:40%;">
+                    <small>ጨዋታዎች</small>
+                    <b>432</b>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div id="profile" class="page">
-        <div style="text-align:center; padding:20px;">
-            <div style="width:100px; height:100px; background:#444; border-radius:50%; margin:0 auto; display:flex; align-items:center; justify-content:center; font-size:2rem;">👤</div>
-            <h2 id="tg-name">Dai (Developer)</h2>
-            <p>የቴሌግራም ID: @user_dai</p>
-        </div>
-        <div class="bet-card" style="text-align:left;">
-            <p>📊 የተጫወቱት ጨዋታ: 124</p>
-            <p>💰 ጠቅላላ ዲፖዚት: 2500 ETB</p>
-            <p>🏆 ከፍተኛ ድል: 450 ETB</p>
-        </div>
-    </div>
-
-    <div class="nav-bar">
-        <div class="nav-item active" onclick="showPage('play')">🎮<br>Play</div>
-        <div class="nav-item" onclick="showPage('wallet')">👛<br>Wallet</div>
-        <div class="nav-item" onclick="showPage('winners')">🏆<br>Top</div>
-        <div class="nav-item" onclick="showPage('profile')">👤<br>Profile</div>
+    <div class="bottom-menu">
+        <div class="menu-item active" onclick="showPage('play-page')">🎮<br>Play</div>
+        <div class="menu-item" onclick="showPage('wallet-page')">👛<br>Wallet</div>
+        <div class="menu-item" onclick="showPage('top-page')">🥇<br>Top</div>
+        <div class="menu-item" onclick="showPage('profile-page')">👤<br>Profile</div>
     </div>
 
     <script>
-        let balance = 500.00;
         let multiplier = 1.00;
         let isFlying = false;
-
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            // Navigation highlight logic
-            if(pageId === 'winners') loadWinners();
-        }
-
-        // Top Winners Data (Ethiopian Names)
-        function loadWinners() {
-            const names = ["አቤል ከበደ", "ሳራ ታደሰ", "ዮናስ መኮንን", "ልዩነሽ አየለ", "ዳዊት በላይ", "ኤልሳቤጥ ግርማ", "በርከት ኃይሉ", "ቲጂ ፋንታሁን", "ካሊድ መሀመድ", "ሰለሞን አስፋው"];
-            let html = "";
-            names.forEach((name, i) => {
-                let icon = i === 0 ? "🥇" : (i === 1 ? "🥈" : (i === 2 ? "🥉" : "👤"));
-                html += `<div class="winner-item">
-                    <span>${icon} ${name}</span>
-                    <span style="color:#10b981">+${(Math.random()*500 + 50).toFixed(2)} ETB</span>
-                </div>`;
-            });
-            document.getElementById('winners-list').innerHTML = html;
-        }
-
-        // Game Logic
-        const plane = document.getElementById('plane');
+        const plane = document.getElementById('plane-emoji');
         const multText = document.getElementById('multiplier');
-        const flewText = document.getElementById('flew-text');
+        const canvas = document.getElementById('trail-canvas');
+        const ctx = canvas.getContext('2d');
 
-        function startRound() {
+        // Page Switching
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(id === 'top-page') generateWinners();
+        }
+
+        // Ethiopian Winners List
+        function generateWinners() {
+            const etNames = ["ዮናስ ታደሰ", "መሳይ ግርማ", "አልማዝ አየለ", "ዳዊት ወልዴ", "ሰለሞን ካሳ", "ቤተልሄም ደምሴ", "ካሊድ ኑሩ", "ቴዎድሮስ ሃይሉ", "ሳሙኤል በቀለ", "ሊዲያ ጌታቸው", "ኤልያስ መሀመድ", "ብስራት ተክሌ", "ትእግስት ፋንታሁን"];
+            let html = "";
+            for(let i=0; i<50; i++) {
+                let name = etNames[i % etNames.length] + (i > 12 ? " " + (i+1) : "");
+                let rank = i === 0 ? "🥇" : (i === 1 ? "🥈" : (i === 2 ? "🥉" : "👤"));
+                html += `<div class="winner-row">
+                    <span>${rank} ${name}</span>
+                    <span style="color:#28a745">+${(Math.random()*800 + 100).toFixed(2)} ETB</span>
+                </div>`;
+            }
+            document.getElementById('winners-container').innerHTML = html;
+        }
+
+        // Game Logic Simulation
+        function runGame() {
             multiplier = 1.00;
             isFlying = true;
-            flewText.style.display = 'none';
-            let crashPoint = (Math.random() * 5 + 1).toFixed(2);
+            document.getElementById('flew-away').style.display = 'none';
+            multText.style.color = 'white';
+            let crashAt = (Math.random() * 4 + 1.1).toFixed(2);
 
-            let timer = setInterval(() => {
-                if(multiplier < crashPoint) {
+            let interval = setInterval(() => {
+                if(multiplier < crashAt) {
                     multiplier += 0.02;
                     multText.innerText = multiplier.toFixed(2) + "x";
                     
-                    // Plane movement
-                    let x = (multiplier - 1) * 50;
-                    let y = (multiplier - 1) * 30;
+                    let x = (multiplier - 1) * 60;
+                    let y = (multiplier - 1) * 35;
                     plane.style.transform = `translate(${x}px, -${y}px)`;
                 } else {
-                    clearInterval(timer);
+                    clearInterval(interval);
                     isFlying = false;
-                    flewText.style.display = 'block';
-                    multText.style.color = 'red';
-                    setTimeout(startRound, 4000);
+                    document.getElementById('flew-away').style.display = 'block';
+                    multText.style.color = '#e11d48';
+                    setTimeout(runGame, 4000);
                 }
-            }, 100);
+            }, 80);
         }
 
-        function placeBet(n) {
-            let amt = document.getElementById('amt'+n).value;
-            if(balance >= amt) {
-                balance -= amt;
-                document.getElementById('user-balance').innerText = balance.toFixed(2);
-                alert(amt + " ETB ተወራርደሃል!");
-            }
+        function requestAction(type) {
+            alert(type + " ጥያቄዎ ለአድሚን ተልኳል። እባክዎ እስኪጸድቅ ይጠብቁ።");
         }
 
-        window.onload = startRound;
+        window.onload = runGame;
     </script>
 </body>
 </html>
