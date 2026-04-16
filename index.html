@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WORLD GAME V38 - FULL DEPLOY</title>
+    <title>WORLD GAME V39 - ADMIN INTEGRATED</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -12,13 +12,11 @@
         body { background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; margin: 0; }
         .font-game { font-family: 'Orbitron', sans-serif; }
         
-        /* Game Area */
         .game-area { position: relative; height: 280px; background: radial-gradient(circle at bottom left, #2a0505, #000 85%); border-radius: 25px; margin: 10px; border: 1px solid #222; overflow: hidden; }
         #multiplier { position: absolute; left: 50%; top: 45%; transform: translate(-50%, -50%); font-size: 3.8rem; font-weight: 900; z-index: 10; font-family: 'Orbitron'; color: #fff; }
         #plane { position: absolute; font-size: 3rem; z-index: 30; filter: drop-shadow(0 0 10px #f00); }
         .red-line { position: absolute; bottom: 10%; left: 10%; height: 3px; background: #f00; box-shadow: 0 0 15px #f00; transform-origin: left bottom; z-index: 20; }
 
-        /* Podium */
         .podium-container { display: flex; align-items: flex-end; justify-content: center; gap: 10px; height: 160px; margin-top: 50px; }
         .podium-box { position: relative; display: flex; flex-direction: column; align-items: center; width: 30%; border-radius: 12px 12px 0 0; }
         .rank-1 { height: 130px; background: linear-gradient(180deg, #ffd70033, #000); border: 2px solid #ffd700; border-bottom: none; }
@@ -26,7 +24,6 @@
         .rank-3 { height: 80px; background: linear-gradient(180deg, #cd7f3233, #000); border: 2px solid #cd7f32; border-bottom: none; }
         .crown-icon { position: absolute; top: -40px; font-size: 32px; filter: drop-shadow(0 0 8px #ffd700); }
 
-        /* Controls */
         .bet-input, .form-input { background: #000; border: 1px solid #333; height: 50px; border-radius: 12px; text-align: center; font-weight: 900; outline: none; color: white; width: 100%; }
         .bet-btn { background: linear-gradient(180deg, #28a745, #1e7e34); height: 55px; border-radius: 15px; font-weight: 900; width: 100%; border-bottom: 4px solid #145523; color: white; transition: 0.2s; }
         .bet-active-glow { animation: flash 0.8s infinite alternate; border: 2px solid #fff !important; }
@@ -99,8 +96,8 @@
                 <p class="text-white text-center font-black text-[10px] uppercase">Deposit Form</p>
                 <input type="number" id="depAmt" placeholder="Amount (ETB)" class="form-input text-sm">
                 <input type="text" id="depFT" placeholder="Transaction (FT) Number" class="form-input text-sm">
-                <button onclick="submitAdmin('Deposit')" class="w-full bg-blue-600 py-4 rounded-xl font-black text-xs uppercase shadow-lg shadow-blue-900/30">Submit to Admin</button>
-                <p class="text-zinc-500 text-[8px] text-center italic">Admin will verify and add balance in 5-15 mins.</p>
+                <button onclick="submitToAdmin('Deposit')" class="w-full bg-blue-600 py-4 rounded-xl font-black text-xs uppercase">Submit to Admin</button>
+                <p class="text-zinc-500 text-[8px] text-center italic">Admin @Dawit_Fikadu21 will verify and approve.</p>
             </div>
         </div>
 
@@ -109,29 +106,17 @@
                 <p class="text-orange-500 text-center font-black text-[10px] uppercase">Withdraw Form</p>
                 <input type="number" id="witAmt" placeholder="Withdraw Amount" class="form-input text-sm">
                 <input type="text" id="witBank" placeholder="Bank Name & Account No" class="form-input text-sm">
-                <button onclick="submitAdmin('Withdraw')" class="w-full bg-orange-600 py-4 rounded-xl font-black text-xs uppercase shadow-lg shadow-orange-900/30">Request Payout</button>
-                <p class="text-zinc-500 text-[8px] text-center italic">Withdrawals are processed after admin approval.</p>
+                <button onclick="submitToAdmin('Withdraw')" class="w-full bg-orange-600 py-4 rounded-xl font-black text-xs uppercase">Request Payout</button>
+                <p class="text-zinc-500 text-[8px] text-center italic">Send request to @Dawit_Fikadu21 for approval.</p>
             </div>
         </div>
     </div>
 
     <div id="topPage" class="page p-4">
         <div class="podium-container">
-            <div class="podium-box rank-2">
-                <span class="text-2xl mb-1">🥈</span>
-                <p class="text-[9px] font-bold text-zinc-400">Yonas.K</p>
-                <p class="text-[10px] font-black">92,400</p>
-            </div>
-            <div class="podium-box rank-1">
-                <span class="crown-icon">👑</span>
-                <p id="winnerName" class="text-[10px] font-black text-yellow-500 uppercase mt-1">DAI</p>
-                <p class="text-xs font-black">245,000</p>
-            </div>
-            <div class="podium-box rank-3">
-                <span class="text-2xl mb-1">🥉</span>
-                <p class="text-[9px] font-bold text-zinc-400">Betty.S</p>
-                <p class="text-[10px] font-black">61,200</p>
-            </div>
+            <div class="podium-box rank-2"><span>🥈</span><p class="text-[9px] font-bold text-zinc-400">Yonas.K</p><p class="text-[10px] font-black">92,400</p></div>
+            <div class="podium-box rank-1"><span class="crown-icon">👑</span><p id="winnerName" class="text-[10px] font-black text-yellow-500 mt-1">DAI</p><p class="text-xs font-black">245,000</p></div>
+            <div class="podium-box rank-3"><span>🥉</span><p class="text-[9px] font-bold text-zinc-400">Betty.S</p><p class="text-[10px] font-black">61,200</p></div>
         </div>
         <div id="winnersList" class="mt-6 space-y-2"></div>
     </div>
@@ -145,10 +130,7 @@
         </div>
         <div class="bg-zinc-900/40 p-6 rounded-2xl border border-zinc-800">
             <p class="text-yellow-500 font-black text-xs uppercase mb-1">Invite & Earn 5 ETB</p>
-            <p class="text-zinc-500 text-[9px] mb-4">Invite friends and get 5 ETB for each successful join!</p>
-            <button onclick="shareLink()" class="w-full bg-blue-600 py-3 rounded-xl font-black text-[10px] uppercase flex items-center justify-center gap-2">
-                <i class="fas fa-share-alt"></i> Share to Friends
-            </button>
+            <button onclick="shareLink()" class="w-full bg-blue-600 py-3 rounded-xl font-black text-[10px] uppercase">Share to Friends</button>
         </div>
     </div>
 
@@ -161,8 +143,9 @@
 
     <script>
         const tg = window.Telegram.WebApp;
-        let user = tg.initDataUnsafe.user || { id: "0000", first_name: "DAI" };
-        let db = JSON.parse(localStorage.getItem('world_v38')) || { bal: 0.0 };
+        const ADMIN_USERNAME = "@Dawit_Fikadu21";
+        let user = tg.initDataUnsafe.user || { id: "0000", first_name: "DAI", username: "Guest" };
+        let db = JSON.parse(localStorage.getItem('world_v39')) || { bal: 0.0 };
         let curM = 1.0, isFlying = false, isWaiting = false, myBets = [null, null], loop;
 
         function startEngine() {
@@ -170,7 +153,6 @@
             document.getElementById('crashAlert').classList.add('hidden');
             let hasBet = myBets[0] || myBets[1];
             let target = hasBet ? (1.00 + Math.random() * 0.40) : (1.5 + Math.random() * 15);
-
             loop = setInterval(() => {
                 curM += (curM < 3 ? 0.04 : 0.35);
                 document.getElementById('multiplier').innerText = curM.toFixed(2) + "x";
@@ -187,27 +169,45 @@
             document.getElementById('crashVal').innerText = curM.toFixed(2) + "x";
             document.getElementById('crashAlert').classList.remove('hidden');
             let timeLeft = 5;
-            document.getElementById('timerText').innerText = timeLeft;
-            updateButtons();
             let countdown = setInterval(() => {
                 timeLeft--;
                 document.getElementById('timerText').innerText = timeLeft;
-                if(timeLeft <= 0) {
-                    clearInterval(countdown);
-                    myBets = [null, null];
-                    startEngine();
-                }
+                if(timeLeft <= 0) { clearInterval(countdown); myBets = [null, null]; startEngine(); }
             }, 1000);
         }
 
         function handleBet(id) {
             let amt = parseFloat(document.getElementById('amt'+id).value);
             if(!isFlying && !myBets[id-1]) {
-                if(db.bal < amt) { alert("Low Balance! Go to Wallet to Deposit."); showPage('wallet'); return; }
+                if(db.bal < amt) { showPage('wallet'); return; }
                 db.bal -= amt; myBets[id-1] = amt; refresh();
             } else if(isFlying && myBets[id-1]) {
                 db.bal += (myBets[id-1] * curM); myBets[id-1] = null; refresh();
             }
+        }
+
+        function submitToAdmin(type) {
+            let details = "";
+            if(type === 'Deposit') {
+                const amt = document.getElementById('depAmt').value;
+                const ft = document.getElementById('depFT').value;
+                if(!amt || !ft) return alert("Please fill all fields!");
+                details = `DEPOSIT REQUEST:\nUser: ${user.first_name}\nID: ${user.id}\nAmount: ${amt} ETB\nFT: ${ft}`;
+            } else {
+                const amt = document.getElementById('witAmt').value;
+                const bank = document.getElementById('witBank').value;
+                if(!amt || !bank) return alert("Please fill all fields!");
+                details = `WITHDRAW REQUEST:\nUser: ${user.first_name}\nID: ${user.id}\nAmount: ${amt} ETB\nBank: ${bank}`;
+            }
+
+            // ለአድሚን ሜሴጅ መላኪያ (Open Admin Chat)
+            const msg = encodeURIComponent(details + "\n\nAdmin, please check and [Approve/Reject].");
+            tg.openTelegramLink(`https://t.me/Dawit_Fikadu21?text=${msg}`);
+            
+            const toast = document.getElementById('toast');
+            toast.innerText = "Request Sent to Admin! 🚀";
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
         }
 
         function updateButtons() {
@@ -219,25 +219,13 @@
                 } else if(isFlying) {
                     btn.innerText = myBets[i-1] ? "CASHOUT" : "FLYING...";
                     btn.className = myBets[i-1] ? "bet-btn cash-btn" : "bet-btn opacity-20 pointer-events-none";
-                } else {
-                    btn.innerText = "WAITING";
-                    btn.className = "bet-btn opacity-50";
                 }
             }
         }
 
-        function submitAdmin(type) {
-            const toast = document.getElementById('toast');
-            toast.innerText = type + " Request Sent to Admin! 🚀";
-            toast.style.display = 'block';
-            setTimeout(() => { toast.style.display = 'none'; }, 3000);
-            // እዚህ ላይ ለአድሚን በቦት መላኪያ ኮድ መጨመር ይቻላል
-        }
-
         function shareLink() {
             const url = `https://t.me/world_all_gamesbot?start=${user.id}`;
-            const text = `Join World Game and win big! You get 5 ETB reward for joining! 🚀`;
-            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`);
+            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=Join and earn 5 ETB!`);
         }
 
         function copyText(t, msg) {
@@ -250,7 +238,7 @@
         function refresh() {
             document.getElementById('topBal').innerText = db.bal.toFixed(2);
             document.getElementById('pBal').innerText = db.bal.toFixed(2);
-            localStorage.setItem('world_v38', JSON.stringify(db));
+            localStorage.setItem('world_v39', JSON.stringify(db));
             updateButtons();
         }
 
@@ -273,15 +261,6 @@
             document.getElementById('uName').innerText = user.first_name;
             document.getElementById('winnerName').innerText = user.first_name;
             if(user.photo_url) { document.getElementById('hPic').src = user.photo_url; document.getElementById('uPic').src = user.photo_url; }
-            
-            const list = document.getElementById('winnersList');
-            const etNames = ["Dawit.W", "Tsega.A", "Bekele.D", "Hana.G", "Elias.T", "Sara.M"];
-            for(let i=4; i<=10; i++) {
-                let name = etNames[Math.floor(Math.random()*etNames.length)];
-                list.innerHTML += `<div class="bg-zinc-900/40 p-3 rounded-xl flex justify-between text-[10px] border border-zinc-900">
-                    <span class="text-zinc-500 font-bold">#${i} ${name}</span>
-                    <span class="text-green-500 font-black">${(1500 + Math.random()*4000).toFixed(0)} ETB</span></div>`;
-            }
             refresh(); startEngine();
         };
     </script>
