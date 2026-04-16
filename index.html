@@ -3,147 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WORLD GAME V50 - TOTAL MASTER</title>
+    <title>WORLD GAME V52 - ULTIMATE MASTER</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;700;900&display=swap');
-        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; margin: 0; }
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; margin: 0; display: flex; flex-direction: column; height: 100vh; }
         .font-game { font-family: 'Orbitron', sans-serif; }
         
-        /* Game Engine Visuals */
-        .game-area { position: relative; height: 320px; background: radial-gradient(circle at bottom left, #2b0505, #000); border-radius: 24px; margin: 10px; border: 1px solid #1a1a1a; overflow: hidden; }
-        #multiplier { position: absolute; left: 50%; top: 35%; transform: translate(-50%, -50%); font-size: 5.5rem; font-weight: 900; z-index: 10; color: #fff; }
-        #plane { position: absolute; font-size: 50px; transition: all 0.1s linear; z-index: 5; filter: drop-shadow(0 0 15px red); }
+        /* Game Engine Area */
+        .game-area { position: relative; flex-grow: 1; background: radial-gradient(circle at bottom left, #200, #000); overflow: hidden; }
+        #multiplier { position: absolute; left: 50%; top: 30%; transform: translate(-50%, -50%); font-size: 5.5rem; font-weight: 900; z-index: 20; color: #fff; text-shadow: 0 0 30px rgba(255,0,0,0.5); }
+        #plane { position: absolute; font-size: 45px; z-index: 30; transition: all 0.1s linear; filter: drop-shadow(0 0 10px red); transform: rotate(-10deg); }
+        
+        /* Path Line SVG */
+        #svgPath { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
+        #pathLine { stroke: #ff0000; stroke-width: 5; fill: none; stroke-linecap: round; filter: drop-shadow(0 0 8px red); }
 
-        /* Podium Styles */
-        .podium-wrap { display: flex; align-items: flex-end; justify-content: center; gap: 10px; height: 160px; margin-top: 40px; }
-        .podium-box { position: relative; display: flex; flex-direction: column; align-items: center; width: 30%; border-radius: 12px 12px 0 0; border: 1px solid rgba(255,255,255,0.1); border-bottom: none; }
-        .p-1 { height: 130px; background: linear-gradient(180deg, #ffd70022, #000); border-color: #ffd700; }
-        .p-2 { height: 100px; background: linear-gradient(180deg, #c0c0c022, #000); border-color: #c0c0c0; }
-        .p-3 { height: 80px; background: linear-gradient(180deg, #cd7f3222, #000); border-color: #cd7f32; }
+        /* Bottom Controls */
+        .controls-area { background: #080808; padding: 20px; border-top: 2px solid #1a1a1a; padding-bottom: 110px; }
+        .bet-btn-green { background: linear-gradient(180deg, #22c55e, #15803d); height: 75px; border-radius: 18px; font-weight: 900; border-bottom: 5px solid #14532d; width: 45%; font-size: 1.3rem; transition: 0.1s; }
+        .bet-btn-green:active { transform: translateY(3px); border-bottom: none; }
 
-        /* Green Bet Buttons */
-        .bet-btn-green { background: linear-gradient(180deg, #22c55e, #15803d); height: 75px; border-radius: 18px; font-weight: 900; border-bottom: 5px solid #14532d; width: 45%; font-size: 1.3rem; }
-        .bet-btn-green:active { transform: translateY(4px); border-bottom: none; }
+        /* Podium System */
+        .podium-wrap { display: flex; align-items: flex-end; justify-content: center; gap: 10px; height: 150px; margin-top: 30px; }
+        .podium-box { position: relative; display: flex; flex-direction: column; align-items: center; width: 30%; border-radius: 15px 15px 0 0; border: 1px solid rgba(255,255,255,0.1); border-bottom: none; }
+        .p-1 { height: 120px; background: linear-gradient(180deg, #ffd70022, #000); border-color: #ffd700; }
+        .p-2 { height: 90px; background: linear-gradient(180deg, #c0c0c022, #000); border-color: #c0c0c0; }
+        .p-3 { height: 70px; background: linear-gradient(180deg, #cd7f3222, #000); border-color: #cd7f32; }
 
-        /* Wallet Cards */
-        .bank-card { background: #0c0c0c; padding: 25px; border-radius: 25px; border: 2px solid #1a1a1a; text-align: center; margin-bottom: 15px; }
-        .bank-num { font-size: 1.8rem; font-weight: 900; letter-spacing: 1px; color: #fff; margin-top: 8px; }
-
-        .page { display: none; height: 100vh; overflow-y: auto; padding-bottom: 120px; }
+        .page { display: none; height: 100vh; overflow-y: auto; background: #000; }
         .active-page { display: block; }
-        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #22c55e; color: white; padding: 12px 25px; border-radius: 50px; font-size: 13px; z-index: 9999; display: none; font-weight: 900; box-shadow: 0 0 20px rgba(0,255,0,0.3); }
+        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #22c55e; color: white; padding: 12px 25px; border-radius: 50px; font-size: 13px; z-index: 9999; display: none; font-weight: 900; }
     </style>
 </head>
 <body>
 
     <div id="toast" class="toast">Success! ✅</div>
 
-    <header class="flex justify-between items-center p-4 border-b border-zinc-900 bg-black sticky top-0 z-[1000]">
+    <header class="flex justify-between items-center p-4 border-b border-zinc-900 bg-black z-[1000]">
         <div class="flex items-center gap-3">
-            <img id="uPic" src="https://via.placeholder.com/45" class="w-11 h-11 rounded-full border-2 border-zinc-800">
-            <div><p id="uName" class="text-[11px] font-black uppercase tracking-widest">LOADING...</p><p class="text-[8px] text-green-500 font-bold uppercase">Online</p></div>
+            <img id="uPic" src="https://via.placeholder.com/45" class="w-10 h-10 rounded-full border border-zinc-700">
+            <div><p id="uName" class="text-[11px] font-black uppercase tracking-tighter">LOADING...</p><p class="text-[8px] text-green-500 font-bold">ONLINE</p></div>
         </div>
         <div class="bg-zinc-900 px-5 py-2 rounded-2xl border border-zinc-800 flex items-center gap-2">
             <span id="topBal" class="text-green-500 font-game text-lg">0.00</span>
-            <i class="fas fa-coins text-yellow-500 text-xs"></i>
         </div>
     </header>
 
     <div id="playPage" class="page active-page">
         <div class="game-area">
             <div id="multiplier" class="font-game">1.00x</div>
+            <svg id="svgPath"><path id="pathLine" d=""></path></svg>
             <div id="plane" style="left: 10%; bottom: 10%;">✈️</div>
         </div>
         
-        <div class="px-4 space-y-4">
+        <div class="controls-area space-y-4">
             <div class="flex gap-3 items-center">
-                <div class="flex-1 bg-zinc-900 rounded-2xl p-4 border border-zinc-800"><span class="text-[9px] text-zinc-500 font-bold">BET ETB</span><input type="number" id="amt1" value="100" class="bg-transparent w-full text-2xl font-black outline-none"></div>
+                <div class="flex-1 bg-zinc-900 rounded-2xl p-4 border border-zinc-800">
+                    <span class="text-[9px] text-zinc-500 font-bold uppercase">Amount</span>
+                    <input type="number" id="amt1" value="100" class="bg-transparent w-full text-2xl font-black outline-none">
+                </div>
                 <button onclick="tg.HapticFeedback.impactOccurred('heavy');" class="bet-btn-green">BET</button>
             </div>
             <div class="flex gap-3 items-center">
-                <div class="flex-1 bg-zinc-900 rounded-2xl p-4 border border-zinc-800"><span class="text-[9px] text-zinc-500 font-bold">BET ETB</span><input type="number" id="amt2" value="200" class="bg-transparent w-full text-2xl font-black outline-none"></div>
+                <div class="flex-1 bg-zinc-900 rounded-2xl p-4 border border-zinc-800">
+                    <span class="text-[9px] text-zinc-500 font-bold uppercase">Amount</span>
+                    <input type="number" id="amt2" value="200" class="bg-transparent w-full text-2xl font-black outline-none">
+                </div>
                 <button onclick="tg.HapticFeedback.impactOccurred('heavy');" class="bet-btn-green">BET</button>
             </div>
         </div>
     </div>
 
-    <div id="walletPage" class="page p-6">
-        <h2 class="text-center font-black text-zinc-500 uppercase text-xs mb-8">Deposit to start playing</h2>
-        <div class="bank-card" onclick="copy('1000179571815', 'CBE')">
-            <p class="text-blue-500 font-black text-[10px]">CBE (Commercial Bank)</p>
-            <p class="bank-num">1000179571815</p>
+    <div id="walletPage" class="page p-6 pb-[150px]">
+        <div onclick="copy('1000179571815', 'CBE')" class="bg-[#0c0c0c] p-6 rounded-3xl border-2 border-zinc-900 text-center mb-4 active:scale-95 transition">
+            <p class="text-blue-500 font-black text-xs mb-2">CBE ACCOUNT</p>
+            <p class="text-3xl font-black tracking-wider">1000179571815</p>
         </div>
-        <div class="bank-card" onclick="copy('165097254', 'Abyssinia')">
-            <p class="text-yellow-500 font-black text-[10px]">BANK OF ABYSSINIA</p>
-            <p class="bank-num">165097254</p>
+        <div onclick="copy('165097254', 'Abyssinia')" class="bg-[#0c0c0c] p-6 rounded-3xl border-2 border-zinc-900 text-center mb-6 active:scale-95 transition">
+            <p class="text-yellow-500 font-black text-xs mb-2">ABYSSINIA ACCOUNT</p>
+            <p class="text-3xl font-black tracking-wider">165097254</p>
         </div>
-        <div class="bg-zinc-900 p-6 rounded-[35px] border border-zinc-800 space-y-4 mt-8">
-            <input type="number" id="depAmt" placeholder="Amount (ETB)" class="bg-black w-full p-5 rounded-2xl outline-none border border-zinc-800 text-xl font-bold">
-            <input type="text" id="depFT" placeholder="Transaction FT Number" class="bg-black w-full p-5 rounded-2xl outline-none border border-zinc-800">
-            <button onclick="submitRequest()" class="w-full bg-blue-600 py-5 rounded-2xl font-black text-sm uppercase shadow-lg shadow-blue-900/20">Submit Deposit</button>
+        <div class="bg-zinc-900 p-6 rounded-[40px] border border-zinc-800 space-y-4">
+            <input type="number" id="depAmt" placeholder="Amount (ETB)" class="bg-black w-full p-5 rounded-2xl border border-zinc-800 text-xl font-bold outline-none">
+            <input type="text" id="depFT" placeholder="Transaction FT Number" class="bg-black w-full p-5 rounded-2xl border border-zinc-800 outline-none">
+            <button onclick="submitDep()" class="w-full bg-blue-600 py-5 rounded-2xl font-black uppercase text-sm">Send Deposit Request</button>
         </div>
     </div>
 
-    <div id="topPage" class="page p-4">
+    <div id="topPage" class="page p-4 pb-[150px]">
         <div class="podium-wrap">
-            <div class="podium-box p-2">🥈<p class="text-[9px] font-bold">Yonas.K</p><p class="text-[11px] font-black">28,500</p></div>
-            <div class="podium-box p-1">👑<p id="topName" class="text-[10px] font-black text-yellow-500">YOU</p><p class="text-sm font-black">54,000</p></div>
-            <div class="podium-box p-3">🥉<p class="text-[9px] font-bold">Hana.G</p><p class="text-[11px] font-black">19,200</p></div>
+            <div class="podium-box p-2">🥈<p class="text-[9px] font-bold">Yonas.K</p><p class="text-[11px] font-black">32,100</p></div>
+            <div class="podium-box p-1">👑<p id="topUser" class="text-[10px] font-black text-yellow-500">YOU</p><p class="text-sm font-black">64,000</p></div>
+            <div class="podium-box p-3">🥉<p class="text-[9px] font-bold">Beti.W</p><p class="text-[11px] font-black">18,500</p></div>
         </div>
-        <div id="topList" class="mt-10 px-4 space-y-2"></div>
+        <div id="leaderBoard" class="mt-8 space-y-2 px-4"></div>
     </div>
 
-    <div id="adminPage" class="page p-6">
-        <h2 class="text-center font-black text-red-600 text-xl mb-8 uppercase tracking-widest">Admin Approval</h2>
-        <div id="adminList" class="space-y-4">
-            <p class="text-center text-zinc-600">No pending deposit requests.</p>
+    <div id="adminPage" class="page p-6 pb-[150px]">
+        <h2 class="text-center font-black text-red-600 mb-8 uppercase tracking-widest">Admin Control</h2>
+        <div id="adminRequests" class="space-y-4">
+            <p class="text-center text-zinc-600">No pending requests.</p>
         </div>
     </div>
 
-    <div id="profilePage" class="page p-10 text-center">
+    <div id="profilePage" class="page p-10 text-center pb-[150px]">
         <img id="uPicMain" src="https://via.placeholder.com/150" class="w-28 h-28 rounded-full mx-auto border-4 border-zinc-900 shadow-2xl">
-        <h2 id="uNameMain" class="font-black text-2xl mt-4 uppercase tracking-tighter">PLAYER</h2>
-        <div class="bg-zinc-900 p-10 rounded-[45px] border border-zinc-800 mt-8 mb-4">
-            <p id="pBal" class="text-6xl font-game font-black text-green-500">0.00</p>
-            <p class="text-[10px] text-zinc-500 uppercase mt-2 font-black tracking-widest">Available Balance</p>
+        <h2 id="uNameMain" class="font-black text-2xl mt-4 uppercase">PLAYER</h2>
+        <div class="bg-zinc-900 p-10 rounded-[45px] border border-zinc-800 mt-8 mb-6">
+            <p id="pBal" class="text-5xl font-game font-black text-green-500">0.00</p>
+            <p class="text-[10px] text-zinc-500 uppercase font-black mt-2">Available ETB</p>
         </div>
-        <button id="adminBtn" onclick="showPage('admin')" class="hidden w-full bg-yellow-600 py-5 rounded-2xl font-black text-xs uppercase">Open Admin Dashboard</button>
+        <button id="adminBtn" onclick="showPage('admin')" class="hidden w-full bg-yellow-600 py-5 rounded-2xl font-black text-xs uppercase">Open Admin Panel</button>
     </div>
 
-    <nav class="fixed bottom-0 w-full h-24 bg-black/90 backdrop-blur-xl border-t border-zinc-900 flex justify-around items-center z-[2000] pb-8 pt-4">
-        <div onclick="showPage('play')" id="n-play" class="text-green-500 flex flex-col items-center"><i class="fas fa-plane-departure text-xl"></i><span class="text-[9px] mt-1 font-bold">GAME</span></div>
-        <div onclick="showPage('wallet')" id="n-wallet" class="flex flex-col items-center"><i class="fas fa-wallet text-xl"></i><span class="text-[9px] mt-1 font-bold">WALLET</span></div>
+    <nav class="fixed bottom-0 w-full h-24 bg-black border-t border-zinc-900 flex justify-around items-center z-[2000] pb-8 pt-4">
+        <div onclick="showPage('play')" id="n-play" class="text-green-500 flex flex-col items-center"><i class="fas fa-paper-plane text-xl"></i><span class="text-[9px] mt-1 font-bold">GAME</span></div>
+        <div onclick="showPage('wallet')" id="n-wallet" class="flex flex-col items-center"><i class="fas fa-university text-xl"></i><span class="text-[9px] mt-1 font-bold">WALLET</span></div>
         <div onclick="showPage('top')" id="n-top" class="flex flex-col items-center"><i class="fas fa-trophy text-xl"></i><span class="text-[9px] mt-1 font-bold">TOP</span></div>
-        <div onclick="showPage('profile')" id="n-profile" class="flex flex-col items-center"><i class="fas fa-user-circle text-xl"></i><span class="text-[9px] mt-1 font-bold">ME</span></div>
+        <div onclick="showPage('profile')" id="n-profile" class="flex flex-col items-center"><i class="fas fa-user-circle text-xl"></i><span class="text-[9px] mt-1 font-bold">PROFILE</span></div>
     </nav>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        const ADMIN_ID = 12345678; // ያንተን የቴሌግራም ID እዚህ ቀይር
+        const ADMIN_ID = 12345678; // ያንተን የቴሌግራም ID እዚህ ያስገቡ
         
         let user = tg.initDataUnsafe.user || { id: 12345678, first_name: "Nahom" };
-        let db = JSON.parse(localStorage.getItem('world_master_v50')) || { bal: 0.0, reqs: [] };
+        let db = JSON.parse(localStorage.getItem('world_v52_db')) || { bal: 0.0, reqs: [] };
 
         function save() {
-            localStorage.setItem('world_master_v50', JSON.stringify(db));
+            localStorage.setItem('world_v52_db', JSON.stringify(db));
             document.getElementById('topBal').innerText = db.bal.toFixed(2);
             document.getElementById('pBal').innerText = db.bal.toFixed(2);
         }
 
-        function submitRequest() {
+        function submitDep() {
             const a = document.getElementById('depAmt').value;
             const f = document.getElementById('depFT').value;
-            if(!a || !f) return alert("እባክዎ መረጃውን ያሟሉ!");
+            if(!a || !f) return alert("Fill all details!");
             db.reqs.push({ id: Date.now(), name: user.first_name, amt: parseFloat(a), ft: f });
-            save(); showToast("ጥያቄው ለአድሚን ተልኳል! ⏳");
-            document.getElementById('depAmt').value = ""; document.getElementById('depFT').value = "";
+            save(); showToast("Sent to Admin! ⏳");
         }
 
-        function adminDo(id, act) {
+        function adminAction(id, act) {
             const i = db.reqs.findIndex(r => r.id === id);
             if(act === 'ok') db.bal += db.reqs[i].amt;
             db.reqs.splice(i, 1);
@@ -151,12 +156,12 @@
         }
 
         function renderAdmin() {
-            const box = document.getElementById('adminList');
-            if(db.reqs.length === 0) { box.innerHTML = `<p class="text-center text-zinc-600">No pending requests.</p>`; return; }
+            const box = document.getElementById('adminRequests');
+            if(db.reqs.length === 0) { box.innerHTML = `<p class="text-center text-zinc-600">No requests.</p>`; return; }
             box.innerHTML = db.reqs.map(r => `
                 <div class="bg-zinc-900 p-5 rounded-3xl border border-zinc-800 flex justify-between items-center">
-                    <div><p class="text-xs font-black uppercase">${r.name}</p><p class="text-green-500 font-black text-xl">${r.amt} ETB</p><p class="text-[9px] text-zinc-500">FT: ${r.ft}</p></div>
-                    <div class="flex gap-2"><button onclick="adminDo(${r.id},'ok')" class="bg-green-600 p-4 rounded-2xl font-black">OK</button><button onclick="adminDo(${r.id},'no')" class="bg-red-600 p-4 rounded-2xl font-black text-xs">X</button></div>
+                    <div><p class="text-xs font-black uppercase">${r.name}</p><p class="text-green-500 font-bold text-xl">${r.amt} ETB</p><p class="text-[9px] text-zinc-500">FT: ${r.ft}</p></div>
+                    <div class="flex gap-2"><button onclick="adminAction(${r.id},'ok')" class="bg-green-600 p-4 rounded-xl font-black">OK</button><button onclick="adminAction(${r.id},'no')" class="bg-red-600 p-4 rounded-xl font-black text-xs">X</button></div>
                 </div>`).join('');
         }
 
@@ -170,35 +175,49 @@
         }
 
         function renderTop() {
-            const l = document.getElementById('topList'); l.innerHTML = "";
-            const users = ["Dawit.F", "Sara.M", "Miki.Y", "Elias.T", "Abel.Z", "Lidya.K", "Beti.S"];
-            users.forEach((n, i) => {
-                l.innerHTML += `<div class="bg-zinc-900/40 p-4 rounded-2xl flex justify-between items-center border border-zinc-800"><span class="text-zinc-500 font-bold text-xs">#${i+4} ${n}</span><span class="text-white font-black text-sm">${(15000 - i*1200).toLocaleString()} ETB</span></div>`;
+            const l = document.getElementById('leaderBoard'); l.innerHTML = "";
+            ["Dawit.M", "Hana.G", "Miki.Y", "Elias.T", "Abel.Z", "Lidya.K", "Beti.S"].forEach((n, i) => {
+                l.innerHTML += `<div class="bg-zinc-900/40 p-4 rounded-2xl flex justify-between items-center border border-zinc-800"><span class="text-zinc-500 font-bold text-xs">#${i+4} ${n}</span><span class="text-white font-black text-sm">${(25000 - i*1500).toLocaleString()} ETB</span></div>`;
             });
         }
 
         function showToast(m) { const t = document.getElementById('toast'); t.innerText = m; t.style.display='block'; setTimeout(()=>t.style.display='none', 2500); }
         function copy(t, b) { navigator.clipboard.writeText(t); showToast(b + " Copied! ✅"); }
 
-        // --- FLYING ENGINE ---
+        // --- FLY ENGINE WITH LINE ---
         let m = 1.0;
+        let pathPoints = [];
+
         function runGame() {
-            const plane = document.getElementById('plane');
+            const p = document.getElementById('plane');
             const mult = document.getElementById('multiplier');
-            let crashPoint = 1.8 + (Math.random() * 4.5);
+            const pathLine = document.getElementById('pathLine');
+            const area = document.querySelector('.game-area');
+            let crashPoint = 1.6 + (Math.random() * 5);
+            pathPoints = [];
             
             let flyLoop = setInterval(() => {
                 m += 0.04;
                 mult.innerText = m.toFixed(2) + "x";
-                plane.style.left = (10 + (m-1)*15) + "%";
-                plane.style.bottom = (10 + (m-1)*13) + "%";
                 
+                let x = 10 + (m-1)*14;
+                let y = 10 + (m-1)*11;
+                
+                p.style.left = x + "%";
+                p.style.bottom = y + "%";
+
+                let svgX = (area.clientWidth * x) / 100;
+                let svgY = area.clientHeight - (area.clientHeight * y) / 100;
+                pathPoints.push(`${svgX},${svgY}`);
+                pathLine.setAttribute("d", "M" + pathPoints.join(" L"));
+
                 if(m >= crashPoint) {
                     clearInterval(flyLoop);
                     mult.classList.add('text-red-600');
                     setTimeout(() => {
                         m = 1.0; mult.classList.remove('text-red-600');
-                        plane.style.left = "10%"; plane.style.bottom = "10%";
+                        p.style.left = "10%"; p.style.bottom = "10%";
+                        pathLine.setAttribute("d", "");
                         runGame();
                     }, 3000);
                 }
@@ -206,10 +225,10 @@
         }
 
         window.onload = () => {
-            const name = user.first_name;
+            const name = user.first_name.toUpperCase();
             document.getElementById('uName').innerText = name;
             document.getElementById('uNameMain').innerText = name;
-            document.getElementById('topName').innerText = name;
+            document.getElementById('topUser').innerText = name;
             if(user.photo_url) {
                 document.getElementById('uPic').src = user.photo_url;
                 document.getElementById('uPicMain').src = user.photo_url;
