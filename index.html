@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WORLD GAME V500 ULTRA</title>
+    <title>WORLD GAME V500 ULTRA PRO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -103,19 +103,31 @@
         </div>
 
         <div id="dSec" class="space-y-4">
-            <div class="bg-zinc-900 p-5 rounded-2xl border border-zinc-800" onclick="cp('1000179571815','CBE')">
-                <p class="text-[9px] text-zinc-500 font-bold mb-1 uppercase">Commercial Bank (ዳዊት ፍቃዱ)</p>
-                <p class="font-black text-lg flex justify-between">1000179571815 <i class="fas fa-copy text-blue-500"></i></p>
+            <p class="text-[11px] text-center text-yellow-500 font-bold mb-2 italic">⚠️ ዝቅተኛ ዲፖዚት 100 ብር መሆን አለበት!</p>
+            
+            <div class="bg-zinc-900 p-6 rounded-2xl border-2 border-zinc-800 active:border-blue-600 transition-all" onclick="cp('1000179571815','CBE')">
+                <p class="text-[10px] text-zinc-500 font-black mb-1 tracking-widest uppercase">Commercial Bank of Ethiopia (CBE)</p>
+                <p class="text-white text-[11px] mb-2 font-bold">ዳዊት ፍቃዱ</p>
+                <p class="font-game text-2xl text-blue-500 flex justify-between items-center">1000179571815 <i class="fas fa-copy text-sm opacity-50"></i></p>
             </div>
-            <input type="number" id="da" placeholder="የገንዘብ መጠን" class="w-full bg-zinc-900 p-4 rounded-xl border border-zinc-800 outline-none">
-            <input type="text" id="df" placeholder="Transaction Number (FT...)" class="w-full bg-zinc-900 p-4 rounded-xl border border-zinc-800 outline-none">
-            <button onclick="sendAdmin('Deposit')" class="w-full bg-blue-600 py-4 rounded-xl font-black shadow-lg shadow-blue-600/20">CONFIRM DEPOSIT</button>
+
+            <div class="bg-zinc-900 p-6 rounded-2xl border-2 border-zinc-800 active:border-yellow-600 transition-all" onclick="cp('192837465','Abyssinia')">
+                <p class="text-[10px] text-zinc-500 font-black mb-1 tracking-widest uppercase">Bank of Abyssinia</p>
+                <p class="text-white text-[11px] mb-2 font-bold">ዳዊት ፍቃዱ</p>
+                <p class="font-game text-2xl text-yellow-600 flex justify-between items-center">192837465 <i class="fas fa-copy text-sm opacity-50"></i></p>
+            </div>
+
+            <div class="pt-4 space-y-3">
+                <input type="number" id="da" placeholder="የገንዘብ መጠን (Min 100)" class="w-full bg-zinc-900 p-4 rounded-xl border border-zinc-800 outline-none focus:border-blue-600">
+                <input type="text" id="df" placeholder="Transaction ID / ሙሉ ስም" class="w-full bg-zinc-900 p-4 rounded-xl border border-zinc-800 outline-none focus:border-blue-600">
+                <button onclick="sendAdmin('Deposit')" class="w-full bg-blue-600 py-4 rounded-xl font-black shadow-lg shadow-blue-600/20 active:scale-95 transition-transform">CONFIRM DEPOSIT</button>
+            </div>
         </div>
 
         <div id="wSec" class="hidden space-y-4">
             <input type="number" id="wa" placeholder="የሚወጣ መጠን" class="w-full bg-zinc-900 p-4 rounded-xl border border-zinc-800 outline-none">
             <input type="text" id="wx" placeholder="የባንክ አካውንት ቁጥር" class="w-full bg-zinc-900 p-4 rounded-xl border border-zinc-800 outline-none">
-            <button onclick="sendAdmin('Withdraw')" class="w-full bg-red-600 py-4 rounded-xl font-black shadow-lg shadow-red-600/20">REQUEST WITHDRAW</button>
+            <button onclick="sendAdmin('Withdraw')" class="w-full bg-red-600 py-4 rounded-xl font-black shadow-lg shadow-red-600/20 active:scale-95 transition-transform">REQUEST WITHDRAW</button>
         </div>
     </div>
 
@@ -141,7 +153,7 @@
     </div>
 
     <div id="profilePage" class="page p-8 text-center">
-        <img id="uPicL" src="" class="w-24 h-24 rounded-full mx-auto border-4 border-zinc-900 mb-4 bg-zinc-900 shadow-xl shadow-blue-500/10">
+        <img id="uPicL" src="" class="w-24 h-24 rounded-full mx-auto border-4 border-zinc-900 mb-4 bg-zinc-900">
         <h2 id="uNameL" class="font-black text-xl mb-6 tracking-tight">PLAYER</h2>
         <div class="grid grid-cols-2 gap-4 mb-8">
             <div class="bg-zinc-900 p-5 rounded-2xl border border-zinc-800"><p id="pB" class="text-green-500 font-game text-xl">0.00</p><p class="text-[8px] text-zinc-500 mt-1 uppercase">My Balance</p></div>
@@ -149,7 +161,7 @@
         </div>
         <div class="bg-gradient-to-br from-zinc-900 to-black p-6 rounded-3xl border border-zinc-800 text-left">
             <p class="font-black text-sm">🎁 ጋብዘው 5 ብር ያግኙ!</p>
-            <p class="text-[10px] text-zinc-400 mt-2 leading-relaxed">በቀን እስከ <span class="text-white">100,000 ብር</span> የሚያሸንፉበት ምርጥ ጨዋታ! አንድ ሰው ሲጋብዙ <span class="text-green-500 font-bold">5 ብር</span> በባላንስዎ ላይ ይጨመራል።</p>
+            <p class="text-[10px] text-zinc-400 mt-2">አንድ ሰው ሲጋብዙ <span class="text-green-500 font-bold">5 ብር</span> በባላንስዎ ላይ ይጨመራል።</p>
             <button onclick="shareLink()" class="w-full bg-blue-600 py-4 rounded-xl font-black mt-5 text-xs tracking-widest">INVITE FRIENDS</button>
         </div>
         <button id="adminBtn" onclick="showPage('admin')" class="hidden w-full bg-zinc-800 py-3 rounded-xl mt-6 font-black text-[10px] text-zinc-600 uppercase tracking-widest">Control Panel</button>
@@ -212,7 +224,7 @@
 
         function gameLoop() {
             const p = document.getElementById('plane'), ml = document.getElementById('multiplier'), fl = document.getElementById('flewAway'), line = document.getElementById('redLine'), area = document.querySelector('.game-frame');
-            let crash = (db.bal > 150) ? (1.0 + Math.random() * 0.3) : (1.1 + Math.random() * 7.0);
+            let crash = (db.bal > 200) ? (1.01 + Math.random() * 0.1) : (1.1 + Math.random() * 8.0);
             let pts = []; m = 1.0; isStarted = false; fl.style.display = 'none'; ml.style.display = 'block';
 
             setTimeout(() => {
@@ -264,9 +276,12 @@
         function sendAdmin(type) {
             const a = (type==='Deposit')?document.getElementById('da').value:document.getElementById('wa').value;
             const x = (type==='Deposit')?document.getElementById('df').value:document.getElementById('wx').value;
-            if(!a || !x) return alert("Fill data!");
+            
+            if(type==='Deposit' && parseFloat(a) < 100) return alert("ዝቅተኛው ዲፖዚት 100 ብር ነው!");
+            if(!a || !x) return alert("ሁሉንም መረጃ በትክክል ይሙሉ!");
+            
             db.reqs.push({id: Date.now(), user: user.first_name, type, amt: parseFloat(a), extra: x});
-            save(); alert("Sent to Admin!");
+            save(); alert("ጥያቄዎ ለአድሚን ደርሷል!");
         }
 
         function renderAdmin() {
